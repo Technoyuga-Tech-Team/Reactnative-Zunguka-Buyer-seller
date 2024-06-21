@@ -1,17 +1,25 @@
-import {FullTheme} from 'react-native-elements';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SCREEN_HEIGHT} from '../constant';
+import { FullTheme } from "react-native-elements";
+import { RFValue } from "react-native-responsive-fontsize";
+import { SCREEN_HEIGHT } from "../constant";
 
 const LightThemeColor = {
-  primary: '#F3B241',
+  primary: "#F3B241",
+  transparent: "transparent",
+  background: "#FFFFFF",
+  textColor: "#000000",
+  buttonText: "#FFFFFF",
 };
 const DarkThemeColor = {
-  primary: '#F3B241',
+  primary: "#F3B241",
+  transparent: "transparent",
+  background: "#FFFFFF",
+  textColor: "#000000",
+  buttonText: "#FFFFFF",
 };
 
-export const getTheme = (mode: 'light' | 'dark' = 'dark') => {
+export const getTheme = (mode: "light" | "dark" = "dark") => {
   const theme: Partial<FullTheme> = {
-    colors: mode === 'dark' ? DarkThemeColor : LightThemeColor,
+    colors: mode === "dark" ? DarkThemeColor : LightThemeColor,
     spacing: {
       fs10: RFValue(10, SCREEN_HEIGHT),
       fs11: RFValue(11, SCREEN_HEIGHT),
@@ -82,16 +90,10 @@ export const getTheme = (mode: 'light' | 'dark' = 'dark') => {
       fs30: RFValue(30, SCREEN_HEIGHT),
     },
     fontFamily: {
-      light: 'SFProDisplay-Light',
-      regular: 'SFProDisplay-Regular',
-      medium: 'SFProDisplay-Medium',
-      bold: 'SFProDisplay-Bold',
-    },
-    Text: {
-      style: {
-        fontFamily: 'SFProDisplay-Regular',
-        color: '#333',
-      },
+      light: "NunitoSans-Light",
+      regular: "NunitoSans-Regular",
+      medium: "NunitoSans-Medium",
+      bold: "NunitoSans-Bold",
     },
   };
   return theme;
