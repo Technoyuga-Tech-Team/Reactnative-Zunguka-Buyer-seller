@@ -1,15 +1,28 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {FullTheme} from 'react-native-elements';
+import { FullTheme } from "react-native-elements";
 
-type RecursivePartial<T> = {[P in keyof T]?: RecursivePartial<T[P]>};
+type RecursivePartial<T> = { [P in keyof T]?: RecursivePartial<T[P]> };
 
-declare module 'react-native-elements/dist/config/colors' {
+declare module "react-native-elements/dist/config/colors" {
   export interface Colors {
     primary: string;
+    transparent: string;
+    background: string;
+    textColor: string;
+    buttonText: string;
+    borderButtonColor: string;
+    textPrimary: string;
+    textSecondary: string;
+    primaryText: string;
+    secondaryText: string;
+    iconColor: string;
+    primaryLight: string;
+    lightGrey: string;
+    pinkDark: string;
   }
 }
 
-declare module 'react-native-elements' {
+declare module "react-native-elements" {
   export interface Sizing {
     fs10: number;
     fs11: number;

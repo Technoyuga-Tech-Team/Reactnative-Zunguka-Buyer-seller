@@ -1,16 +1,12 @@
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp } from "@react-navigation/native";
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+} from "@react-navigation/native-stack";
 
 export type AppRoutes = {
   Onboard: undefined;
-  Onboard1: undefined;
   Splash: undefined;
-  SelectRoll: undefined;
-  BuyerSellerStack: undefined;
-  MoverStack: undefined;
   Authentication: undefined;
   Dashboard: undefined;
   Home: undefined;
@@ -53,7 +49,29 @@ export type AppRoutes = {
   JobHistory: undefined;
 };
 
+export type AuthenticationRoutes = {
+  Onboard: undefined;
+  SelectRoll: undefined;
+  Login: undefined;
+  Signup: undefined;
+  ForgotPassword: undefined;
+  EnterOTP: { phone?: string };
+  ChangePassword: undefined;
+  Mainstack: undefined;
+  Dashboard: undefined;
+  Authentication: undefined;
+  ResetPassword: { phone?: string; email?: string };
+  ChangePassword: undefined;
+};
+
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {
-  navigation: NativeStackNavigationProp<AppRoutes, 'Splash'>;
+  navigation: NativeStackNavigationProp<AppRoutes, "Splash">;
   route: RouteProp<AppRoutes, RouteName>;
+}
+
+export interface AuthNavigationProps<
+  RouteName extends keyof AuthenticationRoutes
+> {
+  navigation: NativeStackNavigationProp<AuthenticationRoutes, RouteName>;
+  route: RouteProp<AuthenticationRoutes, RouteName>;
 }

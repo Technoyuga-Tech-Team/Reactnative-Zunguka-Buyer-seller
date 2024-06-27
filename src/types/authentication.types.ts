@@ -1,5 +1,5 @@
-import {AuthLoadingState, LoadingState} from './global.types';
-import {UserData} from './user.types';
+import { AuthLoadingState, LoadingState } from "./global.types";
+import { UserData } from "./user.types";
 
 export interface LoginFormProps {
   phoneNumber: string;
@@ -9,6 +9,7 @@ export interface LoginFormProps {
 export interface SignupFormProps {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   createPassword: string;

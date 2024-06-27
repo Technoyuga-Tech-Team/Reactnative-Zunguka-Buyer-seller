@@ -1,17 +1,43 @@
-import {FullTheme} from 'react-native-elements';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SCREEN_HEIGHT} from '../constant';
+import { FullTheme } from "react-native-elements";
+import { RFValue } from "react-native-responsive-fontsize";
+import { SCREEN_HEIGHT } from "../constant";
 
 const LightThemeColor = {
-  primary: '#F3B241',
+  primary: "#F3B241",
+  primaryLight: "rgba(243, 178, 65, 0.5)",
+  transparent: "transparent",
+  background: "#FFFFFF",
+  textColor: "#000000",
+  buttonText: "#FFFFFF",
+  borderButtonColor: "#E8E8E8",
+  textPrimary: "rgba(0, 0, 0, 1)",
+  textSecondary: "#999999",
+  primaryText: "#333333",
+  secondaryText: "rgba(138, 138, 138, 1)",
+  iconColor: "#484C52",
+  lightGrey: "rgba(187, 190, 197, 1)",
+  pinkDark: "#E43E2B",
 };
 const DarkThemeColor = {
-  primary: '#F3B241',
+  primary: "#F3B241",
+  primaryLight: "rgba(243, 178, 65, 0.5)",
+  transparent: "transparent",
+  background: "#FFFFFF",
+  textColor: "#000000",
+  buttonText: "#FFFFFF",
+  borderButtonColor: "#E8E8E8",
+  textPrimary: "rgba(0, 0, 0, 1)",
+  textSecondary: "#999999",
+  primaryText: "#333333",
+  secondaryText: "rgba(138, 138, 138, 1)",
+  iconColor: "#484C52",
+  lightGrey: "rgba(187, 190, 197, 1)",
+  pinkDark: "#E43E2B",
 };
 
-export const getTheme = (mode: 'light' | 'dark' = 'dark') => {
+export const getTheme = (mode: "light" | "dark" = "dark") => {
   const theme: Partial<FullTheme> = {
-    colors: mode === 'dark' ? DarkThemeColor : LightThemeColor,
+    colors: mode === "dark" ? DarkThemeColor : LightThemeColor,
     spacing: {
       fs10: RFValue(10, SCREEN_HEIGHT),
       fs11: RFValue(11, SCREEN_HEIGHT),
@@ -82,16 +108,10 @@ export const getTheme = (mode: 'light' | 'dark' = 'dark') => {
       fs30: RFValue(30, SCREEN_HEIGHT),
     },
     fontFamily: {
-      light: 'SFProDisplay-Light',
-      regular: 'SFProDisplay-Regular',
-      medium: 'SFProDisplay-Medium',
-      bold: 'SFProDisplay-Bold',
-    },
-    Text: {
-      style: {
-        fontFamily: 'SFProDisplay-Regular',
-        color: '#333',
-      },
+      light: "NunitoSans10pt-Light",
+      regular: "NunitoSans10pt-Regular",
+      medium: "NunitoSans10pt-Medium",
+      bold: "NunitoSans10pt-Bold",
     },
   };
   return theme;
