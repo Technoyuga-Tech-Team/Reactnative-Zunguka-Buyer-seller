@@ -8,6 +8,7 @@ import { Route } from "../constant/navigationConstants";
 import Splash from "../screen/Splash";
 import Onboard from "../screen/onboard/Onboard";
 import { AppRoutes } from "../types/navigation";
+import Authentication from "./Authentication";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -23,35 +24,10 @@ const MainStack = () => {
       >
         <Stack.Screen name={Route.navSplash} component={Splash} />
         <Stack.Screen name={Route.navOnboard} component={Onboard} />
-        {/* 
-        <Stack.Screen name={Route.navOnboard1} component={Onboard1} />
-        <Stack.Screen name={Route.navSelectRoll} component={SelectUserRoll} />
         <Stack.Screen
           name={Route.navAuthentication}
           component={Authentication}
         />
-        <Stack.Screen
-          name={Route.navBuyerSellerStack}
-          component={BuyerSellerStack}
-        />
-        <Stack.Screen name={Route.navMoverStack} component={MoverStack} />
-        <Stack.Screen name={Route.navMessaging} component={Messaging} />
-        <Stack.Screen name={Route.navChatroom} component={Chatroom} />
-        <Stack.Screen
-          name={Route.navChangePassword}
-          component={ChangePassword}
-        />
-        <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
-        <Stack.Screen
-          name={Route.navPaymentToMover}
-          component={PaymentToMover}
-        />
-        <Stack.Screen
-          name={Route.navDeliveryDetails1}
-          component={DeliveryDetails1}
-        />
-        <Stack.Screen name={Route.navVisitProfile} component={VisitProfile} />
-        <Stack.Screen name={Route.navJobHistory} component={JobHistory} /> */}
       </Stack.Navigator>
     </GestureHandlerRootView>
   );

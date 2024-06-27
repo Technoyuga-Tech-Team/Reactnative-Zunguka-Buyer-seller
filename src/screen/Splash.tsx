@@ -1,15 +1,14 @@
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StatusBar, View } from "react-native";
-import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import Scale from "../utils/Scale";
-import { appAlreadyOpen, getData } from "../utils/asyncStorage";
-import { USER_DATA, USER_ROLE, secureStoreKeys } from "../constant";
+import { USER_DATA, secureStoreKeys } from "../constant";
+import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setUserData } from "../store/settings/settings.slice";
-import { Route } from "../constant/navigationConstants";
+import Scale from "../utils/Scale";
+import { appAlreadyOpen, getData } from "../utils/asyncStorage";
 
 interface SplashScreenProps {}
 
@@ -44,16 +43,10 @@ const Splash: React.FC<SplashScreenProps> = () => {
       } else {
         if (await appAlreadyOpen()) {
           setTimeout(() => {
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 0,
-            //     routes: [{ name: Route.navAuthentication }],
-            //   })
-            // );
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: Route.navOnboard }],
+                routes: [{ name: Route.navAuthentication }],
               })
             );
           }, 2000);

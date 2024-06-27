@@ -10,6 +10,15 @@ declare module "react-native-elements/dist/config/colors" {
     background: string;
     textColor: string;
     buttonText: string;
+    borderButtonColor: string;
+    textPrimary: string;
+    textSecondary: string;
+    primaryText: string;
+    secondaryText: string;
+    iconColor: string;
+    primaryLight: string;
+    lightGrey: string;
+    pinkDark: string;
   }
 }
 

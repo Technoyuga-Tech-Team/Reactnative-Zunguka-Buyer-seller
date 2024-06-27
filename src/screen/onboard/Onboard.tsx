@@ -96,6 +96,13 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
     sliderRef.current?.scrollToIndex({ index });
   };
 
+  const onPressLogin = () => {
+    navigation.navigate(Route.navAuthentication);
+  };
+  const onPressSignup = () => {
+    navigation.navigate(Route.navAuthentication, { screen: Route.navSignup });
+  };
+
   return (
     <View style={styles.mainCont}>
       <StatusBar
@@ -136,11 +143,13 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
       </View>
 
       <CustomButton
+        onPress={onPressSignup}
         title={"Create an account"}
         variant="primary"
         buttonWidth="full"
       />
       <CustomButton
+        onPress={onPressLogin}
         title={"Log in"}
         type="outline"
         buttonWidth="full"
