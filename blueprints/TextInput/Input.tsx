@@ -33,21 +33,21 @@ export const Input = React.memo(
   React.forwardRef((props: InputProps, ref?: React.Ref<RNTextInput | null>) => {
     const {
       backgroundColor = "white",
-      borderColor = "black",
+      borderColor = "rgba(138, 138, 138, 1)",
       error,
       errorContainerStyle,
       errorStyle,
       inputContainerStyle,
       inputStyle,
       label,
-      labelColor = "black",
+      labelColor = "rgba(138, 138, 138, 1)",
       leftIcon,
       leftIconContainerStyle,
       onBlur,
       onFocus,
       onFocusBackgroundColor = "#e9e9e9",
-      onFocusBorderColor = "#0c5fed",
-      onFocusLabelColor = "#0c5fed",
+      onFocusBorderColor = "rgba(138, 138, 138, 1)",
+      onFocusLabelColor = "rgba(138, 138, 138, 1)",
       onHoverBackgroundColor = "#e9e9e9",
       onMouseEnter,
       onMouseLeave,
@@ -145,7 +145,7 @@ export const Input = React.memo(
     const animatedInput = useAnimatedStyle(() => {
       return {
         fontSize: 16,
-        minHeight: variant === "standard" ? 48 : 56,
+        minHeight: variant === "standard" ? 48 : 53,
         paddingEnd: rightIcon ? 12 : variant === "standard" ? 0 : 16,
         paddingStart: leftIcon ? 12 : variant === "standard" ? 0 : 16,
         paddingTop: variant === "filled" && label ? 18 : 0,
@@ -168,16 +168,16 @@ export const Input = React.memo(
 
     const animatedOutline = useAnimatedStyle(() => {
       return {
-        borderBottomEndRadius: 4,
-        borderBottomStartRadius: 4,
+        borderBottomEndRadius: 8,
+        borderBottomStartRadius: 8,
         borderColor: focused.value
           ? onFocusBorderColor
           : hovered.value
           ? onFocusBorderColor
           : borderColor,
-        borderTopEndRadius: 4,
-        borderTopStartRadius: 4,
-        borderWidth: focused.value ? 2 : 1,
+        borderTopEndRadius: 8,
+        borderTopStartRadius: 8,
+        borderWidth: 1,
       };
     }, [focused.value, hovered.value]);
 
@@ -202,7 +202,7 @@ export const Input = React.memo(
           [0, 1],
           [labelColor, onFocusLabelColor]
         ),
-        fontSize: interpolate(activeAnimation.value, [0, 1], [16, 12]),
+        fontSize: interpolate(activeAnimation.value, [0, 1], [16, 13]),
         transform: [
           {
             translateY: interpolate(
@@ -267,7 +267,7 @@ export const Input = React.memo(
             ref={ref}
             style={[styles.input, animatedInput, inputStyle]}
             animatedProps={animatedPlaceholder}
-            placeholderTextColor={theme?.colors?.textColor}
+            placeholderTextColor={theme?.colors?.transparent}
             onFocus={handleFocus}
             onBlur={handleBlur}
             {...({
@@ -314,7 +314,7 @@ export const Input = React.memo(
               style={[styles.labelContainer, animatedLabelContainer]}
               pointerEvents="none"
             >
-              {variant === "outlined" && (
+              {/* {variant === "outlined" && (
                 <Animated.View
                   style={[
                     styles.outlineLabelGap,
@@ -322,7 +322,7 @@ export const Input = React.memo(
                     animatedOutlineLabelGap,
                   ]}
                 />
-              )}
+              )} */}
               <Animated.Text style={animatedLabel}>{label}</Animated.Text>
             </Animated.View>
           ) : null}

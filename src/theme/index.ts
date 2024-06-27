@@ -108,10 +108,10 @@ export const getTheme = (mode: "light" | "dark" = "dark") => {
       fs30: RFValue(30, SCREEN_HEIGHT),
     },
     fontFamily: {
-      light: "NunitoSans-Light",
-      regular: "NunitoSans-Regular",
-      medium: "NunitoSans-Medium",
-      bold: "NunitoSans-Bold",
+      light: "NunitoSans10pt-Light",
+      regular: "NunitoSans10pt-Regular",
+      medium: "NunitoSans10pt-Medium",
+      bold: "NunitoSans10pt-Bold",
     },
   };
   return theme;

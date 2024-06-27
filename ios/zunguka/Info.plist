@@ -39,10 +39,10 @@
 	<string/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>NunitoSans-Bold.ttf</string>
-		<string>NunitoSans-Light.ttf</string>
-		<string>NunitoSans-Medium.ttf</string>
-		<string>NunitoSans-Regular.ttf</string>
+		<string>NunitoSans10pt-Bold.ttf</string>
+		<string>NunitoSans10pt-Light.ttf</string>
+		<string>NunitoSans10pt-Medium.ttf</string>
+		<string>NunitoSans10pt-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>

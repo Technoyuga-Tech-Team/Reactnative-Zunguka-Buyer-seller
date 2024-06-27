@@ -1,39 +1,29 @@
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import {
-  Keyboard,
-  Platform,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { makeStyles, useTheme } from "react-native-elements";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
-import { AuthNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { getData } from "../../utils/asyncStorage";
-import { HAS_NOTCH, HIT_SLOP2, USER_ROLE } from "../../constant";
-import { LoginFormProps } from "../../types/authentication.types";
-import { LoginScreenSchema } from "../../constant/formValidations";
+import { Keyboard, StatusBar, Text, TextInput, View } from "react-native";
 import {
   CountryCode,
   TranslationLanguageCodeMap,
 } from "react-native-country-picker-modal";
+import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CustomButton from "../../components/ui/CustomButton";
-import SocialAuthenticationView from "../../components/ui/SocialAuth/SocialAuthenticationView";
-import { ThemeProps } from "../../types/global.types";
-import Scale from "../../utils/Scale";
-import { CustomTxtInput } from "../../components/ui/CustomTextInput";
-import ZungukaLogoIcon from "../../components/ui/svg/ZungukaLogoIcon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppImage } from "../../components/AppImage/AppImage";
 import CountryPickerModal from "../../components/ui/CountryPickerModal";
+import CustomButton from "../../components/ui/CustomButton";
+import { CustomTxtInput } from "../../components/ui/CustomTextInput";
 import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
+import SocialAuthenticationView from "../../components/ui/SocialAuth/SocialAuthenticationView";
+import { USER_ROLE } from "../../constant";
+import { LoginScreenSchema } from "../../constant/formValidations";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { LoginFormProps } from "../../types/authentication.types";
+import { ThemeProps } from "../../types/global.types";
+import { AuthNavigationProps } from "../../types/navigation";
+import Scale from "../../utils/Scale";
+import { getData } from "../../utils/asyncStorage";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
