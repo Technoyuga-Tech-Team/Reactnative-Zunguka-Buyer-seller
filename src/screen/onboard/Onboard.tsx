@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -97,10 +97,31 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
   };
 
   const onPressLogin = () => {
-    navigation.navigate(Route.navAuthentication);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navAuthentication }],
+      })
+    );
   };
   const onPressSignup = () => {
-    navigation.navigate(Route.navAuthentication, { screen: Route.navSignup });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: Route.navAuthentication,
+            state: {
+              routes: [
+                {
+                  name: Route.navSignup,
+                },
+              ],
+            },
+          },
+        ],
+      })
+    );
   };
 
   return (
