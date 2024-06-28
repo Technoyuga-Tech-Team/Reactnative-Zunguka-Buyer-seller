@@ -29,16 +29,22 @@ const Splash: React.FC<SplashScreenProps> = () => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [
-                {
-                  name: Route.navBuyerSellerStack,
-                  state: {
-                    routes: [{ name: Route.navDashboard }],
-                  },
-                },
-              ],
+              routes: [{ name: Route.navAuthentication }],
             })
           );
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [
+          //       {
+          //         name: Route.navBuyerSellerStack,
+          //         state: {
+          //           routes: [{ name: Route.navDashboard }],
+          //         },
+          //       },
+          //     ],
+          //   })
+          // );
         }, 2000);
       } else {
         if (await appAlreadyOpen()) {

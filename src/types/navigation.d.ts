@@ -8,6 +8,8 @@ export type AppRoutes = {
   Onboard: undefined;
   Splash: undefined;
   Authentication: undefined;
+  YourAddress: undefined;
+  ChooseAddress: undefined;
   Dashboard: undefined;
   Home: undefined;
   Search: undefined;
@@ -55,7 +57,9 @@ export type AuthenticationRoutes = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
-  EnterOTP: { phone?: string };
+  YourAddress: undefined;
+  ChooseAddress: undefined;
+  EnterOTP: { phone?: string; type: string };
   ChangePassword: undefined;
   Mainstack: undefined;
   Dashboard: undefined;

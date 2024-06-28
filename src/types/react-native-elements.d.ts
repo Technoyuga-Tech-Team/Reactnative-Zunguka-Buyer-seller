@@ -19,6 +19,8 @@ declare module "react-native-elements/dist/config/colors" {
     primaryLight: string;
     lightGrey: string;
     pinkDark: string;
+    overlay: string;
+    primaryLightest: string;
   }
 }
 

@@ -1,11 +1,13 @@
-import {combineReducers} from '@reduxjs/toolkit';
-import {RootReduxState} from '../types/store.types';
-import global from '../store/global/global.slice';
-import settings from '../store/settings/settings.slice';
+import { combineReducers } from "@reduxjs/toolkit";
+import { RootReduxState } from "../types/store.types";
+import global from "../store/global/global.slice";
+import settings from "../store/settings/settings.slice";
+import authentication from "../store/authentication/authentication.slice";
 
 const rootReducer = combineReducers<RootReduxState>({
   global,
   settings,
+  authentication,
 });
 
 export default rootReducer;

@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -37,6 +39,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSCameraUsageDescription</key>
+	<string>Need permission to access your camera</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need location permission for get location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need permission to save photos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NunitoSans10pt-Bold.ttf</string>

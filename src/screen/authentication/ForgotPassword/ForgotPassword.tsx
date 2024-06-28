@@ -38,7 +38,7 @@ const ForgotPassword: React.FC<
 
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
-  const [countryCode, setCountryCode] = useState<CountryCode>("US");
+  const [countryCode, setCountryCode] = useState<CountryCode>("RW");
   const [country, setCountry] = useState<string | TranslationLanguageCodeMap>(
     ""
   );

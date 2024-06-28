@@ -23,8 +23,8 @@ export const User_Role_Mover = "mover";
 /* when you sent a build please set to US*/
 export const CURRENT_COUNTRY_CODE = "US";
 
-// BASE_URL //
-export const BASE_PORT = "54.67.89.222";
+// BASE_URL // http://3.70.108.140/api/
+export const BASE_PORT = "3.70.108.140";
 export const SOCKET_PORT = `${BASE_PORT}:4000`;
 export const BASE_URL = `http://${BASE_PORT}/api`;
 export const SOCKET_URL = `http://${SOCKET_PORT}`;

@@ -16,10 +16,17 @@ import { HAS_NOTCH, HIT_SLOP } from "../../../constant";
 import BackIcon from "../../../components/ui/svg/BackIcon";
 import Scale from "../../../utils/Scale";
 import CustomButton from "../../../components/ui/CustomButton";
-import { ThemeProps } from "../../../types/global.types";
+import { LoadingState, ThemeProps } from "../../../types/global.types";
 import SmoothOtpInput from "../../../components/SmoothOtpInput";
 import { AppImage } from "../../../components/AppImage/AppImage";
 import LeftIcon from "../../../components/ui/svg/LeftIcon";
+import {
+  userOTPCode,
+  userResendOTP,
+} from "../../../store/authentication/authentication.thunks";
+import { setSuccess } from "../../../store/global/global.slice";
+import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
+import Loading from "../../../components/ui/Loading";
 
 const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   navigation,
@@ -30,9 +37,10 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
-  // const loading = useSelector(selectAuthenticationLoading);
+  const loading = useSelector(selectAuthenticationLoading);
 
-  const phone = route?.params?.phone || "+1 201 555 0123";
+  const phone = route?.params?.phone;
+  const type = route?.params?.type;
 
   const [time, setTime] = useState({ minutes: 1, seconds: 0 });
 
@@ -63,29 +71,21 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
 
   const onPressResendCode = async () => {
     let phone_number = phone && phone.replace(/ /g, "").replace("-", "");
-    let obj_forget_password = {
+
+    let obj = {
       phone_number: phone_number && phone_number.replace("-", ""),
-      type: "forget_password",
     };
 
-    let obj_phone = {
-      phone_number: phone_number && phone_number.replace("-", ""),
-      type: "otp_verification",
-    };
-    setTime({ seconds: 0, minutes: 1 });
-    // let payload = type === "forget_password" ? obj_forget_password : obj_phone;
-
-    // const result = await dispatch(userResendOTP(payload));
-    // if (userResendOTP.fulfilled.match(result)) {
-    //   if (result.payload.status === 1) {
-    //     setTime({ seconds: 0, minutes: 1 });
-
-    //     // dispatch(setSuccess(result.payload.message));
-    //     // navigation.navigate(Route.navResetPassword, { email: mail });
-    //   }
-    // } else {
-    //   console.log("errror userOTPCode --->", result.payload);
-    // }
+    const result = await dispatch(userResendOTP(obj));
+    console.log("result", result);
+    if (userResendOTP.fulfilled.match(result)) {
+      if (result?.payload?.status === 1) {
+        setTime({ seconds: 0, minutes: 1 });
+        dispatch(setSuccess(result.payload.message));
+      }
+    } else {
+      console.log("errror userOTPCode --->", result.payload);
+    }
   };
   const onPressBack = () => {
     navigation.goBack();
@@ -104,53 +104,45 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
     initialValues: { otp: "" },
     onSubmit: async ({ otp }) => {
       let phone_number = phone && phone.replace(/ /g, "").replace("-", "");
-      let obj_forget_password = {
+
+      let obj = {
         phone_number: phone_number && phone_number.replace("-", ""),
-        type: "forget_password",
+        type: type,
         code: otp,
       };
 
-      let obj_phone = {
-        phone_number: phone_number && phone_number.replace("-", ""),
-        type: "otp_verification",
-        code: otp,
-      };
-
-      // let payload =
-      //   type === "forget_password" ? obj_forget_password : obj_phone;
-
-      // const result = await dispatch(userOTPCode(payload));
-      // if (userOTPCode.fulfilled.match(result)) {
-      //   if (result.payload.status === 1) {
-      //     dispatch(setSuccess(result.payload.message));
-      //     if (type === "otp_verification") {
-      //       navigation.dispatch(
-      //         CommonActions.reset({
-      //           index: 0,
-      //           routes: [
-      //             {
-      //               name: Route.navAuthentication,
-      //             },
-      //           ],
-      //         })
-      //       );
-      //     } else {
-      //       navigation.navigate(Route.navResetPassword, {
-      //         phone: phone_number && phone_number.replace("-", ""),
-      //       });
-      //     }
-      //   }
-      // } else {
-      //   console.log("errror userOTPCode --->", result.payload);
-      // }
+      const result = await dispatch(userOTPCode(obj));
+      if (userOTPCode.fulfilled.match(result)) {
+        if (result?.payload?.status === 1) {
+          dispatch(setSuccess(result.payload.message));
+          if (type === "otp_verification") {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: Route.navAuthentication,
+                  },
+                ],
+              })
+            );
+          } else {
+            navigation.navigate(Route.navResetPassword, {
+              phone: phone_number && phone_number.replace("-", ""),
+            });
+          }
+        }
+      } else {
+        console.log("errror userOTPCode --->", result.payload);
+      }
     },
   });
 
   useEffect(() => {
     if (values.otp) {
       if (values.otp.length === 6) {
-        // Keyboard.dismiss();
-        // handleSubmit();
+        Keyboard.dismiss();
+        handleSubmit();
       }
     }
   }, [values.otp]);
@@ -162,7 +154,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={style.container}
     >
-      {/* {loading === LoadingState.CREATE && <Loading />} */}
+      {loading === LoadingState.CREATE && <Loading />}
       <View
         style={{
           flexDirection: "row",

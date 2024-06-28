@@ -46,7 +46,7 @@ export interface AuthenticationState {
   oAuthLoading: AuthLoadingState;
 }
 
-export type authorisation = {
+export type authorization = {
   token: string;
   type: string;
 };
@@ -54,7 +54,7 @@ export type authorisation = {
 export type TokenPayload = {
   message: string;
   data: UserData;
-  authorisation: authorisation;
+  authorization: authorization;
   status: number;
 };
 

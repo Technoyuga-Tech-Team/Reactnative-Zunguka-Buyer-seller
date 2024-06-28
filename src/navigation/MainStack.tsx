@@ -9,6 +9,8 @@ import Splash from "../screen/Splash";
 import Onboard from "../screen/onboard/Onboard";
 import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
+import YourAddress from "../screen/authentication/AddAddress/YourAddress";
+import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -28,6 +30,8 @@ const MainStack = () => {
           name={Route.navAuthentication}
           component={Authentication}
         />
+        <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
+        <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
       </Stack.Navigator>
     </GestureHandlerRootView>
   );
