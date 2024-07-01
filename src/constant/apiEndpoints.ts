@@ -9,6 +9,11 @@ export const API = {
   RESET_PASSWORD: "/reset-password",
   RESEND_OTP: "/send-otp",
   VERIFY_OTP_CODE: "/verify-code",
+  // Address
+  ADD_ADDRESS: "/add-address",
+  // Verify ID (kyc)
+  VERIFY_KYC: "/verify-kyc",
+
   // profile
   UPDATE_PROFILE: "/profile",
   UPDATE_PROFILE_PICTURE: "/profile",

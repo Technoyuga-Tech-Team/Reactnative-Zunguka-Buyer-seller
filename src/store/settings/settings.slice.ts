@@ -68,6 +68,7 @@ const initialState: SettingsStateProps = {
     id_type: null,
   },
   errorFromSocial: false,
+  address: "",
 };
 
 const settings = createSlice({
@@ -86,9 +87,13 @@ const settings = createSlice({
     setErrorFromSocial: (state, action: PayloadAction<boolean>) => {
       state.errorFromSocial = action.payload;
     },
+    saveAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
   },
 });
 
-export const { isDarkMode, setUserData, setErrorFromSocial } = settings.actions;
+export const { isDarkMode, setUserData, setErrorFromSocial, saveAddress } =
+  settings.actions;
 
 export default settings.reducer;

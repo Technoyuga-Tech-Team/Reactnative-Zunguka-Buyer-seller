@@ -37,8 +37,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSCameraUsageDescription</key>
 	<string>Need permission to access your camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

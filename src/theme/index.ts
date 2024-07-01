@@ -19,6 +19,11 @@ const LightThemeColor = {
   lightGrey: "rgba(187, 190, 197, 1)",
   pinkDark: "#E43E2B",
   overlay: "rgba(40, 40, 40, 0.5)",
+  purple: "#414B70",
+  border: "#B2B5C433",
+  aqua: "#67C2C9",
+  lightBg: "#F1F1F1",
+  unselectedIconColor: "#A3ADB7",
 };
 const DarkThemeColor = {
   primary: "#F3B241",
@@ -37,6 +42,11 @@ const DarkThemeColor = {
   lightGrey: "rgba(187, 190, 197, 1)",
   pinkDark: "#E43E2B",
   overlay: "rgba(40, 40, 40, 0.5)",
+  purple: "#414B70",
+  border: "#B2B5C433",
+  aqua: "#67C2C9",
+  lightBg: "#F1F1F1",
+  unselectedIconColor: "#A3ADB7",
 };
 
 export const getTheme = (mode: "light" | "dark" = "dark") => {

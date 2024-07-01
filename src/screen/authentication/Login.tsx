@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import {
@@ -122,11 +122,20 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
       if (userLogin.fulfilled.match(result)) {
         if (result.payload?.status == 1) {
           let steps = result.payload?.user?.step;
-          console.log("steps", steps);
-          if (steps == 0) {
-            navigation.navigate(Route.navYourAddress);
-          } else if (steps == 1) {
-            // navigate to add kyc
+          console.log("USER", result.payload?.user);
+          if (steps !== 2) {
+            if (steps == 0) {
+              navigation.navigate(Route.navYourAddress);
+            } else if (steps == 1) {
+              navigation.navigate(Route.navAddKyc);
+            }
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
           }
         }
       } else {
@@ -139,6 +148,9 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
             });
           }
           if (result.payload?.status === 4) {
+            if (result.payload?.step == 1) {
+              navigation.navigate(Route.navAddKyc);
+            }
           }
         }
       }

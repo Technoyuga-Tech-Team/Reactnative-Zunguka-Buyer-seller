@@ -11,6 +11,8 @@ import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import YourAddress from "../screen/authentication/AddAddress/YourAddress";
 import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
+import AddKyc from "../screen/authentication/Add kyc/AddKyc";
+import Bottombar from "./Bottombar/Bottombar";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -30,8 +32,10 @@ const MainStack = () => {
           name={Route.navAuthentication}
           component={Authentication}
         />
+        <Stack.Screen name={Route.navDashboard} component={Bottombar} />
         <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
         <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
+        <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
       </Stack.Navigator>
     </GestureHandlerRootView>
   );

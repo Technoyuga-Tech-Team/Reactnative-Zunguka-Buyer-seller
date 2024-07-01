@@ -257,3 +257,18 @@ export const SetupProfile7ScreenSchema = Yup.object().shape({
       NO_SPECIAL_CHAR.test(value)
     ),
 });
+
+// Add Address
+export const AddAddressScreenSchema = (gpsAddressHave: number) => {
+  return Yup.object().shape({
+    gpsAddress:
+      gpsAddressHave == 1
+        ? Yup.string().required("Address is required")
+        : Yup.string().notRequired(),
+    streetAddress: Yup.string().notRequired(),
+    streetAddress1: Yup.string().notRequired(),
+    country: Yup.string().notRequired(),
+    city: Yup.string().notRequired(),
+    zipcode: Yup.string().notRequired(),
+  });
+};

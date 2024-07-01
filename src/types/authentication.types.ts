@@ -63,3 +63,14 @@ export type TokenPayload1 = {
   data: any;
   status: number;
 };
+
+// ADD Address
+
+export interface AddAddressProps {
+  gpsAddress: string;
+  streetAddress: string;
+  streetAddress1: string;
+  city: string;
+  country: string;
+  zipcode: string;
+}

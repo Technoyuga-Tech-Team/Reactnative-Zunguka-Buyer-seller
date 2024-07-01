@@ -10,6 +10,7 @@ export type AppRoutes = {
   Authentication: undefined;
   YourAddress: undefined;
   ChooseAddress: undefined;
+  AddKyc: undefined;
   Dashboard: undefined;
   Home: undefined;
   Search: undefined;
@@ -58,6 +59,7 @@ export type AuthenticationRoutes = {
   Signup: undefined;
   ForgotPassword: undefined;
   YourAddress: undefined;
+  AddKyc: undefined;
   ChooseAddress: undefined;
   EnterOTP: { phone?: string; type: string };
   ChangePassword: undefined;
@@ -66,6 +68,14 @@ export type AuthenticationRoutes = {
   Authentication: undefined;
   ResetPassword: { phone?: string; email?: string };
   ChangePassword: undefined;
+};
+
+export type BottomRoutes = {
+  Home: undefined;
+  Favourites: undefined;
+  Sell: undefined;
+  Inbox: undefined;
+  Profile: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

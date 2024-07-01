@@ -16,3 +16,8 @@ export const selectSocialError = createSelector(
   [selectSettings],
   (settings) => settings.errorFromSocial
 );
+
+export const getSavedAddress = createSelector(
+  [selectSettings],
+  (settings) => settings.address
+);

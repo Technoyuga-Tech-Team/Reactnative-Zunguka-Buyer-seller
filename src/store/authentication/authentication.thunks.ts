@@ -440,3 +440,79 @@ export const logout = createAsyncThunk<
 
   return null;
 });
+
+// Add Address
+
+export const userAddress = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "authentication/userAddress",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.ADD_ADDRESS,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    if (data?.authorization) {
+      dispatch(setUserData(data?.user));
+      setData(USER_DATA, data?.user);
+      await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
+    }
+
+    return data;
+  }
+);
+// Add KYC
+export const userVerifyId = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "authentication/userVerifyId",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.VERIFY_KYC,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    if (data?.authorization) {
+      dispatch(setUserData(data?.user));
+      setData(USER_DATA, data?.user);
+      await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
+    }
+
+    return data;
+  }
+);
