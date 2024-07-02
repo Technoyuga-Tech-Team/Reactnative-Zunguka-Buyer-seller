@@ -1,14 +1,6 @@
-import { CommonActions } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import {
-  Keyboard,
-  Platform,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Keyboard, Platform, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -18,37 +10,32 @@ import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { AuthNavigationProps } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { selectUserData } from "../../store/settings/settings.selectors";
 import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
-import { ResetPasswordFormProps } from "../../types/authentication.types";
-import { ResetPasswordScreenSchema } from "../../constant/formValidations";
-import { getData } from "../../utils/asyncStorage";
-import { HAS_NOTCH, HIT_SLOP, USER_ROLE } from "../../constant";
-import { userResetPassword } from "../../store/authentication/authentication.thunks";
+import { ChangePasswordFormProps } from "../../types/authentication.types";
+import { ChangePasswordScreenSchema } from "../../constant/formValidations";
+import { userChangePassword } from "../../store/authentication/authentication.thunks";
+import { setSuccess } from "../../store/global/global.slice";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import Loading from "../../components/ui/Loading";
-import BackIcon from "../../components/ui/svg/BackIcon";
+import CustomHeader from "../../components/ui/CustomHeader";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
 import CustomButton from "../../components/ui/CustomButton";
-import PasswordChangePopup from "../../components/ui/popups/PasswordChangePopup";
-import LeftIcon from "../../components/ui/svg/LeftIcon";
-import { AppImage } from "../../components/AppImage/AppImage";
-import Scale from "../../utils/Scale";
+import { HAS_NOTCH } from "../../constant";
 
-const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
-  navigation,
-  route,
-}) => {
+const ChangePassword: React.FC<
+  AuthNavigationProps<Route.navChangePassword>
+> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-
-  const phone = route?.params?.phone;
-  const dispatch = useAppDispatch();
-  const loading = useSelector(selectAuthenticationLoading);
-
+  const passwordRef = React.useRef<TextInput>(null);
   const confirmPasswordRef = React.useRef<TextInput>(null);
 
-  const [visible, setVisible] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const userData = useSelector(selectUserData);
+  const loading = useSelector(selectAuthenticationLoading);
 
   useEffect(() => {
     setAdjustResize();
@@ -56,24 +43,6 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
       setAdjustPan();
     };
   }, []);
-
-  const onPressBack = () => {
-    navigation.goBack();
-  };
-  const togglePopup = () => {
-    setVisible(!visible);
-  };
-  const onPressBackToLogin = () => {
-    togglePopup();
-    setTimeout(() => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: Route.navAuthentication }],
-        })
-      );
-    }, 200);
-  };
 
   const {
     handleChange,
@@ -83,21 +52,26 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
     errors,
     isValid,
     handleSubmit,
-  } = useFormik<ResetPasswordFormProps>({
-    validationSchema: ResetPasswordScreenSchema,
-    initialValues: { password: "", confirmPassword: "" },
-    onSubmit: async ({ password, confirmPassword }) => {
-      const u_role = await getData(USER_ROLE);
+    setErrors,
+    setFieldError,
+  } = useFormik<ChangePasswordFormProps>({
+    validationSchema: ChangePasswordScreenSchema,
+    initialValues: { currentPassword: "", password: "", confirmPassword: "" },
+    onSubmit: async ({ currentPassword, password, confirmPassword }) => {
       const result = await dispatch(
-        userResetPassword({ phone_number: phone, password })
+        userChangePassword({
+          old_password: currentPassword,
+          password,
+        })
       );
-      if (userResetPassword.fulfilled.match(result)) {
+      if (userChangePassword.fulfilled.match(result)) {
         if (result.payload.status === 1) {
-          setVisible(true);
-          // navigation.navigate(Route.navResetPassword, { email: mail });
+          dispatch(setSuccess(result.payload.message));
+          navigation.goBack();
         }
       } else {
-        console.log("errror userResetPassword --->", result.payload);
+        console.log("errror userChangePassword --->", result.payload);
+        setFieldError("currentPassword", result.payload?.message);
       }
     },
   });
@@ -110,29 +84,27 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
     >
       {loading === LoadingState.CREATE && <Loading />}
 
-      <TouchableOpacity
-        onPress={onPressBack}
-        hitSlop={HIT_SLOP}
-        style={style.backBtnCont}
-      >
-        <LeftIcon color={theme.colors?.black} />
-      </TouchableOpacity>
-      <View style={style.iconCont}>
-        <AppImage
-          source={require("../../assets/images/roundedLogo.png")}
-          resizeMode="contain"
-          style={style.appIcon}
-        />
-      </View>
-      <Text style={style.txtVerificationCode}>Reset Password</Text>
-      <Text style={style.txtVerificationSentCode}>
-        Your new password must be unique.
-      </Text>
+      <CustomHeader title="Change Password" />
 
       <View style={style.otpInputCont}>
         <CustomTxtInput
-          textInputTitle="New Password"
-          placeholder="New password"
+          textInputTitle="Current Password"
+          placeholder="Enter current password"
+          onChangeText={handleChange("currentPassword")}
+          onBlur={handleBlur("currentPassword")}
+          value={values.currentPassword}
+          error={errors.currentPassword}
+          touched={touched.currentPassword}
+          returnKeyLabel="next"
+          returnKeyType="next"
+          rightIcon={true}
+          textContentType="oneTimeCode"
+          onSubmitEditing={() => passwordRef.current?.focus()}
+        />
+        <CustomTxtInput
+          textInputTitle="Create Password"
+          placeholder="Enter password"
+          ref={passwordRef}
           onChangeText={handleChange("password")}
           onBlur={handleBlur("password")}
           value={values.password}
@@ -145,8 +117,8 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
           onSubmitEditing={() => confirmPasswordRef.current?.focus()}
         />
         <CustomTxtInput
-          textInputTitle="Confirm New Password"
-          placeholder="Confirm New Password"
+          textInputTitle="Confirm Password"
+          placeholder="Enter confirm password"
           ref={confirmPasswordRef}
           onChangeText={handleChange("confirmPassword")}
           onBlur={handleBlur("confirmPassword")}
@@ -166,22 +138,17 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
             Keyboard.dismiss();
             handleSubmit();
           }}
-          title={"Continue"}
+          title={"Change Password"}
           buttonWidth="full"
           variant="primary"
           type="solid"
         />
       </View>
-      <PasswordChangePopup
-        visiblePopup={visible}
-        togglePopup={togglePopup}
-        onPressBackToLogin={onPressBackToLogin}
-      />
     </KeyboardAwareScrollView>
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
@@ -190,21 +157,19 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     backgroundColor: theme.colors?.background,
     paddingHorizontal: 20,
   },
-  txtVerificationCode: {
+  txtTitle: {
     fontSize: theme.fontSize?.fs20,
-    fontFamily: theme.fontFamily?.bold,
+    fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.black,
-    textAlign: "center",
   },
   backBtnCont: {
-    marginVertical: 10,
+    marginVertical: 30,
   },
   txtVerificationSentCode: {
-    fontSize: theme.fontSize?.fs12,
+    fontSize: theme.fontSize?.fs16,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.secondaryText,
-    marginTop: 10,
-    textAlign: "center",
+    marginTop: 20,
   },
   otpInputCont: {
     flex: 1,
@@ -236,9 +201,10 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs12,
     color: theme.colors?.error,
   },
-  iconCont: { alignSelf: "center", marginBottom: 20 },
-  appIcon: {
-    height: Scale(96),
-    width: Scale(96),
+  iconCont: { alignSelf: "center", marginVertical: 30 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 }));

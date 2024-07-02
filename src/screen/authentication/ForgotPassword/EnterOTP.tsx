@@ -27,6 +27,7 @@ import {
 import { setSuccess } from "../../../store/global/global.slice";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import Loading from "../../../components/ui/Loading";
+import { saveAddress } from "../../../store/settings/settings.slice";
 
 const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   navigation,
@@ -116,6 +117,13 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
         if (result?.payload?.status === 1) {
           dispatch(setSuccess(result.payload.message));
           if (type === "otp_verification") {
+            dispatch(saveAddress(""));
+            // navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [{ name: Route.navYourAddress }],
+            //   })
+            // );
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,

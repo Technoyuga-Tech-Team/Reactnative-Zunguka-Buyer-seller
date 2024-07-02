@@ -37,6 +37,7 @@ export interface ChangePasswordFormProps {
 export interface EditProfileFormProps {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   phoneNumber: string;
 }
@@ -54,6 +55,8 @@ export type authorization = {
 export type TokenPayload = {
   message: string;
   data: UserData;
+  is_profile_completed: number;
+  step: number;
   authorization: authorization;
   status: number;
 };

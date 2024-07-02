@@ -1632,4 +1632,5 @@ export const ID_TYPES = [
   { title: "Passport", key: "Passport" },
   { title: "National ID Card", key: "National ID Card" },
   { title: "Pancard", key: "Pancard" },
+  { title: "Driver's License", key: "Driver's License" },
 ];

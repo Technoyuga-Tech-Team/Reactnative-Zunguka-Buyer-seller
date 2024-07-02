@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Platform, Text, View } from "react-native";
+import { Platform, Text, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,6 +22,8 @@ import { AuthNavigationProps } from "../../../types/navigation";
 import { getUrlExtension } from "../../../utils";
 import { userAddress } from "../../../store/authentication/authentication.thunks";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
+import { CommonActions } from "@react-navigation/native";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 
 const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   navigation,
@@ -30,15 +32,26 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+
+  const st1Ref = React.useRef<TextInput>(null);
+  const cityRef = React.useRef<TextInput>(null);
+  const countryRef = React.useRef<TextInput>(null);
+  const zipRef = React.useRef<TextInput>(null);
+
   const savedAddress = useSelector(getSavedAddress);
   const loading = useSelector(selectAuthenticationLoading);
-
-  console.log("savedAddress", savedAddress);
 
   const [houseImage, setHouseImages] = useState<imagePickerProps[]>([]);
   const [productImageError, setProductImageError] = useState<string>("");
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
+
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   useEffect(() => {
     if (savedAddress) {
@@ -86,7 +99,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
       formData.append("street_address_2", `${streetAddress1}`);
       formData.append("country", `${country}`);
       formData.append("city", `${city}`);
-      formData.append("zipcode", `${zipcode}`);
+      formData.append("zip_code", `${zipcode}`);
 
       Object.entries(houseImage).forEach(([_key, val]) => {
         formData.append(`house_images[${_key}]`, {
@@ -97,13 +110,14 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
         });
       });
-
+      console.log("formData", JSON.stringify(formData));
       const result = await dispatch(userAddress({ formData: formData }));
 
       if (userAddress.fulfilled.match(result)) {
         if (result.payload.status === 1) {
           console.log("userAddress result - - - ", result.payload);
           dispatch(setSuccess(result.payload.message));
+          navigation.navigate(Route.navAddKyc);
         }
       } else {
         console.log("userAddress error - - - ", result.payload);
@@ -111,9 +125,26 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
     },
   });
 
+  const onPressBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navAuthentication }],
+        })
+      );
+    }
+  };
+
   return (
     <View style={style.container}>
-      <CustomHeader title="Your address" />
+      <CustomHeader
+        title="Your address"
+        isOutsideBack={true}
+        onPressBackBtn={onPressBack}
+      />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}
         showsVerticalScrollIndicator={false}
@@ -153,57 +184,65 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           <CustomTxtInput
             textInputTitle="Street address"
             placeholder="Street address"
-            // onChangeText={handleChange("password")}
-            // onBlur={handleBlur("password")}
-            // value={values.password}
-            // error={errors.password}
-            // touched={touched.password}
+            onChangeText={handleChange("streetAddress")}
+            onBlur={handleBlur("streetAddress")}
+            value={values.streetAddress}
+            error={errors.streetAddress}
+            touched={touched.streetAddress}
             returnKeyLabel="next"
             returnKeyType="next"
+            onSubmitEditing={() => st1Ref.current?.focus()}
           />
           <CustomTxtInput
+            ref={st1Ref}
             textInputTitle="Apt, suites, etc"
             placeholder="Apt, suites, etc"
-            // onChangeText={handleChange("password")}
-            // onBlur={handleBlur("password")}
-            // value={values.password}
-            // error={errors.password}
-            // touched={touched.password}
+            onChangeText={handleChange("streetAddress1")}
+            onBlur={handleBlur("streetAddress1")}
+            value={values.streetAddress1}
+            error={errors.streetAddress1}
+            touched={touched.streetAddress1}
             returnKeyLabel="next"
             returnKeyType="next"
+            onSubmitEditing={() => cityRef.current?.focus()}
           />
           <CustomTxtInput
+            ref={cityRef}
             textInputTitle="City"
             placeholder="City"
-            // onChangeText={handleChange("password")}
-            // onBlur={handleBlur("password")}
-            // value={values.password}
-            // error={errors.password}
-            // touched={touched.password}
+            onChangeText={handleChange("city")}
+            onBlur={handleBlur("city")}
+            value={values.city}
+            error={errors.city}
+            touched={touched.city}
             returnKeyLabel="next"
             returnKeyType="next"
+            onSubmitEditing={() => countryRef.current?.focus()}
           />
           <CustomTxtInput
+            ref={countryRef}
             textInputTitle="Country"
             placeholder="Country"
-            // onChangeText={handleChange("password")}
-            // onBlur={handleBlur("password")}
-            // value={values.password}
-            // error={errors.password}
-            // touched={touched.password}
+            onChangeText={handleChange("country")}
+            onBlur={handleBlur("country")}
+            value={values.country}
+            error={errors.country}
+            touched={touched.country}
             returnKeyLabel="next"
             returnKeyType="next"
+            onSubmitEditing={() => zipRef.current?.focus()}
           />
           <CustomTxtInput
+            ref={zipRef}
             textInputTitle="Zip Code"
             placeholder="Zip Code"
-            // onChangeText={handleChange("password")}
-            // onBlur={handleBlur("password")}
-            // value={values.password}
-            // error={errors.password}
-            // touched={touched.password}
-            returnKeyLabel="next"
-            returnKeyType="next"
+            onChangeText={handleChange("zipcode")}
+            onBlur={handleBlur("zipcode")}
+            value={values.zipcode}
+            error={errors.zipcode}
+            touched={touched.zipcode}
+            returnKeyLabel="done"
+            returnKeyType="done"
           />
         </View>
       </KeyboardAwareScrollView>
@@ -227,7 +266,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
         buttonWidth="full"
         variant="primary"
         type="solid"
-        disabled={!isValid || loading === LoadingState.CREATE}
+        disabled={loading === LoadingState.CREATE}
         loading={loading === LoadingState.CREATE}
       />
     </View>

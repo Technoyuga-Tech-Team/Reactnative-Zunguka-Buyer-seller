@@ -19,11 +19,16 @@ import { ForgotPasswordScreenSchema } from "../../../constant/formValidations";
 import { Route } from "../../../constant/navigationConstants";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { ForgotPasswordFormProps } from "../../../types/authentication.types";
-import { ThemeProps } from "../../../types/global.types";
+import { LoadingState, ThemeProps } from "../../../types/global.types";
 import { AuthNavigationProps } from "../../../types/navigation";
 import Scale from "../../../utils/Scale";
 import { AppImage } from "../../../components/AppImage/AppImage";
 import LeftIcon from "../../../components/ui/svg/LeftIcon";
+import Loading from "../../../components/ui/Loading";
+import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
+import { useSelector } from "react-redux";
+import { userForgotPassword } from "../../../store/authentication/authentication.thunks";
+import { setSuccess } from "../../../store/global/global.slice";
 
 const ForgotPassword: React.FC<
   AuthNavigationProps<Route.navForgotPassword>
@@ -34,7 +39,7 @@ const ForgotPassword: React.FC<
   const dispatch = useAppDispatch();
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
 
-  // const loading = useSelector(selectAuthenticationLoading);
+  const loading = useSelector(selectAuthenticationLoading);
 
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
@@ -90,23 +95,23 @@ const ForgotPassword: React.FC<
     initialValues: { phoneNumber: "" },
     onSubmit: async ({ phoneNumber }) => {
       let phone_number = phoneNumber.replace(/ /g, "").replace("-", "");
-      // const result = await dispatch(
-      //   userForgotPassword({
-      //     phone_number: phone_number.replace("-", ""),
-      //   })
-      // );
-      // if (userForgotPassword.fulfilled.match(result)) {
-      //   console.log("result userForgotPassword --->", result.payload);
-      //   if (result.payload.status === 1) {
-      //     dispatch(setSuccess(result.payload.message));
-      //     navigation.navigate(Route.navEnterOTP, {
-      //       phone: phone_number,
-      //       type: "forget_password",
-      //     });
-      //   }
-      // } else {
-      //   console.log("errror userForgotPassword --->", result.payload);
-      // }
+      const result = await dispatch(
+        userForgotPassword({
+          phone_number: phone_number.replace("-", ""),
+        })
+      );
+      if (userForgotPassword.fulfilled.match(result)) {
+        console.log("result userForgotPassword --->", result.payload);
+        if (result.payload.status === 1) {
+          dispatch(setSuccess(result.payload.message));
+          navigation.navigate(Route.navEnterOTP, {
+            phone: phone_number,
+            type: "forget_password",
+          });
+        }
+      } else {
+        console.log("errror userForgotPassword --->", result.payload);
+      }
     },
   });
 
@@ -116,7 +121,7 @@ const ForgotPassword: React.FC<
       keyboardShouldPersistTaps={"handled"}
       contentContainerStyle={style.container}
     >
-      {/* {loading && <Loading />} */}
+      {loading === LoadingState.CREATE && <Loading />}
       <TouchableOpacity
         onPress={onPressBack}
         hitSlop={HIT_SLOP}
@@ -178,16 +183,15 @@ const ForgotPassword: React.FC<
       <View style={style.bottomCont}>
         <CustomButton
           onPress={() => {
-            navigation.navigate(Route.navEnterOTP);
-            // Keyboard.dismiss();
-            // handleSubmit();
+            Keyboard.dismiss();
+            handleSubmit();
           }}
           title={"Request code "}
           buttonWidth="full"
           variant="primary"
           type="solid"
-          // disabled={!isValid || loading === LoadingState.CREATE}
-          // loading={loading === LoadingState.CREATE}
+          disabled={!isValid || loading === LoadingState.CREATE}
+          loading={loading === LoadingState.CREATE}
         />
       </View>
     </KeyboardAwareScrollView>

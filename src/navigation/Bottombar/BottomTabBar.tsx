@@ -205,12 +205,10 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
   },
   txtRouteName: {
     fontSize: theme.fontSize?.fs12,
-    fontFamily: theme.fontFamily?.medium,
+    fontFamily: theme.fontFamily?.regular,
     marginTop: 5,
-    letterSpacing: 0.8,
   },
   circlePlusCont: {
-    // position: "absolute",
     marginBottom: 25,
   },
 }));

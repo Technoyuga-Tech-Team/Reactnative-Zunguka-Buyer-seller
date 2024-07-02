@@ -24,6 +24,7 @@ const LightThemeColor = {
   aqua: "#67C2C9",
   lightBg: "#F1F1F1",
   unselectedIconColor: "#A3ADB7",
+  red: "#FF2626",
 };
 const DarkThemeColor = {
   primary: "#F3B241",
@@ -47,6 +48,7 @@ const DarkThemeColor = {
   aqua: "#67C2C9",
   lightBg: "#F1F1F1",
   unselectedIconColor: "#A3ADB7",
+  red: "#FF2626",
 };
 
 export const getTheme = (mode: "light" | "dark" = "dark") => {

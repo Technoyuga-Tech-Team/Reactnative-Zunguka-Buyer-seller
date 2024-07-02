@@ -26,6 +26,7 @@ declare module "react-native-elements/dist/config/colors" {
     aqua: string;
     lightBg: string;
     unselectedIconColor: string;
+    red: string;
   }
 }
 

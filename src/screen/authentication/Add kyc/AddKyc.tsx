@@ -26,6 +26,7 @@ import { userVerifyId } from "../../../store/authentication/authentication.thunk
 import { setErrors, setSuccess } from "../../../store/global/global.slice";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import { useSelector } from "react-redux";
+import { CommonActions } from "@react-navigation/native";
 
 const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   navigation,
@@ -159,6 +160,12 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
           if (result.payload.status === 1) {
             console.log("userAddress result - - - ", result.payload);
             dispatch(setSuccess(result.payload.message));
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
           }
         } else {
           console.log("userAddress error - - - ", result.payload);
@@ -169,9 +176,26 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
     }
   };
 
+  const onPressBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navAuthentication }],
+        })
+      );
+    }
+  };
+
   return (
     <View style={style.container}>
-      <CustomHeader title="Verify your ID(KYC)" />
+      <CustomHeader
+        title="Verify your ID(KYC)"
+        isOutsideBack={true}
+        onPressBackBtn={onPressBack}
+      />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}
         showsVerticalScrollIndicator={false}

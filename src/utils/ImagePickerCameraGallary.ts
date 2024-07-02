@@ -8,8 +8,8 @@ const requestCameraPermission = async () => {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
       {
-        title: "Hus-app Camera Permission",
-        message: "Hus-app needs access to your camera ",
+        title: "Zunguka-app Camera Permission",
+        message: "Zunguka-app needs access to your camera ",
         buttonNeutral: "Ask Me Later",
         buttonNegative: "Cancel",
         buttonPositive: "OK",

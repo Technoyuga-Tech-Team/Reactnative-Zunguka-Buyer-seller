@@ -23,6 +23,7 @@ export type AppRoutes = {
   ChangePassword: undefined;
   SavedItems: undefined;
   PurchasedHistory: undefined;
+  ResetPassword: undefined;
   Messaging: undefined;
   Chatroom: undefined;
   ProductDetails: undefined;
@@ -78,6 +79,16 @@ export type BottomRoutes = {
   Profile: undefined;
 };
 
+export type HomeRoutes = {
+  Home: undefined;
+  Favourites: undefined;
+  Sell: undefined;
+  Inbox: undefined;
+  Profile: undefined;
+  EditProfile: undefined;
+  ChangePassword: undefined;
+};
+
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {
   navigation: NativeStackNavigationProp<AppRoutes, "Splash">;
   route: RouteProp<AppRoutes, RouteName>;
@@ -88,4 +99,9 @@ export interface AuthNavigationProps<
 > {
   navigation: NativeStackNavigationProp<AuthenticationRoutes, RouteName>;
   route: RouteProp<AuthenticationRoutes, RouteName>;
+}
+
+export interface HomeNavigationProps<RouteName extends keyof HomeRoutes> {
+  navigation: NativeStackNavigationProp<HomeRoutes, RouteName>;
+  route: RouteProp<HomeRoutes, RouteName>;
 }

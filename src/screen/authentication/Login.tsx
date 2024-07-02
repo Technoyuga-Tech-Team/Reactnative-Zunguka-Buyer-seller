@@ -38,6 +38,7 @@ import { userLogin } from "../../store/authentication/authentication.thunks";
 import Loading from "../../components/ui/Loading";
 import { useSelector } from "react-redux";
 import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import { saveAddress } from "../../store/settings/settings.slice";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -120,11 +121,13 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         })
       );
       if (userLogin.fulfilled.match(result)) {
+        console.log("result.payload", result.payload);
+
         if (result.payload?.status == 1) {
-          let steps = result.payload?.user?.step;
-          console.log("USER", result.payload?.user);
+          let steps = result.payload?.user?.step || result.payload?.step;
           if (steps !== 2) {
             if (steps == 0) {
+              dispatch(saveAddress(""));
               navigation.navigate(Route.navYourAddress);
             } else if (steps == 1) {
               navigation.navigate(Route.navAddKyc);
@@ -151,6 +154,12 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
             if (result.payload?.step == 1) {
               navigation.navigate(Route.navAddKyc);
             }
+          }
+          if (result.payload?.step == 0) {
+            navigation.navigate(Route.navYourAddress);
+          }
+          if (result.payload?.step == 1) {
+            navigation.navigate(Route.navAddKyc);
           }
         }
       }

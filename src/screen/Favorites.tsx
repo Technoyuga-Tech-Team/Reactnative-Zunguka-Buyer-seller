@@ -4,18 +4,18 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
 import { ThemeProps } from "../types/global.types";
 
-const Home = () => {
+const Favorites = () => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   return (
     <View style={style.container}>
-      <Text>Home</Text>
+      <Text>Favorites</Text>
     </View>
   );
 };
 
-export default Home;
+export default Favorites;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {

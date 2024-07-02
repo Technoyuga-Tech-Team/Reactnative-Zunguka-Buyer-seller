@@ -5,6 +5,10 @@ import RNBootSplash from "react-native-bootsplash";
 import { BottomRoutes } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import Home from "../../screen/Home";
+import Profile from "../../screen/profile/Profile";
+import Favorites from "../../screen/Favorites";
+import Sell from "../../screen/sell/Sell";
+import Inbox from "../../screen/Inbox/Inbox";
 
 const Bottombar = () => {
   const Tab = createBottomTabNavigator<BottomRoutes>();
@@ -22,10 +26,10 @@ const Bottombar = () => {
       tabBar={(props) => <BottomTabBar {...props} />}
     >
       <Tab.Screen name={Route.navHome} component={Home} />
-      <Tab.Screen name={Route.navFavourites} component={Home} />
-      <Tab.Screen name={Route.navSell} component={Home} />
-      <Tab.Screen name={Route.navInbox} component={Home} />
-      <Tab.Screen name={Route.navProfile} component={Home} />
+      <Tab.Screen name={Route.navFavourites} component={Favorites} />
+      <Tab.Screen name={Route.navSell} component={Sell} />
+      <Tab.Screen name={Route.navInbox} component={Inbox} />
+      <Tab.Screen name={Route.navProfile} component={Profile} />
     </Tab.Navigator>
   );
 };

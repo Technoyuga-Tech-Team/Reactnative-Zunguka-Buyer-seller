@@ -198,7 +198,7 @@ export const userOTPCode = createAsyncThunk<
 );
 
 export const userChangePassword = createAsyncThunk<
-  TokenPayload1,
+  any,
   { old_password: string; password: string },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(

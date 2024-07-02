@@ -79,6 +79,11 @@ export const EditProfileScreenSchema = (countryCode: CountryCode) => {
       .test("noSpecialChars", no_specialChar_space_allow, (value) =>
         NO_SPECIAL_CHAR.test(value)
       ),
+    username: Yup.string()
+      .required("Username is required")
+      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
+        NO_SPECIAL_CHAR.test(value)
+      ),
     email: Yup.string()
       .trim()
       .email("Invalid email address")
@@ -261,14 +266,11 @@ export const SetupProfile7ScreenSchema = Yup.object().shape({
 // Add Address
 export const AddAddressScreenSchema = (gpsAddressHave: number) => {
   return Yup.object().shape({
-    gpsAddress:
-      gpsAddressHave == 1
-        ? Yup.string().required("Address is required")
-        : Yup.string().notRequired(),
-    streetAddress: Yup.string().notRequired(),
-    streetAddress1: Yup.string().notRequired(),
-    country: Yup.string().notRequired(),
-    city: Yup.string().notRequired(),
-    zipcode: Yup.string().notRequired(),
+    gpsAddress: Yup.string().required("Address is required"),
+    streetAddress: Yup.string().required("StreetAddress is required"),
+    streetAddress1: Yup.string().required("StreetAddress1 is required"),
+    country: Yup.string().required("Country is required"),
+    city: Yup.string().required("City is required"),
+    zipcode: Yup.string().required("Zipcode is required"),
   });
 };

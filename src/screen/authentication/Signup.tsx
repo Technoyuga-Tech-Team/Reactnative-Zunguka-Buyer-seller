@@ -52,6 +52,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
   const firstNameRef = React.useRef<TextInput>(null);
   const lastnameRef = React.useRef<TextInput>(null);
+  const usernameRef = React.useRef<TextInput>(null);
   const emaiRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
   const passwordRef = React.useRef<TextInput>(null);
@@ -228,11 +229,11 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.lastName}
             error={errors.lastName}
             touched={touched.lastName}
-            onSubmitEditing={() => emaiRef.current?.focus()}
+            onSubmitEditing={() => usernameRef.current?.focus()}
           />
           <CustomTxtInput
             textInputTitle="Username"
-            ref={lastnameRef}
+            ref={usernameRef}
             placeholder="Username"
             returnKeyType="next"
             returnKeyLabel="next"
@@ -297,6 +298,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.createPassword}
             error={errors.createPassword}
             touched={touched.createPassword}
+            maxLength={MAX_CHAR_LENGTH}
             returnKeyLabel="next"
             returnKeyType="next"
             rightIcon={true}
@@ -312,6 +314,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.confirmPassword}
             error={errors.confirmPassword}
             touched={touched.confirmPassword}
+            maxLength={MAX_CHAR_LENGTH}
             returnKeyLabel="done"
             returnKeyType="done"
             textContentType="oneTimeCode"
