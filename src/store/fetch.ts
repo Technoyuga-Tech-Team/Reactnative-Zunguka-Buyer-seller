@@ -73,7 +73,7 @@ export const fetch = async <T>(
       return result;
     }
   } catch (err: any) {
-    console.log("err ------>", err);
+    console.log("err ------>", err?.response);
 
     if (err?.response) {
       if (err?.response?.status.toString().startsWith("5")) {

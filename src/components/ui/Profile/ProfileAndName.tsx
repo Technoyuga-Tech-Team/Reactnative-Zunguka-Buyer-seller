@@ -26,7 +26,9 @@ const ProfileAndName: React.FC<ProfileAndNameProps> = ({
       <AppImage style={style.profile} source={Profile} resizeMode="cover" />
       <View style={style.txtCont}>
         <Text style={style.txtName}>{name}</Text>
-        <Text style={style.txtViewProfile}>{email}</Text>
+        <Text numberOfLines={2} style={style.txtViewProfile}>
+          {email}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -59,8 +61,10 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontFamily: theme.fontFamily?.regular,
     lineHeight: 21,
     marginTop: 2,
+    width: "100%",
   },
   txtCont: {
+    flex: 1,
     marginLeft: 20,
   },
 }));

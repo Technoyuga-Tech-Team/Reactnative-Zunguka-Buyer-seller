@@ -7,6 +7,7 @@ import { fetchAction } from "../fetch";
 import { setUserData } from "../settings/settings.slice";
 import { API } from "../../constant/apiEndpoints";
 import { USER_DATA, secureStoreKeys } from "../../constant";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export const userRegistration = createAsyncThunk<
   true,
@@ -294,7 +295,8 @@ export const oAuthLogin = createAsyncThunk<
   {
     first_name: string;
     last_name: string;
-    type: string;
+    username: string;
+    // profile_image: string;
     email: string;
     social_id: string;
     is_social: string;
@@ -302,7 +304,7 @@ export const oAuthLogin = createAsyncThunk<
     iso: string;
     device_type: string;
     device_token: string;
-    // credential: FirebaseAuthTypes.AuthCredential;
+    credential: FirebaseAuthTypes.AuthCredential;
   },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(
@@ -311,32 +313,34 @@ export const oAuthLogin = createAsyncThunk<
     {
       first_name,
       last_name,
-      type,
+      username,
+      // profile_image,
       is_social,
       social_type,
       iso,
       device_type,
       device_token,
-      // credential,
+      credential,
     },
     { dispatch, rejectWithValue }
   ) => {
-    // try {
-    //   await auth().signInWithCredential(credential);
-    // } catch (e) {
-    //   return rejectWithValue(e);
-    // }
+    try {
+      await auth().signInWithCredential(credential);
+    } catch (e) {
+      return rejectWithValue(e);
+    }
     const { errors, data, authorization } = await dispatch(
       fetchAction<TokenPayload>(
         {
           url: API.OAUTH_LOGIN,
           method: "POST",
           data: {
-            // first_name: auth()?.currentUser?.displayName || first_name,
-            // last_name: auth()?.currentUser?.displayName || last_name,
-            // email: auth()?.currentUser?.email,
-            // social_id: auth()?.currentUser?.uid,
-            type,
+            first_name: auth()?.currentUser?.displayName || first_name,
+            last_name: auth()?.currentUser?.displayName || last_name,
+            username: username,
+            // profile_image,
+            email: auth()?.currentUser?.email,
+            social_id: auth()?.currentUser?.uid,
             is_social,
             social_type,
             iso,

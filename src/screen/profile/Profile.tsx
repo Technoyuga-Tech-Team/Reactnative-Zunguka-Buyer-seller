@@ -8,7 +8,12 @@ import CustomButton from "../../components/ui/CustomButton";
 import ProfileAndName from "../../components/ui/Profile/ProfileAndName";
 import LogoutPopup from "../../components/ui/popups/LogoutPopup";
 import LogoutIcon from "../../components/ui/svg/LogoutIcon";
-import { SCREEN_WIDTH, USER_DATA, secureStoreKeys } from "../../constant";
+import {
+  GOOGLE_WEB_CLIENT_ID,
+  SCREEN_WIDTH,
+  USER_DATA,
+  secureStoreKeys,
+} from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { logout } from "../../store/authentication/authentication.thunks";
@@ -24,6 +29,7 @@ import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
 import InfocircleIcon from "../../components/ui/svg/InfocircleIcon";
 import DocslistIcon from "../../components/ui/svg/DocslistIcon";
 import ProfileIcon from "../../components/ui/svg/ProfileIcon";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -43,6 +49,14 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   );
 
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID,
+      offlineAccess: true,
+      // scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
+    });
+  }, []);
+
+  useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
       setProfilePicture(userData?.profile_image);
     });
@@ -56,9 +70,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     setVisible(!visible);
   };
   const onPressLogout = async () => {
-    // if (userData.is_social == 1) {
-    //   await GoogleSignin.signOut();
-    // }
+    if (userData.is_social == 1) {
+      await GoogleSignin.signOut();
+    }
     setVisible(false);
     // dispatch(logout());
     await setData(secureStoreKeys.JWT_TOKEN, null);
@@ -90,7 +104,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
       <Text style={style.txtProfile}>Profile</Text>
       <View style={style.profileCont}>
         <ProfileAndName
-          name={userData?.first_name}
+          name={userData?.username}
           email={userData?.email}
           profileImage={Profile}
         />

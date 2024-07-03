@@ -26,6 +26,10 @@ export const CURRENT_COUNTRY_CODE = "US";
 // Google map key
 export const GOOGLE_MAP_API_KEY = "AIzaSyCVccOgy8-HJMjKuUCNC6B1_4z2WOoyRK4";
 
+// Google web client id
+export const GOOGLE_WEB_CLIENT_ID =
+  "784015034349-k2l1hu4gt38f1qdmcefo0rtlc0kl9ih1.apps.googleusercontent.com";
+
 // BASE_URL // http://3.70.108.140/api/
 export const BASE_PORT = "3.70.108.140";
 export const SOCKET_PORT = `${BASE_PORT}:4000`;
