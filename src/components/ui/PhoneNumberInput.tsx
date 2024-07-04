@@ -22,7 +22,7 @@ export const PhoneNumberInput = React.forwardRef<
 >(({ ...props }, ref) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const DEFAULT_FLAG_CODE = 238; // US default flag code
+  const DEFAULT_FLAG_CODE = 200; // RAWANDA default flag code
   return (
     <View style={styles.textInCont}>
       {/* {props.textInputTitle && (
@@ -30,7 +30,7 @@ export const PhoneNumberInput = React.forwardRef<
       )} */}
       <ReactNativePhoneInput
         ref={ref}
-        initialCountry={"us"}
+        initialCountry={"rw"}
         autoFormat
         renderFlag={({ imageSource }) => {
           return (

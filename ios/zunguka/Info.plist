@@ -20,12 +20,35 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.784015034349-gmj7u4fl5b5avm6kthtpre007fi2ndcv</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>zunguka</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>zunguka</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -35,8 +58,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Need permission to access your camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Need location permission for get location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need permission to save photos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NunitoSans10pt-Bold.ttf</string>
@@ -45,7 +72,7 @@
 		<string>NunitoSans10pt-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>BootSplash</string>
+	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

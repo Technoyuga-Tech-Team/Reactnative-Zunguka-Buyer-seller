@@ -7,7 +7,7 @@ export interface FetchResponse<T> {
   statusCode?: number | null;
   errors?: FetchResponseError | null;
   headers?: any;
-  authorisation: {
+  authorization: {
     token: string;
     type: string;
   };

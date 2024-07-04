@@ -9,6 +9,13 @@ import Splash from "../screen/Splash";
 import Onboard from "../screen/onboard/Onboard";
 import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
+import YourAddress from "../screen/authentication/AddAddress/YourAddress";
+import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
+import AddKyc from "../screen/authentication/Add kyc/AddKyc";
+import Bottombar from "./Bottombar/Bottombar";
+import EditProfile from "../screen/profile/EditProfile";
+import ChangePassword from "../screen/profile/ChangePassword";
+import ResetPassword from "../screen/authentication/ResetPassword";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -28,6 +35,16 @@ const MainStack = () => {
           name={Route.navAuthentication}
           component={Authentication}
         />
+        <Stack.Screen name={Route.navDashboard} component={Bottombar} />
+        <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
+        <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
+        <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
+        <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
+        <Stack.Screen
+          name={Route.navChangePassword}
+          component={ChangePassword}
+        />
+        <Stack.Screen name={Route.navResetPassword} component={ResetPassword} />
       </Stack.Navigator>
     </GestureHandlerRootView>
   );

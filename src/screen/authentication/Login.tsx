@@ -1,7 +1,14 @@
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Keyboard, StatusBar, Text, TextInput, View } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  StatusBar,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import {
   CountryCode,
   TranslationLanguageCodeMap,
@@ -9,6 +16,8 @@ import {
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+// Relative paths
 import { AppImage } from "../../components/AppImage/AppImage";
 import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import CustomButton from "../../components/ui/CustomButton";
@@ -20,10 +29,16 @@ import { LoginScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { LoginFormProps } from "../../types/authentication.types";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { getData } from "../../utils/asyncStorage";
+import ReactNativePhoneInput from "react-native-phone-input";
+import { userLogin } from "../../store/authentication/authentication.thunks";
+import Loading from "../../components/ui/Loading";
+import { useSelector } from "react-redux";
+import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import { saveAddress } from "../../store/settings/settings.slice";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -34,25 +49,27 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
 
   const dispatch = useAppDispatch();
   const navigationRoute = useNavigation();
+  const loading = useSelector(selectAuthenticationLoading);
 
   const emaiRef = React.useRef<TextInput>(null);
   const passwordRef = React.useRef<TextInput>(null);
+  const phoneRef = React.useRef<ReactNativePhoneInput>(null);
 
   const [fcmToken, setFcmToken] = useState<string>("");
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
   const [userRole, setUserRole] = useState<string>("");
-  const [countryCode, setCountryCode] = useState<CountryCode>("US");
+  const [countryCode, setCountryCode] = useState<CountryCode>("RW");
   const [country, setCountry] = useState<string | TranslationLanguageCodeMap>(
     ""
   );
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -94,49 +111,58 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     onSubmit: async ({ phoneNumber, password }) => {
       let phone_number = phoneNumber.replace(/ /g, "").replace("-", "");
 
-      const u_role = await getData(USER_ROLE);
-      // const result = await dispatch(
-      //   userLogin({
-      //     phone_number: phone_number.replace("-", ""),
-      //     password,
-      //     is_social: 0,
-      //     device_type: Platform.OS === "ios" ? "iOS" : "Android",
-      //     device_token: fcmToken,
-      //     type: u_role,
-      //   })
-      // );
-      // if (userLogin.fulfilled.match(result)) {
-      //   if (result.payload) {
-      //     if (u_role === "mover") {
-      //       setNavigation(result.payload?.user, navigationRoute);
-      //     } else {
-      //       navigation.dispatch(
-      //         CommonActions.reset({
-      //           index: 0,
-      //           routes: [{ name: Route.navBuyerSellerStack }],
-      //         })
-      //       );
-      //     }
-      //   }
-      // } else {
-      //   console.log("errror userLogin --->", result.payload);
-      //   if (result.payload?.status === 2) {
-      //     if (result.payload?.statusCode === 403) {
-      //       navigation.navigate(Route.navEnterOTP, {
-      //         phone: result.payload?.phone_number,
-      //         type: "otp_verification",
-      //       });
-      //     }
-      //   }
-      //   if (result.payload?.status === 3) {
-      //     Snackbar.show({
-      //       text: result.payload?.message,
-      //       duration: Snackbar.LENGTH_LONG,
-      //       backgroundColor: theme.colors?.error,
-      //       textColor: theme.colors?.white,
-      //     });
-      //   }
-      // }
+      const result = await dispatch(
+        userLogin({
+          phone_number: phone_number.replace("-", ""),
+          password,
+          is_social: 0,
+          device_type: Platform.OS === "ios" ? "iOS" : "Android",
+          device_token: fcmToken,
+        })
+      );
+      if (userLogin.fulfilled.match(result)) {
+        console.log("result.payload", result.payload);
+
+        if (result.payload?.status == 1) {
+          let steps = result.payload?.user?.step || result.payload?.step;
+          if (steps !== 2) {
+            if (steps == 0) {
+              dispatch(saveAddress(""));
+              navigation.navigate(Route.navYourAddress);
+            } else if (steps == 1) {
+              navigation.navigate(Route.navAddKyc);
+            }
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
+          }
+        }
+      } else {
+        console.log("errror userLogin --->", result.payload);
+        if (result.payload?.statusCode === 403) {
+          if (result.payload?.status === 2) {
+            navigation.navigate(Route.navEnterOTP, {
+              phone: result.payload?.phone_number,
+              type: "otp_verification",
+            });
+          }
+          if (result.payload?.status === 4) {
+            if (result.payload?.step == 1) {
+              navigation.navigate(Route.navAddKyc);
+            }
+          }
+          if (result.payload?.step == 0) {
+            navigation.navigate(Route.navYourAddress);
+          }
+          if (result.payload?.step == 1) {
+            navigation.navigate(Route.navAddKyc);
+          }
+        }
+      }
     },
   });
 
@@ -162,7 +188,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     country: string | TranslationLanguageCodeMap,
     cca2: CountryCode
   ) => {
-    // phoneRef?.current?.selectCountry(cca2.toLowerCase());
+    phoneRef?.current?.selectCountry(cca2.toLowerCase());
     setCountryCode(cca2);
     setCountry(country);
     setVisibleCountryPicker(false);
@@ -190,7 +216,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         barStyle={"dark-content"}
         backgroundColor={theme.colors?.white}
       />
-      {/* {loading === LoadingState.CREATE && <Loading />} */}
+      {loading === LoadingState.CREATE && <Loading />}
       <View style={style.iconCont}>
         <AppImage
           source={require("../../assets/images/roundedLogo.png")}
@@ -254,8 +280,8 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
             buttonWidth="full"
             variant="primary"
             type="solid"
-            // disabled={!isValid || loading === LoadingState.CREATE}
-            // loading={loading === LoadingState.CREATE}
+            disabled={!isValid || loading === LoadingState.CREATE}
+            loading={loading === LoadingState.CREATE}
           />
         </View>
         <Text onPress={onPressForgotPassword} style={style.txtForgotPassword}>

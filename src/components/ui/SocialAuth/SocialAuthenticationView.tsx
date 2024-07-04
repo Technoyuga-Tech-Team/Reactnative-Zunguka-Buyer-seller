@@ -1,6 +1,6 @@
 // import appleAuth from "@invertase/react-native-apple-authentication";
-// import auth from "@react-native-firebase/auth";
-// import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
@@ -11,7 +11,7 @@ import { useAppDispatch } from "../../../hooks/useAppDispatch";
 // import { selectOAuthLoading } from "../../../store/authentication/authentication.selectors";
 // import { setOAuthLoading } from "../../../store/authentication/authentication.slice";
 // import { oAuthLogin } from "../../../store/authentication/authentication.thunks";
-import { setErrors } from "../../../store/global/global.slice";
+import { setErrors, setSuccess } from "../../../store/global/global.slice";
 // import { setErrorFromSocial } from "../../../store/settings/settings.slice";
 import { AuthLoadingState } from "../../../types/global.types";
 import { AuthenticationRoutes } from "../../../types/navigation";
@@ -19,6 +19,15 @@ import SocialIconBlock from "./SocialIconBlock";
 import GoogleIcon from "../svg/GoogleIcon";
 import AppleIcon from "../svg/AppleIcon";
 import FacebookIcon from "../svg/FacebookIcon";
+import { GOOGLE_WEB_CLIENT_ID } from "../../../constant";
+import {
+  saveAddress,
+  setErrorFromSocial,
+} from "../../../store/settings/settings.slice";
+import { setOAuthLoading } from "../../../store/authentication/authentication.slice";
+import { selectOAuthLoading } from "../../../store/authentication/authentication.selectors";
+import { oAuthLogin } from "../../../store/authentication/authentication.thunks";
+import { Route } from "../../../constant/navigationConstants";
 
 interface SocialAuthenticationViewProps {
   fromLogin: boolean;
@@ -35,67 +44,72 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
   const dispatch = useAppDispatch();
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthenticationRoutes>>();
-  // const loading = useSelector(selectOAuthLoading);
+  const loading = useSelector(selectOAuthLoading);
 
-  // useEffect(() => {
-  //   GoogleSignin.configure({
-  //     webClientId: GOOGLE_WEB_CLIENT_ID,
-  //     offlineAccess: true,
-  //     // scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
-  //   });
-  // }, []);
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID,
+      offlineAccess: true,
+      // scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
+    });
+  }, []);
 
-  // const onPressGoogleLogin = async () => {
-  //   dispatch(setErrorFromSocial(true));
-  //   dispatch(setOAuthLoading(AuthLoadingState.GOOGLE));
-  //   try {
-  //     const userInfo = await GoogleSignin.signIn();
-  //     const googleCredential = auth.GoogleAuthProvider.credential(
-  //       userInfo.idToken
-  //     );
+  const onPressGoogleLogin = async () => {
+    dispatch(setErrorFromSocial(true));
+    dispatch(setOAuthLoading(AuthLoadingState.GOOGLE));
+    try {
+      const userInfo = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken
+      );
 
-  //     let param = {
-  //       first_name: userInfo.user.name,
-  //       last_name: userInfo.user.name,
-  //       type: userRole,
-  //       email: userInfo.user.email,
-  //       social_id: googleCredential.token,
-  //       is_social: 1,
-  //       social_type: "google",
-  //       iso: "US",
-  //       device_type: Platform.OS === "ios" ? "iOS" : "Android",
-  //       device_token: fcmToken || null,
-  //       credential: googleCredential,
-  //     };
+      let param = {
+        first_name: userInfo.user.name,
+        last_name: userInfo.user.name,
+        username: userInfo.user.givenName,
+        profile_image: userInfo?.user?.photo || "",
+        email: userInfo.user.email,
+        social_id: googleCredential.token,
+        is_social: 1,
+        social_type: "google",
+        iso: "RW",
+        device_type: Platform.OS === "ios" ? "iOS" : "Android",
+        device_token: fcmToken || null,
+        credential: googleCredential,
+      };
 
-  //     console.log("param", param);
+      const result = await dispatch(oAuthLogin(param));
+      if (oAuthLogin.fulfilled.match(result)) {
+        if (result.payload.status == 1) {
+          console.log("result.payload", result.payload);
+          let steps = result.payload?.user?.step;
 
-  //     const result = await dispatch(oAuthLogin(param));
-  //     console.log("result", result);
-  //     if (oAuthLogin.fulfilled.match(result)) {
-  //       dispatch(setOAuthLoading(AuthLoadingState.NULL));
-  //       navigation.dispatch(
-  //         CommonActions.reset({
-  //           index: 0,
-  //           routes: [
-  //             {
-  //               name: Route.navBuyerSellerStack,
-  //               state: {
-  //                 routes: [{ name: Route.navDashboard }],
-  //               },
-  //             },
-  //           ],
-  //         })
-  //       );
-  //     } else {
-  //       dispatch(setOAuthLoading(AuthLoadingState.NULL));
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     dispatch(setOAuthLoading(AuthLoadingState.NULL));
-  //   }
-
-  // };
+          if (steps !== 2) {
+            if (steps == 0) {
+              dispatch(saveAddress(""));
+              navigation.navigate(Route.navYourAddress);
+            } else if (steps == 1) {
+              navigation.navigate(Route.navAddKyc);
+            }
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
+            dispatch(setSuccess(result.payload.message));
+          }
+          dispatch(setOAuthLoading(AuthLoadingState.NULL));
+        }
+      } else {
+        dispatch(setOAuthLoading(AuthLoadingState.NULL));
+      }
+    } catch (error) {
+      console.log("error", error);
+      dispatch(setOAuthLoading(AuthLoadingState.NULL));
+    }
+  };
 
   // const handleFacebookSignIn = useCallback(async () => {
   //   try {
@@ -228,9 +242,9 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
   return (
     <View style={Style.container}>
       <SocialIconBlock
-        // loading={loading === "google"}
+        loading={loading === "google"}
         icon={<GoogleIcon />}
-        onPress={() => {}}
+        onPress={onPressGoogleLogin}
       />
       {Platform.OS === "ios" && (
         <SocialIconBlock

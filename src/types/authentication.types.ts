@@ -37,6 +37,7 @@ export interface ChangePasswordFormProps {
 export interface EditProfileFormProps {
   firstName: string;
   lastName: string;
+  username: string;
   email: string;
   phoneNumber: string;
 }
@@ -46,7 +47,7 @@ export interface AuthenticationState {
   oAuthLoading: AuthLoadingState;
 }
 
-export type authorisation = {
+export type authorization = {
   token: string;
   type: string;
 };
@@ -54,7 +55,9 @@ export type authorisation = {
 export type TokenPayload = {
   message: string;
   data: UserData;
-  authorisation: authorisation;
+  is_profile_completed: number;
+  step: number;
+  authorization: authorization;
   status: number;
 };
 
@@ -63,3 +66,14 @@ export type TokenPayload1 = {
   data: any;
   status: number;
 };
+
+// ADD Address
+
+export interface AddAddressProps {
+  gpsAddress: string;
+  streetAddress: string;
+  streetAddress1: string;
+  city: string;
+  country: string;
+  zipcode: string;
+}

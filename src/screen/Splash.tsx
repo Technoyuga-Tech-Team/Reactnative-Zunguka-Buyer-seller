@@ -29,14 +29,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [
-                {
-                  name: Route.navBuyerSellerStack,
-                  state: {
-                    routes: [{ name: Route.navDashboard }],
-                  },
-                },
-              ],
+              routes: [{ name: Route.navDashboard }],
             })
           );
         }, 2000);
@@ -97,7 +90,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
         barStyle={"light-content"}
       />
       <FastImage
-        source={require("../assets/images/splash_logo.png")}
+        source={require("../assets/images/splash_black_logo.png")}
         style={{
           height: 224.74,
           width: Scale(195),

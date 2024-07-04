@@ -14,22 +14,25 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import CustomButton from "../../../components/CustomButton";
-import { CustomTxtInput } from "../../../components/CustomTextInput";
-import BackIcon from "../../../components/svg/BackIcon";
-import Loading from "../../../components/ui/Loading";
-import PasswordChangePopup from "../../../components/ui/Popups/PasswordChangePopup";
-import { HAS_NOTCH, HIT_SLOP, USER_ROLE } from "../../../constants";
-import { ResetPasswordScreenSchema } from "../../../constants/formValidations";
-import { Route } from "../../../constants/navigationConstants";
-import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
-import { userResetPassword } from "../../../store/authentication/authentication.thunks";
-import { ResetPasswordFormProps } from "../../../types/authentication.types";
-import { LoadingState, ThemeProps } from "../../../types/global.types";
-import { AuthNavigationProps } from "../../../types/navigation";
-import { getData } from "../../../utils/asyncStorage";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { AuthNavigationProps } from "../../types/navigation";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import { ResetPasswordFormProps } from "../../types/authentication.types";
+import { ResetPasswordScreenSchema } from "../../constant/formValidations";
+import { getData } from "../../utils/asyncStorage";
+import { HAS_NOTCH, HIT_SLOP, USER_ROLE } from "../../constant";
+import { userResetPassword } from "../../store/authentication/authentication.thunks";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import Loading from "../../components/ui/Loading";
+import BackIcon from "../../components/ui/svg/BackIcon";
+import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import CustomButton from "../../components/ui/CustomButton";
+import PasswordChangePopup from "../../components/ui/popups/PasswordChangePopup";
+import LeftIcon from "../../components/ui/svg/LeftIcon";
+import { AppImage } from "../../components/AppImage/AppImage";
+import Scale from "../../utils/Scale";
 
 const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
   navigation,
@@ -66,7 +69,7 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: Route.navLogin }],
+          routes: [{ name: Route.navAuthentication }],
         })
       );
     }, 200);
@@ -86,7 +89,7 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
     onSubmit: async ({ password, confirmPassword }) => {
       const u_role = await getData(USER_ROLE);
       const result = await dispatch(
-        userResetPassword({ phone_number: phone, password, type: u_role })
+        userResetPassword({ phone_number: phone, password })
       );
       if (userResetPassword.fulfilled.match(result)) {
         if (result.payload.status === 1) {
@@ -112,16 +115,24 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
         hitSlop={HIT_SLOP}
         style={style.backBtnCont}
       >
-        <BackIcon color={theme.colors?.black} />
+        <LeftIcon color={theme.colors?.black} />
       </TouchableOpacity>
-      <Text style={style.txtVerificationCode}>Reset your password</Text>
-      {/* <Text style={style.txtVerificationSentCode}>
-        We have sent a code to {mail}
-      </Text> */}
+      <View style={style.iconCont}>
+        <AppImage
+          source={require("../../assets/images/roundedLogo.png")}
+          resizeMode="contain"
+          style={style.appIcon}
+        />
+      </View>
+      <Text style={style.txtVerificationCode}>Reset Password</Text>
+      <Text style={style.txtVerificationSentCode}>
+        Your new password must be unique.
+      </Text>
+
       <View style={style.otpInputCont}>
         <CustomTxtInput
           textInputTitle="New Password"
-          placeholder="Enter new password"
+          placeholder="New password"
           onChangeText={handleChange("password")}
           onBlur={handleBlur("password")}
           value={values.password}
@@ -135,7 +146,7 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
         />
         <CustomTxtInput
           textInputTitle="Confirm New Password"
-          placeholder="Enter confirm new password"
+          placeholder="Confirm New Password"
           ref={confirmPasswordRef}
           onChangeText={handleChange("confirmPassword")}
           onBlur={handleBlur("confirmPassword")}
@@ -180,18 +191,20 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     paddingHorizontal: 20,
   },
   txtVerificationCode: {
-    fontSize: theme.fontSize?.fs17,
+    fontSize: theme.fontSize?.fs20,
     fontFamily: theme.fontFamily?.bold,
     color: theme.colors?.black,
+    textAlign: "center",
   },
   backBtnCont: {
-    marginVertical: 30,
+    marginVertical: 10,
   },
   txtVerificationSentCode: {
-    fontSize: theme.fontSize?.fs16,
+    fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.secondaryText,
-    marginTop: 20,
+    marginTop: 10,
+    textAlign: "center",
   },
   otpInputCont: {
     flex: 1,
@@ -223,5 +236,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs12,
     color: theme.colors?.error,
   },
-  iconCont: { alignSelf: "center", marginVertical: 30 },
+  iconCont: { alignSelf: "center", marginBottom: 20 },
+  appIcon: {
+    height: Scale(96),
+    width: Scale(96),
+  },
 }));

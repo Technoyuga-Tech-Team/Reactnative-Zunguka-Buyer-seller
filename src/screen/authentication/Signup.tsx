@@ -31,11 +31,14 @@ import { CustomTxtInput } from "../../components/ui/CustomTextInput";
 import CustomButton from "../../components/ui/CustomButton";
 import { setErrors } from "../../store/global/global.slice";
 import SocialAuthenticationView from "../../components/ui/SocialAuth/SocialAuthenticationView";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
 import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import TermsAndCondition from "../../components/ui/TermsAndCondition";
+import { userRegistration } from "../../store/authentication/authentication.thunks";
+import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import Loading from "../../components/ui/Loading";
 
 const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   navigation,
@@ -45,10 +48,11 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
-  // const loading = useSelector(selectAuthenticationLoading);
+  const loading = useSelector(selectAuthenticationLoading);
 
   const firstNameRef = React.useRef<TextInput>(null);
   const lastnameRef = React.useRef<TextInput>(null);
+  const usernameRef = React.useRef<TextInput>(null);
   const emaiRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
   const passwordRef = React.useRef<TextInput>(null);
@@ -56,7 +60,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
-  const [countryCode, setCountryCode] = useState<CountryCode>("US");
+  const [countryCode, setCountryCode] = useState<CountryCode>("RW");
   const [country, setCountry] = useState<string | TranslationLanguageCodeMap>(
     ""
   );
@@ -148,34 +152,36 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
     onSubmit: async ({
       firstName,
       lastName,
+      username,
       email,
       phoneNumber,
       createPassword,
       confirmPassword,
     }) => {
       let phone_number = phoneNumber.replace(/ /g, "").replace("-", "");
-      const u_role = await getData(USER_ROLE);
-      // const result = await dispatch(
-      //   userRegistration({
-      //     first_name: firstName.trim(),
-      //     last_name: lastName.trim(),
-      //     email: email.trim(),
-      //     password: createPassword.trim(),
-      //     phone_number: phone_number.replace("-", ""),
-      //     iso: countryCode.toLowerCase(),
-      //     device_type: Platform.OS === "ios" ? "iOS" : "Android",
-      //     device_token: fcmToken,
-      //     type: u_role,
-      //   })
-      // );
-      // if (userRegistration.fulfilled.match(result)) {
-      //   if (result.payload) {
-      //     navigation.navigate(Route.navEnterOTP, {
-      //       phone: phone_number,
-      //       type: "otp_verification",
-      //     });
-      //   }
-      // }
+
+      const result = await dispatch(
+        userRegistration({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          username: username.trim(),
+          email: email.trim(),
+          password: createPassword.trim(),
+          phone_number: phone_number.replace("-", ""),
+          iso: countryCode.toLowerCase(),
+          device_type: Platform.OS === "ios" ? "iOS" : "Android",
+          device_token: fcmToken,
+        })
+      );
+      if (userRegistration.fulfilled.match(result)) {
+        if (result.payload) {
+          console.log("result", result);
+          navigation.navigate(Route.navEnterOTP, {
+            phone: phone_number,
+            type: "otp_verification",
+          });
+        }
+      }
     },
   });
 
@@ -190,7 +196,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
         barStyle={"dark-content"}
         backgroundColor={theme.colors?.white}
       />
-      {/* {loading === LoadingState.CREATE && <Loading />} */}
+      {loading === LoadingState.CREATE && <Loading />}
       <View style={style.innerCont}>
         <Text style={style.title}>Create an account</Text>
         <Text style={style.title1}>FIll up your details below</Text>
@@ -223,11 +229,11 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.lastName}
             error={errors.lastName}
             touched={touched.lastName}
-            onSubmitEditing={() => emaiRef.current?.focus()}
+            onSubmitEditing={() => usernameRef.current?.focus()}
           />
           <CustomTxtInput
             textInputTitle="Username"
-            ref={lastnameRef}
+            ref={usernameRef}
             placeholder="Username"
             returnKeyType="next"
             returnKeyLabel="next"
@@ -292,6 +298,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.createPassword}
             error={errors.createPassword}
             touched={touched.createPassword}
+            maxLength={MAX_CHAR_LENGTH}
             returnKeyLabel="next"
             returnKeyType="next"
             rightIcon={true}
@@ -307,6 +314,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             value={values.confirmPassword}
             error={errors.confirmPassword}
             touched={touched.confirmPassword}
+            maxLength={MAX_CHAR_LENGTH}
             returnKeyLabel="done"
             returnKeyType="done"
             textContentType="oneTimeCode"
@@ -335,8 +343,8 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
                 handleSubmit();
               }
             }}
-            // disabled={!isValid || loading === LoadingState.CREATE}
-            // loading={loading === LoadingState.CREATE}
+            disabled={!isValid || loading === LoadingState.CREATE}
+            loading={loading === LoadingState.CREATE}
             title={"Sign up"}
             buttonWidth="full"
             variant="primary"
