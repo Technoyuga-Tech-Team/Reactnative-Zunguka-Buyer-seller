@@ -1,48 +1,63 @@
 import * as React from "react";
-import { Platform, View } from "react-native";
+import { View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemeProps } from "../../types/global.types";
+import { SCREEN_WIDTH } from "../../constant";
 import { SliderItemProps } from "../../types/slider.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
-import { SCREEN_WIDTH } from "../../constant";
 
 interface SliderProps {
   item: SliderItemProps;
+  bannerHeight?: number;
+  bannerwidth?: number;
 }
 
-const SliderItem: React.FC<SliderProps> = ({ item }) => {
-  const insets = useSafeAreaInsets();
-  const styles = useStyles({ insets });
+const SliderItem: React.FC<SliderProps> = ({
+  item,
+  bannerHeight,
+  bannerwidth,
+}) => {
+  const height = bannerHeight || 213.41;
+  const width = bannerwidth || SCREEN_WIDTH;
+  const styles = useStyles({ height, width });
   const { theme } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={bannerHeight ? styles.container : styles.container1}>
       <AppImage
         source={item?.image}
         style={styles.sliderImage}
-        resizeMode={"contain"}
+        resizeMode={"cover"}
       />
     </View>
   );
 };
 
-const useStyles = makeStyles((theme, props: ThemeProps) => ({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginBottom: 100,
-  },
-  imageContainer: {
-    paddingVertical: Scale(20),
-  },
-  sliderImage: {
-    height: 213.41,
-    width: SCREEN_WIDTH,
-  },
-}));
+const useStyles = makeStyles(
+  (theme, props: { height: number; width: number }) => {
+    return {
+      container: {
+        alignItems: "center",
+        justifyContent: "flex-end",
+        width: SCREEN_WIDTH,
+        height: props?.height,
+      },
+      container1: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "flex-end",
+        marginBottom: 100,
+      },
+      imageContainer: {
+        paddingVertical: Scale(20),
+      },
+      sliderImage: {
+        height: props?.height,
+        width: props?.width,
+        borderRadius: 8,
+      },
+    };
+  }
+);
 
 export default SliderItem;

@@ -4,6 +4,7 @@ import { SCREEN_HEIGHT } from "../constant";
 
 const LightThemeColor = {
   primary: "#F3B241",
+  primaryVibrant: "#664B1B",
   primaryLight: "rgba(243, 178, 65, 0.5)",
   primaryLightest: "#FEF7EC",
   transparent: "transparent",
@@ -24,10 +25,14 @@ const LightThemeColor = {
   aqua: "#67C2C9",
   lightBg: "#F1F1F1",
   unselectedIconColor: "#A3ADB7",
+  darkGrey: "#5E7082",
   red: "#FF2626",
+  grey11: "#C1C8CF",
+  backgroundLight: "#F9FAFB",
 };
 const DarkThemeColor = {
   primary: "#F3B241",
+  primaryVibrant: "#664B1B",
   primaryLight: "rgba(243, 178, 65, 0.5)",
   primaryLightest: "#FEF7EC",
   transparent: "transparent",
@@ -49,6 +54,9 @@ const DarkThemeColor = {
   lightBg: "#F1F1F1",
   unselectedIconColor: "#A3ADB7",
   red: "#FF2626",
+  grey11: "#C1C8CF",
+  backgroundLight: "#F9FAFB",
+  darkGrey: "#5E7082",
 };
 
 export const getTheme = (mode: "light" | "dark" = "dark") => {

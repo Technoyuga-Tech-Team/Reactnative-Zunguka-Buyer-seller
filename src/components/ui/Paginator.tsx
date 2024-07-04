@@ -9,10 +9,16 @@ interface SliderProps {
   data: number[];
   scrollX: Animated.Value;
   variant?: ColorVariant;
+  marginHorizontal?: number;
 }
 
-const Paginator: React.FC<SliderProps> = ({ data, scrollX, variant }) => {
-  const styles = useStyles(variant);
+const Paginator: React.FC<SliderProps> = ({
+  data,
+  scrollX,
+  variant = "secondary",
+  marginHorizontal = 10,
+}) => {
+  const styles = useStyles({ variant, marginHorizontal });
   const { width } = useWindowDimensions();
 
   return (
@@ -37,18 +43,22 @@ const Paginator: React.FC<SliderProps> = ({ data, scrollX, variant }) => {
   );
 };
 
-const useStyles = makeStyles((theme, variant: ColorVariant) => ({
-  container: {
-    flexDirection: "row",
-  },
-  dot: {
-    height: Scale(8),
-    width: Scale(8),
-    borderRadius: Scale(5),
-    backgroundColor:
-      variant === "secondary" ? theme.colors?.primary : theme.colors?.white,
-    marginHorizontal: 10,
-  },
-}));
+const useStyles = makeStyles(
+  (theme, props: { variant: ColorVariant; marginHorizontal: number }) => ({
+    container: {
+      flexDirection: "row",
+    },
+    dot: {
+      height: Scale(8),
+      width: Scale(8),
+      borderRadius: Scale(5),
+      backgroundColor:
+        props.variant === "secondary"
+          ? theme.colors?.primary
+          : theme.colors?.white,
+      marginHorizontal: props.marginHorizontal || 10,
+    },
+  })
+);
 
 export default Paginator;

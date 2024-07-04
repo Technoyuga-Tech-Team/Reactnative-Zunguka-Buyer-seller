@@ -1388,6 +1388,18 @@ export const SLIDER: SliderItemProps[] = [
   },
 ];
 
+export const HOME_BANNERS: any[] = [
+  {
+    image: require("../assets/images/homeBanners.png"),
+  },
+  {
+    image: require("../assets/images/homeBanners.png"),
+  },
+  {
+    image: require("../assets/images/homeBanners.png"),
+  },
+];
+
 export const COUNTRIES = [
   { title: "Afghanistan", key: "AF" },
   { title: "Åland Islands", key: "AX" },
@@ -1637,4 +1649,120 @@ export const ID_TYPES = [
   { title: "National ID Card", key: "National ID Card" },
   { title: "Pancard", key: "Pancard" },
   { title: "Driver's License", key: "Driver's License" },
+];
+
+export const CATEGORIES = [
+  {
+    created_at: "",
+    icon: "",
+    id: 1,
+    parent_id: "1",
+    updated_at: "",
+    name: "Fashion",
+    title: "Fashion",
+    key: 1,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 2,
+    parent_id: "2",
+    updated_at: "",
+    name: "Electronics",
+    title: "Electronics",
+    key: 2,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 3,
+    parent_id: "3",
+    updated_at: "",
+    name: "Home and Living",
+    title: "Home and Living",
+    key: 3,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 4,
+    parent_id: "4",
+    updated_at: "",
+    name: "Beauty and Health",
+    title: "Beauty and Health",
+    key: 4,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 5,
+    parent_id: "5",
+    updated_at: "",
+    name: "Auto-motive",
+    title: "Auto-motive",
+    key: 5,
+  },
+];
+
+export const HOT_BRANDS = [
+  {
+    created_at: "",
+    icon: "",
+    id: 1,
+    parent_id: "1",
+    updated_at: "",
+    name: "Adidas",
+    title: "Adidas",
+    key: 1,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 2,
+    parent_id: "2",
+    updated_at: "",
+    name: "Rolex",
+    title: "Rolex",
+    key: 2,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 3,
+    parent_id: "3",
+    updated_at: "",
+    name: "Gucci",
+    title: "Gucci",
+    key: 3,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 4,
+    parent_id: "4",
+    updated_at: "",
+    name: "Nike",
+    title: "Nike",
+    key: 4,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 5,
+    parent_id: "5",
+    updated_at: "",
+    name: "Samsung",
+    title: "Samsung",
+    key: 5,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 6,
+    parent_id: "6",
+    updated_at: "",
+    name: "Apple",
+    title: "Apple",
+    key: 6,
+  },
 ];
