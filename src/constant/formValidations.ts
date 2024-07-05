@@ -28,16 +28,8 @@ export const LoginScreenSchema = (countryCode: CountryCode) => {
 
 export const SignupScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
-    firstName: Yup.string()
-      .required("First name is required")
-      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-        NO_SPECIAL_CHAR.test(value)
-      ),
-    lastName: Yup.string()
-      .required("Last name is required")
-      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-        NO_SPECIAL_CHAR.test(value)
-      ),
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
     username: Yup.string().trim().required("Username is required"),
     email: Yup.string()
       .trim()
@@ -69,26 +61,13 @@ export const SignupScreenSchema = (countryCode: CountryCode) => {
 
 export const EditProfileScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
-    firstName: Yup.string()
-      .required("First name is required")
-      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-        NO_SPECIAL_CHAR.test(value)
-      ),
-    lastName: Yup.string()
-      .required("Last name is required")
-      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-        NO_SPECIAL_CHAR.test(value)
-      ),
-    username: Yup.string()
-      .required("Username is required")
-      .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-        NO_SPECIAL_CHAR.test(value)
-      ),
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    username: Yup.string().required("Username is required"),
     email: Yup.string()
       .trim()
       .email("Invalid email address")
       .required("Email is required"),
-
     phoneNumber: Yup.string()
       .trim()
       .phone(countryCode, "Please enter a valid phone number")
@@ -239,28 +218,13 @@ export const SetupProfile2ScreenSchema = Yup.object().shape({
   address: Yup.string().trim().required("Address is required"),
 });
 export const SetupProfile3ScreenSchema = Yup.object().shape({
-  license: Yup.string()
-    .trim()
-    .required("License is required")
-    .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-      NO_SPECIAL_CHAR.test(value)
-    ),
+  license: Yup.string().trim().required("License is required"),
 });
 export const SetupProfile4ScreenSchema = Yup.object().shape({
-  insurance: Yup.string()
-    .trim()
-    .required("Insurance is required")
-    .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-      NO_SPECIAL_CHAR.test(value)
-    ),
+  insurance: Yup.string().trim().required("Insurance is required"),
 });
 export const SetupProfile7ScreenSchema = Yup.object().shape({
-  rate: Yup.string()
-    .trim()
-    .required("Rate is required")
-    .test("noSpecialChars", no_specialChar_space_allow, (value) =>
-      NO_SPECIAL_CHAR.test(value)
-    ),
+  rate: Yup.string().trim().required("Rate is required"),
 });
 
 // Add Address

@@ -82,17 +82,17 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   });
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
-  const [countryCode, setCountryCode] = useState<string | CountryCode>("RW");
+  const [countryCode, setCountryCode] = useState<CountryCode>("RW");
   const [country, setCountry] = useState<string | TranslationLanguageCodeMap>(
     ""
   );
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -127,7 +127,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   };
 
   const onPhoneInputChange = (value: string, iso2: string) => {
-    setCountryCode(iso2?.toUpperCase());
+    setCountryCode(iso2?.toUpperCase() as CountryCode);
     setFieldValue("phoneNumber", value);
   };
 
@@ -183,11 +183,11 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     onSubmit: async ({ firstName, lastName, username, email, phoneNumber }) => {
       const result = await dispatch(
         userUpdateProfile({
-          first_name: firstName,
-          last_name: lastName,
-          username: username,
-          email,
-          phone_number: phoneNumber,
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          username: username.trim(),
+          email: email.trim(),
+          phone_number: phoneNumber.trim(),
         })
       );
       if (userUpdateProfile.fulfilled.match(result)) {
@@ -335,7 +335,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               maxLength={MAX_CHAR_LENGTH}
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
-              editable={false}
               value={values.username}
               error={errors.username}
               touched={touched.username}
@@ -373,6 +372,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
                 textProps={{
                   placeholder: "Enter your phone number",
                   placeholderTextColor: theme.colors?.iconColor,
+                  editable: false,
                   style: style.txtInStyle,
                   returnKeyLabel: "done",
                   returnKeyType: "done",

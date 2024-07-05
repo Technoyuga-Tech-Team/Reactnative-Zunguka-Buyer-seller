@@ -109,6 +109,7 @@ export const useStyles = makeStyles((theme) => ({
     color: theme.colors?.textPrimary,
     fontFamily: theme.fontFamily?.regular,
     fontSize: theme.fontSize?.fs15,
+    backgroundColor: theme?.colors?.white,
   },
   iconInputCont: {
     flexDirection: "row",

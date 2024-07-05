@@ -93,6 +93,22 @@ const timeElapsedString = (datetime: string | number | Date, full = false) => {
   return result ? result + " ago" : "just now";
 };
 
+const formatNumber = (number: string) => {
+  // Convert the number to a string for easier manipulation
+  const numberString = number.toString();
+
+  // Extract the last four digits for the second part
+  const lastFourDigits = numberString.slice(-4);
+
+  // Replace the first seven digits with asterisks (*)
+  const maskedFirstPart = numberString.slice(0, -4).replace(/./g, "*");
+
+  // Combine the masked first part and the last four digits with a hyphen (-)
+  const formattedNumber = `${maskedFirstPart} - ${lastFourDigits}`;
+
+  return formattedNumber;
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -100,4 +116,5 @@ export {
   getUrlExtension,
   onShare,
   timeElapsedString,
+  formatNumber,
 };

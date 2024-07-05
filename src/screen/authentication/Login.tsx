@@ -64,12 +64,12 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     ""
   );
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -113,8 +113,8 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
 
       const result = await dispatch(
         userLogin({
-          phone_number: phone_number.replace("-", ""),
-          password,
+          phone_number: phone_number.replace("-", "").trim(),
+          password: password.trim(),
           is_social: 0,
           device_type: Platform.OS === "ios" ? "iOS" : "Android",
           device_token: fcmToken,

@@ -22,7 +22,7 @@ const Bottombar = () => {
   return (
     <Tab.Navigator
       initialRouteName={Route.navHome}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
       tabBar={(props) => <BottomTabBar {...props} />}
     >
       <Tab.Screen name={Route.navHome} component={Home} />

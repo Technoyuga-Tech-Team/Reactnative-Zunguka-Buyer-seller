@@ -1,4 +1,5 @@
 import {
+  DefaultTheme,
   LinkingOptions,
   NavigationContainer,
   useNavigationContainerRef,
@@ -104,8 +105,16 @@ const MainNavigator = () => {
     theme.colors?.grey5,
   ]);
 
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: "#ffffff",
+    },
+  };
+
   return (
-    <NavigationContainer ref={navigationRef} linking={linking}>
+    <NavigationContainer ref={navigationRef} linking={linking} theme={MyTheme}>
       <MainStack />
     </NavigationContainer>
   );

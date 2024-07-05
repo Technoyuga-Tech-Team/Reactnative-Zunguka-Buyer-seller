@@ -71,12 +71,12 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
   const [userRole, setUserRole] = useState<string>("");
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -167,7 +167,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
           username: username.trim(),
           email: email.trim(),
           password: createPassword.trim(),
-          phone_number: phone_number.replace("-", ""),
+          phone_number: phone_number.replace("-", "").trim(),
           iso: countryCode.toLowerCase(),
           device_type: Platform.OS === "ios" ? "iOS" : "Android",
           device_token: fcmToken,

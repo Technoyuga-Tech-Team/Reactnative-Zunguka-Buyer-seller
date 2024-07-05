@@ -46,12 +46,12 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (savedAddress) {

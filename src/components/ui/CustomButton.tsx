@@ -4,6 +4,7 @@ import {
   Button as RNEButton,
   ButtonProps as RNEButtonProps,
   makeStyles,
+  useTheme,
 } from "react-native-elements";
 import Scale from "../../utils/Scale";
 import { SCREEN_WIDTH } from "../../constant";
@@ -17,6 +18,7 @@ interface CustomButtonProps extends RNEButtonProps {
   icon?: ReactElement;
   buttonWidth: "half" | "full";
   marginTop?: number;
+  backgroundColor?: string;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = (props) => {
@@ -31,10 +33,11 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
     icon,
     buttonWidth,
     marginTop,
+    backgroundColor,
     ...otherProps
   } = props;
   const styles = useStyles(props);
-
+  const { theme } = useTheme();
   return (
     <View
       style={[
@@ -59,6 +62,12 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
           type === "outline" &&
             variant === "secondary" &&
             styles.secondaryOutline,
+          {
+            backgroundColor:
+              variant === "primary" && type !== "outline"
+                ? backgroundColor
+                : theme?.colors?.transparent,
+          },
         ]}
         titleStyle={[
           variant === "primary" ? styles.primaryTitle : styles.secondaryTitle,

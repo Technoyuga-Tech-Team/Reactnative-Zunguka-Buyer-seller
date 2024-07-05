@@ -50,12 +50,12 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
 
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -89,7 +89,10 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
     onSubmit: async ({ password, confirmPassword }) => {
       const u_role = await getData(USER_ROLE);
       const result = await dispatch(
-        userResetPassword({ phone_number: phone, password })
+        userResetPassword({
+          phone_number: phone?.trim(),
+          password: password.trim(),
+        })
       );
       if (userResetPassword.fulfilled.match(result)) {
         if (result.payload.status === 1) {

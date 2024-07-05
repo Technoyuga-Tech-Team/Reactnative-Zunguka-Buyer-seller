@@ -93,7 +93,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
         source={require("../assets/images/splash_black_logo.png")}
         style={{
           height: 224.74,
-          width: Scale(195),
+          width: Scale(170),
         }}
         resizeMode="contain"
       />

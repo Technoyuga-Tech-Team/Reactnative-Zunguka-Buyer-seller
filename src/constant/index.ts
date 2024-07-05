@@ -1644,11 +1644,9 @@ export const COUNTRIES = [
 ];
 
 export const ID_TYPES = [
-  { title: "Electricity bill", key: "Electricity bill" },
   { title: "Passport", key: "Passport" },
   { title: "National ID Card", key: "National ID Card" },
-  { title: "Pancard", key: "Pancard" },
-  { title: "Driver's License", key: "Driver's License" },
+  { title: "Driving License", key: "Driving License" },
 ];
 
 export const CATEGORIES = [

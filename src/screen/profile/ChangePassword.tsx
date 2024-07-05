@@ -37,12 +37,12 @@ const ChangePassword: React.FC<
   const userData = useSelector(selectUserData);
   const loading = useSelector(selectAuthenticationLoading);
 
-  useEffect(() => {
-    setAdjustResize();
-    return () => {
-      setAdjustPan();
-    };
-  }, []);
+  // useEffect(() => {
+  //   setAdjustResize();
+  //   return () => {
+  //     setAdjustPan();
+  //   };
+  // }, []);
 
   const {
     handleChange,
@@ -60,8 +60,8 @@ const ChangePassword: React.FC<
     onSubmit: async ({ currentPassword, password, confirmPassword }) => {
       const result = await dispatch(
         userChangePassword({
-          old_password: currentPassword,
-          password,
+          old_password: currentPassword.trim(),
+          password: password.trim(),
         })
       );
       if (userChangePassword.fulfilled.match(result)) {

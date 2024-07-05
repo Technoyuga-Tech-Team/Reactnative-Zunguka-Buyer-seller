@@ -97,7 +97,7 @@ const ForgotPassword: React.FC<
       let phone_number = phoneNumber.replace(/ /g, "").replace("-", "");
       const result = await dispatch(
         userForgotPassword({
-          phone_number: phone_number.replace("-", ""),
+          phone_number: phone_number.replace("-", "").trim(),
         })
       );
       if (userForgotPassword.fulfilled.match(result)) {
@@ -105,7 +105,7 @@ const ForgotPassword: React.FC<
         if (result.payload.status === 1) {
           dispatch(setSuccess(result.payload.message));
           navigation.navigate(Route.navEnterOTP, {
-            phone: phone_number,
+            phone: phoneNumber,
             type: "forget_password",
           });
         }

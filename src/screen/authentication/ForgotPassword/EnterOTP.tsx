@@ -28,6 +28,7 @@ import { setSuccess } from "../../../store/global/global.slice";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import Loading from "../../../components/ui/Loading";
 import { saveAddress } from "../../../store/settings/settings.slice";
+import { formatNumber } from "../../../utils";
 
 const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   navigation,
@@ -41,6 +42,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   const loading = useSelector(selectAuthenticationLoading);
 
   const phone = route?.params?.phone;
+  console.log("phone", phone);
   const type = route?.params?.type;
 
   const [time, setTime] = useState({ minutes: 1, seconds: 0 });
@@ -107,9 +109,9 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       let phone_number = phone && phone.replace(/ /g, "").replace("-", "");
 
       let obj = {
-        phone_number: phone_number && phone_number.replace("-", ""),
+        phone_number: phone_number && phone_number.replace("-", "").trim(),
         type: type,
-        code: otp,
+        code: otp.trim(),
       };
 
       const result = await dispatch(userOTPCode(obj));
@@ -185,7 +187,9 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
 
       <Text style={style.txtDigitCode1}>Almost done!</Text>
 
-      <Text style={style.txtDigitCode1}>We've sent a code to {phone}.</Text>
+      <Text style={style.txtDigitCode1}>
+        We've sent a code to {formatNumber(phone)}.
+      </Text>
 
       <AppImage
         source={require("../../../assets/images/MessagesOTP.png")}
@@ -252,13 +256,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.black,
   },
   backBtnCont: {
-    marginVertical: 30,
-  },
-  txtVerificationSentCode: {
-    fontSize: theme.fontSize?.fs16,
-    fontFamily: theme.fontFamily?.regular,
-    color: theme.colors?.secondaryText,
-    marginTop: 20,
+    marginVertical: 15,
   },
   otpInputCont: {
     flex: 1,
