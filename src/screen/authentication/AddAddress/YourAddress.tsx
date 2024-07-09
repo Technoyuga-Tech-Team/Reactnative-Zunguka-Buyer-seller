@@ -27,11 +27,13 @@ import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 
 const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+  const from = route?.params?.fromOTP || false;
 
   const st1Ref = React.useRef<TextInput>(null);
   const cityRef = React.useRef<TextInput>(null);
@@ -126,7 +128,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   });
 
   const onPressBack = () => {
-    if (navigation.canGoBack()) {
+    if (navigation.canGoBack() && !from) {
       navigation.goBack();
     } else {
       navigation.dispatch(

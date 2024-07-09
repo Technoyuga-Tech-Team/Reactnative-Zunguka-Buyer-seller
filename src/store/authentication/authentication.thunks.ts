@@ -8,6 +8,7 @@ import { setUserData } from "../settings/settings.slice";
 import { API } from "../../constant/apiEndpoints";
 import { USER_DATA, secureStoreKeys } from "../../constant";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { UserRoleType } from "../../types/user.types";
 
 export const userRegistration = createAsyncThunk<
   true,
@@ -54,6 +55,7 @@ export const userRegistration = createAsyncThunk<
             iso,
             device_type,
             device_token,
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         false
@@ -70,6 +72,7 @@ export const userRegistration = createAsyncThunk<
     if (authorization) {
       dispatch(setUserData(data?.user));
       setData(USER_DATA, data?.user);
+      await setData(secureStoreKeys.JWT_TOKEN, authorization.token);
     }
 
     return true;
@@ -102,6 +105,7 @@ export const userLogin = createAsyncThunk<
             is_social,
             device_token,
             device_type,
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         false
@@ -135,6 +139,7 @@ export const userForgotPassword = createAsyncThunk<
           method: "POST",
           data: {
             phone_number,
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         false
@@ -155,12 +160,12 @@ export const userForgotPassword = createAsyncThunk<
 
 export const userOTPCode = createAsyncThunk<
   any,
-  { email?: string; code: string; type: string; phone_number?: string },
+  { code: string; action_type: string; phone_number?: string },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(
   "authentication/userOTPCode",
   async (
-    { code, email, type, phone_number },
+    { code, action_type, phone_number },
     { dispatch, rejectWithValue }
   ) => {
     const { errors, data } = await dispatch(
@@ -170,15 +175,13 @@ export const userOTPCode = createAsyncThunk<
           method: "POST",
           data: {
             code,
-            ...(email && {
-              email,
-            }),
-            ...(type && {
-              type,
+            ...(action_type && {
+              action_type,
             }),
             ...(phone_number && {
               phone_number,
             }),
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         false
@@ -190,6 +193,11 @@ export const userOTPCode = createAsyncThunk<
 
     if (errors) {
       return rejectWithValue(errors);
+    }
+
+    if (data?.data) {
+      dispatch(setUserData(data?.data));
+      setData(USER_DATA, data?.data);
     }
 
     // await setData(secureStoreKeys.JWT_TOKEN, data.token);
@@ -213,6 +221,7 @@ export const userChangePassword = createAsyncThunk<
           data: {
             old_password,
             password,
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         true
@@ -231,11 +240,11 @@ export const userChangePassword = createAsyncThunk<
 
 export const userResetPassword = createAsyncThunk<
   any,
-  { password: string; phone_number: string; type: string },
+  { password: string; phone_number: string },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(
   "authentication/userResetPassword",
-  async ({ password, phone_number, type }, { dispatch, rejectWithValue }) => {
+  async ({ password, phone_number }, { dispatch, rejectWithValue }) => {
     const { errors, data } = await dispatch(
       fetchAction<TokenPayload1>(
         {
@@ -244,7 +253,7 @@ export const userResetPassword = createAsyncThunk<
           data: {
             password,
             phone_number,
-            type,
+            type: UserRoleType.BUYER_SELLER,
           },
         },
         false

@@ -59,7 +59,7 @@ export type AuthenticationRoutes = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
-  YourAddress: undefined;
+  YourAddress: { fromOTP?: boolean };
   AddKyc: undefined;
   ChooseAddress: undefined;
   EnterOTP: { phone?: string; type: string };

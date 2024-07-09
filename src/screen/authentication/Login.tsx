@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -16,29 +16,26 @@ import {
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 // Relative paths
+import ReactNativePhoneInput from "react-native-phone-input";
+import { useSelector } from "react-redux";
 import { AppImage } from "../../components/AppImage/AppImage";
 import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import CustomButton from "../../components/ui/CustomButton";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import Loading from "../../components/ui/Loading";
 import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
 import SocialAuthenticationView from "../../components/ui/SocialAuth/SocialAuthenticationView";
-import { USER_ROLE } from "../../constant";
 import { LoginScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import { userLogin } from "../../store/authentication/authentication.thunks";
+import { saveAddress } from "../../store/settings/settings.slice";
 import { LoginFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
-import { getData } from "../../utils/asyncStorage";
-import ReactNativePhoneInput from "react-native-phone-input";
-import { userLogin } from "../../store/authentication/authentication.thunks";
-import Loading from "../../components/ui/Loading";
-import { useSelector } from "react-redux";
-import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
-import { saveAddress } from "../../store/settings/settings.slice";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -70,17 +67,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   //     setAdjustPan();
   //   };
   // }, []);
-
-  useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", async () => {
-      const u_role = await getData(USER_ROLE);
-      setUserRole(u_role);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   // useEffect(() => {
   //   const Init = async () => {
@@ -124,7 +110,8 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         console.log("result.payload", result.payload);
 
         if (result.payload?.status == 1) {
-          let steps = result.payload?.user?.step || result.payload?.step;
+          let steps = result.payload?.user?.step;
+          console.log("steps", steps);
           if (steps !== 2) {
             if (steps == 0) {
               dispatch(saveAddress(""));

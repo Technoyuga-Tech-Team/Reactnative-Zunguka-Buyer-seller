@@ -155,6 +155,6 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(50),
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: Scale(4),
+    borderRadius: Scale(50 / 2),
   },
 }));

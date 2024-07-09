@@ -1,6 +1,9 @@
 import { LoadingState } from "./global.types";
 
-export type UserRole = "mover" | "buyer_seller" | null;
+export enum UserRoleType {
+  BUYER_SELLER = 0,
+  MOVER = 1,
+}
 
 export type UserData = {
   id: number;

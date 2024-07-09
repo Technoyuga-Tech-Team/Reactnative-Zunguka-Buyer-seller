@@ -70,7 +70,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     setVisible(!visible);
   };
   const onPressLogout = async () => {
-    if (userData.is_social == 1) {
+    if (userData?.is_social == 1) {
       await GoogleSignin.signOut();
     }
     setVisible(false);

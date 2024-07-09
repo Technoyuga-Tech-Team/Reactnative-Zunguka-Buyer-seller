@@ -74,7 +74,7 @@ const useStyle = makeStyles((theme) => ({
     // flex: 1,
     alignSelf: "center",
     position: "absolute",
-    top: "40%",
+    top: "35%",
     width: "90%",
   },
   modalCont: {
@@ -109,6 +109,7 @@ const useStyle = makeStyles((theme) => ({
     color: theme.colors?.secondaryText,
     marginVertical: 20,
     textAlign: "center",
+    width: "90%",
   },
   txtLoginToZungukaDesc: {
     fontSize: theme.fontSize?.fs17,

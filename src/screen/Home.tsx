@@ -1,4 +1,4 @@
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, StatusBar, Platform } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
@@ -13,12 +13,23 @@ import { CATEGORIES, HOT_BRANDS } from "../constant";
 import CategoryListing from "../components/Categories/CategoryListing";
 import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
   const userData = useSelector(selectUserData);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      StatusBar.setBarStyle("dark-content");
+      StatusBar.setTranslucent(true);
+      Platform.OS === "android" && StatusBar.setBackgroundColor("transparent");
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const onPressNotification = () => {};
   const onPressSearch = () => {};

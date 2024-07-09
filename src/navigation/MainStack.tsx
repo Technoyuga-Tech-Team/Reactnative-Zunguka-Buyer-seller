@@ -29,13 +29,29 @@ const MainStack = () => {
         screenOptions={{ headerShown: false }}
         initialRouteName={Route.navSplash}
       >
-        <Stack.Screen name={Route.navSplash} component={Splash} />
+        <Stack.Screen
+          name={Route.navSplash}
+          component={Splash}
+          options={{
+            contentStyle: {
+              backgroundColor: "transparent",
+            },
+          }}
+        />
         <Stack.Screen name={Route.navOnboard} component={Onboard} />
         <Stack.Screen
           name={Route.navAuthentication}
           component={Authentication}
         />
-        <Stack.Screen name={Route.navDashboard} component={Bottombar} />
+        <Stack.Screen
+          name={Route.navDashboard}
+          component={Bottombar}
+          options={{
+            contentStyle: {
+              backgroundColor: "transparent",
+            },
+          }}
+        />
         <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
         <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
         <Stack.Screen name={Route.navAddKyc} component={AddKyc} />

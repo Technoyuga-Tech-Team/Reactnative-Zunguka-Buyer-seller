@@ -110,7 +110,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
 
       let obj = {
         phone_number: phone_number && phone_number.replace("-", "").trim(),
-        type: type,
+        action_type: type,
         code: otp.trim(),
       };
 
@@ -118,24 +118,36 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       if (userOTPCode.fulfilled.match(result)) {
         if (result?.payload?.status === 1) {
           dispatch(setSuccess(result.payload.message));
+          console.log("result?.payload", result?.payload);
           if (type === "otp_verification") {
             dispatch(saveAddress(""));
+            let steps = result.payload?.data?.step;
+            console.log("steps", steps);
+            if (steps !== 2) {
+              if (steps == 0) {
+                dispatch(saveAddress(""));
+                navigation.navigate(Route.navYourAddress, { fromOTP: true });
+              } else if (steps == 1) {
+                navigation.navigate(Route.navAddKyc);
+              }
+            } else {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: Route.navDashboard }],
+                })
+              );
+            }
             // navigation.dispatch(
             //   CommonActions.reset({
             //     index: 0,
-            //     routes: [{ name: Route.navYourAddress }],
+            //     routes: [
+            //       {
+            //         name: Route.navAuthentication,
+            //       },
+            //     ],
             //   })
             // );
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: Route.navAuthentication,
-                  },
-                ],
-              })
-            );
           } else {
             navigation.navigate(Route.navResetPassword, {
               phone: phone_number && phone_number.replace("-", ""),

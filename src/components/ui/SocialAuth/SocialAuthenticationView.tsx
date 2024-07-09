@@ -8,11 +8,7 @@ import { Platform, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-// import { selectOAuthLoading } from "../../../store/authentication/authentication.selectors";
-// import { setOAuthLoading } from "../../../store/authentication/authentication.slice";
-// import { oAuthLogin } from "../../../store/authentication/authentication.thunks";
 import { setErrors, setSuccess } from "../../../store/global/global.slice";
-// import { setErrorFromSocial } from "../../../store/settings/settings.slice";
 import { AuthLoadingState } from "../../../types/global.types";
 import { AuthenticationRoutes } from "../../../types/navigation";
 import SocialIconBlock from "./SocialIconBlock";
@@ -87,7 +83,7 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
           if (steps !== 2) {
             if (steps == 0) {
               dispatch(saveAddress(""));
-              navigation.navigate(Route.navYourAddress);
+              navigation.navigate(Route.navYourAddress, { fromOTP: false });
             } else if (steps == 1) {
               navigation.navigate(Route.navAddKyc);
             }
