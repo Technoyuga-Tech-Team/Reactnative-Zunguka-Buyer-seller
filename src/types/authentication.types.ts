@@ -71,9 +71,8 @@ export type TokenPayload1 = {
 
 export interface AddAddressProps {
   gpsAddress: string;
-  streetAddress: string;
-  streetAddress1: string;
-  city: string;
-  country: string;
-  zipcode: string;
+  houseNumber: string;
+  streetNumber: string;
+  sector: string;
+  district: string;
 }

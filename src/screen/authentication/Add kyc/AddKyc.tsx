@@ -143,7 +143,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
     if (isValid()) {
       try {
         const formData = new FormData();
-        formData.append("country", `${country}`);
+        formData.append("district", `${country}`);
         formData.append("id_type", `${IdType}`);
         Object.entries(image).forEach(([_key, val]) => {
           formData.append(`kyc_documents[${_key}]`, {
@@ -158,7 +158,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
         const result = await dispatch(userVerifyId({ formData: formData }));
         if (userVerifyId.fulfilled.match(result)) {
           if (result.payload.status === 1) {
-            console.log("userAddress result - - - ", result.payload);
+            console.log("userVerifyId result - - - ", result.payload);
             dispatch(setSuccess(result.payload.message));
             navigation.dispatch(
               CommonActions.reset({
@@ -168,7 +168,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
             );
           }
         } else {
-          console.log("userAddress error - - - ", result.payload);
+          console.log("userVerifyId error - - - ", result.payload);
         }
       } catch (error) {
         console.log("catch error - - - ", error);

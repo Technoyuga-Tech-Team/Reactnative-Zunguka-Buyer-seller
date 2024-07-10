@@ -10,7 +10,7 @@ const Inbox = () => {
   const { theme } = useTheme();
   return (
     <View style={style.container}>
-      <Text>Inbox</Text>
+      <Text>Alert</Text>
     </View>
   );
 };

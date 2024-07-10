@@ -37,6 +37,7 @@ import { SignupFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   navigation,
@@ -218,6 +219,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             touched={touched.lastName}
             onSubmitEditing={() => usernameRef.current?.focus()}
           />
+          <InputFieldInfo text={"Name view only for admin."} />
           <CustomTxtInput
             textInputTitle="Username"
             ref={usernameRef}
@@ -233,6 +235,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             touched={touched.username}
             onSubmitEditing={() => emaiRef.current?.focus()}
           />
+          <InputFieldInfo text={"Username view for publicly"} />
           <CustomTxtInput
             textInputTitle="Email Address"
             ref={emaiRef}

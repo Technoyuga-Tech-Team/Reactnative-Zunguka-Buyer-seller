@@ -19,8 +19,10 @@ const getIcons = (key: number) => {
     : key == 2
     ? Images.MOBILE_IMAGE
     : key == 3
-    ? Images.HOME_IMAGE
+    ? Images.HOBBIES_IMAGE
     : key == 4
+    ? Images.HOME_IMAGE
+    : key == 5
     ? Images.RESTROOM_WOMEN_IMAGE
     : Images.CAR_IMAGE;
 };

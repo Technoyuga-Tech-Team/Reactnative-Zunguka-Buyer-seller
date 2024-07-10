@@ -1676,8 +1676,8 @@ export const CATEGORIES = [
     id: 3,
     parent_id: "3",
     updated_at: "",
-    name: "Home and Living",
-    title: "Home and Living",
+    name: "Hobbies and Leisure",
+    title: "Hobbies and Leisure",
     key: 3,
   },
   {
@@ -1686,8 +1686,8 @@ export const CATEGORIES = [
     id: 4,
     parent_id: "4",
     updated_at: "",
-    name: "Beauty and Health",
-    title: "Beauty and Health",
+    name: "Home and Living",
+    title: "Home and Living",
     key: 4,
   },
   {
@@ -1696,9 +1696,19 @@ export const CATEGORIES = [
     id: 5,
     parent_id: "5",
     updated_at: "",
+    name: "Beauty and Health",
+    title: "Beauty and Health",
+    key: 5,
+  },
+  {
+    created_at: "",
+    icon: "",
+    id: 6,
+    parent_id: "6",
+    updated_at: "",
     name: "Auto-motive",
     title: "Auto-motive",
-    key: 5,
+    key: 6,
   },
 ];
 

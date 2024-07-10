@@ -79,29 +79,26 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
     validationSchema: AddAddressScreenSchema(gpsAddressHave),
     initialValues: {
       gpsAddress,
-      streetAddress: "",
-      streetAddress1: "",
-      country: "",
-      city: "",
-      zipcode: "",
+      houseNumber: "",
+      streetNumber: "",
+      sector: "",
+      district: "",
     },
     onSubmit: async ({
       gpsAddress,
-      streetAddress,
-      streetAddress1,
-      country,
-      city,
-      zipcode,
+      houseNumber,
+      streetNumber,
+      sector,
+      district,
     }) => {
       const formData = new FormData();
 
       formData.append("is_gps_location", `${gpsAddressHave}`);
       formData.append("address", `${gpsAddress}`);
-      formData.append("street_address_1", `${streetAddress}`);
-      formData.append("street_address_2", `${streetAddress1}`);
-      formData.append("country", `${country}`);
-      formData.append("city", `${city}`);
-      formData.append("zip_code", `${zipcode}`);
+      formData.append("house_number", `${houseNumber}`);
+      formData.append("street_number", `${streetNumber}`);
+      formData.append("district", `${district}`);
+      formData.append("sector", `${sector}`);
 
       Object.entries(houseImage).forEach(([_key, val]) => {
         formData.append(`house_images[${_key}]`, {
@@ -184,73 +181,60 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           />
           <Text style={style.txtManualAddress}>Manual Address</Text>
           <CustomTxtInput
-            textInputTitle="Street address"
-            placeholder="Street address"
-            onChangeText={handleChange("streetAddress")}
-            onBlur={handleBlur("streetAddress")}
-            value={values.streetAddress}
-            error={errors.streetAddress}
-            touched={touched.streetAddress}
+            textInputTitle="House number"
+            placeholder="House number"
+            onChangeText={handleChange("houseNumber")}
+            onBlur={handleBlur("houseNumber")}
+            value={values.houseNumber}
+            error={errors.houseNumber}
+            touched={touched.houseNumber}
             returnKeyLabel="next"
             returnKeyType="next"
             onSubmitEditing={() => st1Ref.current?.focus()}
           />
           <CustomTxtInput
             ref={st1Ref}
-            textInputTitle="Apt, suites, etc"
-            placeholder="Apt, suites, etc"
-            onChangeText={handleChange("streetAddress1")}
-            onBlur={handleBlur("streetAddress1")}
-            value={values.streetAddress1}
-            error={errors.streetAddress1}
-            touched={touched.streetAddress1}
+            textInputTitle="Street number"
+            placeholder="Street number"
+            onChangeText={handleChange("streetNumber")}
+            onBlur={handleBlur("streetNumber")}
+            value={values.streetNumber}
+            error={errors.streetNumber}
+            touched={touched.streetNumber}
             returnKeyLabel="next"
             returnKeyType="next"
             onSubmitEditing={() => cityRef.current?.focus()}
           />
           <CustomTxtInput
             ref={cityRef}
-            textInputTitle="City"
-            placeholder="City"
-            onChangeText={handleChange("city")}
-            onBlur={handleBlur("city")}
-            value={values.city}
-            error={errors.city}
-            touched={touched.city}
+            textInputTitle="Sector name"
+            placeholder="Sector name"
+            onChangeText={handleChange("sector")}
+            onBlur={handleBlur("sector")}
+            value={values.sector}
+            error={errors.sector}
+            touched={touched.sector}
             returnKeyLabel="next"
             returnKeyType="next"
             onSubmitEditing={() => countryRef.current?.focus()}
           />
           <CustomTxtInput
             ref={countryRef}
-            textInputTitle="Country"
-            placeholder="Country"
-            onChangeText={handleChange("country")}
-            onBlur={handleBlur("country")}
-            value={values.country}
-            error={errors.country}
-            touched={touched.country}
+            textInputTitle="District name"
+            placeholder="District name"
+            onChangeText={handleChange("district")}
+            onBlur={handleBlur("district")}
+            value={values.district}
+            error={errors.district}
+            touched={touched.district}
             returnKeyLabel="next"
             returnKeyType="next"
             onSubmitEditing={() => zipRef.current?.focus()}
-          />
-          <CustomTxtInput
-            ref={zipRef}
-            textInputTitle="Zip Code"
-            placeholder="Zip Code"
-            onChangeText={handleChange("zipcode")}
-            onBlur={handleBlur("zipcode")}
-            value={values.zipcode}
-            error={errors.zipcode}
-            touched={touched.zipcode}
-            returnKeyLabel="done"
-            returnKeyType="done"
           />
         </View>
       </KeyboardAwareScrollView>
       <CustomButton
         onPress={() => {
-          console.log("houseImage", houseImage);
           if (houseImage?.length > 0) {
             handleSubmit();
           } else {

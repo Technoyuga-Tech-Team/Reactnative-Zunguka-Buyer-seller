@@ -13,6 +13,8 @@ import { Route } from "../../constant/navigationConstants";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import InboxIcon from "../../components/ui/svg/InboxIcon";
+import CameraLIcon from "../../components/ui/svg/CameraLIcon";
+import AlertIcon from "../../components/ui/svg/AlertIcon";
 
 const BottomTabBar = ({ state, navigation }: any) => {
   const dispatch = useDispatch();
@@ -68,7 +70,7 @@ const BottomTabBar = ({ state, navigation }: any) => {
                       width={22}
                     />
                   ) : route.name === Route.navSell ? (
-                    <SellIcon
+                    <CameraLIcon
                       color={
                         isFocused
                           ? theme.colors?.primary
@@ -77,8 +79,8 @@ const BottomTabBar = ({ state, navigation }: any) => {
                       height={25}
                       width={25}
                     />
-                  ) : route.name === Route.navInbox ? (
-                    <InboxIcon
+                  ) : route.name === Route.navAlert ? (
+                    <AlertIcon
                       color={
                         isFocused
                           ? theme.colors?.primary
