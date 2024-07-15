@@ -62,7 +62,6 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
       let param = {
         first_name: userInfo.user.name,
         last_name: userInfo.user.name,
-        username: userInfo.user.givenName,
         profile_image: userInfo?.user?.photo || "",
         email: userInfo.user.email,
         social_id: googleCredential.token,

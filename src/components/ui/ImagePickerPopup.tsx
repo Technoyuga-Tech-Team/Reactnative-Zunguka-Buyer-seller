@@ -11,7 +11,7 @@ import { makeStyles } from "react-native-elements";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomButton from "./CustomButton";
-import { HAS_NOTCH, HIT_SLOP } from "../../constant";
+import { HAS_NOTCH, HIT_SLOP, SCREEN_WIDTH } from "../../constant";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 
@@ -49,6 +49,7 @@ const ImagePickerPopup: React.FC<ImagePickerPopupProps> = ({
                 onPress={onPressFromGallary}
                 title={"Gallary"}
                 buttonWidth="half"
+                width={SCREEN_WIDTH - 100}
                 variant="primary"
                 type="solid"
                 containerStyle={style.btnCont}
@@ -59,6 +60,7 @@ const ImagePickerPopup: React.FC<ImagePickerPopupProps> = ({
                 onPress={onPressFromCamera}
                 title={"Camera"}
                 buttonWidth="half"
+                width={SCREEN_WIDTH - 100}
                 variant="primary"
                 type="solid"
                 containerStyle={style.btnCont}

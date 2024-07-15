@@ -1,6 +1,6 @@
 import { CommonActions } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -30,6 +30,7 @@ import { ResetPasswordFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 
 const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
   navigation,
@@ -47,12 +48,12 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
 
   const [visible, setVisible] = useState(false);
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   const onPressBack = () => {
     navigation.goBack();

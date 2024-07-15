@@ -23,8 +23,14 @@ import { selectUserData } from "../../store/settings/settings.selectors";
 import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { imagePickerProps } from "../../types/common.types";
-import { EditProfileFormProps } from "../../types/authentication.types";
-import { EditProfileScreenSchema } from "../../constant/formValidations";
+import {
+  EditProfileFormProps,
+  EditProfileFormWithoutPhoneProps,
+} from "../../types/authentication.types";
+import {
+  EditProfileScreenSchema,
+  EditProfileScreenSchemaWithoutPhone,
+} from "../../constant/formValidations";
 import {
   userUpdateProfile,
   userUpdateProfilePicture,
@@ -50,6 +56,7 @@ import CustomButton from "../../components/ui/CustomButton";
 import ImagePickerPopup from "../../components/ui/ImagePickerPopup";
 import Scale from "../../utils/Scale";
 import BorderedItem from "../../components/ui/BorderedItem";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   navigation,
@@ -87,12 +94,14 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     ""
   );
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
+
+  console.log("userData", userData);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -122,8 +131,8 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   const onPressUpdateProfile = () => {};
 
   const onPressFlag = () => {
-    setFieldValue("phoneNumber", "");
-    setVisibleCountryPicker(true);
+    // setFieldValue("phoneNumber", "");
+    // setVisibleCountryPicker(true);
   };
 
   const onPhoneInputChange = (value: string, iso2: string) => {
@@ -171,7 +180,10 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     setFieldValue,
     setValues,
   } = useFormik<EditProfileFormProps>({
-    validationSchema: EditProfileScreenSchema(countryCode),
+    validationSchema:
+      userData?.is_social == 1
+        ? EditProfileScreenSchemaWithoutPhone(countryCode)
+        : EditProfileScreenSchema(countryCode),
     initialValues: {
       firstName: "",
       lastName: "",
@@ -325,6 +337,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               touched={touched.lastName}
               onSubmitEditing={() => usernameRef.current?.focus()}
             />
+            <InputFieldInfo text={"Name view only for admin."} />
             <CustomTxtInput
               textInputTitle="Username"
               ref={usernameRef}
@@ -335,11 +348,13 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               maxLength={MAX_CHAR_LENGTH}
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
+              editable={values.username ? false : true}
               value={values.username}
               error={errors.username}
               touched={touched.username}
               onSubmitEditing={() => emaiRef.current?.focus()}
             />
+            <InputFieldInfo text={"Username view for publicly"} />
             <CustomTxtInput
               textInputTitle="Email Address"
               ref={emaiRef}
@@ -349,40 +364,42 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               keyboardType={"email-address"}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              editable={false}
+              editable={true}
               value={values.email}
               error={errors.email}
               touched={touched.email}
               onSubmitEditing={() => phoneRef.current?.focus()}
             />
-            <TouchableOpacity
-              onPress={() => {
-                setTamp_phone("");
-              }}
-              activeOpacity={1}
-            >
-              <PhoneNumberInput
-                ref={phoneRef}
-                textInputTitle="Phone Number"
-                onPressFlag={onPressFlag}
-                onChangePhoneNumber={(value, iso2) =>
-                  onPhoneInputChange(value, iso2)
-                }
-                initialValue={phone_initial}
-                textProps={{
-                  placeholder: "Enter your phone number",
-                  placeholderTextColor: theme.colors?.iconColor,
-                  editable: false,
-                  style: style.txtInStyle,
-                  returnKeyLabel: "done",
-                  returnKeyType: "done",
-                  onPressIn: () => {
-                    setTamp_phone("");
-                  },
+            {userData?.is_social !== 1 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setTamp_phone("");
                 }}
-                error={errors.phoneNumber}
-              />
-            </TouchableOpacity>
+                activeOpacity={1}
+              >
+                <PhoneNumberInput
+                  ref={phoneRef}
+                  textInputTitle="Phone Number"
+                  onPressFlag={onPressFlag}
+                  onChangePhoneNumber={(value, iso2) =>
+                    onPhoneInputChange(value, iso2)
+                  }
+                  initialValue={phone_initial}
+                  textProps={{
+                    placeholder: "Enter your phone number",
+                    placeholderTextColor: theme.colors?.iconColor,
+                    editable: false,
+                    style: style.txtInStyle,
+                    returnKeyLabel: "done",
+                    returnKeyType: "done",
+                    onPressIn: () => {
+                      setTamp_phone("");
+                    },
+                  }}
+                  error={errors.phoneNumber}
+                />
+              </TouchableOpacity>
+            )}
 
             <CountryPickerModal
               country={country}

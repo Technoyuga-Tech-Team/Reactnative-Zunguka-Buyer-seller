@@ -242,7 +242,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
         <View
           style={{
             flex: 1,
-            alignItems: image && image.length > 0 ? "flex-start" : "center",
+            alignItems: "center",
             paddingHorizontal: 20,
           }}
         >

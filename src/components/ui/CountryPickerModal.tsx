@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TextInput, TouchableOpacity } from "react-native";
 import CountryPicker, {
   Country,
   CountryCode,
@@ -31,6 +31,7 @@ const CountryPickerModal: React.FC<CountryPickerModalProps> = ({
 }) => {
   const { theme } = useTheme();
   const style = useStyle();
+
   return (
     <CountryPicker
       containerButtonStyle={[style.container]}

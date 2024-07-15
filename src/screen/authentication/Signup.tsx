@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -38,6 +38,7 @@ import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import InputFieldInfo from "../../components/ui/InputFieldInfo";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 
 const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   navigation,
@@ -70,12 +71,12 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
   const [userRole, setUserRole] = useState<string>("");
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   // useEffect(() => {
   //   const Init = async () => {
@@ -165,7 +166,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
         if (result.payload) {
           console.log("result", result);
           navigation.navigate(Route.navEnterOTP, {
-            phone: phone_number,
+            phone: phoneNumber,
             type: "otp_verification",
           });
         }

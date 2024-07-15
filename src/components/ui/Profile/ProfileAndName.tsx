@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     lineHeight: 28,
     color: theme.colors?.black,
     fontFamily: theme.fontFamily?.bold,
+    textTransform: "capitalize",
   },
   txtViewProfile: {
     fontSize: theme.fontSize?.fs16,

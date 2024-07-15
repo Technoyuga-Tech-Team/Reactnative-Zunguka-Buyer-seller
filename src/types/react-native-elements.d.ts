@@ -31,6 +31,8 @@ declare module "react-native-elements/dist/config/colors" {
     grey11: string;
     backgroundLight: string;
     darkGrey: string;
+    backgroundLight1: string;
+    greyed: string;
   }
 }
 

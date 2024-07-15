@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, Platform } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
 import { ThemeProps } from "../types/global.types";
@@ -12,18 +12,34 @@ import SeeAllItem from "../components/SeeAllItem";
 import { CATEGORIES, HOT_BRANDS } from "../constant";
 import CategoryListing from "../components/Categories/CategoryListing";
 import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
+import { HomeNavigationProps } from "../types/navigation";
+import { Route } from "../constant/navigationConstants";
 
-const Home = ({ navigation }) => {
+const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
   const userData = useSelector(selectUserData);
 
+  const [name, setName] = useState({
+    fname: userData?.first_name,
+    lname: userData?.last_name,
+  });
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setName({ fname: userData?.first_name, lname: userData?.last_name });
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [userData]);
+
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("dark-content");
-      StatusBar.setTranslucent(true);
+      Platform.OS === "android" && StatusBar.setTranslucent(true);
       Platform.OS === "android" && StatusBar.setBackgroundColor("transparent");
     });
     return () => {
@@ -31,8 +47,12 @@ const Home = ({ navigation }) => {
     };
   }, []);
 
-  const onPressNotification = () => {};
-  const onPressSearch = () => {};
+  const onPressNotification = () => {
+    navigation.navigate(Route.navAlert);
+  };
+  const onPressSearch = () => {
+    navigation.navigate(Route.navSearchProduct);
+  };
   const onPressSeeAllCategories = () => {};
   const onPressCategory = (item: any) => {};
   const onPressHotBrands = (item: any) => {};
@@ -45,7 +65,7 @@ const Home = ({ navigation }) => {
         barStyle={"dark-content"}
       />
       <HeaderHome
-        name={userData?.username}
+        name={`${name?.fname} ${name?.lname}`}
         onPressNotification={onPressNotification}
         onPressSearch={onPressSearch}
       />

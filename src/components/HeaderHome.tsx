@@ -8,6 +8,7 @@ import Scale from "../utils/Scale";
 import { HIT_SLOP2, SCREEN_WIDTH } from "../constant";
 import BellIcon from "./ui/svg/BellIcon";
 import SearchIcon from "./ui/svg/SearchIcon";
+import MarqueeText from "react-native-marquee";
 
 interface HeaderHomeProps {
   name: string;
@@ -32,9 +33,18 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
       <View style={style.InnerCont}>
         <View style={style.nameCont}>
           <View style={style.nameInnerCont}>
-            <Text style={style.txtName}>{`Hi ${name}!`}</Text>
+            {/* <Text numberOfLines={1} style={style.txtName}>{`Hi ${name}!`}</Text> */}
+            <MarqueeText
+              style={style.txtName}
+              speed={1}
+              marqueeOnStart={true}
+              loop={true}
+              delay={1000}
+            >
+              {`Hi ${name}!`}
+            </MarqueeText>
             <Text style={style.txtTitle}>
-              Find items you seek at discounted prices
+              Explore the world of hidden gems!
             </Text>
           </View>
           <TouchableOpacity
@@ -47,7 +57,7 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={1}
           onPress={onPressSearch}
           style={style.searchCont}
         >
@@ -94,6 +104,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     letterSpacing: 0.36,
     lineHeight: 34,
     textTransform: "capitalize",
+    width: "90%",
   },
   txtTitle: {
     fontSize: theme.fontSize?.fs13,

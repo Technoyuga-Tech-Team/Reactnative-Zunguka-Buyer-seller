@@ -104,7 +104,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
       <Text style={style.txtProfile}>Profile</Text>
       <View style={style.profileCont}>
         <ProfileAndName
-          name={userData?.username}
+          name={`${userData?.first_name} ${userData?.last_name}`}
           email={userData?.email}
           profileImage={Profile}
         />

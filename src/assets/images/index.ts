@@ -15,4 +15,7 @@ export enum Images {
   NIKE_IMAGE = require("../images/nike.png"),
   SAMSUNG_IMAGE = require("../images/samsung.png"),
   APPLE_IMAGE = require("../images/apple.png"),
+  // radio button
+  UNCHECKED_RADIO = require("../images/radio_button_unchecked.png"),
+  CHECKED_RADIO = require("../images/radio_button_checked.png"),
 }

@@ -13,7 +13,7 @@ export type AppRoutes = {
   AddKyc: undefined;
   Dashboard: undefined;
   Home: undefined;
-  Search: undefined;
+  SearchProduct: undefined;
   Add: undefined;
   SellAnItem: undefined;
   ListAnother: undefined;
@@ -81,12 +81,14 @@ export type BottomRoutes = {
 
 export type HomeRoutes = {
   Home: undefined;
+  SearchProduct: undefined;
   Favourites: undefined;
   Sell: undefined;
-  Inbox: undefined;
+  Alert: undefined;
   Profile: undefined;
   EditProfile: undefined;
   ChangePassword: undefined;
+  ProductDetails: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

@@ -10,16 +10,19 @@ interface SliderProps {
   item: SliderItemProps;
   bannerHeight?: number;
   bannerwidth?: number;
+  borderRadius?: number;
 }
 
 const SliderItem: React.FC<SliderProps> = ({
   item,
   bannerHeight,
   bannerwidth,
+  borderRadius,
 }) => {
   const height = bannerHeight || 213.41;
   const width = bannerwidth || SCREEN_WIDTH;
-  const styles = useStyles({ height, width });
+  const radius = borderRadius || 8;
+  const styles = useStyles({ height, width, radius });
   const { theme } = useTheme();
 
   return (
@@ -34,7 +37,7 @@ const SliderItem: React.FC<SliderProps> = ({
 };
 
 const useStyles = makeStyles(
-  (theme, props: { height: number; width: number }) => {
+  (theme, props: { height: number; width: number; radius: number }) => {
     return {
       container: {
         alignItems: "center",
@@ -54,7 +57,7 @@ const useStyles = makeStyles(
       sliderImage: {
         height: props?.height,
         width: props?.width,
-        borderRadius: 8,
+        borderRadius: props?.radius,
       },
     };
   }

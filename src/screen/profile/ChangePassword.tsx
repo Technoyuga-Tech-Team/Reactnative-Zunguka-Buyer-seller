@@ -37,12 +37,12 @@ const ChangePassword: React.FC<
   const userData = useSelector(selectUserData);
   const loading = useSelector(selectAuthenticationLoading);
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   const {
     handleChange,

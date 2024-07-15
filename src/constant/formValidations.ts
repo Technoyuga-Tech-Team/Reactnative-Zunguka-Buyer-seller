@@ -75,11 +75,25 @@ export const EditProfileScreenSchema = (countryCode: CountryCode) => {
   });
 };
 
+export const EditProfileScreenSchemaWithoutPhone = (
+  countryCode: CountryCode
+) => {
+  return Yup.object().shape({
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    username: Yup.string().required("Username is required"),
+    email: Yup.string()
+      .trim()
+      .email("Invalid email address")
+      .required("Email is required"),
+  });
+};
+
 // OTP screen
 export const OTPScreenSchema = Yup.object().shape({
   otp: Yup.string()
     .trim()
-    .test("len", "Must be 6 characters", (val) => val?.length == 6)
+    .test("len", "Must be 6 digits", (val) => val?.length == 6)
     .required("OTP is required"),
 });
 

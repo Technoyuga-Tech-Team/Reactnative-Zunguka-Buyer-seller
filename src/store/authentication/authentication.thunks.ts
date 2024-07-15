@@ -304,7 +304,6 @@ export const oAuthLogin = createAsyncThunk<
   {
     first_name: string;
     last_name: string;
-    username: string;
     // profile_image: string;
     email: string;
     social_id: string;
@@ -322,7 +321,6 @@ export const oAuthLogin = createAsyncThunk<
     {
       first_name,
       last_name,
-      username,
       // profile_image,
       is_social,
       social_type,
@@ -346,7 +344,6 @@ export const oAuthLogin = createAsyncThunk<
           data: {
             first_name: auth()?.currentUser?.displayName || first_name,
             last_name: auth()?.currentUser?.displayName || last_name,
-            username: username,
             // profile_image,
             email: auth()?.currentUser?.email,
             social_id: auth()?.currentUser?.uid,

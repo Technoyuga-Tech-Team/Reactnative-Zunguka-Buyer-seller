@@ -41,6 +41,12 @@ export interface EditProfileFormProps {
   email: string;
   phoneNumber: string;
 }
+export interface EditProfileFormWithoutPhoneProps {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+}
 
 export interface AuthenticationState {
   loading: LoadingState;

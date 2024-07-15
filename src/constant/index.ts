@@ -1400,6 +1400,18 @@ export const HOME_BANNERS: any[] = [
   },
 ];
 
+export const PRODUCT_BANNERS: any[] = [
+  {
+    image: require("../assets/images/product.png"),
+  },
+  {
+    image: require("../assets/images/product.png"),
+  },
+  {
+    image: require("../assets/images/product.png"),
+  },
+];
+
 export const COUNTRIES = [
   { title: "Afghanistan", key: "AF" },
   { title: "Åland Islands", key: "AX" },
@@ -1772,5 +1784,175 @@ export const HOT_BRANDS = [
     name: "Apple",
     title: "Apple",
     key: 6,
+  },
+];
+
+export const PRODUCTS = [
+  {
+    productImage:
+      "https://images.indianexpress.com/2022/10/Galaxy-Watch-5-featured.jpg",
+    productName: "Samsung galaxy watch 5",
+    productType: "New",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://www.apple.com/newsroom/images/product/iphone/standard/apple_iphone-12-spring21_purple_04202021_big.jpg.large.jpg",
+    productName: "Iphone 12 ",
+    productType: "Used",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://images.indianexpress.com/2022/10/Galaxy-Watch-5-featured.jpg",
+    productName: "Samsung galaxy watch 5",
+    productType: "New",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://www.apple.com/newsroom/images/product/iphone/standard/apple_iphone-12-spring21_purple_04202021_big.jpg.large.jpg",
+    productName: "Iphone 12 ",
+    productType: "Used",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://images.indianexpress.com/2022/10/Galaxy-Watch-5-featured.jpg",
+    productName: "Samsung galaxy watch 5",
+    productType: "New",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://www.apple.com/newsroom/images/product/iphone/standard/apple_iphone-12-spring21_purple_04202021_big.jpg.large.jpg",
+    productName: "Iphone 12 ",
+    productType: "Used",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://images.indianexpress.com/2022/10/Galaxy-Watch-5-featured.jpg",
+    productName: "Samsung galaxy watch 5",
+    productType: "New",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+  {
+    productImage:
+      "https://www.apple.com/newsroom/images/product/iphone/standard/apple_iphone-12-spring21_purple_04202021_big.jpg.large.jpg",
+    productName: "Iphone 12 ",
+    productType: "Used",
+    categories: [
+      "Electronic",
+      "Wearables",
+      "Electronic",
+      "Wearables",
+      "Electronic",
+    ],
+    price: "200",
+  },
+];
+
+export const COLORS = [
+  {
+    colorName: "Red",
+    colorCode: "#FF0000",
+  },
+  {
+    colorName: "Green",
+    colorCode: "#008000",
+  },
+  {
+    colorName: "Yellow",
+    colorCode: "#FFFF00",
+  },
+  {
+    colorName: "Pink",
+    colorCode: "#FFC0CB",
+  },
+  {
+    colorName: "White",
+    colorCode: "#ffffff",
+  },
+  {
+    colorName: "Black",
+    colorCode: "#000000",
+  },
+  {
+    colorName: "Silver",
+    colorCode: "#C0C0C0",
+  },
+  {
+    colorName: "Purple",
+    colorCode: "#A020F0",
+  },
+  {
+    colorName: "Orange",
+    colorCode: "#ffA500",
+  },
+  {
+    colorName: "Grey",
+    colorCode: "#808080",
+  },
+  {
+    colorName: "Golden",
+    colorCode: "#FFD700",
+  },
+  {
+    colorName: "Brown",
+    colorCode: "#964B00",
+  },
+  {
+    colorName: "Blue",
+    colorCode: "#0000FF",
   },
 ];

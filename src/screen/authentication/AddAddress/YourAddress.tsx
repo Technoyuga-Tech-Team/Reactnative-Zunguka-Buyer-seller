@@ -48,12 +48,12 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   useEffect(() => {
     if (savedAddress) {
@@ -149,7 +149,9 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps={"handled"}
       >
-        <Text style={style.txtHouseImage}>House Image</Text>
+        <Text style={style.txtHouseImage}>
+          Image of House apperance or Gate
+        </Text>
 
         <UploadPhotos
           navigation={navigation}

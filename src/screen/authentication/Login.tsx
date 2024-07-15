@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -36,6 +36,7 @@ import { LoginFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -61,12 +62,12 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     ""
   );
 
-  // useEffect(() => {
-  //   setAdjustResize();
-  //   return () => {
-  //     setAdjustPan();
-  //   };
-  // }, []);
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   // useEffect(() => {
   //   const Init = async () => {
@@ -216,6 +217,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         <Text style={style.title1}>FIll up your details below</Text>
         <View style={style.txtInCont}>
           <PhoneNumberInput
+            ref={phoneRef}
             textInputTitle="Phone Number"
             onPressFlag={onPressFlag}
             onChangePhoneNumber={(value, iso2) =>

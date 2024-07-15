@@ -17,6 +17,7 @@ interface CustomButtonProps extends RNEButtonProps {
   rightIcon?: ReactElement;
   icon?: ReactElement;
   buttonWidth: "half" | "full";
+  width?: number;
   marginTop?: number;
   backgroundColor?: string;
 }
@@ -32,6 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
     rightIcon,
     icon,
     buttonWidth,
+    width,
     marginTop,
     backgroundColor,
     ...otherProps
@@ -119,8 +121,7 @@ const useStyles = makeStyles((theme, props: CustomButtonProps) => ({
   primary: {
     borderRadius: Scale(32),
     height: Scale(56),
-    width:
-      props.buttonWidth === "half" ? SCREEN_WIDTH - 100 : SCREEN_WIDTH - 40,
+    width: props.buttonWidth === "half" ? props.width : SCREEN_WIDTH - 40,
     backgroundColor: theme.colors?.primary,
   },
   secondary: {
@@ -148,8 +149,7 @@ const useStyles = makeStyles((theme, props: CustomButtonProps) => ({
     borderWidth: 1,
     borderRadius: Scale(32),
     height: Scale(56),
-    width:
-      props.buttonWidth === "half" ? SCREEN_WIDTH - 100 : SCREEN_WIDTH - 40,
+    width: props.buttonWidth === "half" ? props.width : SCREEN_WIDTH - 40,
   },
   icon: {
     marginHorizontal: 3,

@@ -93,21 +93,64 @@ const timeElapsedString = (datetime: string | number | Date, full = false) => {
   return result ? result + " ago" : "just now";
 };
 
-const formatNumber = (number: string) => {
-  // Convert the number to a string for easier manipulation
-  const numberString = number.toString();
+// function formatPhoneNumber(number: string) {
+//   // Remove leading "+" sign and non-numeric characters
+//   const cleanedNumber = number.replace(/^\+|\D/g, "");
 
-  // Extract the last four digits for the second part
-  const lastFourDigits = numberString.slice(-4);
+//   // Extract parts (area code, first three digits, last four digits)
+//   const areaCode = cleanedNumber.slice(0, 3);
+//   const firstThree = cleanedNumber.slice(3, 6);
+//   const lastFour = cleanedNumber.slice(6);
 
-  // Replace the first seven digits with asterisks (*)
-  const maskedFirstPart = numberString.slice(0, -4).replace(/./g, "*");
+//   console.log("areaCode", areaCode);
+//   console.log("firstThree", firstThree);
+//   console.log("lastFour", lastFour);
 
-  // Combine the masked first part and the last four digits with a hyphen (-)
-  const formattedNumber = `${maskedFirstPart} - ${lastFourDigits}`;
+//   // Format and return the number
+//   return `(${areaCode.replace(/./g, "*")}) ${firstThree.replace(
+//     /./g,
+//     "*"
+//   )} ${lastFour.slice(0, 3).replace(/./g, "*")}-${lastFour.slice(3)}`;
+// }
+
+function formatPhoneNumber(number: string) {
+  // Split the number at the first space
+  const parts = number.split(" ");
+
+  // Check if there's a space
+  if (parts.length < 2) {
+    console.warn("No space found in phone number:", number);
+    return number; // Return the original number if no space is found
+  }
+
+  // Extract the first part (assuming it's not the country code)
+  const firstPart = parts[0];
+
+  const lastparts = number.split(" ").reverse(); // Reverse to get the last space first
+  // Check if there's a space
+  if (lastparts.length < 2) {
+    console.warn("No space found in phone number:", number);
+    return number; // Return the original number if no space is found
+  }
+
+  const lastPhoneNumber = lastparts[0];
+  const lastDigit = lastPhoneNumber.length <= 4 ? lastPhoneNumber.length : 4;
+  const lastFourDigits = lastPhoneNumber.slice(-`${lastDigit}`);
+
+  // Mask all digits except the lastDigit in the remaining part
+  const remainingDigits = parts
+    .slice(1)
+    .join("")
+    .slice(0, -`${lastDigit}`)
+    .replace(/./g, "*");
+
+  // Combine the formatted parts
+  const formattedNumber = `(${firstPart
+    .slice(1)
+    .replace(/./g, "*")}) ${remainingDigits} -${lastFourDigits}`;
 
   return formattedNumber;
-};
+}
 
 export {
   CreditDebitCardNumber,
@@ -116,5 +159,5 @@ export {
   getUrlExtension,
   onShare,
   timeElapsedString,
-  formatNumber,
+  formatPhoneNumber,
 };

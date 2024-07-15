@@ -16,6 +16,8 @@ import Bottombar from "./Bottombar/Bottombar";
 import EditProfile from "../screen/profile/EditProfile";
 import ChangePassword from "../screen/profile/ChangePassword";
 import ResetPassword from "../screen/authentication/ResetPassword";
+import SearchProducts from "../screen/search/SearchProducts";
+import ProductDetails from "../screen/product/ProductDetails";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -51,6 +53,14 @@ const MainStack = () => {
               backgroundColor: "transparent",
             },
           }}
+        />
+        <Stack.Screen
+          name={Route.navSearchProduct}
+          component={SearchProducts}
+        />
+        <Stack.Screen
+          name={Route.navProductDetails}
+          component={ProductDetails}
         />
         <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
         <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />

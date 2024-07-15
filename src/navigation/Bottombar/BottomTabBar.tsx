@@ -111,7 +111,7 @@ const BottomTabBar = ({ state, navigation }: any) => {
                       },
                     ]}
                   >
-                    {route.name}
+                    {route.name == "Profile" ? "My Account" : route.name}
                   </Text>
                 </TouchableOpacity>
               );

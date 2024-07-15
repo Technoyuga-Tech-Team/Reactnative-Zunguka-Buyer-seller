@@ -49,6 +49,7 @@ const LogoutPopup: React.FC<LogoutPopupProps> = ({
               onPress={onPressLogout}
               title={"Yes, Log Out"}
               buttonWidth="half"
+              width={SCREEN_WIDTH - 100}
               variant="primary"
               type="solid"
               backgroundColor={theme?.colors?.pinkDark}

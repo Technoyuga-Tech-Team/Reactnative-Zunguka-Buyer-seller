@@ -203,7 +203,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
 
   return (
     <View style={style.container}>
-      <CustomHeader title="Choose your address" />
+      <CustomHeader title="Search or drop the pin" />
       <View style={style.mapCont}>
         {loading && <Loading />}
         {!loading &&

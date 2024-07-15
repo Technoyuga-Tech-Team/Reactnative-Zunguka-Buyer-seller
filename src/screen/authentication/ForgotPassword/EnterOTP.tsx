@@ -1,7 +1,14 @@
 import { CommonActions } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import { Keyboard, Platform, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  AppState,
+  Keyboard,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -28,8 +35,11 @@ import { setSuccess } from "../../../store/global/global.slice";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import Loading from "../../../components/ui/Loading";
 import { saveAddress } from "../../../store/settings/settings.slice";
-import { formatNumber } from "../../../utils";
+import { formatPhoneNumber } from "../../../utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const INITIAL_TIME = { minutes: 1, seconds: 0 };
+let store_time = { minutes: 1, seconds: 0 };
 const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   navigation,
   route,
@@ -45,12 +55,36 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   console.log("phone", phone);
   const type = route?.params?.type;
 
-  const [time, setTime] = useState({ minutes: 1, seconds: 0 });
+  const timerRef = useRef();
+
+  const [time, setTime] = useState(INITIAL_TIME);
+
+  const [intervalId, setIntervalId] = useState(null); // Store interval ID
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === "background") {
+        storeTimerTime(); // Store time in AsyncStorage on background
+      } else if (nextAppState === "active") {
+        retrieveTimerTime(); // Retrieve time from AsyncStorage on foreground
+      }
+    };
+
+    AppState.addEventListener("change", handleAppStateChange);
+
+    return () => {
+      clearInterval(intervalId); // Clear interval on unmount to avoid leaks
+    };
+  }, []);
 
   useEffect(() => {
     startInterval();
     return () => {
       setTime({ seconds: 0, minutes: 0 });
+      store_time = { seconds: 0, minutes: 0 };
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
 
@@ -58,18 +92,67 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
     if (time.minutes <= 2 && (time.seconds > 0 || time.minutes > 0)) {
       startInterval();
     }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
   }, [time.seconds, time.minutes]);
 
   const startInterval = () => {
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       if (time.seconds > 0) {
         setTime({ seconds: time.seconds - 1, minutes: time.minutes });
+        store_time = { seconds: time.seconds - 1, minutes: time.minutes };
       } else if (time.seconds === 0) {
         if (time.minutes > 0) {
           setTime({ minutes: time.minutes - 1, seconds: 59 });
+          store_time = { minutes: time.minutes - 1, seconds: 59 };
         }
       }
     }, 1000);
+  };
+
+  const storeTimerTime = async () => {
+    try {
+      const timestamp = Date.now(); // Get current timestamp
+      const data = JSON.stringify({ timestamp, timerDuration: store_time });
+      await AsyncStorage.setItem("timerData", data);
+      console.log("Timer time stored:", data);
+    } catch (error) {
+      console.error("Error storing timer time:", error);
+    }
+  };
+
+  const retrieveTimerTime = async () => {
+    try {
+      const data = await AsyncStorage.getItem("timerData");
+      if (data !== null) {
+        const parsedData = JSON.parse(data);
+        const storedTimestamp = parsedData.timestamp;
+        const elapsedTime = Date.now() - storedTimestamp;
+        const remainingTime = Math.max(
+          0,
+          parsedData.timerDuration.minutes * 60 +
+            parsedData.timerDuration.seconds -
+            elapsedTime / 1000
+        ); // Calculate remaining time in seconds
+        const calculatedMinutes = Math.floor(remainingTime / 60);
+        const calculatedSeconds = Math.floor(remainingTime % 60);
+        console.log("calculatedMinutes --", calculatedMinutes);
+        console.log("calculatedSeconds --", calculatedSeconds);
+        setTime({ minutes: calculatedMinutes, seconds: calculatedSeconds });
+        store_time = { minutes: calculatedMinutes, seconds: calculatedSeconds };
+        console.log("Timer time retrieved:", data);
+      } else {
+        console.log("No timer data found, resetting timer.");
+        setTime(INITIAL_TIME); // Reset timer if no data is found
+        store_time = INITIAL_TIME;
+      }
+    } catch (error) {
+      console.error("Error retrieving timer time:", error);
+    }
   };
 
   const onPressResendCode = async () => {
@@ -84,6 +167,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
     if (userResendOTP.fulfilled.match(result)) {
       if (result?.payload?.status === 1) {
         setTime({ seconds: 0, minutes: 1 });
+        store_time = { seconds: 0, minutes: 1 };
         dispatch(setSuccess(result.payload.message));
       }
     } else {
@@ -200,8 +284,9 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       <Text style={style.txtDigitCode1}>Almost done!</Text>
 
       <Text style={style.txtDigitCode1}>
-        We've sent a code to {formatNumber(phone)}.
+        We've sent a code to {formatPhoneNumber(phone)}.
       </Text>
+      {/* "+91 79908 68556" */}
 
       <AppImage
         source={require("../../../assets/images/MessagesOTP.png")}
