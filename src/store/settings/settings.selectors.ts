@@ -21,3 +21,8 @@ export const getSavedAddress = createSelector(
   [selectSettings],
   (settings) => settings.address
 );
+
+export const getCityAddress = createSelector(
+  [selectSettings],
+  (settings) => settings.city
+);

@@ -24,7 +24,7 @@ import { ThemeProps } from "../../../types/global.types";
 import { AuthNavigationProps } from "../../../types/navigation";
 import Scale from "../../../utils/Scale";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { saveAddress } from "../../../store/settings/settings.slice";
+import { saveAddress, saveCity } from "../../../store/settings/settings.slice";
 import SearchIcon from "../../../components/ui/svg/SearchIcon";
 import Geolocation from "react-native-geolocation-service";
 import { setErrors } from "../../../store/global/global.slice";
@@ -43,6 +43,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [addressLatLng, setAddressLatLng] = useState<Point>({
     lat: 0,
@@ -153,8 +154,23 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
     data: GooglePlaceData,
     details: GooglePlaceDetail
   ) => {
-    console.log("data", data);
-    console.log("details", details);
+    console.log("data", JSON.stringify(data));
+    console.log("details", JSON.stringify(details));
+    dispatch(saveCity(""));
+    if (data) {
+      const addressComponents = data?.address_components;
+      console.log("addressComponents", addressComponents);
+      // Loop through address components to find the city
+      if (addressComponents && addressComponents.length > 0) {
+        for (const component of addressComponents) {
+          if (component.types.includes("locality")) {
+            const city = component.long_name;
+            console.log("Extracted City:", city);
+            setCity(city);
+          }
+        }
+      }
+    }
     setMarkerCoordinate({
       latitude: details?.geometry?.location?.lat,
       longitude: details?.geometry?.location?.lng,
@@ -197,6 +213,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   const onPressSave = () => {
     if (address) {
       dispatch(saveAddress(address));
+      dispatch(saveCity(city));
       navigation.goBack();
     }
   };

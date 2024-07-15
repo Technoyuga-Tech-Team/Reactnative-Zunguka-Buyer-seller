@@ -119,7 +119,6 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       const timestamp = Date.now(); // Get current timestamp
       const data = JSON.stringify({ timestamp, timerDuration: store_time });
       await AsyncStorage.setItem("timerData", data);
-      console.log("Timer time stored:", data);
     } catch (error) {
       console.error("Error storing timer time:", error);
     }
@@ -140,11 +139,8 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
         ); // Calculate remaining time in seconds
         const calculatedMinutes = Math.floor(remainingTime / 60);
         const calculatedSeconds = Math.floor(remainingTime % 60);
-        console.log("calculatedMinutes --", calculatedMinutes);
-        console.log("calculatedSeconds --", calculatedSeconds);
         setTime({ minutes: calculatedMinutes, seconds: calculatedSeconds });
         store_time = { minutes: calculatedMinutes, seconds: calculatedSeconds };
-        console.log("Timer time retrieved:", data);
       } else {
         console.log("No timer data found, resetting timer.");
         setTime(INITIAL_TIME); // Reset timer if no data is found

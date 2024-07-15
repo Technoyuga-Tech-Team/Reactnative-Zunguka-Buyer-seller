@@ -14,7 +14,10 @@ import { AddAddressScreenSchema } from "../../../constant/formValidations";
 import { Route } from "../../../constant/navigationConstants";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { setErrors, setSuccess } from "../../../store/global/global.slice";
-import { getSavedAddress } from "../../../store/settings/settings.selectors";
+import {
+  getCityAddress,
+  getSavedAddress,
+} from "../../../store/settings/settings.selectors";
 import { AddAddressProps } from "../../../types/authentication.types";
 import { imagePickerProps } from "../../../types/common.types";
 import { LoadingState, ThemeProps } from "../../../types/global.types";
@@ -41,6 +44,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const zipRef = React.useRef<TextInput>(null);
 
   const savedAddress = useSelector(getSavedAddress);
+  const savedCity = useSelector(getCityAddress);
   const loading = useSelector(selectAuthenticationLoading);
 
   const [houseImage, setHouseImages] = useState<imagePickerProps[]>([]);
@@ -60,7 +64,19 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
       setFieldValue("gpsAddress", savedAddress);
       setGpsAddressHave(1);
     }
-  }, [savedAddress]);
+    if (savedCity) {
+      setFieldValue("district", savedCity);
+    } else {
+      const words = savedAddress.split(",");
+      // Check if there are at least two words (to ensure a second last word exists)
+      if (words.length >= 2) {
+        // Access the second last element using the negative second index (-2)
+        const secondLastWord = words[words.length - 2];
+        console.log("Second Last Word:", secondLastWord);
+        setFieldValue("district", secondLastWord);
+      }
+    }
+  }, [savedAddress, savedCity]);
 
   const onPressGPSAddress = () => {
     navigation.navigate(Route.navChooseAddress);
@@ -137,6 +153,8 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
     }
   };
 
+  console.log("district", values.district);
+
   return (
     <View style={style.container}>
       <CustomHeader
@@ -184,9 +202,10 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           <Text style={style.txtManualAddress}>Manual Address</Text>
           <CustomTxtInput
             textInputTitle="House number"
-            placeholder="House number"
+            placeholder="House number (Ex. 401)"
             onChangeText={handleChange("houseNumber")}
             onBlur={handleBlur("houseNumber")}
+            keyboardType="number-pad"
             value={values.houseNumber}
             error={errors.houseNumber}
             touched={touched.houseNumber}
@@ -197,7 +216,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           <CustomTxtInput
             ref={st1Ref}
             textInputTitle="Street number"
-            placeholder="Street number"
+            placeholder="Street number (Ex. 5 KN 27 Street)"
             onChangeText={handleChange("streetNumber")}
             onBlur={handleBlur("streetNumber")}
             value={values.streetNumber}

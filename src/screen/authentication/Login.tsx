@@ -134,7 +134,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         if (result.payload?.statusCode === 403) {
           if (result.payload?.status === 2) {
             navigation.navigate(Route.navEnterOTP, {
-              phone: result.payload?.phone_number,
+              phone: phoneNumber,
               type: "otp_verification",
             });
           }

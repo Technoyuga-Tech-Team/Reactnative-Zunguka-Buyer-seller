@@ -93,26 +93,6 @@ const timeElapsedString = (datetime: string | number | Date, full = false) => {
   return result ? result + " ago" : "just now";
 };
 
-// function formatPhoneNumber(number: string) {
-//   // Remove leading "+" sign and non-numeric characters
-//   const cleanedNumber = number.replace(/^\+|\D/g, "");
-
-//   // Extract parts (area code, first three digits, last four digits)
-//   const areaCode = cleanedNumber.slice(0, 3);
-//   const firstThree = cleanedNumber.slice(3, 6);
-//   const lastFour = cleanedNumber.slice(6);
-
-//   console.log("areaCode", areaCode);
-//   console.log("firstThree", firstThree);
-//   console.log("lastFour", lastFour);
-
-//   // Format and return the number
-//   return `(${areaCode.replace(/./g, "*")}) ${firstThree.replace(
-//     /./g,
-//     "*"
-//   )} ${lastFour.slice(0, 3).replace(/./g, "*")}-${lastFour.slice(3)}`;
-// }
-
 function formatPhoneNumber(number: string) {
   // Split the number at the first space
   const parts = number.split(" ");

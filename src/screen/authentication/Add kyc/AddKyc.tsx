@@ -39,7 +39,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   const from = route?.params?.fromOTP || false;
   const loading = useSelector(selectAuthenticationLoading);
 
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("RW");
   const [countryError, setCountryError] = useState("");
 
   const [IdType, setIdType] = useState("");
@@ -51,6 +51,10 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
     useState<string>("");
 
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setCountry("RW");
+  }, []);
 
   useEffect(() => {
     if (selectedImageForDelete !== "") {

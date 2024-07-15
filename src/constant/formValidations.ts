@@ -245,9 +245,9 @@ export const SetupProfile7ScreenSchema = Yup.object().shape({
 export const AddAddressScreenSchema = (gpsAddressHave: number) => {
   return Yup.object().shape({
     gpsAddress: Yup.string().required("Address is required"),
-    houseNumber: Yup.string().required("houseNumber is required"),
-    streetNumber: Yup.string().required("streetNumber is required"),
-    sector: Yup.string().required("sector is required"),
-    district: Yup.string().required("district is required"),
+    houseNumber: Yup.string().required("House number is required"),
+    streetNumber: Yup.string().required("Street number is required"),
+    sector: Yup.string().required("Sector is required"),
+    district: Yup.string().required("District is required"),
   });
 };
