@@ -29,7 +29,10 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      setName({ fname: userData?.first_name, lname: userData?.last_name });
+      setName({
+        fname: userData?.first_name,
+        lname: userData?.last_name !== null ? userData?.last_name : "",
+      });
     });
     return () => {
       unsubscribe();

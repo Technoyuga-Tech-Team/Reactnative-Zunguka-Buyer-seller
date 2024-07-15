@@ -39,6 +39,7 @@ import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import InputFieldInfo from "../../components/ui/InputFieldInfo";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { keepSingleSpace } from "../../utils";
 
 const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   navigation,
@@ -151,8 +152,8 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
       const result = await dispatch(
         userRegistration({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          first_name: keepSingleSpace(firstName),
+          last_name: keepSingleSpace(lastName),
           username: username.trim(),
           email: email.trim(),
           password: createPassword.trim(),
@@ -324,7 +325,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
               if (!checked) {
                 dispatch(
                   setErrors({
-                    message: "Please agree with terms & condition",
+                    message: "Please agree with terms & conditions",
                     status: 0,
                     statusCode: null,
                   })

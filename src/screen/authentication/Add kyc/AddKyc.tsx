@@ -30,12 +30,13 @@ import { CommonActions } from "@react-navigation/native";
 
 const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
-
+  const from = route?.params?.fromOTP || false;
   const loading = useSelector(selectAuthenticationLoading);
 
   const [country, setCountry] = useState("");
@@ -102,12 +103,9 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
     togglePopup();
     setTimeout(async () => {
       try {
-        const imageObject = await getImageFromGallary({ multiple: true });
-        setSelectedImage([
-          ...selectedImage,
-          ...imageObject.map((image: { uri: any }) => image.uri),
-        ]);
-        setImage([...image, ...imageObject]);
+        const imageObject = await getImageFromGallary({ multiple: false });
+        setSelectedImage([...selectedImage, imageObject]);
+        setImage([...image, imageObject]);
       } catch (error) {
         // Handle errors here if needed (e.g., display a user-friendly message)
         console.error("Error using getImageFromGallary:", error);
@@ -177,7 +175,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   };
 
   const onPressBack = () => {
-    if (navigation.canGoBack()) {
+    if (navigation.canGoBack() && !from) {
       navigation.goBack();
     } else {
       navigation.dispatch(

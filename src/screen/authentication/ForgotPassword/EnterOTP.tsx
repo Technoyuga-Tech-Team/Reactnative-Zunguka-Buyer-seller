@@ -212,7 +212,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
                 dispatch(saveAddress(""));
                 navigation.navigate(Route.navYourAddress, { fromOTP: true });
               } else if (steps == 1) {
-                navigation.navigate(Route.navAddKyc);
+                navigation.navigate(Route.navAddKyc, { fromOTP: true });
               }
             } else {
               navigation.dispatch(
@@ -222,16 +222,6 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
                 })
               );
             }
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: Route.navAuthentication,
-            //       },
-            //     ],
-            //   })
-            // );
           } else {
             navigation.navigate(Route.navResetPassword, {
               phone: phone_number && phone_number.replace("-", ""),

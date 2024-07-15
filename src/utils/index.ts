@@ -152,6 +152,11 @@ function formatPhoneNumber(number: string) {
   return formattedNumber;
 }
 
+const keepSingleSpace = (value: string) => {
+  const newValue = value?.trim().replace(/\s{2,}/g, " ");
+  return newValue || "";
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -160,4 +165,5 @@ export {
   onShare,
   timeElapsedString,
   formatPhoneNumber,
+  keepSingleSpace,
 };

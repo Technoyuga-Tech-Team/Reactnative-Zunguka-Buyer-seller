@@ -343,8 +343,7 @@ export const oAuthLogin = createAsyncThunk<
           method: "POST",
           data: {
             first_name: auth()?.currentUser?.displayName || first_name,
-            last_name: auth()?.currentUser?.displayName || last_name,
-            // profile_image,
+            last_name: "",
             email: auth()?.currentUser?.email,
             social_id: auth()?.currentUser?.uid,
             is_social,
@@ -480,9 +479,14 @@ export const userAddress = createAsyncThunk<
       return rejectWithValue(errors);
     }
 
+    if (data?.data) {
+      console.log("data - - -- -", data?.data);
+
+      dispatch(setUserData(data?.data));
+      setData(USER_DATA, data?.data);
+    }
+
     if (data?.authorization) {
-      dispatch(setUserData(data?.user));
-      setData(USER_DATA, data?.user);
       await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
     }
 
@@ -517,9 +521,12 @@ export const userVerifyId = createAsyncThunk<
       return rejectWithValue(errors);
     }
 
+    if (data?.data) {
+      dispatch(setUserData(data?.data));
+      setData(USER_DATA, data?.data);
+    }
+
     if (data?.authorization) {
-      dispatch(setUserData(data?.user));
-      setData(USER_DATA, data?.user);
       await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
     }
 

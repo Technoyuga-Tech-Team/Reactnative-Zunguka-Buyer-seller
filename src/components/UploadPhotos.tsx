@@ -78,8 +78,8 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
     togglePopup();
     setTimeout(async () => {
       try {
-        const imageObject = await getImageFromGallary({ multiple: true });
-        setImages([...images, ...imageObject]);
+        const imageObject = await getImageFromGallary({ multiple: false });
+        setImages([...images, imageObject]);
       } catch (error) {
         // Handle errors here if needed (e.g., display a user-friendly message)
         console.error("Error using getImageFromGallary:", error);

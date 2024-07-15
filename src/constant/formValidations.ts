@@ -29,7 +29,7 @@ export const LoginScreenSchema = (countryCode: CountryCode) => {
 export const SignupScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
+    lastName: Yup.string(),
     username: Yup.string().trim().required("Username is required"),
     email: Yup.string()
       .trim()
@@ -62,7 +62,7 @@ export const SignupScreenSchema = (countryCode: CountryCode) => {
 export const EditProfileScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
+    lastName: Yup.string(),
     username: Yup.string().required("Username is required"),
     email: Yup.string()
       .trim()
@@ -80,7 +80,7 @@ export const EditProfileScreenSchemaWithoutPhone = (
 ) => {
   return Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
+    lastName: Yup.string(),
     username: Yup.string().required("Username is required"),
     email: Yup.string()
       .trim()

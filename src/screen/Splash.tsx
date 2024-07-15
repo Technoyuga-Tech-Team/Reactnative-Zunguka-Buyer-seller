@@ -3,12 +3,13 @@ import React, { useEffect } from "react";
 import { StatusBar, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { USER_DATA, secureStoreKeys } from "../constant";
+import { GOOGLE_WEB_CLIENT_ID, USER_DATA, secureStoreKeys } from "../constant";
 import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { setUserData } from "../store/settings/settings.slice";
+import { saveAddress, setUserData } from "../store/settings/settings.slice";
 import Scale from "../utils/Scale";
 import { appAlreadyOpen, getData } from "../utils/asyncStorage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 interface SplashScreenProps {}
 
@@ -19,20 +20,42 @@ const Splash: React.FC<SplashScreenProps> = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID,
+      offlineAccess: true,
+      // scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
+    });
+  }, []);
+
+  useEffect(() => {
     const init = async () => {
       const token = await getData(secureStoreKeys.JWT_TOKEN);
       console.log("Login Token -- ", token);
       if (token) {
         const user_data = await getData(USER_DATA);
+        console.log("user_data - - - -  - -", user_data);
+        if (user_data?.is_social == 1) {
+          await GoogleSignin.signOut();
+        }
         dispatch(setUserData(user_data));
-        setTimeout(() => {
+
+        let steps = user_data.step;
+        console.log("steps", steps);
+        if (steps !== 2) {
+          if (steps == 0) {
+            dispatch(saveAddress(""));
+            navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
+          } else if (steps == 1) {
+            navigation.navigate(Route.navAddKyc);
+          }
+        } else {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
               routes: [{ name: Route.navDashboard }],
             })
           );
-        }, 2000);
+        }
       } else {
         if (await appAlreadyOpen()) {
           setTimeout(() => {

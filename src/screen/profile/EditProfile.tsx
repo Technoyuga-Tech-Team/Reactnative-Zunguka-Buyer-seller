@@ -17,46 +17,43 @@ import ReactNativePhoneInput from "react-native-phone-input";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
-import { HomeNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
-import { selectUserData } from "../../store/settings/settings.selectors";
-import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { imagePickerProps } from "../../types/common.types";
-import {
-  EditProfileFormProps,
-  EditProfileFormWithoutPhoneProps,
-} from "../../types/authentication.types";
+import BorderedItem from "../../components/ui/BorderedItem";
+import CountryPickerModal from "../../components/ui/CountryPickerModal";
+import CustomButton from "../../components/ui/CustomButton";
+import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import ImagePickerPopup from "../../components/ui/ImagePickerPopup";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
+import Loading from "../../components/ui/Loading";
+import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
+import ProfileImage from "../../components/ui/Profile/ProfileImage";
+import BackIcon from "../../components/ui/svg/BackIcon";
+import { HAS_NOTCH, MAX_CHAR_LENGTH, USER_DATA } from "../../constant";
 import {
   EditProfileScreenSchema,
   EditProfileScreenSchemaWithoutPhone,
 } from "../../constant/formValidations";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setSuccess } from "../../store/global/global.slice";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import { setUserData } from "../../store/settings/settings.slice";
+import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
 import {
   userUpdateProfile,
   userUpdateProfilePicture,
 } from "../../store/userprofile/userprofile.thunk";
-import { setUserData } from "../../store/settings/settings.slice";
-import { HAS_NOTCH, MAX_CHAR_LENGTH, USER_DATA } from "../../constant";
+import { EditProfileFormProps } from "../../types/authentication.types";
+import { imagePickerProps } from "../../types/common.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import { getUrlExtension, keepSingleSpace } from "../../utils";
 import { setData } from "../../utils/asyncStorage";
-import { setSuccess } from "../../store/global/global.slice";
 import {
   getImageFromCamera,
   getImageFromGallary,
   requestCameraPermission,
 } from "../../utils/ImagePickerCameraGallary";
-import { getUrlExtension } from "../../utils";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import Loading from "../../components/ui/Loading";
-import BackIcon from "../../components/ui/svg/BackIcon";
-import ProfileImage from "../../components/ui/Profile/ProfileImage";
-import { CustomTxtInput } from "../../components/ui/CustomTextInput";
-import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
-import CountryPickerModal from "../../components/ui/CountryPickerModal";
-import CustomButton from "../../components/ui/CustomButton";
-import ImagePickerPopup from "../../components/ui/ImagePickerPopup";
 import Scale from "../../utils/Scale";
-import BorderedItem from "../../components/ui/BorderedItem";
-import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   navigation,
@@ -77,6 +74,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
   const [visible, setVisible] = useState(false);
 
+  const [enableUsername, setEnableUsername] = useState<boolean>(false);
   const [tamp_phone, setTamp_phone] = useState<string>(userData?.phone_number);
   const [profilePicture, setProfilePicture] = useState<string>(
     userData?.profile_image
@@ -109,7 +107,10 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
         userData?.first_name &&
           setFieldValue("firstName", userData?.first_name);
         userData?.last_name && setFieldValue("lastName", userData?.last_name);
-        userData?.username && setFieldValue("username", userData?.username);
+        console.log("userData?.username", userData?.username);
+        userData?.username
+          ? setFieldValue("username", userData?.username)
+          : setEnableUsername(true);
         userData?.email && setFieldValue("email", userData?.email);
         phoneRef.current?.selectCountry(userData?.iso);
         userData?.phone_number &&
@@ -195,8 +196,8 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     onSubmit: async ({ firstName, lastName, username, email, phoneNumber }) => {
       const result = await dispatch(
         userUpdateProfile({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          first_name: keepSingleSpace(firstName),
+          last_name: keepSingleSpace(lastName),
           username: username.trim(),
           email: email.trim(),
           phone_number: phoneNumber.trim(),
@@ -204,6 +205,9 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
       );
       if (userUpdateProfile.fulfilled.match(result)) {
         if (result.payload.status === 1) {
+          setEnableUsername(false);
+          setFieldValue("firstName", keepSingleSpace(firstName));
+          setFieldValue("lastName", keepSingleSpace(lastName));
           dispatch(setUserData(result?.payload?.data));
           await setData(USER_DATA, result?.payload?.data);
           dispatch(setSuccess(result?.payload?.message));
@@ -348,7 +352,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               maxLength={MAX_CHAR_LENGTH}
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
-              editable={values.username ? false : true}
+              editable={enableUsername}
               value={values.username}
               error={errors.username}
               touched={touched.username}

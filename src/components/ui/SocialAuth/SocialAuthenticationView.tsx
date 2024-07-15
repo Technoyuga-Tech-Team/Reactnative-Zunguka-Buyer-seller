@@ -61,7 +61,7 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
 
       let param = {
         first_name: userInfo.user.name,
-        last_name: userInfo.user.name,
+        last_name: "",
         profile_image: userInfo?.user?.photo || "",
         email: userInfo.user.email,
         social_id: googleCredential.token,
@@ -101,7 +101,16 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
         dispatch(setOAuthLoading(AuthLoadingState.NULL));
       }
     } catch (error) {
-      console.log("error", error);
+      if (error?.code == "12501") {
+        dispatch(setErrorFromSocial(false));
+        dispatch(
+          setErrors({
+            status: 0,
+            statusCode: 400,
+            message: "User has cancelled login with google",
+          })
+        );
+      }
       dispatch(setOAuthLoading(AuthLoadingState.NULL));
     }
   };
