@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { ViewStyleProps } from "../../types/common.types";
-import { HIT_SLOP2, SCREEN_WIDTH } from "../../constant";
+import { HIT_SLOP, HIT_SLOP2, SCREEN_WIDTH } from "../../constant";
 import Scale from "../../utils/Scale";
 
 export interface CustomTxtInputProps extends TextInputProps {
@@ -17,6 +17,7 @@ export interface CustomTxtInputProps extends TextInputProps {
   icon?: React.ReactElement;
   rightIcon?: boolean;
   onPress?: () => void;
+  onPressOuterRightIcon?: () => void;
   touched?: boolean;
   error?: string;
   textInputTitle?: string;
@@ -42,9 +43,9 @@ export const CustomTxtInput = React.forwardRef<TextInput, CustomTxtInputProps>(
         activeOpacity={1}
         style={styles.textInCont}
       >
-        {/* {props.textInputTitle && (
+        {props.textInputTitle && (
           <Text style={styles.txtTextInputTitle}>{props.textInputTitle}</Text>
-        )} */}
+        )}
         <KeyboardAvoidingView
           behavior="padding"
           keyboardVerticalOffset={-200}
@@ -63,7 +64,15 @@ export const CustomTxtInput = React.forwardRef<TextInput, CustomTxtInputProps>(
                 secureTextEntry={props.rightIcon ? secureTextEntry : false}
                 {...props}
               />
-              {isRight && props.icon ? props.icon : null}
+              {isRight && props.icon ? (
+                <TouchableOpacity
+                  hitSlop={HIT_SLOP}
+                  onPress={props.onPressOuterRightIcon}
+                  activeOpacity={0.8}
+                >
+                  {props.icon}
+                </TouchableOpacity>
+              ) : null}
             </View>
             {props.rightIcon ? (
               <TouchableOpacity hitSlop={HIT_SLOP2} onPress={onPressRightIcon}>
@@ -127,9 +136,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   txtTextInputTitle: {
     fontSize: theme.fontSize?.fs17,
-    fontFamily: theme.fontFamily?.medium,
-    color: theme.colors?.iconColor,
-    marginBottom: 5,
+    fontFamily: theme.fontFamily?.bold,
+    color: theme.colors?.black,
+    marginLeft: 20,
   },
   widthError: {
     marginTop: 5,

@@ -131,7 +131,6 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
 
       <View style={style.otpInputCont}>
         <CustomTxtInput
-          textInputTitle="New Password"
           placeholder="New password"
           onChangeText={handleChange("password")}
           onBlur={handleBlur("password")}
@@ -145,7 +144,6 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
           onSubmitEditing={() => confirmPasswordRef.current?.focus()}
         />
         <CustomTxtInput
-          textInputTitle="Confirm New Password"
           placeholder="Confirm New Password"
           ref={confirmPasswordRef}
           onChangeText={handleChange("confirmPassword")}

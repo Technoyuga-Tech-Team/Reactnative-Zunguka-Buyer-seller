@@ -192,7 +192,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
         <Text style={style.title1}>FIll up your details below</Text>
         <View style={style.txtInCont}>
           <CustomTxtInput
-            textInputTitle="First Name"
             ref={firstNameRef}
             placeholder="First name"
             returnKeyType="next"
@@ -207,7 +206,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             onSubmitEditing={() => lastnameRef.current?.focus()}
           />
           <CustomTxtInput
-            textInputTitle="Last Name"
             ref={lastnameRef}
             placeholder="Last name (Optional)"
             returnKeyType="next"
@@ -223,7 +221,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
           />
           <InputFieldInfo text={"Name view only for admin."} />
           <CustomTxtInput
-            textInputTitle="Username"
             ref={usernameRef}
             placeholder="Username"
             returnKeyType="next"
@@ -239,7 +236,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
           />
           <InputFieldInfo text={"Username view for publicly"} />
           <CustomTxtInput
-            textInputTitle="Email Address"
             ref={emaiRef}
             placeholder="Email Address"
             returnKeyType="next"
@@ -255,7 +251,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
 
           <PhoneNumberInput
             ref={phoneRef}
-            textInputTitle="Phone Number"
             onPressFlag={onPressFlag}
             onChangePhoneNumber={(value, iso2) =>
               onPhoneInputChange(value, iso2)
@@ -282,7 +277,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             onSelect={(country, cca2) => onSelect(country, cca2)}
           />
           <CustomTxtInput
-            textInputTitle="Create Password"
             placeholder="Password"
             ref={passwordRef}
             onChangeText={handleChange("createPassword")}
@@ -298,7 +292,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             onSubmitEditing={() => confirmPasswordRef.current?.focus()}
           />
           <CustomTxtInput
-            textInputTitle="Confirm Password"
             placeholder="Confirm password"
             ref={confirmPasswordRef}
             onChangeText={handleChange("confirmPassword")}
@@ -315,6 +308,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
           <TermsAndCondition
             checked={checked}
             toggleCheckbox={toggleCheckbox}
+            isTandC={true}
             onPressTermsAndCondition={() => {}}
           />
         </View>

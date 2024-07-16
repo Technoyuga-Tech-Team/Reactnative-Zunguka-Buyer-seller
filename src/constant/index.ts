@@ -1956,3 +1956,42 @@ export const COLORS = [
     colorCode: "#0000FF",
   },
 ];
+
+export const CONDITIONS = [
+  {
+    title: "New, unused",
+    selected: false,
+  },
+  {
+    title: "Near unused",
+    selected: false,
+  },
+  {
+    title: "No noticeable scratchs or stains",
+    selected: false,
+  },
+  {
+    title: "Slightly scratched or soiled",
+    selected: false,
+  },
+  {
+    title: "Scratched or soiled",
+    selected: false,
+  },
+];
+
+export const CITIES = [
+  { title: "Kigali", key: "Kigali" },
+  { title: "Kibeho", key: "Kibeho" },
+  { title: "Butare", key: "Butare" },
+  { title: "Gitarama", key: "Gitarama" },
+  { title: "Ruhengeri", key: "Ruhengeri" },
+  { title: "Gisenyi", key: "Gisenyi" },
+  { title: "Byumba", key: "Byumba" },
+  { title: "Cyangugu", key: "Cyangugu" },
+  { title: "Nyanza", key: "Nyanza" },
+  { title: "Rwamagana", key: "Rwamagana" },
+  { title: "Kibuye", key: "Kibuye" },
+  { title: "Kibungo", key: "Kibungo" },
+  { title: "Gikongoro", key: "Gikongoro" },
+];

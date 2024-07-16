@@ -1,19 +1,19 @@
-import { View, Text, StatusBar, Platform } from "react-native";
 import React, { useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, StatusBar, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../types/global.types";
-import HeaderHome from "../components/HeaderHome";
-import { useSelector } from "react-redux";
-import { selectUserData } from "../store/settings/settings.selectors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import CategoryListing from "../components/Categories/CategoryListing";
+import HeaderHome from "../components/HeaderHome";
 import HomeBanner from "../components/HomeBanner";
+import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
 import SeeAllItem from "../components/SeeAllItem";
 import { CATEGORIES, HOT_BRANDS } from "../constant";
-import CategoryListing from "../components/Categories/CategoryListing";
-import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
-import { HomeNavigationProps } from "../types/navigation";
 import { Route } from "../constant/navigationConstants";
+import { selectUserData } from "../store/settings/settings.selectors";
+import { ThemeProps } from "../types/global.types";
+import { HomeNavigationProps } from "../types/navigation";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -54,7 +54,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAlert);
   };
   const onPressSearch = () => {
-    // navigation.navigate(Route.navSearchProduct);
+    navigation.navigate(Route.navSearchProduct);
   };
   const onPressSeeAllCategories = () => {};
   const onPressCategory = (item: any) => {};
@@ -62,11 +62,11 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const onPressSeeAllHotBrands = () => {};
   return (
     <View style={style.container}>
-      <StatusBar
+      {/* <StatusBar
         translucent
         backgroundColor={theme.colors?.transparent}
         barStyle={"dark-content"}
-      />
+      /> */}
       <HeaderHome
         name={`${name?.fname} ${name?.lname}`}
         onPressNotification={onPressNotification}

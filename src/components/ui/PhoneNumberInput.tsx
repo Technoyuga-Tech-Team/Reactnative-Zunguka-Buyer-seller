@@ -9,7 +9,7 @@ import DownArrowIcon from "./svg/DownArrowIcon";
 interface CustomPhoneNumberInputProps {
   onPressFlag: () => void;
   onChangePhoneNumber: (value: string, iso2: string) => void;
-  textInputTitle: string;
+  textInputTitle?: string;
   textProps: TextInputProps;
   error?: string;
   initialValue: string;
@@ -25,9 +25,9 @@ export const PhoneNumberInput = React.forwardRef<
   const DEFAULT_FLAG_CODE = 200; // RAWANDA default flag code
   return (
     <View style={styles.textInCont}>
-      {/* {props.textInputTitle && (
+      {props.textInputTitle && (
         <Text style={styles.txtTextInputTitle}>{props.textInputTitle}</Text>
-      )} */}
+      )}
       <ReactNativePhoneInput
         ref={ref}
         initialCountry={"rw"}

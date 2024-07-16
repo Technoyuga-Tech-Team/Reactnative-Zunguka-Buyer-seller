@@ -112,7 +112,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
     <View style={styles.container}>
       <StatusBar
         backgroundColor={theme?.colors?.primary}
-        barStyle={"light-content"}
+        barStyle={"dark-content"}
       />
       <FastImage
         source={require("../assets/images/splash_black_logo.png")}

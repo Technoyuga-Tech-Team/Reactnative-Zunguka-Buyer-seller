@@ -4,6 +4,7 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   COLORS,
+  CONDITIONS,
   HIT_SLOP,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
@@ -39,28 +40,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const [sliderVal, setSliderVal] = useState({ low: 50, high: 500 });
 
   const [selectedCondition, setSelectedCondition] = useState("");
-  const [conditionData, setConditionData] = useState([
-    {
-      title: "New, unused",
-      selected: false,
-    },
-    {
-      title: "Near unused",
-      selected: false,
-    },
-    {
-      title: "No noticeable scratchs or stains",
-      selected: false,
-    },
-    {
-      title: "Slightly scratched or soiled",
-      selected: false,
-    },
-    {
-      title: "Scratched or soiled",
-      selected: false,
-    },
-  ]);
+  const [conditionData, setConditionData] = useState(CONDITIONS);
 
   const onPressItem = (index: number) => {
     setSelectedCondition(conditionData[index].title);

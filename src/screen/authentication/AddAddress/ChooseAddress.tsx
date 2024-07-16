@@ -30,6 +30,7 @@ import Geolocation from "react-native-geolocation-service";
 import { setErrors } from "../../../store/global/global.slice";
 import Loading from "../../../components/ui/Loading";
 
+// @ts-ignore
 navigator.geolocation = require("react-native-geolocation-service");
 const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   navigation,
@@ -109,22 +110,22 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
       (position) => {
         //getting the Longitude from the location json
         const currentLongitude = position.coords.longitude;
-
         //getting the Latitude from the location json
         const currentLatitude = position.coords.latitude;
+
         setInitialCoordinate({
-          latitude: currentLongitude,
-          longitude: currentLatitude,
+          latitude: currentLatitude,
+          longitude: currentLongitude,
         });
         setMarkerCoordinate({
-          latitude: currentLongitude,
-          longitude: currentLatitude,
+          latitude: currentLatitude,
+          longitude: currentLongitude,
         });
         mapRef.current?.fitToCoordinates(
           [
             {
-              latitude: currentLongitude,
-              longitude: currentLatitude,
+              latitude: currentLatitude,
+              longitude: currentLongitude,
             },
           ],
           { animated: true }
@@ -158,6 +159,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
     console.log("details", JSON.stringify(details));
     dispatch(saveCity(""));
     if (data) {
+      // @ts-ignore
       const addressComponents = data?.address_components;
       console.log("addressComponents", addressComponents);
       // Loop through address components to find the city
@@ -191,8 +193,10 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
     const location_address =
       data.description !== undefined
         ? data.description
-        : data?.formatted_address // data?.formatted_address is getting address when fetch address using current location
-        ? data?.formatted_address
+        : // @ts-ignore
+        data?.formatted_address // data?.formatted_address is getting address when fetch address using current location
+        ? // @ts-ignore
+          data?.formatted_address
         : details?.formatted_address;
     setAddress(location_address);
   };
@@ -258,6 +262,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
               />
             )}
             onPress={(data, details) => {
+              // @ts-ignore
               onPressGetAddress(data, details);
             }}
             query={{

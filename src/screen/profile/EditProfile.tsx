@@ -313,7 +313,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
           <View style={style.txtInCont}>
             <CustomTxtInput
-              textInputTitle="First Name"
               placeholder="Enter your first name"
               returnKeyType="next"
               returnKeyLabel="next"
@@ -327,7 +326,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               onSubmitEditing={() => lastnameRef.current?.focus()}
             />
             <CustomTxtInput
-              textInputTitle="Last Name"
               ref={lastnameRef}
               placeholder="Enter your last name"
               returnKeyType="next"
@@ -343,7 +341,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
             />
             <InputFieldInfo text={"Name view only for admin."} />
             <CustomTxtInput
-              textInputTitle="Username"
               ref={usernameRef}
               placeholder="Username"
               returnKeyType="next"
@@ -360,7 +357,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
             />
             <InputFieldInfo text={"Username view for publicly"} />
             <CustomTxtInput
-              textInputTitle="Email Address"
               ref={emaiRef}
               placeholder="Enter email"
               returnKeyType="next"
@@ -383,7 +379,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               >
                 <PhoneNumberInput
                   ref={phoneRef}
-                  textInputTitle="Phone Number"
                   onPressFlag={onPressFlag}
                   onChangePhoneNumber={(value, iso2) =>
                     onPhoneInputChange(value, iso2)

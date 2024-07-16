@@ -168,7 +168,6 @@ const ForgotPassword: React.FC<
           onSelect={(country, cca2) => onSelect(country, cca2)}
         />
         {/* <CustomTxtInput
-          textInputTitle="Email"
           placeholder="Enter Email"
           returnKeyType="done"
           returnKeyLabel="done"

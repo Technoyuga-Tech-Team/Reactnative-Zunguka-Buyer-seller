@@ -199,7 +199,6 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
         )}
         <View style={style.inputCont}>
           <CustomTxtInput
-            textInputTitle="GPS Address"
             placeholder="GPS Address"
             onChangeText={handleChange("gpsAddress")}
             onBlur={handleBlur("gpsAddress")}
@@ -216,7 +215,6 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           />
           <Text style={style.txtManualAddress}>Manual Address</Text>
           <CustomTxtInput
-            textInputTitle="House number"
             placeholder="House number (Ex. 401)"
             onChangeText={handleChange("houseNumber")}
             onBlur={handleBlur("houseNumber")}
@@ -230,7 +228,6 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           />
           <CustomTxtInput
             ref={st1Ref}
-            textInputTitle="Street number"
             placeholder="Street number (Ex. 5 KN 27 Street)"
             onChangeText={handleChange("streetNumber")}
             onBlur={handleBlur("streetNumber")}
@@ -243,7 +240,6 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           />
           <CustomTxtInput
             ref={cityRef}
-            textInputTitle="Sector name"
             placeholder="Sector name"
             onChangeText={handleChange("sector")}
             onBlur={handleBlur("sector")}

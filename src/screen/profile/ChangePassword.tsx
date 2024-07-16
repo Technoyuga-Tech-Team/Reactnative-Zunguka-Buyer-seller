@@ -88,7 +88,6 @@ const ChangePassword: React.FC<
 
       <View style={style.otpInputCont}>
         <CustomTxtInput
-          textInputTitle="Current Password"
           placeholder="Enter current password"
           onChangeText={handleChange("currentPassword")}
           onBlur={handleBlur("currentPassword")}
@@ -102,7 +101,6 @@ const ChangePassword: React.FC<
           onSubmitEditing={() => passwordRef.current?.focus()}
         />
         <CustomTxtInput
-          textInputTitle="Create Password"
           placeholder="Enter password"
           ref={passwordRef}
           onChangeText={handleChange("password")}
@@ -117,7 +115,6 @@ const ChangePassword: React.FC<
           onSubmitEditing={() => confirmPasswordRef.current?.focus()}
         />
         <CustomTxtInput
-          textInputTitle="Confirm Password"
           placeholder="Enter confirm password"
           ref={confirmPasswordRef}
           onChangeText={handleChange("confirmPassword")}

@@ -108,8 +108,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         })
       );
       if (userLogin.fulfilled.match(result)) {
-        console.log("result.payload", result.payload);
-
         if (result.payload?.status == 1) {
           let steps = result.payload?.user?.step;
           console.log("steps", steps);
@@ -218,7 +216,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         <View style={style.txtInCont}>
           <PhoneNumberInput
             ref={phoneRef}
-            textInputTitle="Phone Number"
             onPressFlag={onPressFlag}
             onChangePhoneNumber={(value, iso2) =>
               onPhoneInputChange(value, iso2)
@@ -245,7 +242,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
           />
 
           <CustomTxtInput
-            textInputTitle="Password"
             placeholder="Password"
             ref={passwordRef}
             onChangeText={handleChange("password")}

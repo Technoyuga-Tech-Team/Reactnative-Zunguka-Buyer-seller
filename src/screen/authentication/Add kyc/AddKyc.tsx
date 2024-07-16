@@ -243,7 +243,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
             onSelect={(val) => {
               console.log("val", val);
               setCountryError("");
-              setCountry(val.key);
+              setCountry(val?.key);
             }}
             error={countryError}
           />

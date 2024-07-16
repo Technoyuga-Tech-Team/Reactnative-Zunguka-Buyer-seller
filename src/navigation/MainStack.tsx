@@ -18,6 +18,7 @@ import ChangePassword from "../screen/profile/ChangePassword";
 import ResetPassword from "../screen/authentication/ResetPassword";
 import SearchProducts from "../screen/search/SearchProducts";
 import ProductDetails from "../screen/product/ProductDetails";
+import AddNewProduct from "../screen/sell/AddNewProduct";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -54,6 +55,7 @@ const MainStack = () => {
             },
           }}
         />
+        <Stack.Screen name={Route.navAddNewProduct} component={AddNewProduct} />
         <Stack.Screen
           name={Route.navSearchProduct}
           component={SearchProducts}

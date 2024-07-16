@@ -5,7 +5,7 @@ export enum Images {
   WOMEN_TSHIRT_IMAGE = require("../images/iconoir_women-t-shirt.png"),
   MOBILE_IMAGE = require("../images/mobile1.png"),
   HOBBIES_IMAGE = require("../images/ball.png"),
-  HOME_IMAGE = require("../images/home.png"),
+  HOME_IMAGE = require("../images/homeOutline.png"),
   RESTROOM_WOMEN_IMAGE = require("../images/restroom-women.png"),
   CAR_IMAGE = require("../images/car.png"),
   // hot brands

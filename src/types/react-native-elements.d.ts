@@ -33,6 +33,7 @@ declare module "react-native-elements/dist/config/colors" {
     darkGrey: string;
     backgroundLight1: string;
     greyed: string;
+    textInputFieldBg: string;
   }
 }
 

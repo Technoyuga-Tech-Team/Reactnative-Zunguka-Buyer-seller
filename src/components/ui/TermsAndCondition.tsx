@@ -10,13 +10,17 @@ import SquareCheckIcon from "./svg/SquareCheckIcon";
 interface TermsAndConditionProps {
   checked: boolean;
   toggleCheckbox: () => void;
-  onPressTermsAndCondition: () => void;
+  onPressTermsAndCondition?: () => void;
+  isTandC?: boolean;
+  title?: string;
 }
 
 const TermsAndCondition: React.FC<TermsAndConditionProps> = ({
   checked,
   toggleCheckbox,
   onPressTermsAndCondition,
+  isTandC = false,
+  title,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -45,12 +49,18 @@ const TermsAndCondition: React.FC<TermsAndConditionProps> = ({
           padding: 0,
         }}
       />
-      <Text onPress={toggleCheckbox} style={style.txtTC}>
-        I agree with the{" "}
-        <Text onPress={onPressTermsAndCondition} style={style.txtTC1}>
-          Terms & Conditions
+      {isTandC ? (
+        <Text onPress={toggleCheckbox} style={style.txtTC}>
+          I agree with the{" "}
+          <Text onPress={onPressTermsAndCondition} style={style.txtTC1}>
+            Terms & Conditions
+          </Text>
         </Text>
-      </Text>
+      ) : (
+        <Text onPress={toggleCheckbox} style={style.txtTC}>
+          {title}
+        </Text>
+      )}
     </View>
   );
 };

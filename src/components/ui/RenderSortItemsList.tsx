@@ -30,6 +30,7 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
           : Images.UNCHECKED_RADIO;
         return (
           <TouchableOpacity
+            key={index}
             onPress={() => onPressItem(index)}
             activeOpacity={0.8}
             style={style.radioItemCont}
@@ -52,7 +53,7 @@ export default RenderSortItemsList;
 const useStyle = makeStyles((theme) => ({
   cont: {
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    // paddingVertical: 20,
   },
   txtLoginToZunguka: {
     fontSize: theme.fontSize?.fs20,
@@ -61,8 +62,8 @@ const useStyle = makeStyles((theme) => ({
     marginTop: 10,
   },
   radioButton: {
-    height: Scale(24),
-    width: Scale(24),
+    height: Scale(20),
+    width: Scale(20),
   },
   radioItemCont: {
     flexDirection: "row",
