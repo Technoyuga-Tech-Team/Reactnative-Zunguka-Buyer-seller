@@ -30,7 +30,7 @@ const SliderItem: React.FC<SliderProps> = ({
       <AppImage
         source={item?.image}
         style={styles.sliderImage}
-        resizeMode={"cover"}
+        resizeMode={bannerHeight ? "cover" : "contain"}
       />
     </View>
   );

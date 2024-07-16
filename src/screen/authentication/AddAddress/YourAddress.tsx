@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Platform, Text, TextInput, View } from "react-native";
+import { BackHandler, Platform, Text, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -51,6 +51,21 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const [productImageError, setProductImageError] = useState<string>("");
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
+
+  useEffect(() => {
+    const onBackPress = () => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navAuthentication }],
+        })
+      );
+      return true;
+    };
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  }, []);
 
   useEffect(() => {
     setAdjustResize();

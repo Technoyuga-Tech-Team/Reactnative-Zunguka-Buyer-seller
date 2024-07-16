@@ -54,7 +54,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAlert);
   };
   const onPressSearch = () => {
-    navigation.navigate(Route.navSearchProduct);
+    // navigation.navigate(Route.navSearchProduct);
   };
   const onPressSeeAllCategories = () => {};
   const onPressCategory = (item: any) => {};

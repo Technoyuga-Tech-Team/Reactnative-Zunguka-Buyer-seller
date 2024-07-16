@@ -1,4 +1,4 @@
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, BackHandler } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AuthNavigationProps } from "../../../types/navigation";
 import { Route } from "../../../constant/navigationConstants";
@@ -39,7 +39,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   const from = route?.params?.fromOTP || false;
   const loading = useSelector(selectAuthenticationLoading);
 
-  const [country, setCountry] = useState("RW");
+  const [country, setCountry] = useState();
   const [countryError, setCountryError] = useState("");
 
   const [IdType, setIdType] = useState("");
@@ -53,7 +53,26 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setCountry("RW");
+    const onBackPress = () => {
+      if (navigation.canGoBack() && !from) {
+        navigation.goBack();
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navAuthentication }],
+          })
+        );
+      }
+      return true;
+    };
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  }, []);
+
+  useEffect(() => {
+    setCountry({ key: "RW", title: "Rwanda" });
   }, []);
 
   useEffect(() => {

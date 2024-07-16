@@ -196,8 +196,8 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     onSubmit: async ({ firstName, lastName, username, email, phoneNumber }) => {
       const result = await dispatch(
         userUpdateProfile({
-          first_name: keepSingleSpace(firstName),
-          last_name: keepSingleSpace(lastName),
+          first_name: firstName !== "" ? keepSingleSpace(firstName) : "",
+          last_name: lastName !== "" ? keepSingleSpace(lastName) : "",
           username: username.trim(),
           email: email.trim(),
           phone_number: phoneNumber.trim(),
@@ -368,7 +368,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               keyboardType={"email-address"}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
-              editable={true}
+              editable={userData?.is_social !== 1}
               value={values.email}
               error={errors.email}
               touched={touched.email}
