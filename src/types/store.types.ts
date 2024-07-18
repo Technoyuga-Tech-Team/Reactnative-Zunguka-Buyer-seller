@@ -3,12 +3,14 @@ import { GlobalState } from "./global.types";
 import { SettingsStateProps } from "./settings.types";
 import { AuthenticationState } from "./authentication.types";
 import { UserProfileState } from "./user.types";
+import { ProductState } from "./product.types";
 
 export interface RootReduxState {
   global: GlobalState;
   settings: SettingsStateProps;
   authentication: AuthenticationState;
   userProfile: UserProfileState;
+  product: ProductState;
 }
 
 export type AppDispatch = ThunkDispatch<

@@ -57,6 +57,7 @@ const CustomSearchBarWithSortAndFilter: React.FC<
             style={style.textInput}
             value={search}
             onChangeText={onChangeText}
+            selectionColor={theme?.colors?.primary}
           />
         </View>
       </View>
@@ -96,6 +97,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme?.colors?.black,
     height: Scale(40),
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchCont: {
     flexDirection: "row",

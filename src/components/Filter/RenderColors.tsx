@@ -9,28 +9,30 @@ import SquareCheckIcon from "../ui/svg/SquareCheckIcon";
 import { HIT_SLOP2 } from "../../constant";
 
 interface RenderColorsProps {
-  selectedColors: any[];
+  selectedItem: any[];
   data: any[];
   onSelect: (val: any) => void;
+  isColor?: boolean;
 }
 
 const RenderColors: React.FC<RenderColorsProps> = ({
-  selectedColors,
+  selectedItem,
   data,
   onSelect,
+  isColor,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
   const { theme } = useTheme();
-  const [colors, setColors] = useState<string[]>(selectedColors);
+  const [items, setItems] = useState<string[]>(selectedItem);
 
   const handleCheckboxChange = (ele: any) => {
-    const isSelected = colors.includes(ele.colorName);
-    const updatedColors = isSelected
-      ? colors.filter((c) => c !== ele.colorName)
-      : [...colors, ele.colorName];
-    setColors(updatedColors);
-    onSelect(updatedColors);
+    const isSelected = items.includes(ele.itemName);
+    const updatedItems = isSelected
+      ? items.filter((c) => c !== ele.itemName)
+      : [...items, ele.itemName];
+    setItems(updatedItems);
+    onSelect(updatedItems);
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={style.container}>
@@ -43,7 +45,7 @@ const RenderColors: React.FC<RenderColorsProps> = ({
             key={ele.colorCode}
           >
             <CheckBox
-              checked={colors.includes(ele.colorName)}
+              checked={items.includes(ele.itemName)}
               onPress={() => handleCheckboxChange(ele)}
               hitSlop={HIT_SLOP2}
               checkedIcon={
@@ -64,10 +66,12 @@ const RenderColors: React.FC<RenderColorsProps> = ({
                 padding: 0,
               }}
             />
-            <Text style={style.txtColor}>{ele.colorName}</Text>
-            <View
-              style={[style.colorCont, { backgroundColor: ele.colorCode }]}
-            />
+            <Text style={style.txtColor}>{ele.itemName}</Text>
+            {isColor && (
+              <View
+                style={[style.colorCont, { backgroundColor: ele.colorCode }]}
+              />
+            )}
           </TouchableOpacity>
         );
       })}

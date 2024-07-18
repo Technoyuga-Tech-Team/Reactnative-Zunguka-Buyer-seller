@@ -5,7 +5,7 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { ThemeProps } from "../../types/global.types";
 import { imagePickerProps } from "../../types/common.types";
 import { AppImage } from "../AppImage/AppImage";
-import { HIT_SLOP, SCREEN_WIDTH } from "../../constant";
+import { HIT_SLOP, PRDUCT_EMPTY_CELLS, SCREEN_WIDTH } from "../../constant";
 import Scale from "../../utils/Scale";
 import CloseIcon from "./svg/CloseIcon";
 import PhotoPlusIcon from "./svg/PhotoPlusIcon";
@@ -17,6 +17,7 @@ import {
 } from "../../utils/ImagePickerCameraGallary";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setErrors } from "../../store/global/global.slice";
+import { Images } from "../../assets/images";
 
 interface PickSellProductProps {
   images: imagePickerProps[];
@@ -105,47 +106,51 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
     }
   };
 
-  console.log("images", images);
-
   return (
     <View style={style.container}>
-      <TouchableOpacity
-        onPress={onPressAddImage}
-        activeOpacity={0.8}
-        style={style.emptyPhotoCont}
-      >
-        <PhotoPlusIcon />
-      </TouchableOpacity>
-
-      <FlatList
-        data={images}
-        horizontal={false}
-        numColumns={3}
-        columnWrapperStyle={{
-          justifyContent: "flex-start",
-          flex: 1,
-        }}
-        keyExtractor={(_item, index) => index.toString()}
-        renderItem={({ item, index }) => {
+      <View style={style.innerCont}>
+        {PRDUCT_EMPTY_CELLS.map((ele, index) => {
+          const source =
+            images?.length > index
+              ? images[index]?.uri
+              : Images.EMPTY_PRODUCT_IMAGE;
+          const isHaveImage = images?.length > index ? true : false;
           return (
-            <View style={style.itemCont}>
-              <AppImage
-                source={item.uri}
-                style={style.imgCont}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                onPress={() => onPressCloseIcon(item)}
-                hitSlop={HIT_SLOP}
-                activeOpacity={0.6}
-                style={style.closeCont}
-              >
-                <CloseIcon color={theme.colors?.black} height={14} width={14} />
-              </TouchableOpacity>
+            <View style={[style.itemCont]}>
+              {isHaveImage ? (
+                <AppImage
+                  source={source}
+                  style={style.imgCont}
+                  resizeMode={isHaveImage ? "cover" : "contain"}
+                />
+              ) : (
+                <TouchableOpacity activeOpacity={0.8} onPress={onPressAddImage}>
+                  <AppImage
+                    source={source}
+                    style={style.imgCont}
+                    resizeMode={isHaveImage ? "cover" : "contain"}
+                  />
+                </TouchableOpacity>
+              )}
+
+              {isHaveImage && (
+                <TouchableOpacity
+                  onPress={() => onPressCloseIcon(images[index])}
+                  hitSlop={HIT_SLOP}
+                  activeOpacity={0.6}
+                  style={style.closeCont}
+                >
+                  <CloseIcon
+                    color={theme.colors?.black}
+                    height={14}
+                    width={14}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           );
-        }}
-      />
+        })}
+      </View>
 
       <ImagePickerPopup
         visiblePopup={visible}
@@ -193,8 +198,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     borderWidth: 1,
     borderColor: theme?.colors?.primary,
     borderStyle: "dashed",
-    marginRight: 10,
-    marginTop: 10,
+    // marginRight: 10,
+    marginTop: 20,
   },
   itemCont: {
     height: Scale(112),
@@ -202,6 +207,13 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    margin: 5,
+    marginTop: 10,
+    // marginRight: 10,
+  },
+  innerCont: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 }));

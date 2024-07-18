@@ -4,9 +4,10 @@ import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeProps } from "../../types/global.types";
 import CategoryItem from "./CategoryItem";
+import { CategoriesDataProps } from "../../types/dashboard.types";
 
 interface CategoryDataProps {
-  CategoryData: any;
+  CategoryData: CategoriesDataProps[];
   onPressCategory: (item: any) => void;
 }
 
@@ -17,7 +18,7 @@ const CategoryListing: React.FC<CategoryDataProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
 
-  const renderItem = ({ item }: { item: any }) => {
+  const renderItem = ({ item }: { item: CategoriesDataProps }) => {
     return (
       <CategoryItem item={item} onPressCategory={() => onPressCategory(item)} />
     );

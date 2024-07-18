@@ -7,25 +7,12 @@ import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import { Images } from "../../assets/images";
 import HomeIcon from "../ui/svg/HomeIcon";
+import { HotBrandaDataProps } from "../../types/dashboard.types";
 
 interface HotBrandsItemProps {
-  item: any;
+  item: HotBrandaDataProps;
   onPressHotBrands: () => void;
 }
-
-const getIcons = (key: number) => {
-  return key == 1
-    ? Images.ADIDAS_IMAGE
-    : key == 2
-    ? Images.ROLEX_IMAGE
-    : key == 3
-    ? Images.GUCCI_IMAGE
-    : key == 4
-    ? Images.NIKE_IMAGE
-    : key == 5
-    ? Images.SAMSUNG_IMAGE
-    : Images.APPLE_IMAGE;
-};
 
 const HotBrandsItem: React.FC<HotBrandsItemProps> = ({
   item,
@@ -35,8 +22,6 @@ const HotBrandsItem: React.FC<HotBrandsItemProps> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
-  const product_image = getIcons(item.key) || Images.PLACEHOLDER_IMAGE;
-
   return (
     <TouchableOpacity
       onPress={onPressHotBrands}
@@ -44,11 +29,7 @@ const HotBrandsItem: React.FC<HotBrandsItemProps> = ({
       style={style.container}
     >
       <View style={style.imageBg}>
-        <AppImage
-          source={product_image}
-          style={style.product}
-          resizeMode="cover"
-        />
+        <AppImage source={item.icon} style={style.product} resizeMode="cover" />
       </View>
 
       <Text style={style.txtTitle}>{item.name}</Text>
@@ -61,8 +42,6 @@ export default HotBrandsItem;
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
     marginVertical: 10,
-    marginRight: 20,
-    width: Scale(110),
   },
   product: {
     height: Scale(125),
@@ -72,7 +51,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   imageBg: {
     height: Scale(125),
-    width: Scale(110),
     borderRadius: Scale(10),
     backgroundColor: theme.colors?.backgroundLight,
     alignItems: "center",

@@ -1,6 +1,7 @@
 export enum Images {
   PLACEHOLDER_IMAGE = require("../images/placeholder.jpg"),
   HEADER_HOME_IMAGE = require("../images/home_header.png"),
+  EMPTY_PRODUCT_IMAGE = require("../images/emptyProduct.png"),
   // categories
   WOMEN_TSHIRT_IMAGE = require("../images/iconoir_women-t-shirt.png"),
   MOBILE_IMAGE = require("../images/mobile1.png"),

@@ -45,7 +45,7 @@ const SortProduuctPopup: React.FC<SortProduuctPopupProps> = ({
     },
   ]);
 
-  const onPressItem = (item: SortData, index: number) => {
+  const onPressItem = (index: number) => {
     setSortData(
       sortData.map((item, itemIndex) => ({
         ...item,
@@ -152,6 +152,7 @@ const useStyle = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    marginTop: 20,
   },
   buttonRightMargin: {
     marginRight: 10,

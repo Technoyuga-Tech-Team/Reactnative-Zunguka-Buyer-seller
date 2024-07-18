@@ -11,6 +11,7 @@ export enum Route {
   navAddKyc = "AddKyc",
   navSell = "Sell",
   navAddNewProduct = "AddNewProduct",
+  navCongratulations = "Congratulations",
   navInbox = "Inbox",
   navAlert = "Alert",
   navChooseAddress = "ChooseAddress",

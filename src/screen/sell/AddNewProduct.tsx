@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Keyboard, Text, TextInput, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Keyboard,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,9 +14,17 @@ import CustomDropdown from "../../components/Dropdown/CustomDropdown";
 import CustomHeader from "../../components/ui/CustomHeader";
 import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
 import TitleWithInfoIcon from "../../components/ui/TitleWithInfoIcon";
-import { CITIES, CONDITIONS } from "../../constant";
+import {
+  CITIES,
+  COLORS,
+  CONDITIONS,
+  HIT_SLOP2,
+  SCREEN_HEIGHT,
+  SIZES,
+  VEHICLE_TYPE_DATA,
+} from "../../constant";
 import { Route } from "../../constant/navigationConstants";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
 import Scale from "../../utils/Scale";
@@ -20,6 +35,27 @@ import SellProductItems from "../../components/SellProductItems";
 import CustomButton from "../../components/ui/CustomButton";
 import PickSellProduct from "../../components/ui/PickSellProduct";
 import { imagePickerProps } from "../../types/common.types";
+import { getUrlExtension } from "../../utils";
+import BackIcon from "../../components/ui/svg/BackIcon";
+import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
+import { useCategories } from "../../hooks/useCategories";
+import {
+  CategoriesDataProps,
+  HotBrandaDataProps,
+} from "../../types/dashboard.types";
+import { useBrands } from "../../hooks/useBrands";
+import { Images } from "../../assets/images";
+import { AppImage } from "../../components/AppImage/AppImage";
+import NoDataFound from "../../components/ui/NoDataFound";
+import RenderColors from "../../components/Filter/RenderColors";
+import RenderMultiSelectionItem from "../../components/Filter/RenderMultiSelectionItem";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setErrors } from "../../store/global/global.slice";
+import { addProductForSell } from "../../store/Product/product.thunk";
+import { useSelector } from "react-redux";
+import { selectProductLoading } from "../../store/Product/product.selectors";
+import LeftIcon from "../../components/ui/svg/LeftIcon";
+import { CommonActions } from "@react-navigation/native";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -27,15 +63,24 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-
+  const dispatch = useAppDispatch();
   const productTitleRef = React.useRef<TextInput>(null);
   const locationRef = React.useRef<TextInput>(null);
 
+  const loading = useSelector(selectProductLoading);
+
   const [conditionData, setConditionData] = useState(CONDITIONS);
   const [selectedCondition, setSelectedCondition] = useState("");
+  const [selectedConditionError, setSelectedConditionError] = useState("");
+
+  const [productCategory, setProductCategory] = useState("");
+  const [productCategoryError, setProductCategoryError] = useState("");
 
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
+
+  const [vehicle, setVehicle] = useState("");
+  const [vehicleError, setVehicleError] = useState("");
 
   const [productTitle, setProductTitle] = useState("");
   const [productTitleError, setProductTitleError] = useState("");
@@ -53,13 +98,88 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [checkedNotDamaged, setCheckedNotDamaged] = React.useState(false);
 
   const [productImages, setProductImages] = useState<imagePickerProps[]>([]);
+  const [productImageError, setProductImageError] = useState<string>("");
+
+  const [visibleCategories, setVisibleCategories] = useState(false);
+  const [visibleBrands, setVisibleBrands] = useState(false);
+  const [visibleColor, setVisibleColor] = useState(false);
+  const [visibleSize, setVisibleSize] = useState(false);
+
+  const [subCategoryId, setSubCategoryId] = useState<number | null>(null);
+  const [parantCategoryId, setParantCategoryId] = useState<number | null>(null);
+  const [subCatName, setSubCatName] = useState<string>("");
+  const [parantCatName, setParantCatName] = useState<string>("");
+
+  const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
+  const [brands, setBrands] = useState<HotBrandaDataProps[]>([]);
+
+  const [expand, setExpand] = useState<number | null>(null);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColorsError, setSelectedColorsError] = useState<string>("");
+
+  const [selectedSize, setSelectedSize] = useState<any[]>([]);
+  const [selectedSizeValue, setSelectedSizeValues] = useState<any[]>([]);
+  const [selectedSizeValueError, setSelectedSizeValueError] =
+    useState<string>("");
+
+  const [selectedBrand, setSelectedBrand] = useState<{
+    id: number | null;
+    name: string;
+  }>({ id: null, name: "" });
+  const [selectedBrandError, setSelectedBrandError] = useState<string>("");
+
+  const [subParantCat, setSubParantCat] = useState<string>("");
+
+  const { data: categoriesData, isFetching } = useCategories();
+
+  const { data: brandsData } = useBrands(`${parantCategoryId}`);
+
+  useEffect(() => {
+    if (brandsData?.data?.data) {
+      setBrands(brandsData?.data?.data);
+    }
+  }, [brandsData]);
+
+  useEffect(() => {
+    if (parantCatName && subCatName) {
+      setSubParantCat(`${parantCatName} - ${subCatName}`);
+    }
+  }, [parantCatName, subCatName]);
+
+  useEffect(() => {
+    if (categoriesData?.data?.data) {
+      setCategories(categoriesData?.data?.data);
+    }
+  }, [categoriesData]);
+
+  const ModalHeader = ({
+    title,
+    onPress,
+  }: {
+    title: string;
+    onPress: () => void;
+  }) => {
+    return (
+      <View style={style.header}>
+        <TouchableOpacity
+          onPress={onPress}
+          hitSlop={HIT_SLOP2}
+          activeOpacity={0.8}
+        >
+          <LeftIcon color={theme?.colors?.black} style={{ marginRight: 20 }} />
+        </TouchableOpacity>
+        <Text style={style.txtHeaderTitle}>{title}</Text>
+      </View>
+    );
+  };
 
   const toggleCheckbox = () => setChecked(!checked);
   const toggleCheckboxNotDamage = () =>
     setCheckedNotDamaged(!checkedNotDamaged);
 
   const onPressItem = (index: number) => {
-    setSelectedCondition(conditionData[index].title);
+    setSelectedConditionError("");
+    setSelectedCondition(conditionData[index].value);
     setConditionData(
       conditionData.map((item, itemIndex) => ({
         ...item,
@@ -90,14 +210,14 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const onBlurProductTitle = () => {
     let isValid = isRequiredFields(productTitle);
     if (!isValid) {
-      setProductTitleError("Selling price is required");
+      setProductTitleError("Title is required");
     }
   };
 
   const onBlurLocation = () => {
     let isValid = isRequiredFields(productLocation);
     if (!isValid) {
-      setProductTitleError("Location is required");
+      setProductLocationError("Location is required");
     }
   };
 
@@ -128,7 +248,162 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressSelectCategory = () => {
-    console.log("first");
+    setVisibleCategories(true);
+  };
+
+  const checkIsValidForm = () => {
+    let isValidProductImage = productImages.length > 0;
+    let isValidTitle = isRequiredFields(productTitle);
+    let isValidProductCategory = isRequiredFields(subParantCat);
+    let isValidConditionOfItems = isRequiredFields(selectedCondition);
+    let isValidBrands = isRequiredFields(selectedBrand.name);
+    let isValidColors = isRequiredFields(selectedColors[0]);
+    let isValidSize = isRequiredFields(selectedSizeValue[0]);
+    let isValidCity = isRequiredFields(city);
+    let isValidAddress = isRequiredFields(productLocation);
+    let isValidDescription = isRequiredFields(productDescription);
+    let isValidModeOfTransport = isRequiredFields(vehicle);
+    let isValidPrice = isRequiredFields(productSellingPrice);
+    console.log("isValidTitle", isValidTitle);
+    if (!isValidProductImage) {
+      setProductImageError("Product photos are required");
+      return false;
+    } else if (!isValidTitle) {
+      setProductTitleError("Title is required");
+      return false;
+    } else if (!isValidProductCategory) {
+      setProductCategoryError("Category is required");
+      return false;
+    } else if (!isValidConditionOfItems) {
+      setSelectedConditionError("Condition Of Items is required");
+      return false;
+    } else if (!isValidBrands) {
+      setSelectedBrandError("Brands are required");
+      return false;
+    } else if (!isValidColors) {
+      setSelectedColorsError("Colors is required");
+      return false;
+    } else if (!isValidSize) {
+      setSelectedSizeValueError("Size is required");
+      return false;
+    } else if (!isValidCity) {
+      setCityError("City is required");
+      return false;
+    } else if (!isValidAddress) {
+      setProductLocationError("Address is required");
+      return false;
+    } else if (!isValidDescription) {
+      setProductDescriptionError("Description is required");
+      return false;
+    } else if (!isValidModeOfTransport) {
+      setVehicleError("Mode of transport is required");
+      return false;
+    } else if (!isValidPrice) {
+      setProductSellingPriceError("Selling price is required");
+      return false;
+    } else if (!checked) {
+      dispatch(
+        setErrors({
+          message: "Please agree with terms & condition",
+          status: 0,
+          statusCode: null,
+        })
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const onPressSubmit = async () => {
+    if (checkIsValidForm()) {
+      const formData = new FormData();
+
+      Object.entries(productImages).forEach(([_key, val]) => {
+        formData.append(`images[${_key}]`, {
+          name:
+            val.name ||
+            `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+          type: `image/${getUrlExtension(val.uri)}`,
+          uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+        });
+      });
+      formData.append("title", productTitle);
+      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      formData.append("condition_of_item", selectedCondition);
+      formData.append("brand_id", selectedBrand.id);
+      formData.append("color", selectedColors.join(", "));
+      formData.append("size", selectedSizeValue.join(", "));
+      formData.append("city", city);
+      formData.append("address", productLocation);
+      formData.append("description", productDescription);
+      formData.append("mode_of_transport", vehicle.toLocaleLowerCase());
+      formData.append("sale_price", productSellingPrice);
+
+      const result = await dispatch(addProductForSell({ formData: formData }));
+
+      if (addProductForSell.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: Route.navCongratulations }],
+            })
+          );
+          console.log("addProductForSell response - - - ", result.payload);
+        }
+      } else {
+        console.log("addProductForSell error - - - ", result.payload);
+      }
+    }
+  };
+
+  const onPressCategory = (
+    subCatId: number,
+    subcatName: string,
+    parantCatId: number,
+    parantCatName: string
+  ) => {
+    setProductCategoryError("");
+    setSubCatName(subcatName);
+    setParantCatName(parantCatName);
+    setSubCategoryId(subCatId);
+    setParantCategoryId(parantCatId);
+  };
+
+  const onExpand = (id: number) => {
+    setExpand(null);
+    expand == id ? setExpand(null) : setExpand(id);
+  };
+
+  const onSelectBrand = (itm: HotBrandaDataProps) => {
+    setSelectedBrand({ id: itm.id, name: itm.name });
+  };
+
+  const onPressBrand = () => {
+    setSelectedBrandError("");
+    setVisibleBrands(true);
+  };
+
+  const handleColorSelect = (colors: any) => {
+    setSelectedColors(colors);
+  };
+  const handleSizeSelection = (item: any) => {
+    let arr: any = [];
+    item.forEach((element: { itemValue: any }) => {
+      arr.push(element.itemValue);
+    });
+    setSelectedSizeValues(arr);
+    setSelectedSize(item);
+  };
+
+  const onPressColor = () => {
+    setSelectedColorsError("");
+    setVisibleColor(!visibleColor);
+  };
+  const onPressSize = () => {
+    setSelectedSizeValueError("");
+    setVisibleSize(!visibleSize);
   };
 
   return (
@@ -140,6 +415,24 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={style.scrollCont}
       >
+        <TitleWithInfoIcon title="Photos" />
+        <PickSellProduct
+          images={productImages}
+          setImages={(val) => {
+            setProductImageError("");
+            setProductImages(val);
+          }}
+        />
+        {(productImageError || productImages?.length <= 0) && (
+          <Text style={style.error}>{productImageError}</Text>
+        )}
+        <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
+          <TermsAndCondition
+            checked={checkedNotDamaged}
+            toggleCheckbox={toggleCheckboxNotDamage}
+            title="Damages clearly photos"
+          />
+        </View>
         <CustomTxtInput
           ref={productTitleRef}
           textInputTitle={"Title"}
@@ -154,7 +447,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurProductTitle}
           value={productTitle}
           error={productTitleError}
-          touched={productTitleError == ""}
+          touched={productTitleError}
           textInputStyle={style.inputWithoutBgColor}
           style={style.txtInputWithoutBgColor}
         />
@@ -168,15 +461,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           keyboardType={"default"}
           iconPosition={"right"}
           icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+          value={subParantCat}
+          error={productCategoryError}
+          touched={productCategoryError}
           onPress={onPressSelectCategory}
           onPressIn={onPressSelectCategory}
           onPressOuterRightIcon={onPressSelectCategory}
           editable={false}
-          // onChangeText={onChangeProductTitle}
-          // onBlur={onBlurProductTitle}
-          // value={productTitle}
-          // error={productTitleError}
-          // touched={productTitleError == ""}
           textInputStyle={style.inputWithoutBgColor}
           style={style.txtInputWithoutBgColor}
         />
@@ -185,10 +476,29 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           sortData={conditionData}
           onPressItem={onPressItem}
         />
+        {(selectedConditionError || selectedConditionError?.length <= 0) && (
+          <Text style={style.error}>{selectedConditionError}</Text>
+        )}
         <TitleWithInfoIcon title="Item specifics" showIcon={true} />
         <View style={style.paddingHorizontal}>
-          <SellProductItems title="Brand" value={""} onPressItem={() => {}} />
-          <SellProductItems title="Color" value={""} onPressItem={() => {}} />
+          <SellProductItems
+            title="Brand"
+            value={selectedBrand?.name}
+            onPressItem={onPressBrand}
+            error={selectedBrandError}
+          />
+          <SellProductItems
+            title="Color"
+            value={selectedColors.join(", ")}
+            onPressItem={onPressColor}
+            error={selectedColorsError}
+          />
+          <SellProductItems
+            title="Size"
+            value={selectedSizeValue?.join(", ")}
+            onPressItem={onPressSize}
+            error={selectedSizeValueError}
+          />
         </View>
         <TitleWithInfoIcon title="Location" />
         <View style={style.paddingHorizontal}>
@@ -217,25 +527,11 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurLocation}
           value={productLocation}
           error={productLocationError}
-          touched={productLocationError == ""}
+          touched={productLocationError}
           textInputStyle={style.inputWithoutBgColor}
           style={style.txtInputWithoutBgColor}
         />
-        <TitleWithInfoIcon title="Photos" />
-        <PickSellProduct
-          images={productImages}
-          setImages={(val) => {
-            setProductImages(val);
-          }}
-        />
 
-        <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
-          <TermsAndCondition
-            checked={checkedNotDamaged}
-            toggleCheckbox={toggleCheckboxNotDamage}
-            title="Damages clearly photos"
-          />
-        </View>
         <TitleWithInfoIcon title="Description" />
         <CustomTxtInput
           placeholder={`Please provide detailed information about your products.\n\nEx: Used iPhone in great condition! 1 year old, 90% battery health, and only minor scratches.`}
@@ -250,9 +546,23 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurDescription}
           value={productDescription}
           error={productDescriptionError}
-          touched={productDescriptionError == ""}
+          touched={productDescriptionError}
           onSubmitEditing={() => {}}
         />
+        <TitleWithInfoIcon title="Mode of transports" />
+        <View style={style.paddingHorizontal}>
+          <CustomDropdown
+            dropDownData={VEHICLE_TYPE_DATA}
+            placeHolder={"Select"}
+            value={vehicle}
+            topMargin={20}
+            onSelect={(val) => {
+              setVehicleError("");
+              setVehicle(val.key);
+            }}
+            error={vehicleError}
+          />
+        </View>
         <TitleWithInfoIcon title="Selling Price" />
         <CustomTxtInput
           placeholder="Enter price"
@@ -264,7 +574,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurSellingPrice}
           value={productSellingPrice}
           error={productSellingPriceError}
-          touched={productSellingPriceError == ""}
+          touched={productSellingPriceError}
           textInputStyle={style.inputSellingPrice}
           style={style.txtSellingPrice}
         />
@@ -279,16 +589,96 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           <CustomButton
             onPress={() => {
               Keyboard.dismiss();
+              onPressSubmit();
             }}
             title={"Submit"}
             buttonWidth="full"
             variant="primary"
             type="solid"
-            // disabled={!isValid || loading === LoadingState.CREATE}
-            // loading={loading === LoadingState.CREATE}
+            disabled={loading === LoadingState.CREATE}
+            loading={loading === LoadingState.CREATE}
           />
         </View>
       </KeyboardAwareScrollView>
+      {visibleCategories && (
+        <View style={style.view}>
+          <ModalHeader
+            title="Categories"
+            onPress={() => setVisibleCategories(!visibleCategories)}
+          />
+          <CategoriesListWithExpand
+            categoriesData={categories}
+            onExpand={onExpand}
+            expand={expand}
+            isLoading={isFetching}
+            subCategoryId={subCategoryId}
+            onPressCategory={(sub, subName, parant, parantName) =>
+              onPressCategory(sub, subName, parant, parantName)
+            }
+          />
+        </View>
+      )}
+      {visibleBrands && (
+        <View style={style.view}>
+          <ModalHeader
+            title="Brands"
+            onPress={() => setVisibleBrands(!visibleBrands)}
+          />
+          <View style={{ marginHorizontal: 20, flex: 1 }}>
+            {brands?.length > 0 ? (
+              brands.map((itm) => {
+                const btn =
+                  itm?.id == selectedBrand.id
+                    ? Images.CHECKED_RADIO
+                    : Images.UNCHECKED_RADIO;
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={style.itmBrandSelection}
+                    onPress={() => onSelectBrand(itm)}
+                  >
+                    <AppImage
+                      source={btn}
+                      style={style.radioButton}
+                      resizeMode="cover"
+                    />
+                    <Text style={style.txtBrands}>{itm.name}</Text>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <NoDataFound title="No brands found!" />
+            )}
+          </View>
+        </View>
+      )}
+      {visibleColor && (
+        <View style={style.view}>
+          <ModalHeader
+            title="Colors"
+            onPress={() => setVisibleColor(!visibleColor)}
+          />
+          <RenderColors
+            isColor={true}
+            selectedItem={selectedColors}
+            data={COLORS}
+            onSelect={handleColorSelect}
+          />
+        </View>
+      )}
+      {visibleSize && (
+        <View style={style.view}>
+          <ModalHeader
+            title="Size"
+            onPress={() => setVisibleSize(!visibleSize)}
+          />
+          <RenderMultiSelectionItem
+            selectedItem={selectedSize}
+            data={SIZES}
+            onSelect={handleSizeSelection}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -359,5 +749,52 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   btnSubmit: {
     marginVertical: 10,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: Scale(50),
+    paddingHorizontal: 20,
+  },
+  txtHeaderTitle: {
+    fontSize: theme.fontSize?.fs22,
+    fontFamily: theme.fontFamily?.bold,
+    color: theme.colors?.black,
+    marginLeft: 10,
+  },
+  view: {
+    flex: 1,
+    position: "absolute",
+    top: 0,
+    bottomtop: 0,
+    left: 0,
+    right: 0,
+    height: SCREEN_HEIGHT,
+    zIndex: 11,
+    paddingTop: props.insets.top,
+    backgroundColor: theme?.colors?.white,
+  },
+  itmBrandSelection: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginTop: 10,
+  },
+  txtBrands: {
+    fontSize: theme.fontSize?.fs18,
+    fontFamily: theme.fontFamily?.medium,
+    color: theme.colors?.black,
+    marginLeft: 10,
+  },
+  radioButton: {
+    height: Scale(20),
+    width: Scale(20),
+  },
+  error: {
+    marginTop: 5,
+    fontSize: theme.fontSize?.fs12,
+    color: theme.colors?.error,
+    marginLeft: 20,
   },
 }));

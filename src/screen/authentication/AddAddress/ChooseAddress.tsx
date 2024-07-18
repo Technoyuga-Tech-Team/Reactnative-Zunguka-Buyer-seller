@@ -1,34 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Keyboard,
-  PermissionsAndroid,
-  Platform,
-  View,
-} from "react-native";
+import { PermissionsAndroid, Platform, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import Geocoder from "react-native-geocoding";
+import Geolocation from "react-native-geolocation-service";
 import {
   GooglePlaceData,
   GooglePlaceDetail,
   GooglePlacesAutocomplete,
   Point,
 } from "react-native-google-places-autocomplete";
-import MapView, { MapPressEvent, Marker, Region } from "react-native-maps";
+import MapView, { MapPressEvent, Marker } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddressContainer from "../../../components/ui/AddressContainer";
 import CustomHeader from "../../../components/ui/CustomHeader";
+import Loading from "../../../components/ui/Loading";
+import SearchIcon from "../../../components/ui/svg/SearchIcon";
 import { GOOGLE_MAP_API_KEY } from "../../../constant";
 import { Route } from "../../../constant/navigationConstants";
+import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { setErrors } from "../../../store/global/global.slice";
+import { saveAddress, saveCity } from "../../../store/settings/settings.slice";
 import { ThemeProps } from "../../../types/global.types";
 import { AuthNavigationProps } from "../../../types/navigation";
 import Scale from "../../../utils/Scale";
-import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { saveAddress, saveCity } from "../../../store/settings/settings.slice";
-import SearchIcon from "../../../components/ui/svg/SearchIcon";
-import Geolocation from "react-native-geolocation-service";
-import { setErrors } from "../../../store/global/global.slice";
-import Loading from "../../../components/ui/Loading";
 
 // @ts-ignore
 navigator.geolocation = require("react-native-geolocation-service");

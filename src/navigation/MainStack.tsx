@@ -19,6 +19,8 @@ import ResetPassword from "../screen/authentication/ResetPassword";
 import SearchProducts from "../screen/search/SearchProducts";
 import ProductDetails from "../screen/product/ProductDetails";
 import AddNewProduct from "../screen/sell/AddNewProduct";
+import AllCategories from "../screen/Categories/AllCategories";
+import Congratulations from "../screen/sell/Congratulations";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -64,6 +66,11 @@ const MainStack = () => {
           name={Route.navProductDetails}
           component={ProductDetails}
         />
+        <Stack.Screen
+          name={Route.navCongratulations}
+          component={Congratulations}
+        />
+        <Stack.Screen name={Route.navAllCategories} component={AllCategories} />
         <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
         <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
         <Stack.Screen name={Route.navAddKyc} component={AddKyc} />

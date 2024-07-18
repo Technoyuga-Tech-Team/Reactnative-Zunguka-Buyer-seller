@@ -54,6 +54,7 @@ import {
   requestCameraPermission,
 } from "../../utils/ImagePickerCameraGallary";
 import Scale from "../../utils/Scale";
+import LeftIcon from "../../components/ui/svg/LeftIcon";
 
 const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   navigation,
@@ -295,7 +296,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
         activeOpacity={0.8}
         style={style.backCont}
       >
-        <BackIcon color={theme.colors?.black} />
+        <LeftIcon color={theme.colors?.black} />
       </TouchableOpacity>
       <View style={style.innerCont}>
         <KeyboardAwareScrollView
@@ -480,7 +481,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   backCont: {
     height: Scale(48),
     width: Scale(48),
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     marginLeft: 20,
   },

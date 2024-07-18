@@ -11,12 +11,14 @@ interface SellProductItemsProps {
   title: string;
   value: string;
   onPressItem: () => void;
+  error: string;
 }
 
 const SellProductItems: React.FC<SellProductItemsProps> = ({
   title,
   value,
   onPressItem,
+  error,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -37,6 +39,7 @@ const SellProductItems: React.FC<SellProductItemsProps> = ({
           width={16}
         />
       </TouchableOpacity>
+      {error && <Text style={style.error}>{error}</Text>}
     </View>
   );
 };
@@ -57,5 +60,10 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(40),
     borderBottomColor: theme?.colors?.border,
     borderBottomWidth: 1,
+  },
+  error: {
+    marginTop: 5,
+    fontSize: theme.fontSize?.fs12,
+    color: theme.colors?.error,
   },
 }));

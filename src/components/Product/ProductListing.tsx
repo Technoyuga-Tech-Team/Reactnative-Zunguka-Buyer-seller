@@ -3,22 +3,28 @@ import { FlatList, RefreshControlProps, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductItem from "./ProductItem";
+import { ProductDataProps } from "../../types/product.types";
+import NoDataFound from "../ui/NoDataFound";
 
-interface ProductDataProps {
-  productData: any[];
+interface ProductProps {
+  productData: ProductDataProps[];
   onPress: (itemId: number) => void;
   refreshControl?: React.ReactElement<RefreshControlProps>;
+  onEndReached?: () => void;
+  isLoading?: boolean;
 }
 
-const ProductListing: React.FC<ProductDataProps> = ({
+const ProductListing: React.FC<ProductProps> = ({
   productData,
   onPress,
   refreshControl,
+  onEndReached,
+  isLoading,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
 
-  const renderItem = ({ item }: { item: any }) => {
+  const renderItem = ({ item }: { item: ProductDataProps }) => {
     return <ProductItem item={item} onPress={() => onPress(item.id)} />;
   };
 
@@ -26,15 +32,24 @@ const ProductListing: React.FC<ProductDataProps> = ({
     return <View style={style.border} />;
   };
   return (
-    <FlatList
-      data={productData}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={(_item, index) => index.toString()}
-      contentContainerStyle={style.container}
-      renderItem={renderItem}
-      ItemSeparatorComponent={ItemSeparator}
-      refreshControl={refreshControl}
-    />
+    <>
+      {productData?.length > 0 ? (
+        <FlatList
+          data={productData}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(_item, index) => index.toString()}
+          contentContainerStyle={style.container}
+          renderItem={renderItem}
+          ItemSeparatorComponent={ItemSeparator}
+          refreshControl={refreshControl}
+          onEndReachedThreshold={0.5}
+          initialNumToRender={10}
+          onMomentumScrollEnd={onEndReached}
+        />
+      ) : (
+        <NoDataFound title="No Product found!" isLoading={isLoading} />
+      )}
+    </>
   );
 };
 

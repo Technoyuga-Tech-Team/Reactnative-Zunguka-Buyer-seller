@@ -1,31 +1,16 @@
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CategoriesDataProps } from "../../types/dashboard.types";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
-import { Images } from "../../assets/images";
-import HomeIcon from "../ui/svg/HomeIcon";
 
 interface CategoryItemProps {
-  item: any;
+  item: CategoriesDataProps;
   onPressCategory: () => void;
 }
-
-const getIcons = (key: number) => {
-  return key == 1
-    ? Images.WOMEN_TSHIRT_IMAGE
-    : key == 2
-    ? Images.MOBILE_IMAGE
-    : key == 3
-    ? Images.HOBBIES_IMAGE
-    : key == 4
-    ? Images.HOME_IMAGE
-    : key == 5
-    ? Images.RESTROOM_WOMEN_IMAGE
-    : Images.CAR_IMAGE;
-};
 
 const CategoryItem: React.FC<CategoryItemProps> = ({
   item,
@@ -35,22 +20,15 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
-  const product_image = getIcons(item.key) || Images.PLACEHOLDER_IMAGE;
-
   return (
     <TouchableOpacity
       onPress={onPressCategory}
       activeOpacity={0.9}
       style={style.container}
     >
-      <View style={style.imageBg}>
-        <AppImage
-          source={product_image}
-          style={style.product}
-          resizeMode="cover"
-        />
-      </View>
-
+      {/* <View style={style.imageBg}> */}
+      <AppImage source={item.icon} style={style.product} resizeMode="cover" />
+      {/* </View> */}
       <Text style={style.txtTitle}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -66,9 +44,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     width: Scale(80),
   },
   product: {
-    height: Scale(32),
-    width: Scale(32),
-    // borderRadius: Scale(32 / 2),
+    height: Scale(56),
+    width: Scale(56),
+    borderRadius: Scale(56 / 2),
     resizeMode: "cover",
   },
   imageBg: {

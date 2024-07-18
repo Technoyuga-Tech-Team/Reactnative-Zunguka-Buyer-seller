@@ -21,10 +21,11 @@ export const API = {
   SETUP_PROFILE: "/setup-profile",
   // product
   GET_CATEGORIES: "/categories",
+  GET_BRANDS: "/brands",
   GET_SUB_CATEGORIES: "/subcategories",
   ADD_PRODUCT_FOR_SELL: "/add-item",
   GET_PRODUCT_DETAILS: "/get-item/",
-  GET_ALL_DEALS: "/list-item",
+  GET_PRODUCTS: "/list-item",
   GET_SEARCH_ITEM: "/search-item",
   GET_PRODUCT_FILTER_ITEM: "/filter-items",
   LIKE_DISLIKE_PRODUCT: "/like-dislike",

@@ -1,27 +1,25 @@
-import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  BackHandler,
-  Dimensions,
-  FlatList,
-  View,
-  ViewToken,
-} from "react-native";
+import { Animated, Dimensions, FlatList, View, ViewToken } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { HOME_BANNERS, SCREEN_WIDTH } from "../constant";
 import { createArrayUseNumber } from "../utils";
 import SliderItem from "./Onboard/SliderItem";
 import Paginator from "./ui/Paginator";
-import Scale from "../utils/Scale";
+import { BannerProps } from "../types/dashboard.types";
 // relative path
 
 const { width: wWidth } = Dimensions.get("window");
 
-interface HomeBannerProps {}
+interface HomeBannerProps {
+  bannerData: BannerProps[];
+  onPressBanner: () => void;
+}
 
-const HomeBanner: React.FC<HomeBannerProps> = ({}) => {
+const HomeBanner: React.FC<HomeBannerProps> = ({
+  bannerData,
+  onPressBanner,
+}) => {
   const styles = useStyles();
   const { theme } = useTheme();
 
@@ -29,27 +27,6 @@ const HomeBanner: React.FC<HomeBannerProps> = ({}) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const [currentSlide, setCurrentSlide] = useState<number>(0);
-
-  // handle hardware back button click
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const onBackPress = () => {
-  //       if (currentSlide === 0) {
-  //         return false;
-  //       } else {
-  //         sliderRef.current?.scrollToOffset({
-  //           offset: (currentSlide - 1) * wWidth,
-  //           animated: true,
-  //         });
-  //         setCurrentSlide((pv) => pv - 1);
-  //         return true;
-  //       }
-  //     };
-  //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  //     return () =>
-  //       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  //   }, [currentSlide])
-  // );
 
   // scroll to next slide
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,7 +66,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({}) => {
           ref={sliderRef}
           contentContainerStyle={styles.fltCont}
           horizontal={true}
-          data={HOME_BANNERS}
+          data={bannerData}
           pagingEnabled={true}
           bounces={false}
           showsHorizontalScrollIndicator={false}
@@ -110,6 +87,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({}) => {
               item={item}
               bannerHeight={180}
               bannerwidth={SCREEN_WIDTH - 30}
+              onPressBanner={onPressBanner}
             />
           )}
         />

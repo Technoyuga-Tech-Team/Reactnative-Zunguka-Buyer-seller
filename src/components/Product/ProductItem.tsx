@@ -6,16 +6,30 @@ import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import { DUMMY_PLACEHOLDER } from "../../constant";
+import { ProductDataProps } from "../../types/product.types";
+
+const getConditionItemValue = (item: string) => {
+  return item == "new_unused"
+    ? "New, unused"
+    : item == "near_unused"
+    ? "Near unused"
+    : item == "no_noticable_scratched_stains"
+    ? "No noticeable scratchs or stains"
+    : item == "slightly_scratched"
+    ? "Slightly scratched or soiled"
+    : "Scratched or soiled";
+};
+//  new_unused,near_unused,no_noticable_scratched_stains,slightly_scratched,scratched_soiled
 
 interface ProductItemProps {
-  item: any;
+  item: ProductDataProps;
   onPress: () => void;
 }
 const ProductItem: React.FC<ProductItemProps> = ({ item, onPress }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
 
-  const product_image = item?.productImage || DUMMY_PLACEHOLDER;
+  const product_image = item?.images[0]?.image || DUMMY_PLACEHOLDER;
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -29,10 +43,10 @@ const ProductItem: React.FC<ProductItemProps> = ({ item, onPress }) => {
       />
       <View style={style.secondCont}>
         <Text numberOfLines={1} style={style.txtTitle}>
-          {item.productName}
+          {item?.title}
         </Text>
         <Text numberOfLines={1} style={style.txtTypeAndCategories}>
-          {item.productType}
+          {getConditionItemValue(item?.condition_of_item)}
         </Text>
         <Text
           style={[
@@ -40,9 +54,9 @@ const ProductItem: React.FC<ProductItemProps> = ({ item, onPress }) => {
             { textDecorationLine: "underline", flexWrap: "wrap" },
           ]}
         >
-          {item.categories.join(", ")}
+          {item?.category?.map((ele) => ele.name).join(", ")}
         </Text>
-        <Text style={style.txtPrice}>R₣{item.price}</Text>
+        <Text style={style.txtPrice}>R₣{item.sale_price}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -12,6 +12,7 @@ import ProductHeader from "../../components/ui/ProductHeader";
 import { HAS_NOTCH, SCREEN_WIDTH } from "../../constant";
 import ProductInfo from "../../components/Product/ProductInfo";
 import CustomButton from "../../components/ui/CustomButton";
+import { CommonActions } from "@react-navigation/native";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -32,7 +33,23 @@ const ProductDetails: React.FC<
   }, []);
 
   const onPressBack = () => {
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: Route.navDashboard,
+              state: {
+                routes: [{ name: Route.navSell }],
+              },
+            },
+          ],
+        })
+      );
+    }
   };
   const onPressShare = () => {};
 

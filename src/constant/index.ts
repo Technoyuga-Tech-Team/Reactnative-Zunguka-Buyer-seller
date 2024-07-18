@@ -1402,13 +1402,13 @@ export const HOME_BANNERS: any[] = [
 
 export const PRODUCT_BANNERS: any[] = [
   {
-    image: require("../assets/images/product.png"),
+    banner_image: require("../assets/images/product.png"),
   },
   {
-    image: require("../assets/images/product.png"),
+    banner_image: require("../assets/images/product.png"),
   },
   {
-    image: require("../assets/images/product.png"),
+    banner_image: require("../assets/images/product.png"),
   },
 ];
 
@@ -1904,55 +1904,55 @@ export const PRODUCTS = [
 
 export const COLORS = [
   {
-    colorName: "Red",
+    itemName: "Red",
     colorCode: "#FF0000",
   },
   {
-    colorName: "Green",
+    itemName: "Green",
     colorCode: "#008000",
   },
   {
-    colorName: "Yellow",
+    itemName: "Yellow",
     colorCode: "#FFFF00",
   },
   {
-    colorName: "Pink",
+    itemName: "Pink",
     colorCode: "#FFC0CB",
   },
   {
-    colorName: "White",
+    itemName: "White",
     colorCode: "#ffffff",
   },
   {
-    colorName: "Black",
+    itemName: "Black",
     colorCode: "#000000",
   },
   {
-    colorName: "Silver",
+    itemName: "Silver",
     colorCode: "#C0C0C0",
   },
   {
-    colorName: "Purple",
+    itemName: "Purple",
     colorCode: "#A020F0",
   },
   {
-    colorName: "Orange",
+    itemName: "Orange",
     colorCode: "#ffA500",
   },
   {
-    colorName: "Grey",
+    itemName: "Grey",
     colorCode: "#808080",
   },
   {
-    colorName: "Golden",
+    itemName: "Golden",
     colorCode: "#FFD700",
   },
   {
-    colorName: "Brown",
+    itemName: "Brown",
     colorCode: "#964B00",
   },
   {
-    colorName: "Blue",
+    itemName: "Blue",
     colorCode: "#0000FF",
   },
 ];
@@ -1960,25 +1960,31 @@ export const COLORS = [
 export const CONDITIONS = [
   {
     title: "New, unused",
+    value: "new_unused",
     selected: false,
   },
   {
     title: "Near unused",
+    value: "near_unused",
     selected: false,
   },
   {
     title: "No noticeable scratchs or stains",
+    value: "no_noticable_scratched_stains",
     selected: false,
   },
   {
     title: "Slightly scratched or soiled",
+    value: "slightly_scratched",
     selected: false,
   },
   {
     title: "Scratched or soiled",
+    value: "scratched_soiled",
     selected: false,
   },
 ];
+// new_unused,near_unused,no_noticable_scratched_stains,slightly_scratched,scratched_soiled
 
 export const CITIES = [
   { title: "Kigali", key: "Kigali" },
@@ -1994,4 +2000,206 @@ export const CITIES = [
   { title: "Kibuye", key: "Kibuye" },
   { title: "Kibungo", key: "Kibungo" },
   { title: "Gikongoro", key: "Gikongoro" },
+];
+
+export const PRDUCT_EMPTY_CELLS = [1, 2, 3, 4, 5, 6];
+
+export const RATINGS = [
+  {
+    itemName: "4★ & above",
+    itemValue: "4",
+  },
+  {
+    itemName: "3★ & above",
+    itemValue: "3",
+  },
+  {
+    itemName: "2★ & above",
+    itemValue: "2",
+  },
+  {
+    itemName: "1★ & above",
+    itemValue: "1",
+  },
+];
+
+export const SIZES = [
+  {
+    itemName: "3XS",
+    itemValue: "3XS",
+  },
+  {
+    itemName: "XS",
+    itemValue: "XS",
+  },
+  {
+    itemName: "S",
+    itemValue: "S",
+  },
+  {
+    itemName: "M",
+    itemValue: "M",
+  },
+  {
+    itemName: "L",
+    itemValue: "L",
+  },
+  {
+    itemName: "XL",
+    itemValue: "XL",
+  },
+  {
+    itemName: "3XL",
+    itemValue: "3XL",
+  },
+  {
+    itemName: "4XL",
+    itemValue: "4XL",
+  },
+  {
+    itemName: "5XL",
+    itemValue: "5XL",
+  },
+  {
+    itemName: "6XL",
+    itemValue: "6XL",
+  },
+  {
+    itemName: "7XL",
+    itemValue: "7XL",
+  },
+  {
+    itemName: "8XL",
+    itemValue: "8XL",
+  },
+  {
+    itemName: "16",
+    itemValue: "16",
+  },
+  {
+    itemName: "20",
+    itemValue: "20",
+  },
+  {
+    itemName: "22",
+    itemValue: "22",
+  },
+  {
+    itemName: "24",
+    itemValue: "24",
+  },
+  {
+    itemName: "26",
+    itemValue: "26",
+  },
+  {
+    itemName: "27",
+    itemValue: "27",
+  },
+  {
+    itemName: "28",
+    itemValue: "28",
+  },
+  {
+    itemName: "29",
+    itemValue: "29",
+  },
+  {
+    itemName: "30",
+    itemValue: "30",
+  },
+  {
+    itemName: "31",
+    itemValue: "31",
+  },
+  {
+    itemName: "32",
+    itemValue: "32",
+  },
+  {
+    itemName: "33",
+    itemValue: "33",
+  },
+  {
+    itemName: "34",
+    itemValue: "34",
+  },
+  {
+    itemName: "35",
+    itemValue: "35",
+  },
+  {
+    itemName: "36",
+    itemValue: "36",
+  },
+  {
+    itemName: "37",
+    itemValue: "37",
+  },
+  {
+    itemName: "38",
+    itemValue: "38",
+  },
+  {
+    itemName: "39",
+    itemValue: "39",
+  },
+  {
+    itemName: "40",
+    itemValue: "40",
+  },
+  {
+    itemName: "41",
+    itemValue: "41",
+  },
+  {
+    itemName: "42",
+    itemValue: "42",
+  },
+  {
+    itemName: "43",
+    itemValue: "43",
+  },
+  {
+    itemName: "44",
+    itemValue: "44",
+  },
+  {
+    itemName: "45",
+    itemValue: "45",
+  },
+  {
+    itemName: "46",
+    itemValue: "46",
+  },
+  {
+    itemName: "48",
+    itemValue: "48",
+  },
+  {
+    itemName: "50",
+    itemValue: "50",
+  },
+  {
+    itemName: "XXL",
+    itemValue: "XXL",
+  },
+  {
+    itemName: "XXS",
+    itemValue: "XXS",
+  },
+  {
+    itemName: "10XL",
+    itemValue: "10XL",
+  },
+  {
+    itemName: "9XL",
+    itemValue: "9XL",
+  },
+];
+
+export const VEHICLE_TYPE_DATA = [
+  { key: "Moto", title: "Moto" },
+  { key: "Cab", title: "Cab" },
+  { key: "tricycle_cargo", title: "Tricycle Cargo" },
 ];

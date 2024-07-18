@@ -1,16 +1,18 @@
 import * as React from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { SCREEN_WIDTH } from "../../constant";
 import { SliderItemProps } from "../../types/slider.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
+import { BannerProps } from "../../types/dashboard.types";
 
 interface SliderProps {
-  item: SliderItemProps;
+  item: BannerProps;
   bannerHeight?: number;
   bannerwidth?: number;
   borderRadius?: number;
+  onPressBanner?: () => void;
 }
 
 const SliderItem: React.FC<SliderProps> = ({
@@ -18,6 +20,7 @@ const SliderItem: React.FC<SliderProps> = ({
   bannerHeight,
   bannerwidth,
   borderRadius,
+  onPressBanner,
 }) => {
   const height = bannerHeight || 213.41;
   const width = bannerwidth || SCREEN_WIDTH;
@@ -26,13 +29,17 @@ const SliderItem: React.FC<SliderProps> = ({
   const { theme } = useTheme();
 
   return (
-    <View style={bannerHeight ? styles.container : styles.container1}>
+    <TouchableOpacity
+      onPress={onPressBanner}
+      activeOpacity={0.8}
+      style={bannerHeight ? styles.container : styles.container1}
+    >
       <AppImage
-        source={item?.image}
+        source={item?.banner_image}
         style={styles.sliderImage}
         resizeMode={bannerHeight ? "cover" : "contain"}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
