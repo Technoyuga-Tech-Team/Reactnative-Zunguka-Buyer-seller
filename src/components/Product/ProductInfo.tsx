@@ -8,8 +8,22 @@ import Scale from "../../utils/Scale";
 import SellerProfileWithStar from "../ui/SellerProfileWithStar";
 import SimilarProductListing from "../SimilarProduct/SimilarProductListing";
 import { HOT_BRANDS } from "../../constant";
+import { ProductDetailsDataProps } from "../../types/product.types";
+import moment from "moment";
+import { getConditionItemValue } from "../../utils";
+import FilledHeartIcon from "../ui/svg/filledHeartIcon";
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  productDetails: ProductDetailsDataProps | null;
+  onPressSavedItem: () => void;
+  isProductLike: boolean;
+}
+
+const ProductInfo: React.FC<ProductInfoProps> = ({
+  productDetails,
+  onPressSavedItem,
+  isProductLike,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
@@ -22,19 +36,31 @@ const ProductInfo = () => {
   };
 
   const onPressProduct = (item: any) => {};
+
+  const time = productDetails?.created_at
+    ? moment(productDetails?.created_at).format("DD/MM/YYYY")
+    : "";
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
         <View style={style.productNameCont}>
-          <Text style={style.txtProductName}>Samsung galaxy watch 5</Text>
-          <TouchableOpacity activeOpacity={0.8} style={style.heartCont}>
-            <OutlineHeartIcon color={theme?.colors?.unselectedIconColor} />
+          <Text style={style.txtProductName}>{productDetails?.title}</Text>
+          <TouchableOpacity
+            onPress={onPressSavedItem}
+            activeOpacity={0.8}
+            style={style.heartCont}
+          >
+            {isProductLike ? (
+              <FilledHeartIcon color={"#D0650F"} />
+            ) : (
+              <OutlineHeartIcon color={theme?.colors?.unselectedIconColor} />
+            )}
           </TouchableOpacity>
         </View>
-        <Text style={style.txtPrice}>R₣ 200</Text>
+        <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
         <View style={style.addrCont}>
-          <Text style={style.txtDate}>Posted 04/12/2024</Text>
-          <Text style={style.txtDistrict}>New York, NY</Text>
+          <Text style={style.txtDate}>Posted {time}</Text>
+          <Text style={style.txtDistrict}>{productDetails?.city}</Text>
         </View>
       </View>
       <ItemSeparator />
@@ -45,15 +71,27 @@ const ProductInfo = () => {
           </Text>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Condition</Text>
-            <Text style={style.txtDetails2}>New</Text>
+            <Text style={style.txtDetails2}>
+              {getConditionItemValue(productDetails?.condition_of_item)}
+            </Text>
           </View>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Brand</Text>
-            <Text style={style.txtDetails2}>Samsung</Text>
+            <Text style={style.txtDetails2}>{productDetails?.brand?.name}</Text>
           </View>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Category</Text>
-            <Text style={style.txtDetails2}>Wearables,Electronic,</Text>
+            <Text
+              numberOfLines={2}
+              style={[
+                style.txtDetails2,
+                {
+                  textDecorationLine: "underline",
+                },
+              ]}
+            >
+              {productDetails?.category?.map((ele) => ele.name).join(", ")}
+            </Text>
           </View>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Model</Text>
@@ -65,22 +103,14 @@ const ProductInfo = () => {
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Description
           </Text>
-          <Text style={style.txtdesc}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Text>
+          <Text style={style.txtdesc}>{productDetails?.description}</Text>
         </View>
         <ItemSeparator1 />
         <View>
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Address
           </Text>
-          <Text style={style.txtAddress}>FUTURES ARCHITECTS, BP. 1438</Text>
+          <Text style={style.txtAddress}>{productDetails?.address}</Text>
         </View>
       </View>
       <ItemSeparator />
@@ -91,7 +121,7 @@ const ProductInfo = () => {
           </Text>
           <Text style={style.txtDistrict}>View profile</Text>
         </View>
-        <SellerProfileWithStar />
+        <SellerProfileWithStar userData={productDetails?.user} />
       </View>
       <ItemSeparator />
       <View style={style.paddingCont}>
@@ -183,6 +213,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs13,
     fontFamily: theme.fontFamily?.regular,
     color: theme?.colors?.black,
+    width: "70%",
   },
   txtdesc: {
     fontSize: theme.fontSize?.fs15,

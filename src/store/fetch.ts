@@ -92,6 +92,15 @@ export const fetch = async <T>(
           ...err?.response?.data,
           statusCode: err?.response?.status,
         };
+      } else if (err?.response?.status == 401) {
+        result.statusCode = err?.response?.status;
+        result.status = err?.response?.data?.status;
+        result.errorMessage =
+          err?.response?.data?.message || "Something went wrong!";
+        result.errors = {
+          ...err?.response?.data,
+          statusCode: err?.response?.status,
+        };
       } else {
         // console.log("err 2------>", err.response);
 

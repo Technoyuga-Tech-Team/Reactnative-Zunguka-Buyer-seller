@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeProps } from "../../../types/global.types";
 import Scale from "../../../utils/Scale";
 import { AppImage } from "../../AppImage/AppImage";
+import { Images } from "../../../assets/images";
 
 interface ProfileAndNameProps {
   name: string;
@@ -19,8 +20,7 @@ const ProfileAndName: React.FC<ProfileAndNameProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
-  const Profile =
-    profileImage || require("../../../assets/images/placeholder.jpg");
+  const Profile = profileImage || Images.PLACEHOLDER_IMAGE;
   return (
     <TouchableOpacity activeOpacity={0.8} style={style.container}>
       <AppImage style={style.profile} source={Profile} resizeMode="cover" />
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     lineHeight: 28,
     color: theme.colors?.black,
     fontFamily: theme.fontFamily?.bold,
-    textTransform: "capitalize",
   },
   txtViewProfile: {
     fontSize: theme.fontSize?.fs16,

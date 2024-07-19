@@ -27,6 +27,7 @@ import { userAddress } from "../../../store/authentication/authentication.thunks
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import { CommonActions } from "@react-navigation/native";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import CheckBoxSelection from "../../../components/ui/CheckBoxSelection";
 
 const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   navigation,
@@ -51,6 +52,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
   const [productImageError, setProductImageError] = useState<string>("");
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
+  const [noHouseNumber, setNoHouseNumber] = useState<boolean>(false);
 
   useEffect(() => {
     const onBackPress = () => {
@@ -107,7 +109,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
     handleSubmit,
     setFieldValue,
   } = useFormik<AddAddressProps>({
-    validationSchema: AddAddressScreenSchema(gpsAddressHave),
+    validationSchema: AddAddressScreenSchema(gpsAddressHave, noHouseNumber),
     initialValues: {
       gpsAddress,
       houseNumber: "",
@@ -123,10 +125,11 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
       district,
     }) => {
       const formData = new FormData();
-
+      const is_house_num = noHouseNumber ? 0 : 1;
       formData.append("is_gps_location", `${gpsAddressHave}`);
       formData.append("address", `${gpsAddress}`);
       formData.append("house_number", `${houseNumber}`);
+      formData.append("is_house_number", `${is_house_num}`);
       formData.append("street_number", `${streetNumber}`);
       formData.append("district", `${district}`);
       formData.append("sector", `${sector}`);
@@ -147,7 +150,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
         if (result.payload.status === 1) {
           console.log("userAddress result - - - ", result.payload);
           dispatch(setSuccess(result.payload.message));
-          navigation.navigate(Route.navAddKyc);
+          navigation.navigate(Route.navAddKyc, { fromOTP: false });
         }
       } else {
         console.log("userAddress error - - - ", result.payload);
@@ -168,7 +171,18 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
     }
   };
 
-  console.log("district", values.district);
+  useEffect(() => {
+    values.houseNumber !== ""
+      ? setNoHouseNumber(false)
+      : setNoHouseNumber(true);
+  }, [values.houseNumber]);
+  useEffect(() => {
+    noHouseNumber && setFieldValue("houseNumber", "");
+  }, [noHouseNumber]);
+
+  const handleCheckboxChange = () => {
+    setNoHouseNumber(!noHouseNumber);
+  };
 
   return (
     <View style={style.container}>
@@ -226,6 +240,15 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
             returnKeyType="next"
             onSubmitEditing={() => st1Ref.current?.focus()}
           />
+          <CheckBoxSelection
+            isChecked={noHouseNumber}
+            onPressCheckbox={handleCheckboxChange}
+            itemName={"My house has no house/gate number"}
+            itemValue={"My house has no house/gate number"}
+            containerStyle={style.checkCont}
+            textStyle={style.txtCheckCont}
+            iconSize={22}
+          />
           <CustomTxtInput
             ref={st1Ref}
             placeholder="Street number (Ex. 5 KN 27 Street)"
@@ -252,7 +275,6 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
           />
           <CustomTxtInput
             ref={countryRef}
-            textInputTitle="District name"
             placeholder="District name"
             onChangeText={handleChange("district")}
             onBlur={handleBlur("district")}
@@ -328,5 +350,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.error,
     fontFamily: theme.fontFamily?.regular,
     marginLeft: 20,
+  },
+  checkCont: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  txtCheckCont: {
+    fontSize: theme.fontSize?.fs13,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.textPrimary,
   },
 }));

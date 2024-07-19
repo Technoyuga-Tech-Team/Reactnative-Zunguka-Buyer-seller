@@ -130,7 +130,6 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: theme.fontSize?.fs12,
     color: theme.colors?.error,
     fontFamily: theme.fontFamily?.regular,
-    marginLeft: 20,
   },
   textInCont: {
     marginVertical: 10,
@@ -139,7 +138,6 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: theme.fontSize?.fs17,
     fontFamily: theme.fontFamily?.bold,
     color: theme.colors?.black,
-    marginLeft: 20,
   },
   widthError: {
     marginTop: 5,

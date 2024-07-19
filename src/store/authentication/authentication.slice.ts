@@ -2,6 +2,7 @@ import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { AuthenticationState } from "../../types/authentication.types";
 import {
   userAddress,
+  userAddUserName,
   userChangePassword,
   userForgotPassword,
   userLogin,
@@ -33,6 +34,7 @@ const authentication = createSlice({
       .addMatcher(
         isAnyOf(
           userRegistration.pending,
+          userAddUserName.pending,
           userLogin.pending,
           userForgotPassword.pending,
           userChangePassword.pending,
@@ -49,6 +51,7 @@ const authentication = createSlice({
         isAnyOf(
           userLogin.fulfilled,
           userRegistration.fulfilled,
+          userAddUserName.fulfilled,
           userForgotPassword.fulfilled,
           userChangePassword.fulfilled,
           userOTPCode.fulfilled,
@@ -57,6 +60,7 @@ const authentication = createSlice({
           userVerifyId.fulfilled,
           userLogin.rejected,
           userRegistration.rejected,
+          userAddUserName.rejected,
           userForgotPassword.rejected,
           userChangePassword.rejected,
           userOTPCode.rejected,

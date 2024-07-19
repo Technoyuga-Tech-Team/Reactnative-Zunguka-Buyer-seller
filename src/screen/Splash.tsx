@@ -39,24 +39,42 @@ const Splash: React.FC<SplashScreenProps> = () => {
         }
         dispatch(setUserData(user_data));
 
+        let is_username = user_data.is_username_added;
         let steps = user_data.step;
         console.log("steps", steps);
-        if (steps !== 2) {
-          if (steps == 0) {
-            dispatch(saveAddress(""));
-            // @ts-ignore
-            navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
-          } else if (steps == 1) {
-            // @ts-ignore
-            navigation.navigate(Route.navAddKyc, { fromOTP: true });
-          }
-        } else {
+        if (is_username == 0) {
+          // @ts-ignore
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: Route.navDashboard }],
+              routes: [
+                {
+                  name: Route.navAuthentication,
+                  state: {
+                    routes: [{ name: Route.navAddUserName }],
+                  },
+                },
+              ],
             })
           );
+        } else {
+          if (steps !== 2) {
+            if (steps == 0) {
+              dispatch(saveAddress(""));
+              // @ts-ignore
+              navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
+            } else if (steps == 1) {
+              // @ts-ignore
+              navigation.navigate(Route.navAddKyc, { fromOTP: true });
+            }
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
+          }
         }
       } else {
         if (await appAlreadyOpen()) {

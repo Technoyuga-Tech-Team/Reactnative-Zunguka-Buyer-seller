@@ -60,6 +60,7 @@ export type AuthenticationRoutes = {
   Login: undefined;
   Signup: undefined;
   ForgotPassword: undefined;
+  AddUserName: undefined;
   YourAddress: { fromOTP?: boolean };
   AddKyc: { fromOTP?: boolean };
   ChooseAddress: undefined;
@@ -89,10 +90,10 @@ export type HomeRoutes = {
   Profile: undefined;
   EditProfile: undefined;
   ChangePassword: undefined;
-  ProductDetails: undefined;
+  ProductDetails: { itemId: number };
   AddNewProduct: undefined;
   AllCategories: undefined;
-  Congratulations: undefined;
+  Congratulations: { itemId: number };
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

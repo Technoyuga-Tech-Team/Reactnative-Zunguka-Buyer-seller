@@ -40,10 +40,6 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
 
-  console.log("userData", typeof userData.last_name);
-
-  const userRole = userData?.type;
-
   const [visible, setVisible] = useState(false);
 
   const [profilePicture, setProfilePicture] = useState<string>(
@@ -106,9 +102,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
       <Text style={style.txtProfile}>Profile</Text>
       <View style={style.profileCont}>
         <ProfileAndName
-          name={`${userData?.first_name} ${
-            userData?.last_name !== null ? userData?.last_name : ""
-          }`}
+          name={userData?.username}
           email={userData?.email}
           profileImage={Profile}
         />

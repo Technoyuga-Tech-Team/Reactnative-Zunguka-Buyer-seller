@@ -25,6 +25,11 @@ export const LoginScreenSchema = (countryCode: CountryCode) => {
 };
 
 // Signup screen
+export const UsernameScreenSchema = () => {
+  return Yup.object().shape({
+    username: Yup.string().trim().required("Username is required"),
+  });
+};
 
 export const SignupScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
@@ -58,6 +63,8 @@ export const SignupScreenSchema = (countryCode: CountryCode) => {
       ),
   });
 };
+
+// username
 
 export const EditProfileScreenSchema = (countryCode: CountryCode) => {
   return Yup.object().shape({
@@ -242,10 +249,15 @@ export const SetupProfile7ScreenSchema = Yup.object().shape({
 });
 
 // Add Address
-export const AddAddressScreenSchema = (gpsAddressHave: number) => {
+export const AddAddressScreenSchema = (
+  gpsAddressHave: number,
+  noHouseNumber: boolean
+) => {
   return Yup.object().shape({
     gpsAddress: Yup.string().required("Address is required"),
-    houseNumber: Yup.string().required("House number is required"),
+    houseNumber: noHouseNumber
+      ? Yup.string()
+      : Yup.string().required("House number is required"),
     streetNumber: Yup.string().required("Street number is required"),
     sector: Yup.string().required("Sector is required"),
     district: Yup.string().required("District is required"),

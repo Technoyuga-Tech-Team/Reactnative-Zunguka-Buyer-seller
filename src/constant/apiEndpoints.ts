@@ -9,6 +9,7 @@ export const API = {
   RESET_PASSWORD: "/reset-password",
   RESEND_OTP: "/send-otp",
   VERIFY_OTP_CODE: "/verify-code",
+  ADD_USERNAME: "/add_username",
   // Address
   ADD_ADDRESS: "/add-address",
   // Verify ID (kyc)

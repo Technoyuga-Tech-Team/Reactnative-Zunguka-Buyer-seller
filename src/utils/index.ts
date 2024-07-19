@@ -137,6 +137,18 @@ const keepSingleSpace = (value: string) => {
   return newValue || "";
 };
 
+const getConditionItemValue = (item: string) => {
+  return item == "new_unused"
+    ? "New, unused"
+    : item == "near_unused"
+    ? "Near unused"
+    : item == "no_noticable_scratched_stains"
+    ? "No noticeable scratchs or stains"
+    : item == "slightly_scratched"
+    ? "Slightly scratched or soiled"
+    : "Scratched or soiled";
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -146,4 +158,5 @@ export {
   timeElapsedString,
   formatPhoneNumber,
   keepSingleSpace,
+  getConditionItemValue,
 };

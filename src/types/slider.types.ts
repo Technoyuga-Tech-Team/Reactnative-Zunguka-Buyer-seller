@@ -1,4 +1,4 @@
 export interface SliderItemProps {
-  image: string;
+  banner_image: string;
   description: string;
 }

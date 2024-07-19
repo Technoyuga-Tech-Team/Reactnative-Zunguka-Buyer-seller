@@ -78,6 +78,46 @@ export const userRegistration = createAsyncThunk<
     return true;
   }
 );
+
+export const userAddUserName = createAsyncThunk<
+  true,
+  {
+    username: string;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "authentication/userAddUserName",
+  async ({ username }, { dispatch, rejectWithValue }) => {
+    const { errors, data, authorization } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.ADD_USERNAME,
+          method: "POST",
+          data: {
+            username,
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    console.log("data", data);
+    console.log("authorization", authorization);
+
+    if (authorization) {
+      dispatch(setUserData(data?.user));
+      setData(USER_DATA, data?.user);
+      await setData(secureStoreKeys.JWT_TOKEN, authorization.token);
+    }
+
+    return data;
+  }
+);
+
 export const userLogin = createAsyncThunk<
   any,
   {
@@ -362,7 +402,7 @@ export const oAuthLogin = createAsyncThunk<
       return rejectWithValue(errors);
     }
 
-    console.log("USER data - - - - ", data?.user);
+    console.log("social USER data - - - - ", data?.user);
     if (data?.user) {
       dispatch(setUserData(data?.user));
       setData(USER_DATA, data?.user);

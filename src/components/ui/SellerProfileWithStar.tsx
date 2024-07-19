@@ -7,20 +7,26 @@ import RatingBox from "./RatingBox";
 import { AppImage } from "../AppImage/AppImage";
 import Scale from "../../utils/Scale";
 import { Images } from "../../assets/images";
+import { sellerDetailsProps } from "../../types/product.types";
 
-const SellerProfileWithStar = () => {
+interface SellerProfileWithStarProps {
+  userData: sellerDetailsProps;
+}
+
+const SellerProfileWithStar: React.FC<SellerProfileWithStarProps> = ({
+  userData,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+
+  const profile = userData?.profile_image || Images.PLACEHOLDER_IMAGE;
+
   return (
     <View style={style.container}>
-      <AppImage
-        source={Images.PLACEHOLDER_IMAGE}
-        style={style.profile}
-        resizeMode="cover"
-      />
+      <AppImage source={profile} style={style.profile} resizeMode="cover" />
       <View style={style.innerCont}>
-        <Text style={style.txtName}>Nick Furry</Text>
+        <Text style={style.txtName}>{userData?.username}</Text>
         <View style={style.rateCont}>
           <RatingBox rating={3} onlyStar={true} />
           <Text style={style.txtRatingCount}>(17)</Text>

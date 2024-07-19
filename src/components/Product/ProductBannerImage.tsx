@@ -2,19 +2,19 @@ import * as React from "react";
 import { TouchableOpacity } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { SCREEN_WIDTH } from "../../constant";
-import { BannerProps } from "../../types/dashboard.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
+import { productImage } from "../../types/product.types";
 
-interface SliderProps {
-  item: BannerProps;
+interface ProductBannerImageProps {
+  item: productImage;
   bannerHeight?: number;
   bannerwidth?: number;
   borderRadius?: number;
   onPressBanner?: () => void;
 }
 
-const SliderItem: React.FC<SliderProps> = ({
+const ProductBannerImage: React.FC<ProductBannerImageProps> = ({
   item,
   bannerHeight,
   bannerwidth,
@@ -34,7 +34,7 @@ const SliderItem: React.FC<SliderProps> = ({
       style={bannerHeight ? styles.container : styles.container1}
     >
       <AppImage
-        source={item?.banner_image}
+        source={item?.image}
         style={styles.sliderImage}
         resizeMode={bannerHeight ? "cover" : "contain"}
       />
@@ -69,4 +69,4 @@ const useStyles = makeStyles(
   }
 );
 
-export default SliderItem;
+export default ProductBannerImage;

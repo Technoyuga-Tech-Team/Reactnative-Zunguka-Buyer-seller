@@ -1,5 +1,5 @@
-import { View, Text, StatusBar, Platform } from "react-native";
-import React from "react";
+import { View, Text, StatusBar, Platform, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import { HomeNavigationProps } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import { makeStyles, useTheme } from "react-native-elements";
@@ -13,15 +13,66 @@ import { HAS_NOTCH, SCREEN_WIDTH } from "../../constant";
 import ProductInfo from "../../components/Product/ProductInfo";
 import CustomButton from "../../components/ui/CustomButton";
 import { CommonActions } from "@react-navigation/native";
+import { useProductDetails } from "../../hooks/useProductDetails";
+import RNBootSplash from "react-native-bootsplash";
+import {
+  ProductDetailsDataProps,
+  productImage,
+} from "../../types/product.types";
+import Loading from "../../components/ui/Loading";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import {
+  deleteProduct,
+  likeDislikeProduct,
+} from "../../store/Product/product.thunk";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
-> = ({ navigation }) => {
+> = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+  const dispatch = useAppDispatch();
+  const { itemId } = route.params;
 
-  React.useEffect(() => {
+  const [productDetails, setProductDetails] =
+    useState<ProductDetailsDataProps | null>(null);
+  const [savedItem, setSavedItem] = useState<boolean>(false);
+
+  const [productBannerData, setProductBannerData] = useState<productImage[]>(
+    []
+  );
+
+  const {
+    data: productDetailsData,
+    refetch,
+    isLoading,
+    isFetching,
+    isError,
+  } = useProductDetails(itemId, { cacheTime: 0, enabled: false });
+
+  useEffect(() => {
+    const init = async () => {
+      await RNBootSplash.hide();
+    };
+    init();
+  }, []);
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    if (productDetailsData?.data) {
+      setProductDetails(productDetailsData?.data);
+      setProductBannerData(productDetailsData?.data?.images);
+      setSavedItem(productDetailsData?.data?.is_like);
+    }
+  }, [productDetailsData]);
+
+  console.log("productDetails", productDetails);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("dark-content");
       Platform.OS === "android" && StatusBar.setTranslucent(true);
@@ -52,6 +103,49 @@ const ProductDetails: React.FC<
     }
   };
   const onPressShare = () => {};
+  const onPressDelete = () => {
+    Alert.alert("", "Are you sure you want to delete?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+      {
+        text: "Yes",
+        onPress: () => deleteItem(),
+      },
+    ]);
+  };
+  const deleteItem = async () => {
+    const result = await dispatch(deleteProduct({ id: productDetails?.id }));
+    if (deleteProduct.fulfilled.match(result)) {
+      if (result.payload?.status === 1) {
+        navigation.goBack();
+      }
+    } else {
+      console.log("errror deleteProduct --->", result.payload);
+    }
+  };
+  const onPressSavedItem = async () => {
+    setSavedItem(!savedItem);
+    try {
+      const result = await dispatch(
+        likeDislikeProduct({
+          item_id: productDetails?.id,
+          type: savedItem ? "dislike" : "like",
+        })
+      );
+      if (likeDislikeProduct.fulfilled.match(result)) {
+        if (result.payload) {
+          console.log("response likeDislikeProduct --->", result.payload);
+          refetch();
+        }
+      } else {
+        console.log("errror likeDislikeProduct --->", result.payload);
+      }
+    } catch (error) {
+      console.log("errror likeDislikeProduct --->", error);
+    }
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -64,11 +158,20 @@ const ProductDetails: React.FC<
         backgroundColor={theme.colors?.transparent}
         barStyle={"light-content"}
       />
-      <ProductBanner />
+      {(isLoading || isFetching) && <Loading />}
+      <ProductBanner productBannerData={productBannerData} />
       <View style={style.header}>
-        <ProductHeader onPressBack={onPressBack} onPressShare={onPressShare} />
+        <ProductHeader
+          onPressBack={onPressBack}
+          onPressShare={onPressShare}
+          onPressDelete={onPressDelete}
+        />
       </View>
-      <ProductInfo />
+      <ProductInfo
+        productDetails={productDetails}
+        onPressSavedItem={onPressSavedItem}
+        isProductLike={savedItem}
+      />
       <View style={style.button}>
         <CustomButton
           title={"Message seller"}

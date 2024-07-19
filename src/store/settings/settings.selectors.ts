@@ -26,3 +26,8 @@ export const getCityAddress = createSelector(
   [selectSettings],
   (settings) => settings.city
 );
+
+export const getNotificationCount = createSelector(
+  [selectSettings],
+  (settings) => settings.notificationCount
+);

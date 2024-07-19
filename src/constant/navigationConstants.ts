@@ -7,6 +7,7 @@ export enum Route {
   navSplash = "Splash",
   navLogin = "Login",
   navSignup = "Signup",
+  navAddUserName = "AddUserName",
   navYourAddress = "YourAddress",
   navAddKyc = "AddKyc",
   navSell = "Sell",

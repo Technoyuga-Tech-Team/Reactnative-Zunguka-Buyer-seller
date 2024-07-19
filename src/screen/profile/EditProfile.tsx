@@ -74,6 +74,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
 
   const [visible, setVisible] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const [enableUsername, setEnableUsername] = useState<boolean>(false);
   const [tamp_phone, setTamp_phone] = useState<string>(userData?.phone_number);
@@ -100,7 +101,11 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     };
   }, []);
 
-  console.log("userData", userData);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
+  }, []);
 
   useEffect(() => {
     let unsubscribe = navigation.addListener("focus", async () => {
@@ -290,7 +295,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
   return (
     <View style={style.container}>
-      {userLoading === LoadingState.CREATE && <Loading />}
+      {(userLoading === LoadingState.CREATE || loader) && <Loading />}
       <TouchableOpacity
         onPress={onPressBack}
         activeOpacity={0.8}

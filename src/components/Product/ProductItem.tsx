@@ -7,18 +7,8 @@ import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import { DUMMY_PLACEHOLDER } from "../../constant";
 import { ProductDataProps } from "../../types/product.types";
+import { getConditionItemValue } from "../../utils";
 
-const getConditionItemValue = (item: string) => {
-  return item == "new_unused"
-    ? "New, unused"
-    : item == "near_unused"
-    ? "Near unused"
-    : item == "no_noticable_scratched_stains"
-    ? "No noticeable scratchs or stains"
-    : item == "slightly_scratched"
-    ? "Slightly scratched or soiled"
-    : "Scratched or soiled";
-};
 //  new_unused,near_unused,no_noticable_scratched_stains,slightly_scratched,scratched_soiled
 
 interface ProductItemProps {

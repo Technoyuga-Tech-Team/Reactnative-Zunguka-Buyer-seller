@@ -50,8 +50,8 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
     }
   }, [productsData]);
 
-  const onPressProduct = () => {
-    navigation.navigate(Route.navProductDetails);
+  const onPressProduct = (itemId: number) => {
+    navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 
   const onPressCreateListing = () => {

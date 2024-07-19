@@ -76,25 +76,35 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
       const result = await dispatch(oAuthLogin(param));
       if (oAuthLogin.fulfilled.match(result)) {
         if (result.payload.status == 1) {
-          console.log("result.payload", result.payload);
+          let is_userName = result.payload?.user?.is_username_added;
           let steps = result.payload?.user?.step;
 
-          if (steps !== 2) {
-            if (steps == 0) {
-              dispatch(saveAddress(""));
-              navigation.navigate(Route.navYourAddress, { fromOTP: false });
-            } else if (steps == 1) {
-              navigation.navigate(Route.navAddKyc);
-            }
-          } else {
+          if (is_userName == 0) {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: Route.navDashboard }],
+                routes: [{ name: Route.navAddUserName }],
               })
             );
-            dispatch(setSuccess(result.payload.message));
+          } else {
+            if (steps !== 2) {
+              if (steps == 0) {
+                dispatch(saveAddress(""));
+                navigation.navigate(Route.navYourAddress, { fromOTP: false });
+              } else if (steps == 1) {
+                navigation.navigate(Route.navAddKyc, { fromOTP: false });
+              }
+            } else {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: Route.navDashboard }],
+                })
+              );
+              dispatch(setSuccess(result.payload.message));
+            }
           }
+
           dispatch(setOAuthLoading(AuthLoadingState.NULL));
         }
       } else {

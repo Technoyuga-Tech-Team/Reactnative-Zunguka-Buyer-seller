@@ -103,7 +103,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.white,
     letterSpacing: 0.36,
     lineHeight: 34,
-    textTransform: "capitalize",
     width: "90%",
   },
   txtTitle: {

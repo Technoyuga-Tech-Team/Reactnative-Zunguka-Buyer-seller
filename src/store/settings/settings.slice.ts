@@ -70,6 +70,7 @@ const initialState: SettingsStateProps = {
   errorFromSocial: false,
   address: "",
   city: "",
+  notificationCount: 0,
 };
 
 const settings = createSlice({
@@ -94,6 +95,9 @@ const settings = createSlice({
     saveCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
     },
+    setSaveNotificationCount: (state, action: PayloadAction<number>) => {
+      state.notificationCount = action.payload;
+    },
   },
 });
 
@@ -103,6 +107,7 @@ export const {
   setErrorFromSocial,
   saveAddress,
   saveCity,
+  setSaveNotificationCount,
 } = settings.actions;
 
 export default settings.reducer;

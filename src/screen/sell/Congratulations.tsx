@@ -12,9 +12,11 @@ import { CommonActions } from "@react-navigation/native";
 
 const Congratulations: React.FC<
   HomeNavigationProps<Route.navCongratulations>
-> = ({ navigation }) => {
+> = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
+
+  const { itemId } = route.params;
 
   const onPressDone = () => {
     navigation.dispatch(
@@ -36,7 +38,7 @@ const Congratulations: React.FC<
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: Route.navProductDetails }],
+        routes: [{ name: Route.navProductDetails, params: { itemId: itemId } }],
       })
     );
   };

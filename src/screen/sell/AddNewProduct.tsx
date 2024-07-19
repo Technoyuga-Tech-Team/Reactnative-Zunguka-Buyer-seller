@@ -64,6 +64,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+
+  const scrollRef = React.useRef<KeyboardAwareScrollView>(null);
   const productTitleRef = React.useRef<TextInput>(null);
   const locationRef = React.useRef<TextInput>(null);
 
@@ -267,24 +269,29 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     console.log("isValidTitle", isValidTitle);
     if (!isValidProductImage) {
       setProductImageError("Product photos are required");
+      scrollRef?.current?.scrollToPosition(0, 0, true);
       return false;
     } else if (!isValidTitle) {
       setProductTitleError("Title is required");
+      scrollRef?.current?.scrollToPosition(0, 0, true);
       return false;
     } else if (!isValidProductCategory) {
       setProductCategoryError("Category is required");
+      scrollRef?.current?.scrollToPosition(0, 0, true);
       return false;
     } else if (!isValidConditionOfItems) {
       setSelectedConditionError("Condition Of Items is required");
+      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
       return false;
     } else if (!isValidBrands) {
       setSelectedBrandError("Brands are required");
+      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
       return false;
     } else if (!isValidColors) {
-      setSelectedColorsError("Colors is required");
+      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
       return false;
     } else if (!isValidSize) {
-      setSelectedSizeValueError("Size is required");
+      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
       return false;
     } else if (!isValidCity) {
       setCityError("City is required");
@@ -344,13 +351,19 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
       if (addProductForSell.fulfilled.match(result)) {
         if (result.payload.status === 1) {
+          console.log(
+            "addProductForSell response - - - ",
+            result.payload?.data
+          );
+          const itemId = result.payload?.data?.id;
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: Route.navCongratulations }],
+              routes: [
+                { name: Route.navCongratulations, params: { itemId: itemId } },
+              ],
             })
           );
-          console.log("addProductForSell response - - - ", result.payload);
         }
       } else {
         console.log("addProductForSell error - - - ", result.payload);
@@ -410,6 +423,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     <View style={style.container}>
       <CustomHeader title="Create new listing" />
       <KeyboardAwareScrollView
+        ref={scrollRef}
         bounces={false}
         keyboardShouldPersistTaps={"handled"}
         showsVerticalScrollIndicator={false}
@@ -433,44 +447,46 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             title="Damages clearly photos"
           />
         </View>
-        <CustomTxtInput
-          ref={productTitleRef}
-          textInputTitle={"Title"}
-          placeholder="Enter item title here"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          keyboardType={"default"}
-          iconPosition={"right"}
-          icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
-          onPressOuterRightIcon={onPressTitleIcon}
-          onChangeText={onChangeProductTitle}
-          onBlur={onBlurProductTitle}
-          value={productTitle}
-          error={productTitleError}
-          touched={productTitleError}
-          textInputStyle={style.inputWithoutBgColor}
-          style={style.txtInputWithoutBgColor}
-        />
+        <View style={style.paddingHorizontal}>
+          <CustomTxtInput
+            ref={productTitleRef}
+            textInputTitle={"Title"}
+            placeholder="Enter item title here"
+            returnKeyType="next"
+            returnKeyLabel="next"
+            keyboardType={"default"}
+            iconPosition={"right"}
+            icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            onPressOuterRightIcon={onPressTitleIcon}
+            onChangeText={onChangeProductTitle}
+            onBlur={onBlurProductTitle}
+            value={productTitle}
+            error={productTitleError}
+            touched={productTitleError}
+            textInputStyle={style.inputWithoutBgColor}
+            style={style.txtInputWithoutBgColor}
+          />
 
-        <CustomTxtInput
-          ref={productTitleRef}
-          textInputTitle={"Category"}
-          placeholder="Select product category type"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          keyboardType={"default"}
-          iconPosition={"right"}
-          icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
-          value={subParantCat}
-          error={productCategoryError}
-          touched={productCategoryError}
-          onPress={onPressSelectCategory}
-          onPressIn={onPressSelectCategory}
-          onPressOuterRightIcon={onPressSelectCategory}
-          editable={false}
-          textInputStyle={style.inputWithoutBgColor}
-          style={style.txtInputWithoutBgColor}
-        />
+          <CustomTxtInput
+            ref={productTitleRef}
+            textInputTitle={"Category"}
+            placeholder="Select product category type"
+            returnKeyType="next"
+            returnKeyLabel="next"
+            keyboardType={"default"}
+            iconPosition={"right"}
+            icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            value={subParantCat}
+            error={productCategoryError}
+            touched={productCategoryError}
+            onPress={onPressSelectCategory}
+            onPressIn={onPressSelectCategory}
+            onPressOuterRightIcon={onPressSelectCategory}
+            editable={false}
+            textInputStyle={style.inputWithoutBgColor}
+            style={style.txtInputWithoutBgColor}
+          />
+        </View>
         <TitleWithInfoIcon title="Condition of item" showIcon={true} />
         <RenderSortItemsList
           sortData={conditionData}
@@ -514,25 +530,27 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             error={cityError}
           />
         </View>
-        <CustomTxtInput
-          ref={locationRef}
-          placeholder="Enter address"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          keyboardType={"default"}
-          iconPosition={"right"}
-          icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
-          onPressOuterRightIcon={onPressSelectEnterAddress}
-          onChangeText={onChangeLocation}
-          onBlur={onBlurLocation}
-          value={productLocation}
-          error={productLocationError}
-          touched={productLocationError}
-          textInputStyle={style.inputWithoutBgColor}
-          style={style.txtInputWithoutBgColor}
-        />
-
+        <View style={style.paddingHorizontal}>
+          <CustomTxtInput
+            ref={locationRef}
+            placeholder="Enter address"
+            returnKeyType="next"
+            returnKeyLabel="next"
+            keyboardType={"default"}
+            iconPosition={"right"}
+            icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            onPressOuterRightIcon={onPressSelectEnterAddress}
+            onChangeText={onChangeLocation}
+            onBlur={onBlurLocation}
+            value={productLocation}
+            error={productLocationError}
+            touched={productLocationError}
+            textInputStyle={style.inputWithoutBgColor}
+            style={style.txtInputWithoutBgColor}
+          />
+        </View>
         <TitleWithInfoIcon title="Description" />
+
         <CustomTxtInput
           placeholder={`Please provide detailed information about your products.\n\nEx: Used iPhone in great condition! 1 year old, 90% battery health, and only minor scratches.`}
           returnKeyType="next"
@@ -549,6 +567,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           touched={productDescriptionError}
           onSubmitEditing={() => {}}
         />
+
         <TitleWithInfoIcon title="Mode of transports" />
         <View style={style.paddingHorizontal}>
           <CustomDropdown
@@ -738,7 +757,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   inputWithoutBgColor: {
     height: 40,
     backgroundColor: theme?.colors?.transparent,
-    marginHorizontal: 20,
   },
   txtInputWithoutBgColor: {
     height: 40,

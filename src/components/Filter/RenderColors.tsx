@@ -7,6 +7,7 @@ import CheckIcon from "../ui/svg/CheckIcon";
 import Scale from "../../utils/Scale";
 import SquareCheckIcon from "../ui/svg/SquareCheckIcon";
 import { HIT_SLOP2 } from "../../constant";
+import CheckBoxSelection from "../ui/CheckBoxSelection";
 
 interface RenderColorsProps {
   selectedItem: any[];
@@ -38,41 +39,13 @@ const RenderColors: React.FC<RenderColorsProps> = ({
     <ScrollView showsVerticalScrollIndicator={false} style={style.container}>
       {data?.map((ele) => {
         return (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={style.itemCont}
-            onPress={() => handleCheckboxChange(ele)}
-            key={ele.colorCode}
-          >
-            <CheckBox
-              checked={items.includes(ele.itemName)}
-              onPress={() => handleCheckboxChange(ele)}
-              hitSlop={HIT_SLOP2}
-              checkedIcon={
-                <CheckIcon
-                  color={theme.colors?.primary}
-                  height={Scale(25)}
-                  width={Scale(25)}
-                />
-              }
-              uncheckedIcon={
-                <SquareCheckIcon
-                  color={theme.colors?.iconColor}
-                  height={Scale(25)}
-                  width={Scale(25)}
-                />
-              }
-              containerStyle={{
-                padding: 0,
-              }}
-            />
-            <Text style={style.txtColor}>{ele.itemName}</Text>
-            {isColor && (
-              <View
-                style={[style.colorCont, { backgroundColor: ele.colorCode }]}
-              />
-            )}
-          </TouchableOpacity>
+          <CheckBoxSelection
+            isChecked={items.includes(ele.itemName)}
+            onPressCheckbox={() => handleCheckboxChange(ele)}
+            itemValue={ele.itemValue}
+            itemName={ele.itemName}
+            isColor={isColor}
+          />
         );
       })}
     </ScrollView>

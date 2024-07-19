@@ -32,7 +32,7 @@ const SellProductItems: React.FC<SellProductItemsProps> = ({
         hitSlop={HIT_SLOP}
         style={style.innerCont}
       >
-        <Text>{value ? value : "-"}</Text>
+        <Text style={style.txtVal}>{value ? value : "-"}</Text>
         <RightIcon
           color={theme?.colors?.unselectedIconColor}
           height={16}
@@ -64,6 +64,12 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   error: {
     marginTop: 5,
     fontSize: theme.fontSize?.fs12,
+    fontFamily: theme?.fontFamily?.regular,
     color: theme.colors?.error,
+  },
+  txtVal: {
+    fontSize: theme.fontSize?.fs12,
+    fontFamily: theme?.fontFamily?.regular,
+    color: theme?.colors?.textPrimary,
   },
 }));

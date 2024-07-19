@@ -1375,15 +1375,15 @@ export const USA_STATES_CITY: any = {
 
 export const SLIDER: SliderItemProps[] = [
   {
-    image: require("../assets/images/group.png"),
+    banner_image: require("../assets/images/group.png"),
     description: "Discover a Sustainable Way to Shop",
   },
   {
-    image: require("../assets/images/group.png"),
+    banner_image: require("../assets/images/group.png"),
     description: "Explore, Discover, and Shop",
   },
   {
-    image: require("../assets/images/group.png"),
+    banner_image: require("../assets/images/group.png"),
     description: "Discover a World of Eco-Friendly Finds",
   },
 ];
@@ -1905,55 +1905,55 @@ export const PRODUCTS = [
 export const COLORS = [
   {
     itemName: "Red",
-    colorCode: "#FF0000",
+    itemValue: "#FF0000",
   },
   {
     itemName: "Green",
-    colorCode: "#008000",
+    itemValue: "#008000",
   },
   {
     itemName: "Yellow",
-    colorCode: "#FFFF00",
+    itemValue: "#FFFF00",
   },
   {
     itemName: "Pink",
-    colorCode: "#FFC0CB",
+    itemValue: "#FFC0CB",
   },
   {
     itemName: "White",
-    colorCode: "#ffffff",
+    itemValue: "#ffffff",
   },
   {
     itemName: "Black",
-    colorCode: "#000000",
+    itemValue: "#000000",
   },
   {
     itemName: "Silver",
-    colorCode: "#C0C0C0",
+    itemValue: "#C0C0C0",
   },
   {
     itemName: "Purple",
-    colorCode: "#A020F0",
+    itemValue: "#A020F0",
   },
   {
     itemName: "Orange",
-    colorCode: "#ffA500",
+    itemValue: "#ffA500",
   },
   {
     itemName: "Grey",
-    colorCode: "#808080",
+    itemValue: "#808080",
   },
   {
     itemName: "Golden",
-    colorCode: "#FFD700",
+    itemValue: "#FFD700",
   },
   {
     itemName: "Brown",
-    colorCode: "#964B00",
+    itemValue: "#964B00",
   },
   {
     itemName: "Blue",
-    colorCode: "#0000FF",
+    itemValue: "#0000FF",
   },
 ];
 

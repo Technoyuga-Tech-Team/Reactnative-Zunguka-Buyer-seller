@@ -79,6 +79,8 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
 
+  console.log("selectedColors", selectedColors);
+
   const [selectedBrand, setSelectedBrand] = useState<{
     id: number | null;
     name: string;

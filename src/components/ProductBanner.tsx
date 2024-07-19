@@ -12,16 +12,19 @@ import {
 import { makeStyles, useTheme } from "react-native-elements";
 
 // relative path
-import { PRODUCT_BANNERS, SCREEN_WIDTH } from "../constant";
+import { SCREEN_WIDTH } from "../constant";
+import { productImage } from "../types/product.types";
 import { createArrayUseNumber } from "../utils";
-import SliderItem from "./Onboard/SliderItem";
+import ProductBannerImage from "./Product/ProductBannerImage";
 import Paginator from "./ui/Paginator";
 
 const { width: wWidth } = Dimensions.get("window");
 
-interface ProductBannerProps {}
+interface ProductBannerProps {
+  productBannerData: productImage[];
+}
 
-const ProductBanner: React.FC<ProductBannerProps> = ({}) => {
+const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
   const styles = useStyles();
   const { theme } = useTheme();
 
@@ -54,7 +57,7 @@ const ProductBanner: React.FC<ProductBannerProps> = ({}) => {
   // scroll to next slide
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const nextSlide = async () => {
-    if (currentSlide < PRODUCT_BANNERS.length - 1) {
+    if (currentSlide < productBannerData?.length - 1) {
       sliderRef.current?.scrollToIndex({ index: currentSlide + 1 });
     } else {
       sliderRef.current?.scrollToIndex({ index: 0 });
@@ -78,17 +81,13 @@ const ProductBanner: React.FC<ProductBannerProps> = ({}) => {
     }
   ).current;
 
-  const scrollToIndex = (index: number) => {
-    sliderRef.current?.scrollToIndex({ index });
-  };
-
   return (
     <View style={styles.mainCont}>
       <Animated.FlatList
         ref={sliderRef}
         contentContainerStyle={styles.fltCont}
         horizontal={true}
-        data={PRODUCT_BANNERS}
+        data={productBannerData}
         pagingEnabled={true}
         bounces={false}
         showsHorizontalScrollIndicator={false}
@@ -105,7 +104,7 @@ const ProductBanner: React.FC<ProductBannerProps> = ({}) => {
           { useNativeDriver: false }
         )}
         renderItem={({ item }) => (
-          <SliderItem
+          <ProductBannerImage
             item={item}
             bannerHeight={286}
             bannerwidth={SCREEN_WIDTH}
@@ -113,16 +112,18 @@ const ProductBanner: React.FC<ProductBannerProps> = ({}) => {
           />
         )}
       />
-      <View style={styles.outerPaginatorCont}>
-        <Paginator
-          data={createArrayUseNumber(PRODUCT_BANNERS.length)}
-          scrollX={scrollX}
-          variant={"secondary"}
-          marginHorizontal={2}
-          containerStyle={styles.paginatorCont}
-          showSecondaryColor={true}
-        />
-      </View>
+      {productBannerData?.length > 2 && (
+        <View style={styles.outerPaginatorCont}>
+          <Paginator
+            data={createArrayUseNumber(productBannerData?.length)}
+            scrollX={scrollX}
+            variant={"secondary"}
+            marginHorizontal={2}
+            containerStyle={styles.paginatorCont}
+            showSecondaryColor={true}
+          />
+        </View>
+      )}
     </View>
   );
 };

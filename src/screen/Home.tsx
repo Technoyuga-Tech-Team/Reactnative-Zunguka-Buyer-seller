@@ -36,10 +36,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   const { data: dashboardData, refetch, isLoading } = useGetDashboard();
 
-  const [name, setName] = useState({
-    fname: userData?.first_name,
-    lname: userData?.last_name,
-  });
+  const [name, setName] = useState(userData?.username);
 
   const [banner, setBanner] = useState<BannerProps[]>([]);
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
@@ -71,10 +68,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      setName({
-        fname: userData?.first_name,
-        lname: userData?.last_name !== null ? userData?.last_name : "",
-      });
+      setName(userData?.username);
     });
     return () => {
       unsubscribe();
@@ -119,7 +113,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   return (
     <View style={style.container}>
       <HeaderHome
-        name={`${name?.fname} ${name?.lname}`}
+        name={name}
         onPressNotification={onPressNotification}
         onPressSearch={onPressSearch}
       />

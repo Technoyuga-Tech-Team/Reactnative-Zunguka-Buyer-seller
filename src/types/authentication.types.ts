@@ -15,6 +15,9 @@ export interface SignupFormProps {
   createPassword: string;
   confirmPassword: string;
 }
+export interface UsernameFormProps {
+  username: string;
+}
 
 export interface OTPFormProps {
   otp: string;
