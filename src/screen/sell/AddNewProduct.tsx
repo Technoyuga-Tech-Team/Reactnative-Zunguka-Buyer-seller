@@ -1,3 +1,4 @@
+import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   Keyboard,
@@ -10,9 +11,22 @@ import {
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import { Images } from "../../assets/images";
+import { AppImage } from "../../components/AppImage/AppImage";
 import CustomDropdown from "../../components/Dropdown/CustomDropdown";
+import RenderColors from "../../components/Filter/RenderColors";
+import RenderMultiSelectionItem from "../../components/Filter/RenderMultiSelectionItem";
+import SellProductItems from "../../components/SellProductItems";
+import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
+import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import NoDataFound from "../../components/ui/NoDataFound";
+import PickSellProduct from "../../components/ui/PickSellProduct";
 import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
+import LeftIcon from "../../components/ui/svg/LeftIcon";
+import PencilIcon from "../../components/ui/svg/PencilIcon";
+import TermsAndCondition from "../../components/ui/TermsAndCondition";
 import TitleWithInfoIcon from "../../components/ui/TitleWithInfoIcon";
 import {
   CITIES,
@@ -23,39 +37,24 @@ import {
   SIZES,
   VEHICLE_TYPE_DATA,
 } from "../../constant";
-import { Route } from "../../constant/navigationConstants";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import { HomeNavigationProps } from "../../types/navigation";
-import { CustomTxtInput } from "../../components/ui/CustomTextInput";
-import Scale from "../../utils/Scale";
 import { isRequiredFields } from "../../constant/formValidations";
-import TermsAndCondition from "../../components/ui/TermsAndCondition";
-import PencilIcon from "../../components/ui/svg/PencilIcon";
-import SellProductItems from "../../components/SellProductItems";
-import CustomButton from "../../components/ui/CustomButton";
-import PickSellProduct from "../../components/ui/PickSellProduct";
-import { imagePickerProps } from "../../types/common.types";
-import { getUrlExtension } from "../../utils";
-import BackIcon from "../../components/ui/svg/BackIcon";
-import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { useBrands } from "../../hooks/useBrands";
 import { useCategories } from "../../hooks/useCategories";
+import { setErrors } from "../../store/global/global.slice";
+import { selectProductLoading } from "../../store/Product/product.selectors";
+import { addProductForSell } from "../../store/Product/product.thunk";
+import { imagePickerProps } from "../../types/common.types";
 import {
   CategoriesDataProps,
   HotBrandaDataProps,
 } from "../../types/dashboard.types";
-import { useBrands } from "../../hooks/useBrands";
-import { Images } from "../../assets/images";
-import { AppImage } from "../../components/AppImage/AppImage";
-import NoDataFound from "../../components/ui/NoDataFound";
-import RenderColors from "../../components/Filter/RenderColors";
-import RenderMultiSelectionItem from "../../components/Filter/RenderMultiSelectionItem";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { setErrors } from "../../store/global/global.slice";
-import { addProductForSell } from "../../store/Product/product.thunk";
-import { useSelector } from "react-redux";
-import { selectProductLoading } from "../../store/Product/product.selectors";
-import LeftIcon from "../../components/ui/svg/LeftIcon";
-import { CommonActions } from "@react-navigation/native";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import { getUrlExtension } from "../../utils";
+import Scale from "../../utils/Scale";
+import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -428,6 +427,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         keyboardShouldPersistTaps={"handled"}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={style.scrollCont}
+        nestedScrollEnabled={true}
+        persistentScrollbar={true}
       >
         <TitleWithInfoIcon title="Photos" />
         <PickSellProduct
@@ -462,7 +463,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             onBlur={onBlurProductTitle}
             value={productTitle}
             error={productTitleError}
-            touched={productTitleError}
+            touched={productTitleError !== ""}
             textInputStyle={style.inputWithoutBgColor}
             style={style.txtInputWithoutBgColor}
           />
@@ -478,7 +479,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
             value={subParantCat}
             error={productCategoryError}
-            touched={productCategoryError}
+            touched={productCategoryError !== ""}
             onPress={onPressSelectCategory}
             onPressIn={onPressSelectCategory}
             onPressOuterRightIcon={onPressSelectCategory}
@@ -544,7 +545,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             onBlur={onBlurLocation}
             value={productLocation}
             error={productLocationError}
-            touched={productLocationError}
+            touched={productLocationError !== ""}
             textInputStyle={style.inputWithoutBgColor}
             style={style.txtInputWithoutBgColor}
           />
@@ -564,7 +565,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurDescription}
           value={productDescription}
           error={productDescriptionError}
-          touched={productDescriptionError}
+          touched={productDescriptionError !== ""}
           onSubmitEditing={() => {}}
         />
 
@@ -593,7 +594,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onBlur={onBlurSellingPrice}
           value={productSellingPrice}
           error={productSellingPriceError}
-          touched={productSellingPriceError}
+          touched={productSellingPriceError !== ""}
           textInputStyle={style.inputSellingPrice}
           style={style.txtSellingPrice}
         />

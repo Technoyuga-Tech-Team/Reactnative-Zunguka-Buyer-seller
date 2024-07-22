@@ -263,3 +263,19 @@ export const AddAddressScreenSchema = (
     district: Yup.string().required("District is required"),
   });
 };
+
+// Delivery Address
+
+export const DeliveryAddressScreenSchema = (countryCode: CountryCode) => {
+  return Yup.object().shape({
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    phoneNumber: Yup.string()
+      .trim()
+      .phone(countryCode, "Please enter a valid phone number")
+      .required("Phone is required"),
+    deliveryAddress: Yup.string().required("Delivery address is required"),
+    region: Yup.string().required("Region is required"),
+    city: Yup.string().required("City is required"),
+  });
+};

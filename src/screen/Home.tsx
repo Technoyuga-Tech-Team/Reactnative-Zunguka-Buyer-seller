@@ -107,7 +107,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const onPressHotBrands = (item: any) => {};
   const onPressSeeAllHotBrands = () => {};
   const onPressBanner = () => {
-    navigation.navigate(Route.navCongratulations);
+    navigation.navigate(Route.navDeliveryAddress);
   };
 
   return (

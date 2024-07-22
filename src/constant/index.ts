@@ -2203,3 +2203,30 @@ export const VEHICLE_TYPE_DATA = [
   { key: "Cab", title: "Cab" },
   { key: "tricycle_cargo", title: "Tricycle Cargo" },
 ];
+
+export const AddressData = [
+  {
+    firstName: "John",
+    lastName: "Doe",
+    phone: "+250738923150",
+    address: "FUTURES ARCHITECTS, BP. 1438",
+    region: "kigali",
+    city: "kigali",
+  },
+  {
+    firstName: "Krishna",
+    lastName: "patel",
+    phone: "+250738923150",
+    address: "FUTURES ARCHITECTS, BP. 1438",
+    region: "kigali",
+    city: "kigali",
+  },
+  {
+    firstName: "Mrugesh",
+    lastName: "Patel",
+    phone: "+250738923150",
+    address: "FUTURES ARCHITECTS, BP. 1438",
+    region: "kigali",
+    city: "kigali",
+  },
+];

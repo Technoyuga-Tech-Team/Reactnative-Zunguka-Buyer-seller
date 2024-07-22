@@ -21,6 +21,8 @@ import ProductDetails from "../screen/product/ProductDetails";
 import AddNewProduct from "../screen/sell/AddNewProduct";
 import AllCategories from "../screen/Categories/AllCategories";
 import Congratulations from "../screen/sell/Congratulations";
+import DeliveryAddress from "../screen/deliveryAddress/DeliveryAddress";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -29,58 +31,76 @@ const MainStack = () => {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName={Route.navSplash}
-      >
-        <Stack.Screen
-          name={Route.navSplash}
-          component={Splash}
-          options={{
-            contentStyle: {
-              backgroundColor: "transparent",
-            },
-          }}
-        />
-        <Stack.Screen name={Route.navOnboard} component={Onboard} />
-        <Stack.Screen
-          name={Route.navAuthentication}
-          component={Authentication}
-        />
-        <Stack.Screen
-          name={Route.navDashboard}
-          component={Bottombar}
-          options={{
-            contentStyle: {
-              backgroundColor: "transparent",
-            },
-          }}
-        />
-        <Stack.Screen name={Route.navAddNewProduct} component={AddNewProduct} />
-        <Stack.Screen
-          name={Route.navSearchProduct}
-          component={SearchProducts}
-        />
-        <Stack.Screen
-          name={Route.navProductDetails}
-          component={ProductDetails}
-        />
-        <Stack.Screen
-          name={Route.navCongratulations}
-          component={Congratulations}
-        />
-        <Stack.Screen name={Route.navAllCategories} component={AllCategories} />
-        <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
-        <Stack.Screen name={Route.navChooseAddress} component={ChooseAddress} />
-        <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
-        <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
-        <Stack.Screen
-          name={Route.navChangePassword}
-          component={ChangePassword}
-        />
-        <Stack.Screen name={Route.navResetPassword} component={ResetPassword} />
-      </Stack.Navigator>
+      <BottomSheetModalProvider>
+        <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          initialRouteName={Route.navSplash}
+        >
+          <Stack.Screen
+            name={Route.navSplash}
+            component={Splash}
+            options={{
+              contentStyle: {
+                backgroundColor: "transparent",
+              },
+            }}
+          />
+          <Stack.Screen name={Route.navOnboard} component={Onboard} />
+          <Stack.Screen
+            name={Route.navAuthentication}
+            component={Authentication}
+          />
+          <Stack.Screen
+            name={Route.navDashboard}
+            component={Bottombar}
+            options={{
+              contentStyle: {
+                backgroundColor: "transparent",
+              },
+            }}
+          />
+          <Stack.Screen
+            name={Route.navAddNewProduct}
+            component={AddNewProduct}
+          />
+          <Stack.Screen
+            name={Route.navSearchProduct}
+            component={SearchProducts}
+          />
+          <Stack.Screen
+            name={Route.navProductDetails}
+            component={ProductDetails}
+          />
+          <Stack.Screen
+            name={Route.navCongratulations}
+            component={Congratulations}
+          />
+          <Stack.Screen
+            name={Route.navDeliveryAddress}
+            component={DeliveryAddress}
+          />
+          <Stack.Screen
+            name={Route.navAllCategories}
+            component={AllCategories}
+          />
+          <Stack.Screen name={Route.navYourAddress} component={YourAddress} />
+          <Stack.Screen
+            name={Route.navChooseAddress}
+            component={ChooseAddress}
+          />
+          <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
+          <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
+          <Stack.Screen
+            name={Route.navChangePassword}
+            component={ChangePassword}
+          />
+          <Stack.Screen
+            name={Route.navResetPassword}
+            component={ResetPassword}
+          />
+        </Stack.Navigator>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 };

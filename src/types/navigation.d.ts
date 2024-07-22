@@ -28,6 +28,7 @@ export type AppRoutes = {
   Messaging: undefined;
   Chatroom: undefined;
   ProductDetails: undefined;
+  DeliveryAddress: undefined;
   TransactionHistory: undefined;
   TransactionDetails: undefined;
   NotificationSetting: undefined;
@@ -94,6 +95,7 @@ export type HomeRoutes = {
   AddNewProduct: undefined;
   AllCategories: undefined;
   Congratulations: { itemId: number };
+  DeliveryAddress: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

@@ -70,8 +70,6 @@ const ProductDetails: React.FC<
     }
   }, [productDetailsData]);
 
-  console.log("productDetails", productDetails);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       StatusBar.setBarStyle("dark-content");
