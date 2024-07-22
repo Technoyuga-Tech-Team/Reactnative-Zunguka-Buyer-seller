@@ -1,12 +1,23 @@
 import BottomSheet from "@gorhom/bottom-sheet";
+import { useFormik } from "formik";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  CountryCode,
+  TranslationLanguageCodeMap,
+} from "react-native-country-picker-modal";
 import { makeStyles, useTheme } from "react-native-elements";
+import ReactNativePhoneInput from "react-native-phone-input";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
 import DeliveryAddressList from "../../components/DeliveryAddress/DeliveryAddressList";
+import CustomDropdown from "../../components/Dropdown/CustomDropdown";
+import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
+import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
+import LocationIcon from "../../components/ui/svg/LocationIcon";
 import SinglePlusIcon from "../../components/ui/svg/SinglePlusIcon";
 import {
   AddressData,
@@ -14,27 +25,12 @@ import {
   MAX_CHAR_LENGTH,
   SCREEN_WIDTH,
 } from "../../constant";
+import { DeliveryAddressScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
+import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
-import { useFormik } from "formik";
-import { SignupFormProps } from "../../types/authentication.types";
-import {
-  DeliveryAddressScreenSchema,
-  SignupScreenSchema,
-} from "../../constant/formValidations";
-import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
-import {
-  CountryCode,
-  TranslationLanguageCodeMap,
-} from "react-native-country-picker-modal";
-import { CustomTxtInput } from "../../components/ui/CustomTextInput";
-import ReactNativePhoneInput from "react-native-phone-input";
-import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
-import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import Scale from "../../utils/Scale";
-import LocationIcon from "../../components/ui/svg/LocationIcon";
-import CustomDropdown from "../../components/Dropdown/CustomDropdown";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>

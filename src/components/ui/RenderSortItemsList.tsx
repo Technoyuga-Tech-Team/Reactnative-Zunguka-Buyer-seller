@@ -53,6 +53,7 @@ export default RenderSortItemsList;
 const useStyle = makeStyles((theme) => ({
   cont: {
     paddingHorizontal: 20,
+    flex: 1,
     // paddingVertical: 20,
   },
   txtLoginToZunguka: {

@@ -72,6 +72,7 @@ export type AuthenticationRoutes = {
   Authentication: undefined;
   ResetPassword: { phone?: string; email?: string };
   ChangePassword: undefined;
+  TakeSelfie: undefined;
 };
 
 export type BottomRoutes = {

@@ -3,9 +3,12 @@ import DeviceInfo from "react-native-device-info";
 import { SliderItemProps } from "../types/slider.types";
 
 const { width, height } = Dimensions.get("window");
+const { width: ScreenWidth, height: screenHeight } = Dimensions.get("screen");
 
-export const SCREEN_HEIGHT = height;
-export const SCREEN_WIDTH = width;
+export const SCREEN_HEIGHT = screenHeight;
+export const SCREEN_WIDTH = ScreenWidth;
+export const WINDOW_HEIGHT = height;
+export const WINDOW_WIDTH = width;
 export const LARGE_BTN = width - 50;
 export const SMALL_BTN = width / 2;
 

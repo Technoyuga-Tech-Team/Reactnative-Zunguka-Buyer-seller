@@ -10,6 +10,7 @@ export enum Route {
   navAddUserName = "AddUserName",
   navYourAddress = "YourAddress",
   navAddKyc = "AddKyc",
+  navTakeSelfie = "TakeSelfie",
   navSell = "Sell",
   navDeliveryAddress = "DeliveryAddress",
   navAddNewProduct = "AddNewProduct",

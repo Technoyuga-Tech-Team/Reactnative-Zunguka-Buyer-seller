@@ -2,6 +2,9 @@ export enum Images {
   PLACEHOLDER_IMAGE = require("../images/placeholder.jpg"),
   HEADER_HOME_IMAGE = require("../images/home_header.png"),
   EMPTY_PRODUCT_IMAGE = require("../images/emptyProduct.png"),
+  SELFIE_BG_IMAGE = require("../images/selfie5.png"),
+  CAPTURE_BTN_IMAGE = require("../images/captureBtn.png"),
+
   // categories
   WOMEN_TSHIRT_IMAGE = require("../images/iconoir_women-t-shirt.png"),
   MOBILE_IMAGE = require("../images/mobile1.png"),

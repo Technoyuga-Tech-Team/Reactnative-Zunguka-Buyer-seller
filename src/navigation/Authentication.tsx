@@ -8,6 +8,7 @@ import Signup from "../screen/authentication/Signup";
 import ForgotPassword from "../screen/authentication/ForgotPassword/ForgotPassword";
 import EnterOTP from "../screen/authentication/ForgotPassword/EnterOTP";
 import AddUserName from "../screen/authentication/AddUserName";
+import TakeSelfie from "../screen/authentication/TakeSelfie";
 
 // relative path
 
@@ -27,6 +28,7 @@ const Authentication = () => {
       <Stack.Screen name={Route.navForgotPassword} component={ForgotPassword} />
       <Stack.Screen name={Route.navEnterOTP} component={EnterOTP} />
       <Stack.Screen name={Route.navAddUserName} component={AddUserName} />
+      <Stack.Screen name={Route.navTakeSelfie} component={TakeSelfie} />
     </Stack.Navigator>
   );
 };

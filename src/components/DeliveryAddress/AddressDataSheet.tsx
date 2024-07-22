@@ -10,10 +10,16 @@ import { ThemeProps } from "../../types/global.types";
 import CloseIcon from "../ui/svg/CloseIcon";
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { SharedValue } from "react-native-reanimated";
 
 export interface CustomBottomSheetProps extends BottomSheetProps {
   title: string;
   handleClosePress: () => void;
+  snapPoints:
+    | (string | number)[]
+    | SharedValue<(string | number)[]>
+    | Readonly<(string | number)[] | SharedValue<(string | number)[]>>
+    | undefined;
 }
 
 export const AddressDataSheet = React.forwardRef<
@@ -22,8 +28,6 @@ export const AddressDataSheet = React.forwardRef<
 >(({ ...props }, ref) => {
   const style = useStyles();
   const { theme } = useTheme();
-
-  const snapPoints = useMemo(() => ["50%", "80%"], []);
 
   const renderBackdrop = useCallback(
     (
@@ -43,7 +47,7 @@ export const AddressDataSheet = React.forwardRef<
     <BottomSheet
       ref={ref}
       index={-1}
-      snapPoints={snapPoints}
+      snapPoints={props.snapPoints}
       enablePanDownToClose={true}
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={{ backgroundColor: theme?.colors?.transparent }}
