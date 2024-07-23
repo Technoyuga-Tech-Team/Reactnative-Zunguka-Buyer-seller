@@ -89,7 +89,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const onPressMyProfile = () => {
     navigation.navigate(Route.navEditProfile);
   };
-  const onPressCardDetails = () => {};
+  const onPressCardDetails = () => {
+    navigation.navigate(Route.navCardDetails, { from: "profile" });
+  };
   const onPressTransactionHistroy = () => {};
 
   const Profile = profilePicture;

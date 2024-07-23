@@ -38,7 +38,7 @@ const CategoriesListWithExpand: React.FC<CategoriesListWithExpandProps> = ({
   const style = useStyles({ insets });
   return (
     <View style={style.container}>
-      {categoriesData?.length > 0 ? (
+      {categoriesData?.length > 0 && !isLoading ? (
         categoriesData.map((item) => {
           return (
             <ExpandableView

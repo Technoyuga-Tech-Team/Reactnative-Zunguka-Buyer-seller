@@ -7,7 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   CountryCode,
   TranslationLanguageCodeMap,
@@ -37,6 +43,8 @@ import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setErrors } from "../../store/global/global.slice";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -51,6 +59,8 @@ const DeliveryAddress: React.FC<
   const deliveryAddressRef = React.useRef<TextInput>(null);
 
   const snapPoints = useMemo(() => ["90%", "90%"], []);
+
+  const dispatch = useAppDispatch();
 
   const [selectedAddress, setSelectedAddress] = useState();
   const [visibleCountryPicker, setVisibleCountryPicker] =
@@ -275,8 +285,26 @@ const DeliveryAddress: React.FC<
     );
   };
 
+  const onPressSelectAddress = () => {
+    if (selectedAddress) {
+      navigation.navigate(Route.navModeOfDelivery);
+    } else {
+      dispatch(
+        setErrors({
+          message: "Please select the address",
+          status: 0,
+          statusCode: null,
+        })
+      );
+    }
+  };
+
   return (
     <View style={style.container}>
+      <StatusBar
+        backgroundColor={theme.colors?.transparent}
+        barStyle={"dark-content"}
+      />
       <CustomHeader title="Select delivery address" />
       <View style={style.innerCont}>
         <DeliveryAddressList
@@ -287,7 +315,7 @@ const DeliveryAddress: React.FC<
         />
       </View>
       <CustomButton
-        onPress={() => {}}
+        onPress={onPressSelectAddress}
         title={"Select address"}
         buttonWidth="full"
         variant="primary"

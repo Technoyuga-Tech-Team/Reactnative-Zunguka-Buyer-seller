@@ -4,6 +4,7 @@ import { SettingsStateProps } from "./settings.types";
 import { AuthenticationState } from "./authentication.types";
 import { UserProfileState } from "./user.types";
 import { ProductState } from "./product.types";
+import { PaymentCardState } from "./payment.types";
 
 export interface RootReduxState {
   global: GlobalState;
@@ -11,6 +12,7 @@ export interface RootReduxState {
   authentication: AuthenticationState;
   userProfile: UserProfileState;
   product: ProductState;
+  paymentCard: PaymentCardState;
 }
 
 export type AppDispatch = ThunkDispatch<

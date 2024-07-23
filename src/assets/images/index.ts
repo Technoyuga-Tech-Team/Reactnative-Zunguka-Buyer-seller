@@ -22,4 +22,11 @@ export enum Images {
   // radio button
   UNCHECKED_RADIO = require("../images/radio_button_unchecked.png"),
   CHECKED_RADIO = require("../images/radio_button_checked.png"),
+  // cards
+  CARD1 = require("../images/card1.png"),
+  CARD2 = require("../images/card2.png"),
+  MC = require("../images/mc_symbol.png"),
+  AMEX = require("../images/amex_cropped.png"),
+  DISCOVER = require("../images/discover_card.png"),
+  VISA = require("../images/visa_card.png"),
 }

@@ -25,6 +25,7 @@ import {
   deleteProduct,
   likeDislikeProduct,
 } from "../../store/Product/product.thunk";
+import { onShare } from "../../utils";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -100,7 +101,9 @@ const ProductDetails: React.FC<
       );
     }
   };
-  const onPressShare = () => {};
+  const onPressShare = () => {
+    onShare(`Link will here for product`);
+  };
   const onPressDelete = () => {
     Alert.alert("", "Are you sure you want to delete?", [
       {
@@ -145,6 +148,10 @@ const ProductDetails: React.FC<
     }
   };
 
+  const onPressBuyProduct = () => {
+    navigation.navigate(Route.navDeliveryAddress);
+  };
+
   return (
     <KeyboardAwareScrollView
       bounces={false}
@@ -179,6 +186,7 @@ const ProductDetails: React.FC<
           type="outline"
         />
         <CustomButton
+          onPress={onPressBuyProduct}
           title={"Buy Product"}
           buttonWidth="half"
           width={(SCREEN_WIDTH - 50) / 2}

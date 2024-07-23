@@ -5,6 +5,7 @@ import settings from "../store/settings/settings.slice";
 import authentication from "../store/authentication/authentication.slice";
 import userProfile from "../store/userprofile/userprofile.slice";
 import product from "../store/Product/product.slice";
+import paymentCard from "../store/PaymentCard/paymentCard.slice";
 
 const rootReducer = combineReducers<RootReduxState>({
   global,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers<RootReduxState>({
   authentication,
   userProfile,
   product,
+  paymentCard,
 });
 
 export default rootReducer;

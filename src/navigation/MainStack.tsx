@@ -25,6 +25,9 @@ import DeliveryAddress from "../screen/deliveryAddress/DeliveryAddress";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import DeliveryMode from "../components/DeliveryMode";
 import ModeOfDelivery from "../screen/ModeOfDelivery";
+import CardDetails from "../screen/payment/CardDetails";
+import { AddNewCard } from "../store/PaymentCard/paymentCard.thunk";
+import AddCard from "../screen/payment/AddCard";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -74,6 +77,8 @@ const MainStack = () => {
             name={Route.navModeOfDelivery}
             component={ModeOfDelivery}
           />
+          <Stack.Screen name={Route.navAddCard} component={AddCard} />
+          <Stack.Screen name={Route.navCardDetails} component={CardDetails} />
           <Stack.Screen
             name={Route.navProductDetails}
             component={ProductDetails}

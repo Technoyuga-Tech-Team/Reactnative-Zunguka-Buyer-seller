@@ -98,6 +98,8 @@ export type HomeRoutes = {
   Congratulations: { itemId: number };
   DeliveryAddress: undefined;
   ModeOfDelivery: undefined;
+  AddCard: undefined;
+  CardDetails: { from: string };
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {
