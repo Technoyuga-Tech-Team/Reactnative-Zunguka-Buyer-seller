@@ -97,6 +97,7 @@ export type HomeRoutes = {
   AllCategories: undefined;
   Congratulations: { itemId: number };
   DeliveryAddress: undefined;
+  ModeOfDelivery: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

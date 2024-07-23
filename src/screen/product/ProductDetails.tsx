@@ -114,14 +114,14 @@ const ProductDetails: React.FC<
     ]);
   };
   const deleteItem = async () => {
-    const result = await dispatch(deleteProduct({ id: productDetails?.id }));
-    if (deleteProduct.fulfilled.match(result)) {
-      if (result.payload?.status === 1) {
-        navigation.goBack();
-      }
-    } else {
-      console.log("errror deleteProduct --->", result.payload);
-    }
+    // const result = await dispatch(deleteProduct({ id: productDetails?.id }));
+    // if (deleteProduct.fulfilled.match(result)) {
+    //   if (result.payload?.status === 1) {
+    //     navigation.goBack();
+    //   }
+    // } else {
+    //   console.log("errror deleteProduct --->", result.payload);
+    // }
   };
   const onPressSavedItem = async () => {
     setSavedItem(!savedItem);

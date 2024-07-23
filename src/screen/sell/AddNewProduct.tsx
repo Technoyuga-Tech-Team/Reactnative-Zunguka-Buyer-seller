@@ -249,6 +249,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressSelectCategory = () => {
+    Keyboard.dismiss();
     setVisibleCategories(true);
   };
 

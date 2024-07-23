@@ -1,6 +1,12 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useFormik } from "formik";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import {
   CountryCode,
@@ -44,6 +50,8 @@ const DeliveryAddress: React.FC<
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
   const deliveryAddressRef = React.useRef<TextInput>(null);
 
+  const snapPoints = useMemo(() => ["90%", "90%"], []);
+
   const [selectedAddress, setSelectedAddress] = useState();
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
@@ -71,10 +79,6 @@ const DeliveryAddress: React.FC<
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
     }, 1000);
-  };
-
-  const onPressNewAddress = () => {
-    sheetRef.current?.snapToIndex(1);
   };
 
   const {
@@ -105,6 +109,18 @@ const DeliveryAddress: React.FC<
       city,
     }) => {},
   });
+
+  const onPressNewAddress = () => {
+    setFieldValue("firstName", "");
+    setFieldValue("lastName", "");
+    setFieldValue("phoneNumber", "");
+    setFieldValue("deliveryAddress", "");
+    setFieldValue("region", "");
+    setFieldValue("city", "");
+    setTimeout(() => {
+      sheetRef.current?.snapToIndex(1);
+    }, 500);
+  };
 
   useEffect(() => {
     if (selectedAddress) {
@@ -293,6 +309,7 @@ const DeliveryAddress: React.FC<
         }
       />
       <AddressDataSheet
+        snapPoints={snapPoints}
         ref={sheetRef}
         title={"Add delivery address"}
         handleClosePress={handleClosePress}
