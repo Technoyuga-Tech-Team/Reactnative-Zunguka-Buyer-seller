@@ -85,7 +85,7 @@ export type BottomRoutes = {
 
 export type HomeRoutes = {
   Home: undefined;
-  SearchProduct: undefined;
+  SearchProduct: { mainCat: string; subCat: string };
   Favourites: undefined;
   Sell: undefined;
   Alert: undefined;

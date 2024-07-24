@@ -23,6 +23,7 @@ export interface ProductDataProps {
   category_id: string;
   status: string;
   added_at: string;
+  created_at: string;
   images: productImage[];
   category: productCategory[];
   brand: brandInfo;

@@ -28,6 +28,7 @@ export const API = {
   GET_PRODUCT_DETAILS: "/get-item/",
   GET_PRODUCTS: "/list-item",
   GET_SEARCH_ITEM: "/search-item",
+  GET_SEARCH_FILTER_ITEM: "/search-filter",
   GET_PRODUCT_FILTER_ITEM: "/filter-items",
   LIKE_DISLIKE_PRODUCT: "/like-dislike",
   DELETE_PRODUCT: "/delete-item",

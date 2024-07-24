@@ -98,13 +98,23 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAlert);
   };
   const onPressSearch = () => {
-    navigation.navigate(Route.navSearchProduct);
+    navigation.navigate(Route.navSearchProduct, { mainCat: "", subCat: "" });
   };
   const onPressSeeAllCategories = () => {
     navigation.navigate(Route.navAllCategories);
   };
-  const onPressCategory = (item: any) => {};
-  const onPressHotBrands = (item: any) => {};
+  const onPressCategory = (item: CategoriesDataProps) => {
+    navigation.navigate(Route.navSearchProduct, {
+      mainCat: item.name,
+      subCat: "",
+    });
+  };
+  const onPressHotBrands = (item: HotBrandaDataProps) => {
+    navigation.navigate(Route.navSearchProduct, {
+      mainCat: item.name,
+      subCat: "",
+    });
+  };
   const onPressSeeAllHotBrands = () => {};
   const onPressBanner = () => {
     // navigation.navigate(Route.navModeOfDelivery);

@@ -4,19 +4,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
 import { ThemeProps } from "../../types/global.types";
 import CustomButton from "../../components/ui/CustomButton";
-import {
-  BASE_URL,
-  PRODUCTS,
-  SCREEN_WIDTH,
-  secureStoreKeys,
-} from "../../constant";
+import { PRODUCTS, SCREEN_WIDTH } from "../../constant";
 import ProductListing from "../../components/Product/ProductListing";
 import { Route } from "../../constant/navigationConstants";
 import { HomeNavigationProps } from "../../types/navigation";
 import { useGetProducts } from "../../hooks/useGetProducts";
 import { ProductDataProps } from "../../types/product.types";
-import { getData } from "../../utils/asyncStorage";
-import { API } from "../../constant/apiEndpoints";
 
 const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -29,44 +22,33 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const [totalPage, setTotalPage] = useState(0);
   const [loader, setLoader] = useState(true);
 
+  const {
+    data: productsData,
+    refetch,
+    isLoading,
+    isError,
+  } = useGetProducts("my", `${10}`, `${page}`, { enabled: false });
+
+  useEffect(() => {
+    setLoader(isLoading);
+  }, [isLoading]);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getMyProducts(10, 1);
+      refetch().then();
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  const getMyProducts = async (limit: number, page: number) => {
-    const token = await getData(secureStoreKeys.JWT_TOKEN);
-    try {
-      setLoader(true);
-      const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/my/${limit}/${page}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-
-      // Handle the fetched data here
-      if (data && data?.data?.data?.length > 0) {
-        setLoader(false);
-        setProducts([...products, ...data?.data?.data]);
-        setTotalPage(data?.data?.totalPages);
-        setPage(page + 1);
-      } else {
-        setLoader(false);
-      }
-    } catch (error) {
-      setLoader(false);
-      console.error(error);
+  useEffect(() => {
+    if (!isError && productsData?.data?.data) {
+      setProducts([...products, ...productsData?.data?.data]);
+      setTotalPage(productsData?.data?.totalPages);
+      setPage(page + 1);
     }
-  };
+  }, [productsData]);
 
   const onPressProduct = (itemId: number) => {
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
@@ -78,7 +60,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
 
   const onEndReached = () => {
     if (page <= totalPage && !loader) {
-      getMyProducts(10, page);
+      refetch().then();
     }
   };
   return (

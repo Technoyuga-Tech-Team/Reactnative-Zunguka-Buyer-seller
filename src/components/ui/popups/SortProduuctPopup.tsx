@@ -1,21 +1,15 @@
 import React, { useState } from "react";
-import {
-  Modal,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Modal, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { SCREEN_WIDTH } from "../../../constant";
 import CustomButton from "../CustomButton";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../constant";
+import RenderSortItemsList from "../RenderSortItemsList";
 import PopupHeaderWithClose from "./PopupHeaderWithClose";
-import RenderSortItemsList, { SortData } from "../RenderSortItemsList";
 
 interface SortProduuctPopupProps {
   visiblePopup: boolean;
   togglePopup: () => void;
-  onPressShowItems: () => void;
+  onPressShowItems: (val: number | null) => void;
 }
 
 const SortProduuctPopup: React.FC<SortProduuctPopupProps> = ({
@@ -25,27 +19,32 @@ const SortProduuctPopup: React.FC<SortProduuctPopupProps> = ({
 }) => {
   const style = useStyle();
   const { theme } = useTheme();
-
+  const [selected, setSelected] = useState<number | null>(null);
   const [sortData, setSortData] = useState([
     {
       title: "Best Match",
       selected: false,
+      key: 1,
     },
     {
       title: "Lowest price to highest price",
       selected: false,
+      key: 2,
     },
     {
       title: "Highest price to lowest price",
       selected: false,
+      key: 3,
     },
     {
       title: "Newly listed",
       selected: true,
+      key: 4,
     },
   ]);
 
-  const onPressItem = (index: number) => {
+  const onPressItem = (index: number, key: number) => {
+    setSelected(key);
     setSortData(
       sortData.map((item, itemIndex) => ({
         ...item,
@@ -75,7 +74,7 @@ const SortProduuctPopup: React.FC<SortProduuctPopupProps> = ({
 
           <View style={style.buttonCont}>
             <CustomButton
-              onPress={onPressShowItems}
+              onPress={() => onPressShowItems(selected)}
               title={"Show Items"}
               buttonWidth="half"
               width={SCREEN_WIDTH - 100}

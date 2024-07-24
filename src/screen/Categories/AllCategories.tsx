@@ -43,6 +43,10 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
     parantCatId: number,
     parantName: string
   ) => {
+    navigation.navigate(Route.navSearchProduct, {
+      mainCat: parantName,
+      subCat: subName,
+    });
     setSubCategoryId(subCatId);
   };
 

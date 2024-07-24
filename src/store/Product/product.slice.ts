@@ -1,6 +1,6 @@
 import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { LoadingState } from "../../types/global.types";
-import { addProductForSell, addProductFilter } from "./product.thunk";
+import { addProductForSell, addProductSearchFilter } from "./product.thunk";
 import { ProductState } from "../../types/product.types";
 
 const initialState: ProductState = {
@@ -14,7 +14,7 @@ const product = createSlice({
   extraReducers: (builder) => {
     builder
       .addMatcher(
-        isAnyOf(addProductForSell.pending, addProductFilter.pending),
+        isAnyOf(addProductForSell.pending, addProductSearchFilter.pending),
         (state) => {
           state.loading = LoadingState.CREATE;
         }
@@ -22,9 +22,9 @@ const product = createSlice({
       .addMatcher(
         isAnyOf(
           addProductForSell.fulfilled,
-          addProductFilter.fulfilled,
+          addProductSearchFilter.fulfilled,
           addProductForSell.rejected,
-          addProductFilter.rejected
+          addProductSearchFilter.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

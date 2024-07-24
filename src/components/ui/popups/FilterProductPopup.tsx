@@ -38,11 +38,23 @@ import LeftIcon from "../svg/LeftIcon";
 interface FilterProductPopupProps {
   visiblePopup: boolean;
   togglePopup: () => void;
+  onPressShowItem: (
+    subCategoryId: any,
+    brand: any,
+    selectedCondition: any,
+    selectedColors: any,
+    minPrice: any,
+    maxPrice: any,
+    selectedRatings: any,
+    selectedSize: any,
+    city: any
+  ) => void;
 }
 
 const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   visiblePopup,
   togglePopup,
+  onPressShowItem,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
@@ -268,6 +280,19 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
 
           <View style={style.buttonCont}>
             <CustomButton
+              onPress={() =>
+                onPressShowItem(
+                  subCategoryId,
+                  selectedBrand.id,
+                  selectedCondition,
+                  selectedColors,
+                  sliderVal.low,
+                  sliderVal.high,
+                  selectedRatings.map((ele) => ele.itemValue).join(", "),
+                  selectedSize.map((ele) => ele.itemValue).join(", "),
+                  city
+                )
+              }
               title={"Show Items"}
               buttonWidth="half"
               width={SCREEN_WIDTH - 100}

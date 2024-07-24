@@ -36,19 +36,19 @@ export const addProductForSell = createAsyncThunk<
   }
 );
 
-export const addProductFilter = createAsyncThunk<
+export const addProductSearchFilter = createAsyncThunk<
   any,
   {
     formData: FormData;
   },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(
-  "product/productFilter",
+  "product/productSearchFilter",
   async ({ formData }, { dispatch, rejectWithValue }) => {
     const { errors, data } = await dispatch(
       fetchAction<TokenPayload1>(
         {
-          url: API.GET_PRODUCT_FILTER_ITEM,
+          url: API.GET_SEARCH_FILTER_ITEM,
           method: "POST",
           data: formData,
           headers: {

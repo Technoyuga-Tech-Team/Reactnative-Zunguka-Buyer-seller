@@ -25,6 +25,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@reduxjs/toolkit": "^1.9.6",
+    "@uidotdev/usehooks": "^2.4.1",
     "add": "^2.0.6",
     "axios": "^1.7.2",
     "card-validator": "^10.0.0",

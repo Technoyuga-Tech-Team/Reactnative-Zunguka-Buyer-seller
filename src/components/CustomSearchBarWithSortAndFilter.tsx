@@ -23,11 +23,19 @@ interface CustomSearchBarWithSortAndFilterProps {
   onPressBack: () => void;
   search: string;
   onChangeText: (val: string) => void;
+  disabledButton?: boolean;
 }
 
 const CustomSearchBarWithSortAndFilter: React.FC<
   CustomSearchBarWithSortAndFilterProps
-> = ({ onPressSort, onPressFilter, onPressBack, search, onChangeText }) => {
+> = ({
+  onPressSort,
+  onPressFilter,
+  onPressBack,
+  search,
+  onChangeText,
+  disabledButton,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
@@ -63,6 +71,7 @@ const CustomSearchBarWithSortAndFilter: React.FC<
       </View>
       <View style={style.sortAndFilterCont}>
         <TouchableOpacity
+          disabled={!disabledButton}
           activeOpacity={0.8}
           onPress={onPressSort}
           style={style.iconCont}
@@ -71,6 +80,7 @@ const CustomSearchBarWithSortAndFilter: React.FC<
           <Text style={style.txtFilterAndSort}>Sort</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          disabled={!disabledButton}
           activeOpacity={0.8}
           onPress={onPressFilter}
           style={style.iconCont}

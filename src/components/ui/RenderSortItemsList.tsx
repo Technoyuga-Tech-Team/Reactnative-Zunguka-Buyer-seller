@@ -8,11 +8,12 @@ import { Images } from "../../assets/images";
 export interface SortData {
   title: string;
   selected: boolean;
+  key: number;
 }
 
 interface RenderSortItemsListProps {
   sortData: SortData[];
-  onPressItem: (index: number) => void;
+  onPressItem: (index: number, key: number) => void;
 }
 
 const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
@@ -31,7 +32,7 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => onPressItem(index)}
+            onPress={() => onPressItem(index, item.key)}
             activeOpacity={0.8}
             style={style.radioItemCont}
           >
