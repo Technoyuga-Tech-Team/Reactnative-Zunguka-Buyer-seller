@@ -1391,30 +1391,6 @@ export const SLIDER: SliderItemProps[] = [
   },
 ];
 
-export const HOME_BANNERS: any[] = [
-  {
-    image: require("../assets/images/homeBanners.png"),
-  },
-  {
-    image: require("../assets/images/homeBanners.png"),
-  },
-  {
-    image: require("../assets/images/homeBanners.png"),
-  },
-];
-
-export const PRODUCT_BANNERS: any[] = [
-  {
-    banner_image: require("../assets/images/product.png"),
-  },
-  {
-    banner_image: require("../assets/images/product.png"),
-  },
-  {
-    banner_image: require("../assets/images/product.png"),
-  },
-];
-
 export const COUNTRIES = [
   { title: "Afghanistan", key: "AF" },
   { title: "Åland Islands", key: "AX" },

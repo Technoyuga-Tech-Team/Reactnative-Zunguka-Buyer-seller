@@ -1,31 +1,33 @@
-import { View, Text, StatusBar, Platform, Alert } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { HomeNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
+import { Alert, Platform, StatusBar, View } from "react-native";
+import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../../types/global.types";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ProductBanner from "../../components/ProductBanner";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Scale from "../../utils/Scale";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ProductInfo from "../../components/Product/ProductInfo";
+import ProductBanner from "../../components/ProductBanner";
+import CustomButton from "../../components/ui/CustomButton";
+import Loading from "../../components/ui/Loading";
 import ProductHeader from "../../components/ui/ProductHeader";
 import { HAS_NOTCH, SCREEN_WIDTH } from "../../constant";
-import ProductInfo from "../../components/Product/ProductInfo";
-import CustomButton from "../../components/ui/CustomButton";
-import { CommonActions } from "@react-navigation/native";
-import { useProductDetails } from "../../hooks/useProductDetails";
-import RNBootSplash from "react-native-bootsplash";
-import {
-  ProductDetailsDataProps,
-  productImage,
-} from "../../types/product.types";
-import Loading from "../../components/ui/Loading";
+import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { useProductDetails } from "../../hooks/useProductDetails";
 import {
   deleteProduct,
   likeDislikeProduct,
 } from "../../store/Product/product.thunk";
+import { ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import {
+  ProductDetailsDataProps,
+  productImage,
+} from "../../types/product.types";
 import { onShare } from "../../utils";
+import Scale from "../../utils/Scale";
+import { useSelector } from "react-redux";
+import { selectUserData } from "../../store/settings/settings.selectors";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -35,6 +37,8 @@ const ProductDetails: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const { itemId } = route.params;
+
+  const userData = useSelector(selectUserData);
 
   const [productDetails, setProductDetails] =
     useState<ProductDetailsDataProps | null>(null);
@@ -117,14 +121,14 @@ const ProductDetails: React.FC<
     ]);
   };
   const deleteItem = async () => {
-    // const result = await dispatch(deleteProduct({ id: productDetails?.id }));
-    // if (deleteProduct.fulfilled.match(result)) {
-    //   if (result.payload?.status === 1) {
-    //     navigation.goBack();
-    //   }
-    // } else {
-    //   console.log("errror deleteProduct --->", result.payload);
-    // }
+    const result = await dispatch(deleteProduct({ id: productDetails?.id }));
+    if (deleteProduct.fulfilled.match(result)) {
+      if (result.payload?.status === 1) {
+        navigation.goBack();
+      }
+    } else {
+      console.log("errror deleteProduct --->", result.payload);
+    }
   };
   const onPressSavedItem = async () => {
     setSavedItem(!savedItem);
@@ -169,6 +173,7 @@ const ProductDetails: React.FC<
         <ProductHeader
           onPressBack={onPressBack}
           onPressShare={onPressShare}
+          showDelete={userData?.id == productDetails?.user_id}
           onPressDelete={onPressDelete}
         />
       </View>

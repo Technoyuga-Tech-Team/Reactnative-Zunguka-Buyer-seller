@@ -1,5 +1,11 @@
 import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleProp,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeProps } from "../../../types/global.types";
@@ -7,27 +13,33 @@ import Scale from "../../../utils/Scale";
 import { AppImage } from "../../AppImage/AppImage";
 import { HIT_SLOP2 } from "../../../constant";
 import CameraIcon from "../svg/CameraIcon";
+import { Images } from "../../../assets/images";
 
 interface ProfileImageProps {
   profileImage: string;
   onPressCamera?: () => void;
   showIcon?: boolean;
+  imageStyle: StyleProp<ViewStyle>;
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
   profileImage,
   onPressCamera,
   showIcon = true,
+  imageStyle,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
-  const Profile =
-    profileImage || require("../../../assets/images/placeholder.jpg");
+  const Profile = profileImage || Images.PLACEHOLDER_IMAGE;
   return (
     <View style={style.container}>
-      <AppImage style={style.profile} source={Profile} resizeMode="cover" />
+      <AppImage
+        style={[style.profile, imageStyle]}
+        source={Profile}
+        resizeMode="cover"
+      />
       {showIcon && (
         <TouchableOpacity
           onPress={onPressCamera && onPressCamera}

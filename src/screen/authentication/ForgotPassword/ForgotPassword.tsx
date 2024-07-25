@@ -29,6 +29,7 @@ import { selectAuthenticationLoading } from "../../../store/authentication/authe
 import { useSelector } from "react-redux";
 import { userForgotPassword } from "../../../store/authentication/authentication.thunks";
 import { setSuccess } from "../../../store/global/global.slice";
+import { Images } from "../../../assets/images";
 
 const ForgotPassword: React.FC<
   AuthNavigationProps<Route.navForgotPassword>
@@ -131,20 +132,19 @@ const ForgotPassword: React.FC<
       </TouchableOpacity>
       <View style={style.iconCont}>
         <AppImage
-          source={require("../../../assets/images/roundedLogo.png")}
+          source={Images.ROUND_LOGO}
           resizeMode="contain"
           style={style.appIcon}
         />
       </View>
       <Text style={style.txtVerificationCode}>Forgot password?</Text>
-      <Text style={style.txtVerificationCode1}>Let’s help you reset it!</Text>
+      <Text style={style.txtVerificationCode1}>Let's help you reset it!</Text>
       <Text style={style.txtVerificationSentCode}>
         Please enter your mobile number that is linked to your account.
       </Text>
       <View style={style.otpInputCont}>
         <PhoneNumberInput
           ref={phoneRef}
-          textInputTitle="Phone Number"
           onPressFlag={onPressFlag}
           onChangePhoneNumber={(value, iso2) => onPhoneInputChange(value, iso2)}
           initialValue={values.phoneNumber}

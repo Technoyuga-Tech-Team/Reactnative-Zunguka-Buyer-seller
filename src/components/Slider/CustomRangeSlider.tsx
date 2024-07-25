@@ -67,9 +67,9 @@ const CustomRangeSlider: React.FC<CustomRangeSliderProps> = ({
     <View style={{ zIndex: 111 }}>
       <RangeSlider
         style={style.slider}
-        min={50}
+        min={10}
         max={400}
-        step={50}
+        step={10}
         floatingLabel={false}
         low={sliderVal.low}
         high={sliderVal.high}

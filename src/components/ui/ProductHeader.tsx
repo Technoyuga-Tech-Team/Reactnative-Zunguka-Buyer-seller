@@ -12,12 +12,14 @@ interface ProductHeaderProps {
   onPressBack: () => void;
   onPressShare: () => void;
   onPressDelete: () => void;
+  showDelete: boolean;
 }
 
 const ProductHeader: React.FC<ProductHeaderProps> = ({
   onPressBack,
   onPressShare,
   onPressDelete,
+  showDelete,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -25,15 +27,17 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
   const RoundButton = ({
     icon,
     onPress,
+    marginLeft,
   }: {
     icon: any;
     onPress: () => void;
+    marginLeft?: number;
   }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
-        style={style.roundCont}
+        style={[style.roundCont, { marginLeft }]}
       >
         {icon}
       </TouchableOpacity>
@@ -48,7 +52,6 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
       <View
         style={{
           flexDirection: "row",
-          width: 70,
           justifyContent: "space-between",
         }}
       >
@@ -58,12 +61,15 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
             <ShareIcon color={theme?.colors?.white} height={15} width={15} />
           }
         />
-        <RoundButton
-          onPress={onPressDelete}
-          icon={
-            <DeleteIcon color={theme?.colors?.white} height={15} width={15} />
-          }
-        />
+        {showDelete && (
+          <RoundButton
+            marginLeft={10}
+            onPress={onPressDelete}
+            icon={
+              <DeleteIcon color={theme?.colors?.white} height={15} width={15} />
+            }
+          />
+        )}
       </View>
     </View>
   );

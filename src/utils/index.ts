@@ -4,6 +4,13 @@ const getUrlExtension = (url: string) => {
   return url?.split(/[#?]/)[0]?.split(".")?.pop()?.trim();
 };
 
+const getRandomFileName = () => {
+  var timestamp = new Date().toISOString().replace(/[-:.]/g, "");
+  var random = ("" + Math.random()).substring(2, 8);
+  var random_number = timestamp + random;
+  return random_number;
+};
+
 const createArrayUseNumber = (length: number) => {
   return Array(length).fill(0);
 };
@@ -154,6 +161,7 @@ export {
   createArrayUseNumber,
   determineCardType,
   getUrlExtension,
+  getRandomFileName,
   onShare,
   timeElapsedString,
   formatPhoneNumber,

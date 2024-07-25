@@ -1,15 +1,13 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, FlatList, View, ViewToken } from "react-native";
+import { Animated, FlatList, View, ViewToken } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-import { HOME_BANNERS, SCREEN_WIDTH } from "../constant";
+// relative path
+import { SCREEN_WIDTH } from "../constant";
+import { BannerProps } from "../types/dashboard.types";
 import { createArrayUseNumber } from "../utils";
 import SliderItem from "./Onboard/SliderItem";
 import Paginator from "./ui/Paginator";
-import { BannerProps } from "../types/dashboard.types";
-// relative path
-
-const { width: wWidth } = Dimensions.get("window");
 
 interface HomeBannerProps {
   bannerData: BannerProps[];
@@ -31,7 +29,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({
   // scroll to next slide
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const nextSlide = async () => {
-    if (currentSlide < HOME_BANNERS.length - 1) {
+    if (currentSlide < bannerData.length - 1) {
       sliderRef.current?.scrollToIndex({ index: currentSlide + 1 });
     } else {
       sliderRef.current?.scrollToIndex({ index: 0 });
@@ -93,7 +91,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({
         />
         <View style={{ alignItems: "center", marginVertical: 10 }}>
           <Paginator
-            data={createArrayUseNumber(HOME_BANNERS.length)}
+            data={createArrayUseNumber(bannerData.length)}
             scrollX={scrollX}
             variant={"secondary"}
             marginHorizontal={2}

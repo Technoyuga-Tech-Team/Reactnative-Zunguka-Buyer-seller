@@ -10,6 +10,7 @@ import { saveAddress, setUserData } from "../store/settings/settings.slice";
 import Scale from "../utils/Scale";
 import { appAlreadyOpen, getData } from "../utils/asyncStorage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Images } from "../assets/images";
 
 interface SplashScreenProps {}
 
@@ -133,7 +134,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
         barStyle={"dark-content"}
       />
       <FastImage
-        source={require("../assets/images/splash_black_logo.png")}
+        source={Images.SPLASH_IMAGE}
         style={{
           height: 224.74,
           width: Scale(170),

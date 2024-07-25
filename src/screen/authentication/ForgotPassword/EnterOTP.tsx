@@ -37,6 +37,7 @@ import Loading from "../../../components/ui/Loading";
 import { saveAddress } from "../../../store/settings/settings.slice";
 import { formatPhoneNumber } from "../../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Images } from "../../../assets/images";
 
 const INITIAL_TIME = { minutes: 1, seconds: 0 };
 let store_time = { minutes: 1, seconds: 0 };
@@ -275,7 +276,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
       {/* "+91 79908 68556" */}
 
       <AppImage
-        source={require("../../../assets/images/MessagesOTP.png")}
+        source={Images.MESSAGE_OTP}
         resizeMode="contain"
         style={style.icon}
       />

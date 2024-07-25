@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
@@ -26,14 +26,18 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getSavedProducts(10, 1);
+      getSavedProducts(10, 1, true);
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  const getSavedProducts = async (limit: number, page: number) => {
+  const getSavedProducts = async (
+    limit: number,
+    page: number,
+    refresh: boolean
+  ) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
     try {
       setLoading(true);
@@ -48,10 +52,14 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
       );
 
       const data = await response.json();
+      console.log("data", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setLoading(false);
-        setSavedProduct([...savedProduct, ...data?.data?.data]);
+        refresh
+          ? setSavedProduct([...data?.data?.data])
+          : setSavedProduct([...savedProduct, ...data?.data?.data]);
+
         setTotalPage(data?.data?.totalPages);
         setPage(page + 1);
       } else {
@@ -69,8 +77,13 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
-      getSavedProducts(10, page);
+      getSavedProducts(10, page, false);
     }
+  };
+
+  const onRefresh = () => {
+    setSavedProduct([]);
+    getSavedProducts(10, 1, true);
   };
 
   return (
@@ -82,6 +95,15 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
         onPress={onPressProduct}
         onEndReached={onEndReached}
         showLoadMore={page <= totalPage}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            tintColor={theme?.colors?.primary}
+            // @ts-ignore
+            colors={[theme?.colors?.primary]}
+          />
+        }
       />
     </View>
   );

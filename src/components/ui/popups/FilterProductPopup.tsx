@@ -49,12 +49,14 @@ interface FilterProductPopupProps {
     selectedSize: any,
     city: any
   ) => void;
+  loading: boolean;
 }
 
 const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   visiblePopup,
   togglePopup,
   onPressShowItem,
+  loading,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
@@ -77,7 +79,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
 
   const [selectedRatings, setSelectedRatings] = useState<any[]>([]);
   const [selectedRatingsValues, setSelectedRatingsValues] = useState([]);
-  const [sliderVal, setSliderVal] = useState({ low: 50, high: 500 });
+  const [sliderVal, setSliderVal] = useState({ low: 10, high: 400 });
   const [selectedCondition, setSelectedCondition] = useState("");
   const [conditionData, setConditionData] = useState(CONDITIONS);
 
@@ -90,8 +92,6 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const [subCatName, setSubCatName] = useState<string>("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
-
-  console.log("selectedColors", selectedColors);
 
   const [selectedBrand, setSelectedBrand] = useState<{
     id: number | null;
@@ -210,6 +210,21 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     setSelectedBrand({ id: itm.id, name: itm.name });
   };
 
+  const onPressClear = () => {
+    setVisiblePrice(false);
+    setSubCategoryId(null);
+    setSubCatName("");
+    setSelectedBrand({ id: null, name: "" });
+    setSelectedCondition("");
+    setSelectedColors([]);
+    setSelectedSize([]);
+    setSelectedRatingsValues([]);
+    setSelectedRatings([]);
+    setSelectedSizeValues([]);
+    setCity("");
+    setSliderVal({ low: 10, high: 400 });
+  };
+
   return (
     <Modal
       visible={visiblePopup}
@@ -280,24 +295,34 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
 
           <View style={style.buttonCont}>
             <CustomButton
+              onPress={onPressClear}
+              title={"Clear"}
+              buttonWidth="half"
+              width={(SCREEN_WIDTH - 50) / 2}
+              variant="secondary"
+              type="outline"
+            />
+            <CustomButton
               onPress={() =>
                 onPressShowItem(
                   subCategoryId,
                   selectedBrand.id,
                   selectedCondition,
-                  selectedColors,
+                  selectedColors.join(", "),
                   sliderVal.low,
                   sliderVal.high,
-                  selectedRatings.map((ele) => ele.itemValue).join(", "),
-                  selectedSize.map((ele) => ele.itemValue).join(", "),
+                  selectedRatingsValues.join(", "),
+                  selectedSizeValue.join(", "),
                   city
                 )
               }
               title={"Show Items"}
               buttonWidth="half"
-              width={SCREEN_WIDTH - 100}
+              width={(SCREEN_WIDTH - 50) / 2}
               variant="primary"
               type="solid"
+              loading={loading}
+              disabled={loading}
             />
           </View>
         </View>
@@ -491,9 +516,10 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
   buttonCont: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     width: "100%",
     marginTop: 20,
+    paddingHorizontal: 20,
   },
   buttonRightMargin: {
     marginRight: 10,

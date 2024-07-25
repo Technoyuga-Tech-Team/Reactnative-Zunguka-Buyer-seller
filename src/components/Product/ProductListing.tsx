@@ -81,7 +81,6 @@ const ProductListing: React.FC<ProductProps> = ({
           refreshControl={refreshControl}
           onEndReachedThreshold={0.5}
           initialNumToRender={10}
-          // onMomentumScrollEnd={onEndReached}
           ListFooterComponent={Footer}
         />
       ) : (

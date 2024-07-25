@@ -1,4 +1,10 @@
 export enum Images {
+  // Splash
+  SPLASH_IMAGE = require("../images/splash_black_logo.png"),
+  ROUND_LOGO = require("../images/roundedLogo.png"),
+  MESSAGE_OTP = require("../images/MessagesOTP.png"),
+  ONBOARD = require("../images/group.png"),
+
   PLACEHOLDER_IMAGE = require("../images/placeholder.jpg"),
   HEADER_HOME_IMAGE = require("../images/home_header.png"),
   EMPTY_PRODUCT_IMAGE = require("../images/emptyProduct.png"),

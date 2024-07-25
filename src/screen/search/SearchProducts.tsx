@@ -47,48 +47,64 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   const debouncedSearchTerm = useDebounce(searchValue, 500);
 
   useEffect(() => {
-    getSearchedItems(debouncedSearchTerm, 10, 1, true);
-  }, [debouncedSearchTerm]);
+    getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+  }, [debouncedSearchTerm, mainCat, subCat]);
 
   const getSearchedItems = async (
     keyword: string,
     limit: number,
     page: number,
-    fromChangeKeyword: boolean
+    fromChangeKeyword: boolean,
+    filterItems: any
   ) => {
-    console.log("keyword", keyword);
     keyword !== "" && setProducts([]);
-    setLoader(true);
-    const formData = new FormData();
+    try {
+      setLoader(true);
+      const formData = new FormData();
 
-    formData.append("is_search", keyword ? 1 : 0);
-    formData.append("keyword", keyword);
-    formData.append("is_filter", 0);
-    formData.append("limit", limit);
-    formData.append("offset", page);
+      formData.append("is_search", keyword ? 1 : 0);
+      formData.append("keyword", keyword);
 
-    const result = await dispatch(
-      addProductSearchFilter({ formData: formData })
-    );
+      formData.append("is_filter", filterItems ? 1 : 0);
+      formData.append("category_id", filterItems?.subCategoryId);
+      formData.append("brand_id", filterItems?.brand || "");
+      formData.append("city", filterItems?.city);
+      // formData.append("maxPrice", filterItems?.maxPrice);
+      // formData.append("minPrice", filterItems?.minPrice);
+      formData.append("color", filterItems?.selectedColors);
+      formData.append("condition_of_item", filterItems?.selectedCondition);
+      formData.append("size", filterItems?.selectedSize);
+      // formData.append("rating", filterItems?.selectedRatings);
 
-    if (addProductSearchFilter.fulfilled.match(result)) {
-      console.log("addProductSearchFilter response - - - ", result.payload);
-      if (result.payload.status === 1) {
-        if (fromChangeKeyword && keyword == "") {
-          setProducts(result.payload?.data?.data);
-        } else {
-          keyword
-            ? setProducts(result.payload?.data?.data)
-            : setProducts([...products, ...result.payload?.data?.data]);
+      formData.append("limit", limit);
+      formData.append("offset", page);
+
+      const result = await dispatch(
+        addProductSearchFilter({ formData: formData })
+      );
+
+      if (addProductSearchFilter.fulfilled.match(result)) {
+        console.log("addProductSearchFilter response - - - ", result.payload);
+        if (result.payload.status === 1) {
+          if (fromChangeKeyword && keyword == "") {
+            setProducts(result.payload?.data?.data);
+          } else {
+            keyword
+              ? setProducts(result.payload?.data?.data)
+              : setProducts([...products, ...result.payload?.data?.data]);
+          }
+
+          setTotalPage(result.payload?.data?.totalPages);
+          setPage(page + 1);
+          setLoader(false);
+          setVisibleFilter(false);
         }
-
-        setTotalPage(result.payload?.data?.totalPages);
-        setPage(page + 1);
+      } else {
         setLoader(false);
+        console.log("addProductSearchFilter error - - - ", result.payload);
       }
-    } else {
-      setLoader(false);
-      console.log("addProductSearchFilter error - - - ", result.payload);
+    } catch (error) {
+      console.log("API catch error", error);
     }
   };
 
@@ -98,7 +114,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loader) {
-      getSearchedItems(debouncedSearchTerm, 10, page, false);
+      getSearchedItems(debouncedSearchTerm, 10, page, false, null);
     }
   };
 
@@ -201,8 +217,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     selectedSize: any,
     city: any
   ) => {
-    console.log(
-      "-->",
+    let filterItems = {
       subCategoryId,
       brand,
       selectedCondition,
@@ -211,8 +226,9 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       maxPrice,
       selectedRatings,
       selectedSize,
-      city
-    );
+      city,
+    };
+    getSearchedItems(debouncedSearchTerm, 10, 1, false, filterItems);
   };
 
   return (
@@ -241,6 +257,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       <FilterProductPopup
         visiblePopup={visibleFilter}
         togglePopup={toggleFilterPopup}
+        loading={loader}
         onPressShowItem={(
           subCategoryId: any,
           brand: any,

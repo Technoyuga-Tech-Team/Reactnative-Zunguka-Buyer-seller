@@ -31,6 +31,7 @@ import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { Images } from "../../assets/images";
 
 const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
   navigation,
@@ -119,7 +120,7 @@ const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
       </TouchableOpacity>
       <View style={style.iconCont}>
         <AppImage
-          source={require("../../assets/images/roundedLogo.png")}
+          source={Images.ROUND_LOGO}
           resizeMode="contain"
           style={style.appIcon}
         />
