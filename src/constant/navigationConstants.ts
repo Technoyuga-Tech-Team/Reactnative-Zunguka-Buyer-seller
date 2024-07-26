@@ -33,6 +33,7 @@ export enum Route {
   navDashboard = "Dashboard",
   navMoverDashboard = "MoverDashboard",
   navHome = "Home",
+  navPayment = "Payment",
   navSearchProduct = "SearchProduct",
   navCategoryProduct = "CategoryProduct",
   navHomeMover = "HomeMover",

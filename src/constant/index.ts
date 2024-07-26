@@ -2209,3 +2209,21 @@ export const AddressData = [
     city: "kigali",
   },
 ];
+
+export const PAYMENT_METHOD = [
+  {
+    title: "Pay with credit card visa or Master",
+    value: "Pay with credit card visa or Master",
+    selected: false,
+  },
+  {
+    title: "Mobile Money",
+    value: "Mobile Money",
+    selected: false,
+  },
+  {
+    title: "My Earning",
+    value: "My Earning",
+    selected: false,
+  },
+];

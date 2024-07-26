@@ -117,6 +117,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   };
   const onPressSeeAllHotBrands = () => {};
   const onPressBanner = () => {
+    navigation.navigate(Route.navPayment);
     // navigation.navigate(Route.navModeOfDelivery);
     // navigation.navigate(Route.navDeliveryAddress);
     // navigation.navigate(Route.navAuthentication, {

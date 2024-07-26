@@ -35,4 +35,5 @@ export enum Images {
   AMEX = require("../images/amex_cropped.png"),
   DISCOVER = require("../images/discover_card.png"),
   VISA = require("../images/visa_card.png"),
+  PAYMENT_SECURE = require("../images/paymentSecure.png"),
 }

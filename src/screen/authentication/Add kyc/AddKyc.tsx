@@ -181,12 +181,13 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
           if (result.payload.status === 1) {
             console.log("userVerifyId result - - - ", result.payload);
             dispatch(setSuccess(result.payload.message));
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: Route.navDashboard }],
-              })
-            );
+            navigation.navigate(Route.navTakeSelfie);
+            // navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [{ name: Route.navDashboard }],
+            //   })
+            // );
           }
         } else {
           console.log("userVerifyId error - - - ", result.payload);

@@ -7,18 +7,20 @@ import { Images } from "../../assets/images";
 
 export interface SortData {
   title: string;
+  value: string;
   selected: boolean;
-  key: number;
 }
 
 interface RenderSortItemsListProps {
   sortData: SortData[];
-  onPressItem: (index: number, key: number) => void;
+  onPressItem: (index: number) => void;
+  isBoarderBottom?: boolean;
 }
 
 const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
   sortData,
   onPressItem,
+  isBoarderBottom = true,
 }) => {
   const style = useStyle();
   const { theme } = useTheme();
@@ -32,9 +34,9 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => onPressItem(index, item.key)}
+            onPress={() => onPressItem(index)}
             activeOpacity={0.8}
-            style={style.radioItemCont}
+            style={[style.radioItemCont, isBoarderBottom && style.borderBottom]}
           >
             <AppImage
               source={btn}
@@ -73,13 +75,15 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: "flex-start",
     marginTop: 10,
     height: Scale(40),
-    borderBottomColor: theme?.colors?.border,
-    borderBottomWidth: 1,
   },
   txtTitle: {
     fontSize: theme.fontSize?.fs17,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.black,
     marginLeft: 10,
+  },
+  borderBottom: {
+    borderBottomColor: theme?.colors?.border,
+    borderBottomWidth: 1,
   },
 }));

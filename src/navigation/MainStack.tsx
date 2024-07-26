@@ -1,33 +1,32 @@
-import * as React from "react";
-import { makeStyles } from "react-native-elements";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as React from "react";
 import { StatusBar } from "react-native";
+import { makeStyles } from "react-native-elements";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 // relative path
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Route } from "../constant/navigationConstants";
+import AllCategories from "../screen/Categories/AllCategories";
+import ModeOfDelivery from "../screen/ModeOfDelivery";
 import Splash from "../screen/Splash";
+import AddKyc from "../screen/authentication/Add kyc/AddKyc";
+import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
+import YourAddress from "../screen/authentication/AddAddress/YourAddress";
+import ResetPassword from "../screen/authentication/ResetPassword";
+import DeliveryAddress from "../screen/deliveryAddress/DeliveryAddress";
 import Onboard from "../screen/onboard/Onboard";
+import AddCard from "../screen/payment/AddCard";
+import CardDetails from "../screen/payment/CardDetails";
+import Payment from "../screen/payment/Payment";
+import ProductDetails from "../screen/product/ProductDetails";
+import ChangePassword from "../screen/profile/ChangePassword";
+import EditProfile from "../screen/profile/EditProfile";
+import SearchProducts from "../screen/search/SearchProducts";
+import AddNewProduct from "../screen/sell/AddNewProduct";
+import Congratulations from "../screen/sell/Congratulations";
 import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
-import YourAddress from "../screen/authentication/AddAddress/YourAddress";
-import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
-import AddKyc from "../screen/authentication/Add kyc/AddKyc";
 import Bottombar from "./Bottombar/Bottombar";
-import EditProfile from "../screen/profile/EditProfile";
-import ChangePassword from "../screen/profile/ChangePassword";
-import ResetPassword from "../screen/authentication/ResetPassword";
-import SearchProducts from "../screen/search/SearchProducts";
-import ProductDetails from "../screen/product/ProductDetails";
-import AddNewProduct from "../screen/sell/AddNewProduct";
-import AllCategories from "../screen/Categories/AllCategories";
-import Congratulations from "../screen/sell/Congratulations";
-import DeliveryAddress from "../screen/deliveryAddress/DeliveryAddress";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import DeliveryMode from "../components/DeliveryMode";
-import ModeOfDelivery from "../screen/ModeOfDelivery";
-import CardDetails from "../screen/payment/CardDetails";
-import { AddNewCard } from "../store/PaymentCard/paymentCard.thunk";
-import AddCard from "../screen/payment/AddCard";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -79,6 +78,7 @@ const MainStack = () => {
           />
           <Stack.Screen name={Route.navAddCard} component={AddCard} />
           <Stack.Screen name={Route.navCardDetails} component={CardDetails} />
+          <Stack.Screen name={Route.navPayment} component={Payment} />
           <Stack.Screen
             name={Route.navProductDetails}
             component={ProductDetails}

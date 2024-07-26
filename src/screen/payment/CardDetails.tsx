@@ -18,7 +18,9 @@ import { useGetPaymentCard } from "../../hooks/useGetPaymentCard";
 import PayDepositeIcon from "../../components/ui/svg/PayDepositeIcon";
 import AddRoundedIcon from "../../components/ui/svg/AddRoundedIcon";
 import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
-import { HAS_NOTCH } from "../../constant";
+import { BASE_URL, HAS_NOTCH, secureStoreKeys } from "../../constant";
+import { getData } from "../../utils/asyncStorage";
+import { API } from "../../constant/apiEndpoints";
 
 const CardDetails: React.FC<HomeNavigationProps<Route.navCardDetails>> = ({
   navigation,
@@ -33,35 +35,63 @@ const CardDetails: React.FC<HomeNavigationProps<Route.navCardDetails>> = ({
 
   const fromProfile = route?.params?.from === "profile";
 
-  const { data, isLoading, isError, refetch } = useGetPaymentCard({
-    staleTime: Infinity,
-    cacheTime: 0,
-  });
+  // const { data, isLoading, isError, refetch } = useGetPaymentCard({
+  //   staleTime: Infinity,
+  //   cacheTime: 0,
+  // });
 
   const [cardData, setCardData] = useState<GetPaymentCardData[]>([]);
   const [selectedCard, setSelectedCard] = useState<string>("");
-  const [loader, setLoader] = useState<boolean>(true);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [loader, setLoader] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoader(isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    let unsubscribe = navigation.addListener("focus", async () => {
-      refetch().then();
+    const unsubscribe = navigation.addListener("focus", () => {
+      // getSavedCards(10, 1, true);
     });
-
     return () => {
       unsubscribe();
     };
   }, []);
 
-  useEffect(() => {
-    if (!isError && data?.data) {
-      console.log("data?.data", data?.data);
-      setCardData(data?.data);
+  const getSavedCards = async (
+    limit: number,
+    page: number,
+    refresh: boolean
+  ) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    try {
+      setLoader(true);
+      const response = await fetch(
+        `${BASE_URL}${API.LIST_CARD}/${limit}/${page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log("data", data);
+      // Handle the fetched data here
+      if (data && data?.data?.data?.length > 0) {
+        setLoader(false);
+        refresh
+          ? setCardData([...data?.data?.data])
+          : setCardData([...cardData, ...data?.data?.data]);
+
+        setTotalPage(data?.data?.totalPages);
+        setPage(page + 1);
+      } else {
+        setLoader(false);
+      }
+    } catch (error) {
+      setLoader(false);
+      console.error(error);
     }
-  }, [data, isError]);
+  };
 
   const onPressAddNewCard = () => {
     navigation.navigate(Route.navAddCard);
@@ -95,32 +125,6 @@ const CardDetails: React.FC<HomeNavigationProps<Route.navCardDetails>> = ({
     //   makePaymentForMover();
     // } else {
     //   makePaymentForProduct();
-    // }
-  };
-
-  const makePaymentForMover = async () => {
-    // try {
-    //   const result = await dispatch(
-    //     MakePaymentToMover({
-    //       mode_of_payment: "card",
-    //       card_id: selectedCard,
-    //       package_details_id,
-    //     })
-    //   );
-    //   if (MakePaymentToMover.fulfilled.match(result)) {
-    //     if (result.payload?.status === 1) {
-    //       navigation.dispatch(
-    //         CommonActions.reset({
-    //           index: 0,
-    //           routes: [{ name: Route.navRequestToMover }],
-    //         })
-    //       );
-    //     }
-    //   } else {
-    //     console.log("errror MakePaymentToMover --->", result.payload);
-    //   }
-    // } catch (error) {
-    //   console.log("errror MakePaymentToMover --->", error);
     // }
   };
 

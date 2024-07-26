@@ -108,6 +108,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
           device_token: fcmToken,
         })
       );
+      console.log("result", result);
       if (userLogin.fulfilled.match(result)) {
         if (result.payload?.status == 1) {
           let steps = result.payload?.user?.step;
@@ -137,17 +138,17 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
               type: "otp_verification",
             });
           }
-          if (result.payload?.status === 4) {
-            if (result.payload?.step == 1) {
-              navigation.navigate(Route.navAddKyc);
-            }
-          }
-          if (result.payload?.step == 0) {
-            navigation.navigate(Route.navYourAddress);
-          }
-          if (result.payload?.step == 1) {
-            navigation.navigate(Route.navAddKyc);
-          }
+          // if (result.payload?.status === 4) {
+          //   if (result.payload?.step == 1) {
+          //     navigation.navigate(Route.navAddKyc);
+          //   }
+          // }
+          // if (result.payload?.step == 0) {
+          //   navigation.navigate(Route.navYourAddress);
+          // }
+          // if (result.payload?.step == 1) {
+          //   navigation.navigate(Route.navAddKyc);
+          // }
         }
       }
     },

@@ -40,6 +40,7 @@ export type AppRoutes = {
   ModeOfPayment: undefined;
   CardDetails: undefined;
   AddCard: undefined;
+  Payment: undefined;
   DeliveryDetails: undefined;
   DeliveryCompleteAndRateDriver: undefined;
   SelectMover: undefined;
@@ -100,6 +101,7 @@ export type HomeRoutes = {
   ModeOfDelivery: undefined;
   AddCard: undefined;
   CardDetails: { from: string };
+  Payment: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {
