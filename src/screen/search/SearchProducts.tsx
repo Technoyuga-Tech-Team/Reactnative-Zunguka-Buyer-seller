@@ -86,7 +86,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       if (addProductSearchFilter.fulfilled.match(result)) {
         console.log("addProductSearchFilter response - - - ", result.payload);
         if (result.payload.status === 1) {
-          if (fromChangeKeyword && keyword == "") {
+          if ((fromChangeKeyword && keyword == "") || filterItems) {
             setProducts(result.payload?.data?.data);
           } else {
             keyword

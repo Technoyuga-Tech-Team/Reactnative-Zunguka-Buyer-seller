@@ -42,6 +42,8 @@ const Splash: React.FC<SplashScreenProps> = () => {
 
         let is_username = user_data.is_username_added;
         let steps = user_data.step;
+        let isStepCompleted = user_data.is_profile_completed;
+        let isVerify_by_Admin = user_data.is_kyc_verified_by_admin;
         console.log("steps", steps);
         if (is_username == 0) {
           // @ts-ignore
@@ -59,23 +61,44 @@ const Splash: React.FC<SplashScreenProps> = () => {
             })
           );
         } else {
-          if (steps !== 2) {
-            if (steps == 0) {
-              dispatch(saveAddress(""));
-              // @ts-ignore
-              navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
-            } else if (steps == 1) {
-              // @ts-ignore
-              navigation.navigate(Route.navAddKyc, { fromOTP: true });
-            }
-          } else {
+          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
                 routes: [{ name: Route.navDashboard }],
               })
             );
+          } else {
+            if (steps == 0 || steps == 1) {
+              dispatch(saveAddress(""));
+              // @ts-ignore
+              navigation.navigate(Route.navYourAddress, { fromOTP: true });
+            } else if (steps == 2) {
+              // @ts-ignore
+              navigation.navigate(Route.navAddKyc, { fromOTP: true });
+            } else if (steps == 3) {
+              // @ts-ignore
+              navigation.navigate(Route.navTakeSelfie);
+            }
           }
+
+          // if (steps !== 2) {
+          //   if (steps == 0) {
+          //     dispatch(saveAddress(""));
+          //     // @ts-ignore
+          //     navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
+          //   } else if (steps == 1) {
+          //     // @ts-ignore
+          //     navigation.navigate(Route.navAddKyc, { fromOTP: true });
+          //   }
+          // } else {
+          //   navigation.dispatch(
+          //     CommonActions.reset({
+          //       index: 0,
+          //       routes: [{ name: Route.navDashboard }],
+          //     })
+          //   );
+          // }
         }
       } else {
         if (await appAlreadyOpen()) {
@@ -101,31 +124,6 @@ const Splash: React.FC<SplashScreenProps> = () => {
     };
     init();
   }, []);
-
-  //   const setUpNavigation = async () => {
-  //     const {data: currentUser} = await fetch({
-  //       url: API.ME,
-  //       method: 'GET',
-  //     });
-
-  //     if (currentUser && currentUser?.status === 1) {
-  //       // setNavigation(currentUser.user, navigation);
-  //     } else {
-  //       navigation.dispatch(
-  //         CommonActions.reset({
-  //           index: 0,
-  //           routes: [
-  //             {
-  //               name: Route.navAuthentication,
-  //               state: {
-  //                 routes: [{name: Route.navLogin}],
-  //               },
-  //             },
-  //           ],
-  //         }),
-  //       );
-  //     }
-  //   };
 
   return (
     <View style={styles.container}>

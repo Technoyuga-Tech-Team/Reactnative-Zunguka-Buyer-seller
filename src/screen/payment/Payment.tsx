@@ -17,6 +17,7 @@ import { AppImage } from "../../components/AppImage/AppImage";
 import { Images } from "../../assets/images";
 import CustomButton from "../../components/ui/CustomButton";
 import DoubleRightIcon from "../../components/ui/svg/DoubleRightIcon";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   navigation,
@@ -52,8 +53,8 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   return (
     <View style={style.container}>
       <CustomHeader title="Payment" />
-      <View style={style.innerCont}>
-        <View style={style.borderCont} />
+      <View style={style.borderCont} />
+      <KeyboardAwareScrollView style={style.innerCont}>
         <Text style={style.txtOrderSummary}>Order summary</Text>
         <View style={style.paddingHorizontal}>
           <RenderItem title="Item total" value="R₣ 200" />
@@ -79,7 +80,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           resizeMode="contain"
           style={style.paymentSecure}
         />
-      </View>
+      </KeyboardAwareScrollView>
       <View style={style.bottomCont}>
         <Text style={style.txtTandC}>
           I accept the general terms of use and the privacy policy and can start
@@ -111,6 +112,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flex: 1,
     backgroundColor: theme.colors?.background,
     paddingTop: props.insets.top,
+  },
+  scrollCont: {
+    flexGrow: 1,
   },
   innerCont: {
     flex: 1,

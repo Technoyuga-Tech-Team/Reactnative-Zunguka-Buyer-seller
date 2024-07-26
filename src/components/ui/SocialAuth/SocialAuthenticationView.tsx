@@ -78,6 +78,7 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
         if (result.payload.status == 1) {
           let is_userName = result.payload?.user?.is_username_added;
           let steps = result.payload?.user?.step;
+          let isStepCompleted = result.payload?.user?.is_profile_completed;
 
           if (is_userName == 0) {
             navigation.dispatch(
@@ -87,14 +88,7 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
               })
             );
           } else {
-            if (steps !== 2) {
-              if (steps == 0) {
-                dispatch(saveAddress(""));
-                navigation.navigate(Route.navYourAddress, { fromOTP: false });
-              } else if (steps == 1) {
-                navigation.navigate(Route.navAddKyc, { fromOTP: false });
-              }
-            } else {
+            if (isStepCompleted == 1) {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
@@ -102,7 +96,34 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
                 })
               );
               dispatch(setSuccess(result.payload.message));
+            } else {
+              if (steps == 0) {
+                if (steps == 0 || steps == 1) {
+                  dispatch(saveAddress(""));
+                  navigation.navigate(Route.navYourAddress, { fromOTP: true });
+                } else if (steps == 2) {
+                  navigation.navigate(Route.navAddKyc, { fromOTP: true });
+                } else if (steps == 3) {
+                  navigation.navigate(Route.navTakeSelfie);
+                }
+              }
             }
+            // if (steps !== 2) {
+            //   if (steps == 0) {
+            //     dispatch(saveAddress(""));
+            //     navigation.navigate(Route.navYourAddress, { fromOTP: false });
+            //   } else if (steps == 1) {
+            //     navigation.navigate(Route.navAddKyc, { fromOTP: false });
+            //   }
+            // } else {
+            //   navigation.dispatch(
+            //     CommonActions.reset({
+            //       index: 0,
+            //       routes: [{ name: Route.navDashboard }],
+            //     })
+            //   );
+            //   dispatch(setSuccess(result.payload.message));
+            // }
           }
 
           dispatch(setOAuthLoading(AuthLoadingState.NULL));

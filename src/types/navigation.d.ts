@@ -11,6 +11,7 @@ export type AppRoutes = {
   YourAddress: undefined;
   ChooseAddress: undefined;
   AddKyc: undefined;
+  TakeSelfie: undefined;
   Dashboard: undefined;
   Home: undefined;
   SearchProduct: undefined;

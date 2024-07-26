@@ -111,22 +111,30 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
       console.log("result", result);
       if (userLogin.fulfilled.match(result)) {
         if (result.payload?.status == 1) {
+          console.log("user", result.payload?.user);
+
           let steps = result.payload?.user?.step;
           console.log("steps", steps);
-          if (steps !== 2) {
-            if (steps == 0) {
-              dispatch(saveAddress(""));
-              navigation.navigate(Route.navYourAddress);
-            } else if (steps == 1) {
-              navigation.navigate(Route.navAddKyc);
-            }
-          } else {
+          let isStepCompleted = result.payload?.user?.is_profile_completed;
+          let isVerify_by_Admin =
+            result.payload?.user?.is_kyc_verified_by_admin;
+
+          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
                 routes: [{ name: Route.navDashboard }],
               })
             );
+          } else {
+            if (steps == 0 || steps == 1) {
+              dispatch(saveAddress(""));
+              navigation.navigate(Route.navYourAddress, { fromOTP: false });
+            } else if (steps == 2) {
+              navigation.navigate(Route.navAddKyc, { fromOTP: false });
+            } else if (steps == 3) {
+              navigation.navigate(Route.navTakeSelfie);
+            }
           }
         }
       } else {
@@ -138,17 +146,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
               type: "otp_verification",
             });
           }
-          // if (result.payload?.status === 4) {
-          //   if (result.payload?.step == 1) {
-          //     navigation.navigate(Route.navAddKyc);
-          //   }
-          // }
-          // if (result.payload?.step == 0) {
-          //   navigation.navigate(Route.navYourAddress);
-          // }
-          // if (result.payload?.step == 1) {
-          //   navigation.navigate(Route.navAddKyc);
-          // }
         }
       }
     },
@@ -168,7 +165,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   };
 
   const onPhoneInputChange = (value: string, iso2: string) => {
-    setCountryCode(iso2);
+    setCountryCode(iso2 as CountryCode);
     setFieldValue("phoneNumber", value);
   };
 

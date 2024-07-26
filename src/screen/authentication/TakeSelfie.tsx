@@ -1,35 +1,46 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
+  ActivityIndicator,
+  ImageBackground,
+  Platform,
+  StatusBar,
   Text,
   TouchableOpacity,
-  ImageBackground,
-  StatusBar,
-  ActivityIndicator,
-  Platform,
+  View,
 } from "react-native";
-import React, { useRef, useState } from "react";
-import { AuthNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../../types/global.types";
 import { RNCamera } from "react-native-camera";
+import { makeStyles, useTheme } from "react-native-elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Images } from "../../assets/images";
-import { SCREEN_WIDTH, SCREEN_HEIGHT, HIT_SLOP2 } from "../../constant";
 import { AppImage } from "../../components/AppImage/AppImage";
-import Scale from "../../utils/Scale";
-import { notifyMessage } from "../../utils/notifyMessage";
+import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
 import ProfileImage from "../../components/ui/Profile/ProfileImage";
 import {
-  getImageFromCamera,
-  requestCameraPermission,
-} from "../../utils/ImagePickerCameraGallary";
-import { imagePickerProps } from "../../types/common.types";
-import CustomButton from "../../components/ui/CustomButton";
-import { getRandomFileName, getUrlExtension } from "../../utils";
+  HIT_SLOP2,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  USER_DATA,
+} from "../../constant";
+import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { setErrors } from "../../store/global/global.slice";
+import { setErrors, setSuccess } from "../../store/global/global.slice";
+import { imagePickerProps } from "../../types/common.types";
+import { ThemeProps } from "../../types/global.types";
+import { AuthNavigationProps } from "../../types/navigation";
+import { getRandomFileName, getUrlExtension } from "../../utils";
+import Scale from "../../utils/Scale";
+import { notifyMessage } from "../../utils/notifyMessage";
+import { userSelfieVerification } from "../../store/authentication/authentication.thunks";
+import { CommonActions } from "@react-navigation/native";
+import RNBootSplash from "react-native-bootsplash";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import { useSelector } from "react-redux";
+import { getUserData } from "../../types/user.types";
+import { API } from "../../constant/apiEndpoints";
+import { fetch } from "../../store/fetch";
+import { setUserData } from "../../store/settings/settings.slice";
+import { setData } from "../../utils/asyncStorage";
 
 const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   navigation,
@@ -40,9 +51,12 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
 
   const dispatch = useAppDispatch();
 
+  const userData = useSelector(selectUserData);
+
   const cameraRef = useRef<RNCamera>(null);
   const [capturing, setCapturing] = useState(false);
 
+  const [newUploaded, setNewUploaded] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [profileImage, setProfileImage] = useState<imagePickerProps>({
@@ -50,6 +64,19 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
     type: "",
     uri: "",
   });
+
+  useEffect(() => {
+    const init = async () => {
+      await RNBootSplash.hide();
+    };
+    init();
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      setProfilePicture(userData?.selfie_image);
+    }
+  }, [userData]);
 
   const takePictureAsync = async () => {
     if (cameraRef.current && !capturing) {
@@ -65,7 +92,7 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
           type: "image/jpg",
           uri: data.uri,
         };
-
+        setNewUploaded(true);
         setProfileImage(imageObject);
         notifyMessage("Captured!");
         setShowCamera(false);
@@ -79,10 +106,85 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
     setShowCamera(true);
   };
 
+  const onPressContinue = async () => {
+    try {
+      const formData = new FormData();
+
+      formData.append("selfie_image", {
+        name:
+          profileImage.name ||
+          `${new Date().getMilliseconds()}.${getUrlExtension(
+            profileImage.uri
+          )}`,
+        type: `image/${getUrlExtension(profileImage.uri)}`,
+        uri:
+          Platform.OS === "ios"
+            ? profileImage.uri.replace("file://", "")
+            : profileImage.uri,
+      });
+
+      const result = await dispatch(
+        userSelfieVerification({ formData: formData })
+      );
+      if (userSelfieVerification.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          console.log("userSelfieVerification result - - - ", result.payload);
+          dispatch(setSuccess(result.payload.message));
+          setNewUploaded(false);
+          if (result.payload.data?.is_kyc_verified_by_admin == 1) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
+          } else {
+            if (result.payload.data?.is_kyc_verified_by_admin == 0) {
+              dispatch(
+                setErrors({
+                  message: "Wait for the verify by Admin",
+                  status: 0,
+                  statusCode: null,
+                })
+              );
+            } else {
+              dispatch(
+                setErrors({
+                  message: "Your Profile is rejected by the Admin.",
+                  status: 0,
+                  statusCode: null,
+                })
+              );
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: Route.navAuthentication,
+                      state: {
+                        routes: [{ name: Route.navLogin }],
+                      },
+                    },
+                  ],
+                })
+              );
+            }
+          }
+        }
+      } else {
+        console.log("userSelfieVerification error - - - ", result.payload);
+      }
+    } catch (error) {
+      console.log("catch error - - - ", error);
+    }
+  };
+
+  console.log("profilePicture", profilePicture);
+
   return (
     <View style={style.container}>
       <StatusBar translucent backgroundColor={"transparent"} />
-      <CustomHeader title="Take Selfie" />
+      <CustomHeader title="Selfie Verification" />
       {showCamera ? (
         <View style={style.cameraCont}>
           <RNCamera
@@ -133,13 +235,51 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
               onPressCamera={onPressCamera}
               imageStyle={style.profileImage}
             />
-            <Text style={style.txtFace}>
-              kindly click picture of your face for verify kyc
+            <Text style={[style.txtFace, { marginTop: 20 }]}>
+              Kindly click picture of your face for verify with your documents
             </Text>
           </View>
           <CustomButton
-            onPress={() => {
+            onPress={async () => {
               if (profilePicture !== "") {
+                if (userData?.is_profile_completed == 1 && !newUploaded) {
+                  const { data: currentUser } = await fetch<getUserData>({
+                    url: API.ME,
+                    method: "GET",
+                  });
+                  if (currentUser?.status == 1) {
+                    if (currentUser?.user?.is_kyc_verified_by_admin == 1) {
+                      dispatch(setUserData(currentUser?.user));
+                      setData(USER_DATA, currentUser?.user);
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 0,
+                          routes: [{ name: Route.navDashboard }],
+                        })
+                      );
+                    } else {
+                      if (currentUser?.user?.is_kyc_verified_by_admin == 0) {
+                        dispatch(
+                          setErrors({
+                            message: "Wait for the verify by Admin",
+                            status: 0,
+                            statusCode: null,
+                          })
+                        );
+                      } else {
+                        dispatch(
+                          setErrors({
+                            message: "Your Profile is rejected by the Admin.",
+                            status: 0,
+                            statusCode: null,
+                          })
+                        );
+                      }
+                    }
+                  }
+                } else {
+                  onPressContinue();
+                }
               } else {
                 dispatch(
                   setErrors({
@@ -193,6 +333,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.black,
     marginVertical: 10,
     textAlign: "center",
+    marginHorizontal: 20,
   },
   profileImage: {
     height: Scale(180),

@@ -27,6 +27,7 @@ import Congratulations from "../screen/sell/Congratulations";
 import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
+import TakeSelfie from "../screen/authentication/TakeSelfie";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -101,6 +102,8 @@ const MainStack = () => {
             component={ChooseAddress}
           />
           <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
+          <Stack.Screen name={Route.navTakeSelfie} component={TakeSelfie} />
+
           <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
           <Stack.Screen
             name={Route.navChangePassword}
