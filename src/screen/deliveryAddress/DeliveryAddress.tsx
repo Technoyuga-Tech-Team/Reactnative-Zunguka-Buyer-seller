@@ -62,7 +62,7 @@ const DeliveryAddress: React.FC<
 
   const dispatch = useAppDispatch();
 
-  const [selectedAddress, setSelectedAddress] = useState();
+  const [selectedAddress, setSelectedAddress] = useState<any>({});
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<CountryCode>("RW");
@@ -77,6 +77,8 @@ const DeliveryAddress: React.FC<
   const [region, setRegion] = useState("");
   const [regionError, setRegionError] = useState("");
 
+  const [tamp_phone, setTamp_phone] = useState<string>("");
+
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
@@ -85,7 +87,15 @@ const DeliveryAddress: React.FC<
     setSelectedAddress(item);
   };
   const onPressEdit = (item: any) => {
-    setSelectedAddress(item);
+    setFieldValue("firstName", item.firstName);
+    setFieldValue("lastName", item.lastName);
+    phoneRef.current?.selectCountry("rw");
+    phoneRef.current?.setValue(item.phone);
+    setFieldValue("phoneNumber", item.phone);
+    setTamp_phone(item.phone);
+    setFieldValue("deliveryAddress", item.address);
+    setFieldValue("region", item.region);
+    setFieldValue("city", item.city);
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
     }, 1000);
@@ -132,16 +142,7 @@ const DeliveryAddress: React.FC<
     }, 500);
   };
 
-  useEffect(() => {
-    if (selectedAddress) {
-      setFieldValue("firstName", selectedAddress.firstName);
-      setFieldValue("lastName", selectedAddress.lastName);
-      setFieldValue("phoneNumber", selectedAddress.phone);
-      setFieldValue("deliveryAddress", selectedAddress.address);
-      setFieldValue("region", selectedAddress.region);
-      setFieldValue("city", selectedAddress.city);
-    }
-  }, [selectedAddress]);
+  let phone_initial = tamp_phone === "" ? values.phoneNumber : tamp_phone;
 
   const onPressFlag = () => {
     setFieldValue("phoneNumber", "");
@@ -208,7 +209,7 @@ const DeliveryAddress: React.FC<
           ref={phoneRef}
           onPressFlag={onPressFlag}
           onChangePhoneNumber={(value, iso2) => onPhoneInputChange(value, iso2)}
-          initialValue={values.phoneNumber}
+          initialValue={phone_initial}
           textProps={{
             placeholder: "Phone Number",
             placeholderTextColor: theme.colors?.secondaryText,
@@ -217,6 +218,9 @@ const DeliveryAddress: React.FC<
             returnKeyType: "next",
             maxLength: 18,
             onSubmitEditing: () => deliveryAddressRef.current?.focus(),
+            onPressIn: () => {
+              setTamp_phone("");
+            },
           }}
           error={errors.phoneNumber}
         />

@@ -9,11 +9,12 @@ export interface SortData {
   title: string;
   value: string;
   selected: boolean;
+  key?: number | undefined;
 }
 
 interface RenderSortItemsListProps {
   sortData: SortData[];
-  onPressItem: (index: number) => void;
+  onPressItem: (index: number, key: number | undefined) => void;
   isBoarderBottom?: boolean;
 }
 
@@ -34,7 +35,7 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => onPressItem(index)}
+            onPress={() => onPressItem(index, item?.key)}
             activeOpacity={0.8}
             style={[style.radioItemCont, isBoarderBottom && style.borderBottom]}
           >

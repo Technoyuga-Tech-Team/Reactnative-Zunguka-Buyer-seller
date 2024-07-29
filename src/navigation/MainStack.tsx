@@ -28,6 +28,7 @@ import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
 import TakeSelfie from "../screen/authentication/TakeSelfie";
+import Chatroom from "../screen/chat/Chatroom";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -113,6 +114,7 @@ const MainStack = () => {
             name={Route.navResetPassword}
             component={ResetPassword}
           />
+          <Stack.Screen name={Route.navChatroom} component={Chatroom} />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

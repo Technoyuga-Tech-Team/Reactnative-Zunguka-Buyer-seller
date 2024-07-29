@@ -103,6 +103,7 @@ export type HomeRoutes = {
   AddCard: undefined;
   CardDetails: { from: string };
   Payment: undefined;
+  Chatroom: { receiver_id: string };
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

@@ -86,4 +86,5 @@ export interface ProductDetailsDataProps {
   images: productImage[];
   user: sellerDetailsProps;
   brand: brandInfo;
+  likes_count: number;
 }

@@ -32,9 +32,19 @@ const ProductItem: React.FC<ProductItemProps> = ({ item, onPress }) => {
         resizeMode="cover"
       />
       <View style={style.secondCont}>
-        <Text numberOfLines={1} style={style.txtTitle}>
-          {item?.title}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text numberOfLines={1} style={style.txtTitle}>
+            {item?.title}
+          </Text>
+          {/* <Text style={style.txtSold}>Sold</Text> */}
+        </View>
+
         <Text numberOfLines={1} style={style.txtTypeAndCategories}>
           {getConditionItemValue(item?.condition_of_item)}
         </Text>
@@ -73,6 +83,12 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs17,
     fontFamily: theme.fontFamily?.medium,
     color: theme.colors?.black,
+  },
+  txtSold: {
+    fontSize: theme.fontSize?.fs12,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.red,
+    textDecorationLine: "underline",
   },
   txtTypeAndCategories: {
     fontSize: theme.fontSize?.fs13,

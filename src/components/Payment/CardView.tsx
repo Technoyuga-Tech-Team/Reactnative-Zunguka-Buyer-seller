@@ -8,8 +8,8 @@ import { CreditDebitCardNumber } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import WaveIcon from "../ui/svg/WaveIcon";
-import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 import { Images } from "../../assets/images";
+import { SCREEN_WIDTH } from "../../constant";
 
 interface CardViewProps {
   source: any;

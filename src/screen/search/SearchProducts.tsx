@@ -32,7 +32,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
@@ -61,16 +61,23 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     try {
       setLoader(true);
       const formData = new FormData();
-
+      console.log(
+        "filterItems?.subCategoryId",
+        filterItems?.parantCategoryId,
+        filterItems?.subCategoryId
+      );
       formData.append("is_search", keyword ? 1 : 0);
       formData.append("keyword", keyword);
 
       formData.append("is_filter", filterItems ? 1 : 0);
-      formData.append("category_id", filterItems?.subCategoryId);
+      formData.append(
+        "category_ids",
+        `${filterItems?.parantCategoryId},${filterItems?.subCategoryId}`
+      );
       formData.append("brand_id", filterItems?.brand || "");
       formData.append("city", filterItems?.city);
-      // formData.append("maxPrice", filterItems?.maxPrice);
-      // formData.append("minPrice", filterItems?.minPrice);
+      formData.append("maxPrice", filterItems?.maxPrice);
+      formData.append("minPrice", filterItems?.minPrice);
       formData.append("color", filterItems?.selectedColors);
       formData.append("condition_of_item", filterItems?.selectedCondition);
       formData.append("size", filterItems?.selectedSize);
@@ -101,14 +108,18 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         }
       } else {
         setLoader(false);
+        // setProducts([]);
+        setVisibleFilter(false);
         console.log("addProductSearchFilter error - - - ", result.payload);
       }
     } catch (error) {
+      setLoader(false);
       console.log("API catch error", error);
     }
   };
 
   const onPressProduct = (itemId: number) => {
+    console.log("itemId", itemId);
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 
@@ -131,6 +142,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressFilter = () => {
+    console.log("caleed");
     toggleFilterPopup();
   };
 
@@ -206,7 +218,12 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     setVisible(!visible);
   };
 
+  const clearFilter = () => {
+    getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+  };
+
   const onPressShowItem = (
+    parantCategoryId: any,
     subCategoryId: any,
     brand: any,
     selectedCondition: any,
@@ -218,6 +235,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     city: any
   ) => {
     let filterItems = {
+      parantCategoryId,
       subCategoryId,
       brand,
       selectedCondition,
@@ -228,9 +246,9 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       selectedSize,
       city,
     };
+    console.log("filterItems", filterItems);
     getSearchedItems(debouncedSearchTerm, 10, 1, false, filterItems);
   };
-
   return (
     <View style={style.container}>
       <CustomSearchBarWithSortAndFilter
@@ -259,6 +277,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         togglePopup={toggleFilterPopup}
         loading={loader}
         onPressShowItem={(
+          parantCategoryId: any,
           subCategoryId: any,
           brand: any,
           selectedCondition: any,
@@ -270,6 +289,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
           city: any
         ) =>
           onPressShowItem(
+            parantCategoryId,
             subCategoryId,
             brand,
             selectedCondition,
@@ -281,6 +301,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
             city
           )
         }
+        clearFilter={clearFilter}
       />
     </View>
   );

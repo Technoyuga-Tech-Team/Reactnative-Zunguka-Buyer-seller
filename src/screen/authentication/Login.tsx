@@ -38,6 +38,7 @@ import { AuthNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { Images } from "../../assets/images";
+import { useGetFCMToken } from "../../hooks/useGetFCMToken";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -70,19 +71,19 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     };
   }, []);
 
-  // useEffect(() => {
-  //   const Init = async () => {
-  //     useGetFCMToken()
-  //       .then((token) => {
-  //         console.log(" - - - - - - FCM token - - - - - - ", token);
-  //         setFcmToken(token);
-  //       })
-  //       .catch((err) => {
-  //         console.log(" - - - - - - FCM token error- - - - - - ", err);
-  //       });
-  //   };
-  //   Init();
-  // }, []);
+  useEffect(() => {
+    const Init = async () => {
+      useGetFCMToken()
+        .then((token) => {
+          console.log(" - - - - - - FCM token - - - - - - ", token);
+          if (token) setFcmToken(token);
+        })
+        .catch((err) => {
+          console.log(" - - - - - - FCM token error- - - - - - ", err);
+        });
+    };
+    Init();
+  }, []);
 
   const {
     handleChange,

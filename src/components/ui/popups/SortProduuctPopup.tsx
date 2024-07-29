@@ -23,28 +23,32 @@ const SortProduuctPopup: React.FC<SortProduuctPopupProps> = ({
   const [sortData, setSortData] = useState([
     {
       title: "Best Match",
+      value: "Best Match",
       selected: false,
       key: 1,
     },
     {
       title: "Lowest price to highest price",
+      value: "Lowest price to highest price",
       selected: false,
       key: 2,
     },
     {
       title: "Highest price to lowest price",
+      value: "Highest price to lowest price",
       selected: false,
       key: 3,
     },
     {
       title: "Newly listed",
+      value: "Newly listed",
       selected: true,
       key: 4,
     },
   ]);
 
-  const onPressItem = (index: number, key: number) => {
-    setSelected(key);
+  const onPressItem = (index: number, key: number | undefined) => {
+    key && setSelected(key);
     setSortData(
       sortData.map((item, itemIndex) => ({
         ...item,

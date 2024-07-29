@@ -293,7 +293,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
   let phone_initial =
     tamp_phone === "" ? values.phoneNumber : userData?.phone_number;
-
+  console.log("phone_initial", phone_initial);
   return (
     <View style={style.container}>
       {(userLoading === LoadingState.CREATE || loader) && <Loading />}

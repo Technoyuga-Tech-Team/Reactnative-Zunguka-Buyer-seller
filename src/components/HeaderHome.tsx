@@ -57,7 +57,7 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          activeOpacity={1}
+          activeOpacity={0.8}
           onPress={onPressSearch}
           style={style.searchCont}
         >
@@ -125,14 +125,14 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(18),
   },
   searchCont: {
-    height: Scale(40),
+    height: Scale(50),
     width: "100%",
     borderRadius: 4,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: theme?.colors?.white,
-    marginTop: 20,
+    marginTop: 10,
   },
   searchIcon: {
     marginHorizontal: 10,

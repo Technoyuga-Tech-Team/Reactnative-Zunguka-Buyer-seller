@@ -104,6 +104,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAllCategories);
   };
   const onPressCategory = (item: CategoriesDataProps) => {
+    console.log("item", item.id, item.parent_id);
     navigation.navigate(Route.navSearchProduct, {
       mainCat: item.name,
       subCat: "",

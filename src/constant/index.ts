@@ -2195,7 +2195,7 @@ export const AddressData = [
   {
     firstName: "Krishna",
     lastName: "patel",
-    phone: "+250738923150",
+    phone: "+250738923151",
     address: "FUTURES ARCHITECTS, BP. 1438",
     region: "kigali",
     city: "kigali",
@@ -2203,7 +2203,7 @@ export const AddressData = [
   {
     firstName: "Mrugesh",
     lastName: "Patel",
-    phone: "+250738923150",
+    phone: "+250738923152",
     address: "FUTURES ARCHITECTS, BP. 1438",
     region: "kigali",
     city: "kigali",

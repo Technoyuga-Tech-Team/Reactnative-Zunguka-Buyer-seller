@@ -1,5 +1,5 @@
-import { View, Text, Platform } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Platform, Alert } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { HomeNavigationProps } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,6 +18,9 @@ import { Images } from "../../assets/images";
 import CustomButton from "../../components/ui/CustomButton";
 import DoubleRightIcon from "../../components/ui/svg/DoubleRightIcon";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import SwipeAnimation from "../../components/SwipeAnimation";
+import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   navigation,
@@ -27,6 +30,8 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
+  const snapPoints = useMemo(() => ["70%", "70%"], []);
+  const sheetRef = useRef<BottomSheet>(null);
 
   const [paymentMethods, setPaymentMethods] = useState(PAYMENT_METHOD);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
@@ -48,6 +53,18 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
         selected: index === itemIndex,
       }))
     );
+  };
+
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+
+  const RenderPaymentItems = () => {
+    return <Text>hello</Text>;
+  };
+
+  const onRight = () => {
+    sheetRef.current?.snapToIndex(1);
   };
 
   return (
@@ -86,21 +103,15 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           I accept the general terms of use and the privacy policy and can start
           using zunguka
         </Text>
-        <CustomButton
-          onPress={() => {}}
-          title={"Swipe for quick payment"}
-          buttonWidth="full"
-          variant="primary"
-          type="solid"
-          icon={
-            <DoubleRightIcon
-              color={theme?.colors?.white}
-              style={{ marginRight: 10 }}
-            />
-          }
-          iconPosition="left"
-        />
+        <SwipeAnimation onRight={onRight} />
       </View>
+      <AddressDataSheet
+        snapPoints={snapPoints}
+        ref={sheetRef}
+        title={"Confirm payment"}
+        handleClosePress={handleClosePress}
+        children={RenderPaymentItems()}
+      />
     </View>
   );
 };

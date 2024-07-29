@@ -1,21 +1,20 @@
+import React from "react";
 import {
-  View,
+  KeyboardAvoidingView,
   Text,
   TextInput,
-  KeyboardAvoidingView,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { HIT_SLOP } from "../constant";
 import { ThemeProps } from "../types/global.types";
-import BackIcon from "./ui/svg/BackIcon";
+import Scale from "../utils/Scale";
+import FilterIcon from "./ui/svg/FilterIcon";
 import LeftIcon from "./ui/svg/LeftIcon";
 import SearchIcon from "./ui/svg/SearchIcon";
-import Scale from "../utils/Scale";
 import SortIcon from "./ui/svg/SortIcon";
-import FilterIcon from "./ui/svg/FilterIcon";
-import { HIT_SLOP } from "../constant";
 
 interface CustomSearchBarWithSortAndFilterProps {
   onPressSort: () => void;
@@ -71,7 +70,7 @@ const CustomSearchBarWithSortAndFilter: React.FC<
       </View>
       <View style={style.sortAndFilterCont}>
         <TouchableOpacity
-          disabled={!disabledButton}
+          // disabled={!disabledButton}
           activeOpacity={0.8}
           onPress={onPressSort}
           style={style.iconCont}
@@ -80,7 +79,7 @@ const CustomSearchBarWithSortAndFilter: React.FC<
           <Text style={style.txtFilterAndSort}>Sort</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          disabled={!disabledButton}
+          // disabled={!disabledButton}
           activeOpacity={0.8}
           onPress={onPressFilter}
           style={style.iconCont}
@@ -105,7 +104,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs13,
     fontFamily: theme.fontFamily?.regular,
     color: theme?.colors?.black,
-    height: Scale(40),
+    height: Scale(50),
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -114,7 +113,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    height: Scale(40),
+    height: Scale(50),
     flex: 1,
     backgroundColor: theme?.colors?.backgroundLight1,
     borderRadius: 4,

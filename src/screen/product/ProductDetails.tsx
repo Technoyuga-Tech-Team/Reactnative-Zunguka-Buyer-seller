@@ -1,6 +1,6 @@
 import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, Platform, StatusBar, View } from "react-native";
+import { Alert, Platform, RefreshControl, StatusBar, View } from "react-native";
 import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -48,6 +48,8 @@ const ProductDetails: React.FC<
     []
   );
 
+  const [productLikes, setProductLikes] = useState(0);
+
   const {
     data: productDetailsData,
     refetch,
@@ -70,6 +72,7 @@ const ProductDetails: React.FC<
   useEffect(() => {
     if (productDetailsData?.data) {
       setProductDetails(productDetailsData?.data);
+      setProductLikes(productDetailsData?.data?.likes_count);
       setProductBannerData(productDetailsData?.data?.images);
       setSavedItem(productDetailsData?.data?.is_like);
     }
@@ -156,11 +159,32 @@ const ProductDetails: React.FC<
     navigation.navigate(Route.navDeliveryAddress);
   };
 
+  const onPressMessage = () => {
+    // navigation.navigate(Route.navChatroom, {
+    //   receiver_id: productDetails?.user_id,
+    // });
+  };
+
+  const onRefresh = () => {
+    refetch();
+  };
+
+  const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
+
   return (
     <KeyboardAwareScrollView
       bounces={false}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={style.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading || isFetching}
+          onRefresh={onRefresh}
+          tintColor={theme?.colors?.primary}
+          // @ts-ignore
+          colors={[theme?.colors?.primary]}
+        />
+      }
     >
       <StatusBar
         translucent
@@ -173,7 +197,7 @@ const ProductDetails: React.FC<
         <ProductHeader
           onPressBack={onPressBack}
           onPressShare={onPressShare}
-          showDelete={userData?.id == productDetails?.user_id}
+          showDelete={is_CurrentUsers_product}
           onPressDelete={onPressDelete}
         />
       </View>
@@ -181,24 +205,28 @@ const ProductDetails: React.FC<
         productDetails={productDetails}
         onPressSavedItem={onPressSavedItem}
         isProductLike={savedItem}
+        productLikes={productLikes}
+        onPressMessage={onPressMessage}
       />
-      <View style={style.button}>
-        <CustomButton
-          title={"Message seller"}
-          buttonWidth="half"
-          width={(SCREEN_WIDTH - 50) / 2}
-          variant="secondary"
-          type="outline"
-        />
-        <CustomButton
-          onPress={onPressBuyProduct}
-          title={"Buy Product"}
-          buttonWidth="half"
-          width={(SCREEN_WIDTH - 50) / 2}
-          variant="primary"
-          type="solid"
-        />
-      </View>
+      {!is_CurrentUsers_product && (
+        <View style={style.button}>
+          <CustomButton
+            title={"Message seller"}
+            buttonWidth="half"
+            width={(SCREEN_WIDTH - 50) / 2}
+            variant="secondary"
+            type="outline"
+          />
+          <CustomButton
+            onPress={onPressBuyProduct}
+            title={"Buy Product"}
+            buttonWidth="half"
+            width={(SCREEN_WIDTH - 50) / 2}
+            variant="primary"
+            type="solid"
+          />
+        </View>
+      )}
     </KeyboardAwareScrollView>
   );
 };

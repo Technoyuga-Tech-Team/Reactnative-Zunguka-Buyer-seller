@@ -12,17 +12,23 @@ import { ProductDetailsDataProps } from "../../types/product.types";
 import moment from "moment";
 import { getConditionItemValue } from "../../utils";
 import FilledHeartIcon from "../ui/svg/filledHeartIcon";
+import InboxIcon from "../ui/svg/InboxIcon";
+import MessageOutlineIcon from "../ui/svg/MessageOutlineIcon";
 
 interface ProductInfoProps {
   productDetails: ProductDetailsDataProps | null;
   onPressSavedItem: () => void;
   isProductLike: boolean;
+  onPressMessage: () => void;
+  productLikes: number;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
   productDetails,
   onPressSavedItem,
   isProductLike,
+  onPressMessage,
+  productLikes,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -40,6 +46,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const time = productDetails?.created_at
     ? moment(productDetails?.created_at).format("DD/MM/YYYY")
     : "";
+
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
@@ -55,9 +62,27 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             ) : (
               <OutlineHeartIcon color={theme?.colors?.unselectedIconColor} />
             )}
+            {productLikes > 0 && (
+              <Text style={style.txtCount}>{productLikes}</Text>
+            )}
           </TouchableOpacity>
         </View>
-        <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
+        <View style={style.productNameCont}>
+          <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
+          <TouchableOpacity
+            onPress={onPressMessage}
+            activeOpacity={0.8}
+            style={style.heartCont}
+          >
+            <MessageOutlineIcon
+              color={theme?.colors?.unselectedIconColor}
+              height={15}
+              width={15}
+            />
+            {/* <Text style={style.txtCount}>100</Text> */}
+          </TouchableOpacity>
+        </View>
+        {/* <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text> */}
         <View style={style.addrCont}>
           <Text style={style.txtDate}>Posted {time}</Text>
           <Text style={style.txtDistrict}>{productDetails?.city}</Text>
@@ -145,12 +170,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   heartCont: {
     height: Scale(32),
-    width: Scale(32),
+    minWidth: Scale(32),
+    paddingHorizontal: 8,
     borderRadius: Scale(32 / 2),
     borderColor: theme?.colors?.borderButtonColor,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    marginTop: 5,
   },
   txtProductName: {
     fontSize: theme.fontSize?.fs17,
@@ -182,6 +210,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginTop: 10,
   },
   paddingCont: {
     padding: 20,
@@ -224,5 +253,11 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs15,
     fontFamily: theme.fontFamily?.regular,
     color: theme?.colors?.greyed,
+  },
+  txtCount: {
+    fontSize: theme.fontSize?.fs12,
+    fontFamily: theme.fontFamily?.bold,
+    color: theme?.colors?.greyed,
+    marginLeft: 5,
   },
 }));

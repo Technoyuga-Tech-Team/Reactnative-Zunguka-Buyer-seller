@@ -26,7 +26,7 @@ import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setErrors, setSuccess } from "../../store/global/global.slice";
 import { imagePickerProps } from "../../types/common.types";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
 import { getRandomFileName, getUrlExtension } from "../../utils";
 import Scale from "../../utils/Scale";
@@ -41,6 +41,7 @@ import { API } from "../../constant/apiEndpoints";
 import { fetch } from "../../store/fetch";
 import { setUserData } from "../../store/settings/settings.slice";
 import { setData } from "../../utils/asyncStorage";
+import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
 
 const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   navigation,
@@ -52,6 +53,8 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   const dispatch = useAppDispatch();
 
   const userData = useSelector(selectUserData);
+
+  const loading = useSelector(selectAuthenticationLoading);
 
   const cameraRef = useRef<RNCamera>(null);
   const [capturing, setCapturing] = useState(false);
@@ -294,8 +297,8 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
             buttonWidth="full"
             variant="primary"
             type="solid"
-            // disabled={!isValid || loading === LoadingState.CREATE}
-            // loading={loading === LoadingState.CREATE}
+            disabled={loading === LoadingState.CREATE}
+            loading={loading === LoadingState.CREATE}
           />
         </View>
       )}

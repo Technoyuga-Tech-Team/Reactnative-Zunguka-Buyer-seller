@@ -39,6 +39,7 @@ interface FilterProductPopupProps {
   visiblePopup: boolean;
   togglePopup: () => void;
   onPressShowItem: (
+    parantCategoryId: any,
     subCategoryId: any,
     brand: any,
     selectedCondition: any,
@@ -50,6 +51,7 @@ interface FilterProductPopupProps {
     city: any
   ) => void;
   loading: boolean;
+  clearFilter: () => void;
 }
 
 const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
@@ -57,6 +59,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   togglePopup,
   onPressShowItem,
   loading,
+  clearFilter,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
@@ -64,6 +67,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
 
   const { data: categoriesData, isFetching } = useCategories();
 
+  const [clearPressed, setClearPressed] = useState(false);
   const [visibleColor, setVisibleColor] = useState(false);
   const [visiblePrice, setVisiblePrice] = useState(false);
   const [visibleCondition, setVisibleCondition] = useState(false);
@@ -111,6 +115,10 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
       setCategories(categoriesData?.data?.data);
     }
   }, [categoriesData]);
+
+  useEffect(() => {
+    setClearPressed(false);
+  }, []);
 
   const onPressItem = (index: number) => {
     setSelectedCondition(conditionData[index].title);
@@ -211,6 +219,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   };
 
   const onPressClear = () => {
+    setClearPressed(true);
     setVisiblePrice(false);
     setSubCategoryId(null);
     setSubCatName("");
@@ -223,6 +232,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     setSelectedSizeValues([]);
     setCity("");
     setSliderVal({ low: 10, high: 400 });
+    clearFilter();
   };
 
   return (
@@ -303,8 +313,10 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
               type="outline"
             />
             <CustomButton
-              onPress={() =>
+              onPress={() => {
+                console.log("parantCategoryId-  - -", parantCategoryId);
                 onPressShowItem(
+                  parantCategoryId,
                   subCategoryId,
                   selectedBrand.id,
                   selectedCondition,
@@ -314,15 +326,15 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
                   selectedRatingsValues.join(", "),
                   selectedSizeValue.join(", "),
                   city
-                )
-              }
+                );
+              }}
               title={"Show Items"}
               buttonWidth="half"
               width={(SCREEN_WIDTH - 50) / 2}
               variant="primary"
               type="solid"
-              loading={loading}
-              disabled={loading}
+              loading={!clearPressed && loading}
+              disabled={!clearPressed && loading}
             />
           </View>
         </View>
