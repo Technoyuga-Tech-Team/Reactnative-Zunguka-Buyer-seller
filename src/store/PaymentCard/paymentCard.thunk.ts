@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootReduxState } from "../../types/store.types";
 import { FetchResponseError } from "../../types/fetch.types";
 import { fetchAction } from "../fetch";
-import { TokenPayload1 } from "../../types/authentication.types";
+import { TokenPayload, TokenPayload1 } from "../../types/authentication.types";
 import { API } from "../../constant/apiEndpoints";
 
 export const AddNewCard = createAsyncThunk<
@@ -131,6 +131,69 @@ export const MakePaymentToMover = createAsyncThunk<
               card_id,
             }),
             package_details_id,
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);
+
+// Delivery address
+export const userDeliveryAddress = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "payment/userDeliveryAddress",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.ADD_DELIVERY_ADDRESS,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);
+
+export const userUpdateDeliveryAddress = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "payment/userUpdateDeliveryAddress",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.UPDATE_DELIVERY_ADDRESS,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
           },
         },
         true

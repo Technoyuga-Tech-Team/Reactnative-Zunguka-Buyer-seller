@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     borderBottomWidth: 1,
   },
   textInput: {
-    fontSize: theme.fontSize?.fs13,
+    fontSize: theme.fontSize?.fs14,
     fontFamily: theme.fontFamily?.regular,
     color: theme?.colors?.black,
     height: Scale(50),

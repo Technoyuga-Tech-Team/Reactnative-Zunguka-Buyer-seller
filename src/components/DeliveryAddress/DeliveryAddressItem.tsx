@@ -8,9 +8,10 @@ import { AppImage } from "../AppImage/AppImage";
 import { Images } from "../../assets/images";
 import PencilIcon from "../ui/svg/PencilIcon";
 import { HIT_SLOP2 } from "../../constant";
+import { DeliveryAddressDataProps } from "../../types/payment.types";
 
 interface DeliveryAddressItemProps {
-  item: any;
+  item: DeliveryAddressDataProps;
   onPressItem: () => void;
   onPressEdit: () => void;
   isSelectedAddress: boolean;
@@ -38,13 +39,13 @@ const DeliveryAddressItem: React.FC<DeliveryAddressItemProps> = ({
         <View style={style.centerCont}>
           <Text
             style={style.txtName}
-          >{`${item.firstName} ${item.lastName}`}</Text>
+          >{`${item.first_name} ${item.last_name}`}</Text>
           <Text numberOfLines={2} style={style.txtOthers}>
             {item.address}
           </Text>
-          <Text style={style.txtOthers}>{item.phone}</Text>
+          <Text style={style.txtOthers}>{item.phone_number}</Text>
           <Text style={style.txtOthers}>{`${item.region},${item.city}`}</Text>
-          {isSelectedAddress && (
+          {item.is_default == 1 && (
             <View style={style.defaultAddrCont}>
               <Text style={style.txtDefaultAddr}>Default address</Text>
             </View>

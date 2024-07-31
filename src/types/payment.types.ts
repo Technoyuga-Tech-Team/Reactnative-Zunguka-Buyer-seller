@@ -36,3 +36,32 @@ export interface GetPaymentCardData {
   tokenization_method: string;
   wallet: string;
 }
+
+export interface DeliveryAddressProps {
+  message: string;
+  status: number;
+  data: GetDeliveryAddressData;
+}
+export interface GetDeliveryAddressData {
+  data: DeliveryAddressDataProps[];
+  totalRecords: number;
+  totalPages: number;
+  currentPage: string;
+}
+export interface DeliveryAddressDataProps {
+  id: number;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  address: string;
+  phone_number: string;
+  iso: string;
+  gps_location: string;
+  latitude: string;
+  longitude: string;
+  region: string;
+  city: string;
+  is_default: number;
+  created_at: string;
+  updated_at: string;
+}

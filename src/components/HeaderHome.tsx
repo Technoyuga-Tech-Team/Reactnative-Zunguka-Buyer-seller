@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   nameInnerCont: { flex: 1 },
   txtSearch: {
-    fontSize: theme.fontSize?.fs13,
+    fontSize: theme.fontSize?.fs14,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.grey11,
     height: Scale(18),

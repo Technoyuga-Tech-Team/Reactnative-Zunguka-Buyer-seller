@@ -4,6 +4,12 @@ import {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 
+export type TopRoutes = {
+  OpenItems: undefined;
+  ClosedItems: undefined;
+  ProductDetails: { itemId: number };
+};
+
 export type AppRoutes = {
   Onboard: undefined;
   Splash: undefined;
@@ -103,6 +109,8 @@ export type HomeRoutes = {
   AddCard: undefined;
   CardDetails: { from: string };
   Payment: undefined;
+  Storefront: undefined;
+  TransactionHistory: undefined;
   Chatroom: { receiver_id: string };
 };
 
@@ -121,4 +129,11 @@ export interface AuthNavigationProps<
 export interface HomeNavigationProps<RouteName extends keyof HomeRoutes> {
   navigation: NativeStackNavigationProp<HomeRoutes, RouteName>;
   route: RouteProp<HomeRoutes, RouteName>;
+}
+
+export interface MyFrontStoreNavigationProps<
+  RouteName extends keyof TopRoutes
+> {
+  navigation: NativeStackNavigationProp<TopRoutes, RouteName>;
+  route: RouteProp<TopRoutes, RouteName>;
 }

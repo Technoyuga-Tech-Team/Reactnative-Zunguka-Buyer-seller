@@ -22,6 +22,7 @@ export const API = {
   UPDATE_NOTIFICATION: "/profile",
   SETUP_PROFILE: "/setup-profile",
   // product
+  GET_ALL_DEALS: "/list-item",
   GET_CATEGORIES: "/categories",
   GET_BRANDS: "/brands",
   GET_SUB_CATEGORIES: "/subcategories",
@@ -70,4 +71,8 @@ export const API = {
   GET_MOVER_EARNING: "/mover-earnings",
   GET_PAYOUT_HISTORY: "/get-withdraw-requests",
   SEND_PAYOUT_REQUEST: "/send_withdraw_request",
+  // Delivery address
+  ADD_DELIVERY_ADDRESS: "/add-delivery-address",
+  UPDATE_DELIVERY_ADDRESS: "/update_delivery_address",
+  GET_SAVED_DELIVERY_ADDRESS: "/get_all_addresses",
 };

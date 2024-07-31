@@ -1,13 +1,22 @@
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StatusBar, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import CustomButton from "../../components/ui/CustomButton";
 import ProfileAndName from "../../components/ui/Profile/ProfileAndName";
+import ProfileItem from "../../components/ui/Profile/ProfileItem";
 import LogoutPopup from "../../components/ui/popups/LogoutPopup";
+import CreditcardIcon from "../../components/ui/svg/CreditcardIcon";
+import DocslistIcon from "../../components/ui/svg/DocslistIcon";
+import InfocircleIcon from "../../components/ui/svg/InfocircleIcon";
 import LogoutIcon from "../../components/ui/svg/LogoutIcon";
+import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
+import ProfileIcon from "../../components/ui/svg/ProfileIcon";
+import TagfillIcon from "../../components/ui/svg/TagfillIcon";
 import {
   GOOGLE_WEB_CLIENT_ID,
   SCREEN_WIDTH,
@@ -16,20 +25,11 @@ import {
 } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { logout } from "../../store/authentication/authentication.thunks";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import ProfileItem from "../../components/ui/Profile/ProfileItem";
-import CreditcardIcon from "../../components/ui/svg/CreditcardIcon";
-import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
-import InfocircleIcon from "../../components/ui/svg/InfocircleIcon";
-import DocslistIcon from "../../components/ui/svg/DocslistIcon";
-import ProfileIcon from "../../components/ui/svg/ProfileIcon";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -92,7 +92,12 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const onPressCardDetails = () => {
     navigation.navigate(Route.navCardDetails, { from: "profile" });
   };
-  const onPressTransactionHistroy = () => {};
+  const onPressTransactionHistroy = () => {
+    navigation.navigate(Route.navTransactionHistory);
+  };
+  const onPressMyItems = () => {
+    navigation.navigate(Route.navMyStorefront);
+  };
 
   const Profile = profilePicture;
   return (
@@ -119,6 +124,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           name="My Profile"
           icon={<ProfileIcon color={theme.colors?.primary} />}
           onPress={onPressMyProfile}
+        />
+        <ProfileItem
+          name="My Items"
+          icon={<TagfillIcon color={theme.colors?.primary} />}
+          onPress={onPressMyItems}
         />
         <ProfileItem
           name="Card Details"

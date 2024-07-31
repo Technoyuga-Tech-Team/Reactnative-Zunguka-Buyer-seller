@@ -96,9 +96,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           </Text>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Condition</Text>
-            <Text style={style.txtDetails2}>
-              {getConditionItemValue(productDetails?.condition_of_item)}
-            </Text>
+            {productDetails && (
+              <Text style={style.txtDetails2}>
+                {getConditionItemValue(productDetails?.condition_of_item)}
+              </Text>
+            )}
           </View>
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Brand</Text>
@@ -144,9 +146,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Seller details
           </Text>
-          <Text style={style.txtDistrict}>View profile</Text>
+          <Text style={style.txtDistrict}></Text>
         </View>
-        <SellerProfileWithStar userData={productDetails?.user} />
+        {productDetails && (
+          <SellerProfileWithStar userData={productDetails?.user} />
+        )}
       </View>
       <ItemSeparator />
       <View style={style.paddingCont}>

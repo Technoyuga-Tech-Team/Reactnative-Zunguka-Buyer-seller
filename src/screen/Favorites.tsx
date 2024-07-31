@@ -1,16 +1,15 @@
-import { View, Text, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RefreshControl, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../types/global.types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../components/Product/ProductListing";
-import { ProductDataProps } from "../types/product.types";
-import { HomeNavigationProps } from "../types/navigation";
-import { Route } from "../constant/navigationConstants";
-import { useGetProducts } from "../hooks/useGetProducts";
-import { getData } from "../utils/asyncStorage";
 import { BASE_URL, secureStoreKeys } from "../constant";
 import { API } from "../constant/apiEndpoints";
+import { Route } from "../constant/navigationConstants";
+import { ThemeProps } from "../types/global.types";
+import { HomeNavigationProps } from "../types/navigation";
+import { ProductDataProps } from "../types/product.types";
+import { getData } from "../utils/asyncStorage";
 
 const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
   navigation,

@@ -3,9 +3,10 @@ import * as React from "react";
 import { StatusBar } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// relative path
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+// relative path
 import { Route } from "../constant/navigationConstants";
+import { AppRoutes } from "../types/navigation";
 import AllCategories from "../screen/Categories/AllCategories";
 import ModeOfDelivery from "../screen/ModeOfDelivery";
 import Splash from "../screen/Splash";
@@ -24,11 +25,12 @@ import EditProfile from "../screen/profile/EditProfile";
 import SearchProducts from "../screen/search/SearchProducts";
 import AddNewProduct from "../screen/sell/AddNewProduct";
 import Congratulations from "../screen/sell/Congratulations";
-import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
 import TakeSelfie from "../screen/authentication/TakeSelfie";
 import Chatroom from "../screen/chat/Chatroom";
+import MyStorefront from "../screen/Storefront/MyStorefront";
+import TransactionHistory from "../screen/profile/TransactionHistory";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -115,6 +117,11 @@ const MainStack = () => {
             component={ResetPassword}
           />
           <Stack.Screen name={Route.navChatroom} component={Chatroom} />
+          <Stack.Screen name={Route.navMyStorefront} component={MyStorefront} />
+          <Stack.Screen
+            name={Route.navTransactionHistory}
+            component={TransactionHistory}
+          />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

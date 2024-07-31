@@ -51,6 +51,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
       );
 
       const data = await response.json();
+      console.log("data", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setLoader(false);
@@ -60,6 +61,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
         setTotalPage(data?.data?.totalPages);
         setPage(page + 1);
       } else {
+        setProducts([]);
         setLoader(false);
       }
     } catch (error) {

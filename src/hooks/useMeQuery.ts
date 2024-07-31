@@ -7,7 +7,7 @@ import { API } from "../constant/apiEndpoints";
 export const useMeQuery = (
   options?: UseQueryOptions<getUserData, unknown, getUserData, QueryKey>
 ) => {
-  return useQuery(
+  return useQuery<getUserData>(
     QueryKeys.ME,
     async () => {
       const { data, errors, statusCode } = await fetch<getUserData>({

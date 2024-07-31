@@ -119,7 +119,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressProduct = (itemId: number) => {
-    console.log("itemId", itemId);
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 
@@ -142,7 +141,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressFilter = () => {
-    console.log("caleed");
     toggleFilterPopup();
   };
 
@@ -183,10 +181,9 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     );
 
     // Filter the data based on the maximum category ID
-    const filteredData = data.filter((item) =>
-      item.category_id.includes(maxCategoryId)
-    );
-
+    const filteredData = data.filter((item) => {
+      return item.category_id.includes(maxCategoryId);
+    });
     return filteredData;
   };
 

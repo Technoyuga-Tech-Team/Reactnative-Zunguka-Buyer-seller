@@ -8,6 +8,9 @@ import React, {
   useState,
 } from "react";
 import {
+  ActivityIndicator,
+  PermissionsAndroid,
+  Platform,
   StatusBar,
   Text,
   TextInput,
@@ -33,18 +36,33 @@ import LocationIcon from "../../components/ui/svg/LocationIcon";
 import SinglePlusIcon from "../../components/ui/svg/SinglePlusIcon";
 import {
   AddressData,
+  BASE_URL,
   CITIES,
+  GOOGLE_MAP_API_KEY,
   MAX_CHAR_LENGTH,
   SCREEN_WIDTH,
+  secureStoreKeys,
 } from "../../constant";
 import { DeliveryAddressScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setErrors } from "../../store/global/global.slice";
+import Geocoder from "react-native-geocoding";
+import Geolocation from "react-native-geolocation-service";
+import {
+  userDeliveryAddress,
+  userUpdateDeliveryAddress,
+} from "../../store/PaymentCard/paymentCard.thunk";
+import { useSelector } from "react-redux";
+import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
+import CheckBoxSelection from "../../components/ui/CheckBoxSelection";
+import { getData } from "../../utils/asyncStorage";
+import { API } from "../../constant/apiEndpoints";
+import { DeliveryAddressDataProps } from "../../types/payment.types";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -62,14 +80,17 @@ const DeliveryAddress: React.FC<
 
   const dispatch = useAppDispatch();
 
-  const [selectedAddress, setSelectedAddress] = useState<any>({});
+  const loading = useSelector(selectPaymentCardLoading);
+
+  const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
   const [visibleCountryPicker, setVisibleCountryPicker] =
     useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<CountryCode>("RW");
   const [country, setCountry] = useState<string | TranslationLanguageCodeMap>(
     ""
   );
-  const [visibleAddress, setVisibleAddress] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
@@ -78,26 +99,92 @@ const DeliveryAddress: React.FC<
   const [regionError, setRegionError] = useState("");
 
   const [tamp_phone, setTamp_phone] = useState<string>("");
+  const [makeDefault, setMakeDefault] = useState<number>(0);
+
+  const [deliveryAddress, setDeliveryAddress] = useState<
+    DeliveryAddressDataProps[]
+  >([]);
+
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+
+  const [editOn, setEditOn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getSavedAddress(10, 1, true);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const getSavedAddress = async (
+    limit: number,
+    page: number,
+    refresh: boolean
+  ) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `${BASE_URL}${API.GET_SAVED_DELIVERY_ADDRESS}/${limit}/${page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      // Handle the fetched data here
+      if (data && data?.data?.data?.length > 0) {
+        setIsLoading(false);
+        data?.data?.data.forEach((ele: DeliveryAddressDataProps) => {
+          if (ele.is_default == 1) {
+            setSelectedAddress(ele.id);
+          }
+        });
+        refresh
+          ? setDeliveryAddress([...data?.data?.data])
+          : setDeliveryAddress([...deliveryAddress, ...data?.data?.data]);
+
+        setTotalPage(data?.data?.totalPages);
+        setPage(page + 1);
+      } else {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+    }
+  };
 
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
 
-  const onPressItem = (item: any) => {
-    setSelectedAddress(item);
+  const onPressItem = (item: DeliveryAddressDataProps) => {
+    setSelectedAddress(item.id);
   };
-  const onPressEdit = (item: any) => {
-    setFieldValue("firstName", item.firstName);
-    setFieldValue("lastName", item.lastName);
-    phoneRef.current?.selectCountry("rw");
-    phoneRef.current?.setValue(item.phone);
-    setFieldValue("phoneNumber", item.phone);
-    setTamp_phone(item.phone);
+  const onPressEdit = (item: DeliveryAddressDataProps) => {
+    setFieldValue("firstName", item.first_name);
+    setFieldValue("lastName", item.last_name);
+    phoneRef.current?.selectCountry(item.iso);
+    phoneRef.current?.setValue(item.phone_number);
+    setFieldValue("phoneNumber", item.phone_number);
+    setTamp_phone(item.phone_number);
     setFieldValue("deliveryAddress", item.address);
+    setRegion({ key: item.region, title: item.region });
     setFieldValue("region", item.region);
+    setCity({ key: item.city, title: item.city });
     setFieldValue("city", item.city);
+    setMakeDefault(item.is_default);
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
+      setSelectedAddress(item.id);
+      setEditOn(true);
     }, 1000);
   };
 
@@ -127,7 +214,56 @@ const DeliveryAddress: React.FC<
       deliveryAddress,
       region,
       city,
-    }) => {},
+    }) => {
+      try {
+        const formData = new FormData();
+        formData.append("first_name", firstName);
+        formData.append("last_name", lastName);
+        formData.append("phone_number", phoneNumber);
+        formData.append("iso", countryCode.toLowerCase());
+        formData.append("address", deliveryAddress);
+        formData.append("region", region);
+        formData.append("city", city);
+        formData.append("is_default", makeDefault);
+        editOn && formData.append("address_id", selectedAddress);
+
+        if (editOn) {
+          const result = await dispatch(
+            userUpdateDeliveryAddress({ formData: formData })
+          );
+          if (userUpdateDeliveryAddress.fulfilled.match(result)) {
+            if (result.payload.status === 1) {
+              console.log(
+                "userUpdateDeliveryAddress result - - - ",
+                result.payload
+              );
+              getSavedAddress(10, 1, true);
+              handleClosePress();
+            }
+          } else {
+            console.log(
+              "userUpdateDeliveryAddress error - - - ",
+              result.payload
+            );
+          }
+        } else {
+          const result = await dispatch(
+            userDeliveryAddress({ formData: formData })
+          );
+          if (userDeliveryAddress.fulfilled.match(result)) {
+            if (result.payload.status === 1) {
+              console.log("userDeliveryAddress result - - - ", result.payload);
+              getSavedAddress(10, 1, true);
+              handleClosePress();
+            }
+          } else {
+            console.log("userDeliveryAddress error - - - ", result.payload);
+          }
+        }
+      } catch (error) {
+        console.log("catch error - - - ", error);
+      }
+    },
   });
 
   const onPressNewAddress = () => {
@@ -137,6 +273,11 @@ const DeliveryAddress: React.FC<
     setFieldValue("deliveryAddress", "");
     setFieldValue("region", "");
     setFieldValue("city", "");
+    setMakeDefault(0);
+    phoneRef.current?.selectCountry("rw");
+    phoneRef.current?.setValue("");
+    setRegion("");
+    setCity("");
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
     }, 500);
@@ -171,7 +312,84 @@ const DeliveryAddress: React.FC<
   };
 
   const onPressCurrentLocation = () => {
-    setVisibleAddress(true);
+    requestLocationPermission();
+  };
+
+  Geocoder.init(GOOGLE_MAP_API_KEY, { language: "en" });
+
+  const requestLocationPermission = async () => {
+    setLoader(true);
+    if (Platform.OS === "ios") {
+      await Geolocation.requestAuthorization("whenInUse");
+      getOneTimeLocation();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: "Location Access Required",
+            message: "This App needs to Access your location",
+            buttonPositive: "ok",
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          //To Check, If Permission is granted
+          getOneTimeLocation();
+        } else {
+          dispatch(
+            setErrors({
+              message: "Location permission Denied",
+              status: 0,
+              statusCode: null,
+            })
+          );
+          setLoader(false);
+        }
+      } catch (err) {
+        setLoader(false);
+        console.log(err);
+      }
+    }
+  };
+
+  const getOneTimeLocation = () => {
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      (position) => {
+        //getting the Longitude from the location json
+        const currentLongitude = position.coords.longitude;
+
+        //getting the Latitude from the location json
+        const currentLatitude = position.coords.latitude;
+        getCurrentAddress(currentLatitude, currentLongitude);
+      },
+      (error) => {
+        setLoader(false);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000,
+      }
+    );
+  };
+
+  const getCurrentAddress = (lat: number, lng: number) => {
+    Geocoder.from(lat, lng)
+      .then((json) => {
+        var addressComponent = json.results[0].formatted_address;
+        // setAddress(addressComponent);
+        setFieldValue("deliveryAddress", addressComponent);
+        setLoader(false);
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.log(error);
+      });
+  };
+
+  const handleCheckboxChange = () => {
+    setMakeDefault(makeDefault == 1 ? 0 : 1);
   };
 
   const RenderAddressItems = () => {
@@ -251,7 +469,15 @@ const DeliveryAddress: React.FC<
           activeOpacity={0.8}
           onPress={onPressCurrentLocation}
         >
-          <LocationIcon color={theme?.colors?.primary} height={16} width={16} />
+          {loader ? (
+            <ActivityIndicator color={theme?.colors?.primary} />
+          ) : (
+            <LocationIcon
+              color={theme?.colors?.primary}
+              height={16}
+              width={16}
+            />
+          )}
           <Text style={style.txtChooseLocation}>Auto-locate address</Text>
         </TouchableOpacity>
         <CustomDropdown
@@ -262,6 +488,7 @@ const DeliveryAddress: React.FC<
           onSelect={(val) => {
             setRegionError("");
             setRegion(val.key);
+            setFieldValue("region", val.key);
           }}
           error={regionError}
         />
@@ -273,16 +500,41 @@ const DeliveryAddress: React.FC<
           onSelect={(val) => {
             setCityError("");
             setCity(val.key);
+            setFieldValue("city", val.key);
           }}
           error={cityError}
         />
         <View style={{ marginVertical: 10 }}>
+          <CheckBoxSelection
+            isChecked={makeDefault == 1}
+            onPressCheckbox={handleCheckboxChange}
+            itemName={"Make as default"}
+            itemValue={"Make as default"}
+            containerStyle={style.checkCont}
+            textStyle={style.txtCheckCont}
+            iconSize={22}
+          />
+        </View>
+        <View style={{ marginVertical: 10 }}>
           <CustomButton
-            onPress={() => handleSubmit()}
+            onPress={() => {
+              if (region == "" && city == "") {
+                setRegionError("Please select the region");
+                setCityError("Please select the city");
+              } else if (region == "") {
+                setRegionError("Please select the region");
+              } else if (city == "") {
+                setCityError("Please select the city");
+              } else {
+                handleSubmit();
+              }
+            }}
             title={"Save"}
             buttonWidth="full"
             variant="primary"
             type="solid"
+            loading={loading == LoadingState.CREATE}
+            disabled={loading == LoadingState.CREATE}
           />
         </View>
       </View>
@@ -303,6 +555,12 @@ const DeliveryAddress: React.FC<
     }
   };
 
+  const onEndReached = () => {
+    if (page <= totalPage && !loading) {
+      getSavedAddress(10, page, true);
+    }
+  };
+
   return (
     <View style={style.container}>
       <StatusBar
@@ -312,10 +570,12 @@ const DeliveryAddress: React.FC<
       <CustomHeader title="Select delivery address" />
       <View style={style.innerCont}>
         <DeliveryAddressList
-          DeliveryAddressData={AddressData}
+          DeliveryAddressData={deliveryAddress}
           selectedAddress={selectedAddress}
           onPressItem={(item) => onPressItem(item)}
           onPressEdit={(item) => onPressEdit(item)}
+          isLoading={isLoading}
+          onEndReached={onEndReached}
         />
       </View>
       <CustomButton
@@ -404,5 +664,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.primary,
     marginLeft: 10,
+  },
+  checkCont: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  txtCheckCont: {
+    fontSize: theme.fontSize?.fs13,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.textPrimary,
   },
 }));
