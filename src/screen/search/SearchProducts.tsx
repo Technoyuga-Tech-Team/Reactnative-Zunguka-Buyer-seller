@@ -36,23 +36,26 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   const [searchValue, setSearchValue] = useState<string>("");
   const [filterItems, setFilterItems] = useState<any>(null);
 
-  console.log("filterItems - - - - ", filterItems);
-
-  useEffect(() => {
-    setProducts([]);
-    if (subCat) {
-      setSearchValue(subCat);
-    } else {
-      setSearchValue(mainCat);
-    }
-  }, [mainCat, subCat]);
-
   const debouncedSearchTerm = useDebounce(searchValue, 500);
 
   useEffect(() => {
-    console.log("debouncedSearchTerm - - - - - -", debouncedSearchTerm);
-    getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
-  }, [debouncedSearchTerm, mainCat, subCat]);
+    if (subCat) {
+      console.log("called subcat");
+      setSearchValue(subCat);
+      getSearchedItems(mainCat, 10, 1, true, null);
+    } else if (mainCat) {
+      console.log("called mainCat");
+      setSearchValue(mainCat);
+      getSearchedItems(mainCat, 10, 1, true, null);
+    } else {
+      getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+    }
+  }, [mainCat, subCat, debouncedSearchTerm]);
+
+  // useEffect(() => {
+  //   console.log("debouncedSearchTerm - - - - - -", debouncedSearchTerm);
+  // getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+  // }, [debouncedSearchTerm, mainCat, subCat]);
 
   const getSearchedItems = async (
     keyword: string,
@@ -62,14 +65,14 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     filterItems: any
   ) => {
     keyword !== "" && setProducts([]);
+
+    console.log("keyword", keyword);
+    console.log("fromChangeKeyword", fromChangeKeyword);
+    console.log("filterItems", filterItems);
+
     try {
       setLoader(true);
       const formData = new FormData();
-      console.log(
-        "filterItems?.subCategoryId",
-        filterItems?.parantCategoryId,
-        filterItems?.subCategoryId
-      );
       formData.append("is_search", keyword ? 1 : 0);
       formData.append("keyword", keyword);
 
@@ -105,9 +108,11 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
           if ((fromChangeKeyword && keyword == "") || filterItems) {
             setProducts(result.payload?.data?.data);
           } else {
-            keyword !== ""
-              ? setProducts(result.payload?.data?.data)
-              : setProducts([...products, ...result.payload?.data?.data]);
+            console.log("caledd = == = = = = = == = = = = =");
+            setProducts([...products, ...result.payload?.data?.data]);
+            // keyword !== ""
+            //   ? setProducts([...products, ...result.payload?.data?.data])
+            //   : setProducts([...products, ...result.payload?.data?.data]);
           }
 
           setTotalPage(result.payload?.data?.totalPages);

@@ -620,6 +620,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           style={style.textInput}
           multiline={true}
           textAlignVertical="top"
+          maxLength={200}
           onChangeText={onChangeProductDescription}
           onBlur={onBlurDescription}
           value={productDescription}

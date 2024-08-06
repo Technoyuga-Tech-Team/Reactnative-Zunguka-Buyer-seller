@@ -21,6 +21,7 @@ interface ProductInfoProps {
   isProductLike: boolean;
   onPressMessage: () => void;
   productLikes: number;
+  isCurrentUsersProduct?: boolean;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -29,6 +30,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   isProductLike,
   onPressMessage,
   productLikes,
+  isCurrentUsersProduct,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -56,35 +58,39 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       <View style={style.paddingCont}>
         <View style={style.productNameCont}>
           <Text style={style.txtProductName}>{productDetails?.title}</Text>
-          <TouchableOpacity
-            onPress={onPressSavedItem}
-            activeOpacity={0.8}
-            style={style.heartCont}
-          >
-            {isProductLike ? (
-              <FilledHeartIcon color={"#D0650F"} />
-            ) : (
-              <OutlineHeartIcon color={theme?.colors?.unselectedIconColor} />
-            )}
-            {productLikes > 0 && (
-              <Text style={style.txtCount}>{productLikes}</Text>
-            )}
-          </TouchableOpacity>
+          {!isCurrentUsersProduct && (
+            <TouchableOpacity
+              onPress={onPressSavedItem}
+              activeOpacity={0.8}
+              style={style.heartCont}
+            >
+              {isProductLike ? (
+                <FilledHeartIcon color={"#D0650F"} />
+              ) : (
+                <OutlineHeartIcon color={theme?.colors?.unselectedIconColor} />
+              )}
+              {productLikes > 0 && (
+                <Text style={style.txtCount}>{productLikes}</Text>
+              )}
+            </TouchableOpacity>
+          )}
         </View>
         <View style={style.productNameCont}>
           <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
-          <TouchableOpacity
-            onPress={onPressMessage}
-            activeOpacity={0.8}
-            style={style.heartCont}
-          >
-            <MessageOutlineIcon
-              color={theme?.colors?.unselectedIconColor}
-              height={15}
-              width={15}
-            />
-            {/* <Text style={style.txtCount}>100</Text> */}
-          </TouchableOpacity>
+          {!isCurrentUsersProduct && (
+            <TouchableOpacity
+              onPress={onPressMessage}
+              activeOpacity={0.8}
+              style={style.heartCont}
+            >
+              <MessageOutlineIcon
+                color={theme?.colors?.unselectedIconColor}
+                height={15}
+                width={15}
+              />
+              {/* <Text style={style.txtCount}>100</Text> */}
+            </TouchableOpacity>
+          )}
         </View>
         <View style={style.addrCont}>
           <Text style={style.txtDate}>Posted {time}</Text>

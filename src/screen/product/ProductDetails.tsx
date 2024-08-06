@@ -61,7 +61,6 @@ const ProductDetails: React.FC<
     data: productDetailsData,
     refetch,
     isLoading,
-    isFetching,
     isError,
   } = useProductDetails(itemId, { cacheTime: 0, enabled: false });
 
@@ -186,7 +185,7 @@ const ProductDetails: React.FC<
       contentContainerStyle={style.container}
       refreshControl={
         <RefreshControl
-          refreshing={isLoading || isFetching}
+          refreshing={isLoading}
           onRefresh={onRefresh}
           tintColor={theme?.colors?.primary}
           // @ts-ignore
@@ -199,7 +198,7 @@ const ProductDetails: React.FC<
         backgroundColor={theme.colors?.transparent}
         barStyle={"light-content"}
       />
-      {(isLoading || isFetching) && <Loading />}
+      {isLoading && <Loading />}
       <ProductBanner productBannerData={productBannerData} />
       <View style={style.header}>
         <ProductHeader
@@ -215,6 +214,7 @@ const ProductDetails: React.FC<
         isProductLike={savedItem}
         productLikes={productLikes}
         onPressMessage={onPressMessage}
+        isCurrentUsersProduct={is_CurrentUsers_product}
       />
       {!is_CurrentUsers_product && (
         <View style={style.button}>
