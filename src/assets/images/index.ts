@@ -4,6 +4,9 @@ export enum Images {
   ROUND_LOGO = require("../images/roundedLogo.png"),
   MESSAGE_OTP = require("../images/MessagesOTP.png"),
   ONBOARD = require("../images/group.png"),
+  LOADER = require("../images/loading.png"),
+  OOPS = require("../images/oops.png"),
+  CHEARS = require("../images/confetti.png"),
 
   PLACEHOLDER_IMAGE = require("../images/placeholder.jpg"),
   HEADER_HOME_IMAGE = require("../images/home_header.png"),

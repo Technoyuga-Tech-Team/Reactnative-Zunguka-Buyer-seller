@@ -42,7 +42,7 @@ interface FilterProductPopupProps {
     parantCategoryId: any,
     subCategoryId: any,
     brand: any,
-    selectedCondition: any,
+    selectedConditionValue: any,
     selectedColors: any,
     minPrice: any,
     maxPrice: any,
@@ -84,6 +84,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const [selectedRatings, setSelectedRatings] = useState<any[]>([]);
   const [selectedRatingsValues, setSelectedRatingsValues] = useState([]);
   const [sliderVal, setSliderVal] = useState({ low: 10, high: 400 });
+  const [selectedConditionValue, setSelectedConditionValue] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
   const [conditionData, setConditionData] = useState(CONDITIONS);
 
@@ -122,6 +123,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
 
   const onPressItem = (index: number) => {
     setSelectedCondition(conditionData[index].title);
+    setSelectedConditionValue(conditionData[index].value);
     setConditionData(
       conditionData.map((item, itemIndex) => ({
         ...item,
@@ -319,7 +321,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
                   parantCategoryId,
                   subCategoryId,
                   selectedBrand.id,
-                  selectedCondition,
+                  selectedConditionValue,
                   selectedColors.join(", "),
                   sliderVal.low,
                   sliderVal.high,

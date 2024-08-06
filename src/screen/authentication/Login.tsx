@@ -128,13 +128,13 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
               })
             );
           } else {
-            if (steps == 0 || steps == 1) {
+            if (steps == 0) {
               dispatch(saveAddress(""));
               navigation.navigate(Route.navYourAddress, { fromOTP: false });
-            } else if (steps == 2) {
+            } else if (steps == 1) {
               navigation.navigate(Route.navAddKyc, { fromOTP: false });
-            } else if (steps == 3) {
-              navigation.navigate(Route.navTakeSelfie);
+            } else if (steps == 2 || steps == 3) {
+              navigation.navigate(Route.navTakeSelfie, { fromflow: false });
             }
           }
         }

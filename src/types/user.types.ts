@@ -67,8 +67,9 @@ export type UserData = {
   zip_code: string;
   kyc_documents: string;
   id_type: null;
-  is_kyc_verified_by_admin: null;
+  is_kyc_verified_by_admin: number;
   selfie_image: string;
+  is_selfie_uploaded: number;
 };
 
 export interface getUserData {

@@ -27,6 +27,7 @@ import { setErrors, setSuccess } from "../../../store/global/global.slice";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import { useSelector } from "react-redux";
 import { CommonActions } from "@react-navigation/native";
+import { selectUserData } from "../../../store/settings/settings.selectors";
 
 const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   navigation,
@@ -37,6 +38,9 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const from = route?.params?.fromOTP || false;
+
+  const userData = useSelector(selectUserData);
+
   const loading = useSelector(selectAuthenticationLoading);
 
   const [country, setCountry] = useState();
@@ -51,6 +55,8 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
     useState<string>("");
 
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {}, [userData]);
 
   useEffect(() => {
     const onBackPress = () => {
@@ -181,13 +187,15 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
           if (result.payload.status === 1) {
             console.log("userVerifyId result - - - ", result.payload);
             dispatch(setSuccess(result.payload.message));
-            navigation.navigate(Route.navTakeSelfie);
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 0,
-            //     routes: [{ name: Route.navDashboard }],
-            //   })
-            // );
+            // navigation.navigate(Route.navTakeSelfie, { fromflow: true });
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  { name: Route.navTakeSelfie, params: { fromflow: true } },
+                ],
+              })
+            );
           }
         } else {
           console.log("userVerifyId error - - - ", result.payload);

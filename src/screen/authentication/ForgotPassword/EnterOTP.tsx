@@ -53,7 +53,6 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   const loading = useSelector(selectAuthenticationLoading);
 
   const phone = route?.params?.phone;
-  console.log("phone", phone);
   const type = route?.params?.type;
 
   const timerRef = useRef();
@@ -207,9 +206,25 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
             if (steps !== 2) {
               if (steps == 0) {
                 dispatch(saveAddress(""));
-                navigation.navigate(Route.navYourAddress, { fromOTP: true });
+                // navigation.navigate(Route.navYourAddress, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navYourAddress, params: { fromOTP: true } },
+                    ],
+                  })
+                );
               } else if (steps == 1) {
-                navigation.navigate(Route.navAddKyc, { fromOTP: true });
+                // navigation.navigate(Route.navAddKyc, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navAddKyc, params: { fromOTP: true } },
+                    ],
+                  })
+                );
               }
             } else {
               navigation.dispatch(

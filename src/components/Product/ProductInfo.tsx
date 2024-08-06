@@ -47,6 +47,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     ? moment(productDetails?.created_at).format("DD/MM/YYYY")
     : "";
 
+  const Addr =
+    productDetails?.district && productDetails?.sector
+      ? `${productDetails?.district}, ${productDetails?.sector}`
+      : productDetails?.address;
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
@@ -82,10 +86,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             {/* <Text style={style.txtCount}>100</Text> */}
           </TouchableOpacity>
         </View>
-        {/* <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text> */}
         <View style={style.addrCont}>
           <Text style={style.txtDate}>Posted {time}</Text>
-          <Text style={style.txtDistrict}>{productDetails?.city}</Text>
+          <Text style={style.txtDistrict}>{Addr}</Text>
         </View>
       </View>
       <ItemSeparator />

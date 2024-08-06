@@ -98,14 +98,39 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
               dispatch(setSuccess(result.payload.message));
             } else {
               if (steps == 0) {
-                if (steps == 0 || steps == 1) {
-                  dispatch(saveAddress(""));
-                  navigation.navigate(Route.navYourAddress, { fromOTP: true });
-                } else if (steps == 2) {
-                  navigation.navigate(Route.navAddKyc, { fromOTP: true });
-                } else if (steps == 3) {
-                  navigation.navigate(Route.navTakeSelfie);
-                }
+                dispatch(saveAddress(""));
+                navigation.navigate(Route.navYourAddress, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navYourAddress, params: { fromOTP: true } },
+                    ],
+                  })
+                );
+              } else if (steps == 1) {
+                // navigation.navigate(Route.navAddKyc, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navAddKyc, params: { fromOTP: true } },
+                    ],
+                  })
+                );
+              } else if (steps == 2 || steps == 3) {
+                // navigation.navigate(Route.navTakeSelfie, { fromflow: false });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: Route.navTakeSelfie,
+                        params: { fromflow: false },
+                      },
+                    ],
+                  })
+                );
               }
             }
             // if (steps !== 2) {

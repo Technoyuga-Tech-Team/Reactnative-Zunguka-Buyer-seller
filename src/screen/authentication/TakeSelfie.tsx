@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  BackHandler,
   ImageBackground,
   Platform,
   StatusBar,
@@ -42,13 +43,18 @@ import { fetch } from "../../store/fetch";
 import { setUserData } from "../../store/settings/settings.slice";
 import { setData } from "../../utils/asyncStorage";
 import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
+import { useMeQuery } from "../../hooks/useMeQuery";
+import Loading from "../../components/ui/Loading";
 
 const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+
+  const { fromflow } = route.params;
 
   const dispatch = useAppDispatch();
 
@@ -59,16 +65,32 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   const cameraRef = useRef<RNCamera>(null);
   const [capturing, setCapturing] = useState(false);
 
+  const [loader, setLoader] = useState(true);
   const [newUploaded, setNewUploaded] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [accountStatus, setAccountStatus] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
+  const [selfieUploaded, setSelfieUploded] = useState<number>(0);
+  const [isVerifiedByAdmin, setIsVerifiedByAdmin] = useState<number>(0);
   const [profileImage, setProfileImage] = useState<imagePickerProps>({
     name: "",
     type: "",
     uri: "",
   });
 
+  const { data: currentUser, refetch: refetchUser } = useMeQuery({
+    staleTime: Infinity,
+    refetchInterval: 5000,
+  });
+
   useEffect(() => {
+    if (currentUser?.user) {
+      dispatch(setUserData(currentUser?.user));
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    refetchUser();
     const init = async () => {
       await RNBootSplash.hide();
     };
@@ -76,10 +98,57 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
   }, []);
 
   useEffect(() => {
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
     if (userData) {
       setProfilePicture(userData?.selfie_image);
+      console.log(
+        "userData?.is_kyc_verified_by_admin",
+        userData?.is_kyc_verified_by_admin
+      );
+      setIsVerifiedByAdmin(userData?.is_kyc_verified_by_admin);
+      setSelfieUploded(userData?.is_selfie_uploaded);
     }
   }, [userData]);
+
+  useEffect(() => {
+    // uploaded and rejected by admin
+    if (selfieUploaded == 1 && isVerifiedByAdmin == 2) {
+      setAccountStatus("Rejected");
+    } else if (
+      (selfieUploaded == 0 || selfieUploaded == 1) &&
+      isVerifiedByAdmin == 0
+    ) {
+      setAccountStatus("Pending");
+    } else if (selfieUploaded == 1 && isVerifiedByAdmin == 1) {
+      setAccountStatus("Completed");
+    }
+  }, [selfieUploaded, isVerifiedByAdmin]);
+
+  useEffect(() => {
+    const onBackPress = () => {
+      if (showCamera) {
+        setShowCamera(false);
+        return true;
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navAuthentication }],
+          })
+        );
+        return true;
+      }
+      return false;
+    };
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  }, [showCamera]);
 
   const takePictureAsync = async () => {
     if (cameraRef.current && !capturing) {
@@ -182,12 +251,32 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
     }
   };
 
-  console.log("profilePicture", profilePicture);
+  console.log("selfieUploaded", selfieUploaded);
+  console.log("accountStatus", accountStatus);
+
+  const onPressBackBtn = () => {
+    if (navigation?.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navAuthentication }],
+        })
+      );
+    }
+  };
 
   return (
     <View style={style.container}>
       <StatusBar translucent backgroundColor={"transparent"} />
-      <CustomHeader title="Selfie Verification" />
+      <CustomHeader
+        title="Selfie Verification"
+        isBackVisible={fromflow}
+        isOutsideBack={true}
+        onPressBackBtn={onPressBackBtn}
+      />
+      {loader && <Loading backgroundColor={theme?.colors?.white} />}
       {showCamera ? (
         <View style={style.cameraCont}>
           <RNCamera
@@ -200,7 +289,6 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
               height: SCREEN_HEIGHT,
               width: SCREEN_WIDTH,
               position: "absolute",
-              // bottom: 0,
             }}
             source={Images.SELFIE_BG_IMAGE}
           />
@@ -232,74 +320,143 @@ const TakeSelfie: React.FC<AuthNavigationProps<Route.navTakeSelfie>> = ({
         </View>
       ) : (
         <View style={{ flex: 1, paddingBottom: insets.bottom + 10 }}>
-          <View style={{ marginTop: 50, flex: 1 }}>
-            <ProfileImage
-              profileImage={profilePicture}
-              onPressCamera={onPressCamera}
-              imageStyle={style.profileImage}
-            />
-            <Text style={[style.txtFace, { marginTop: 20 }]}>
-              Kindly click picture of your face for verify with your documents
-            </Text>
-          </View>
-          <CustomButton
-            onPress={async () => {
-              if (profilePicture !== "") {
-                if (userData?.is_profile_completed == 1 && !newUploaded) {
-                  const { data: currentUser } = await fetch<getUserData>({
-                    url: API.ME,
-                    method: "GET",
-                  });
-                  if (currentUser?.status == 1) {
-                    if (currentUser?.user?.is_kyc_verified_by_admin == 1) {
-                      dispatch(setUserData(currentUser?.user));
-                      setData(USER_DATA, currentUser?.user);
-                      navigation.dispatch(
-                        CommonActions.reset({
-                          index: 0,
-                          routes: [{ name: Route.navDashboard }],
-                        })
-                      );
-                    } else {
-                      if (currentUser?.user?.is_kyc_verified_by_admin == 0) {
-                        dispatch(
-                          setErrors({
-                            message: "Wait for the verify by Admin",
-                            status: 0,
-                            statusCode: null,
+          {selfieUploaded == 1 && accountStatus == "Pending" ? (
+            <>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <AppImage
+                  source={Images.LOADER}
+                  style={{ height: 70, width: 70, marginBottom: 20 }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: Scale(30),
+                    fontFamily: theme?.fontFamily?.bold,
+                    color: theme?.colors?.black,
+                  }}
+                >
+                  Profile under review
+                </Text>
+                <Text style={style.txtFace}>
+                  Your profile is under review, Admin will verify soon
+                </Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={{ marginTop: 50, flex: 1 }}>
+                <ProfileImage
+                  profileImage={profilePicture}
+                  onPressCamera={onPressCamera}
+                  imageStyle={style.profileImage}
+                  showIcon={
+                    accountStatus == "Pending" || accountStatus == "Rejected"
+                  }
+                />
+
+                {accountStatus == "Pending" && (
+                  <Text style={[style.txtFace, { marginTop: 20 }]}>
+                    Kindly click picture of your face for verify with your
+                    documents
+                  </Text>
+                )}
+                {accountStatus == "Rejected" && (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 50,
+                    }}
+                  >
+                    <AppImage
+                      source={Images.OOPS}
+                      style={{ height: 80, width: 80 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={[style.txtFace, { marginTop: 20 }]}>
+                      Your Profile is Rejeceted by Admin, please upload new
+                      selfie!
+                    </Text>
+                  </View>
+                )}
+                {accountStatus == "Completed" && (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 50,
+                    }}
+                  >
+                    <AppImage
+                      source={Images.CHEARS}
+                      style={{ height: 100, width: 100 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={[style.txtFace, { marginTop: 20 }]}>
+                      Your Profile is Verified by Admin, You are good to go!
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <CustomButton
+                onPress={async () => {
+                  if (profilePicture && profilePicture !== "") {
+                    if (userData?.is_profile_completed == 1 && !newUploaded) {
+                      if (accountStatus == "Completed") {
+                        setData(USER_DATA, userData);
+                        navigation.dispatch(
+                          CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: Route.navDashboard }],
                           })
                         );
                       } else {
-                        dispatch(
-                          setErrors({
-                            message: "Your Profile is rejected by the Admin.",
-                            status: 0,
-                            statusCode: null,
-                          })
-                        );
+                        if (accountStatus == "Pending") {
+                          dispatch(
+                            setErrors({
+                              message: "Wait for the verify by Admin",
+                              status: 0,
+                              statusCode: null,
+                            })
+                          );
+                        } else {
+                          dispatch(
+                            setErrors({
+                              message: "Your Profile is rejected by the Admin.",
+                              status: 0,
+                              statusCode: null,
+                            })
+                          );
+                        }
                       }
+                    } else {
+                      onPressContinue();
                     }
+                  } else {
+                    dispatch(
+                      setErrors({
+                        message: "Please take the selfie",
+                        status: 0,
+                        statusCode: null,
+                      })
+                    );
                   }
-                } else {
-                  onPressContinue();
-                }
-              } else {
-                dispatch(
-                  setErrors({
-                    message: "Please take the selfie",
-                    status: 0,
-                    statusCode: null,
-                  })
-                );
-              }
-            }}
-            title={"Continue"}
-            buttonWidth="full"
-            variant="primary"
-            type="solid"
-            disabled={loading === LoadingState.CREATE}
-            loading={loading === LoadingState.CREATE}
-          />
+                }}
+                title={"Continue"}
+                buttonWidth="full"
+                variant="primary"
+                type="solid"
+                disabled={loading === LoadingState.CREATE}
+                loading={loading === LoadingState.CREATE}
+              />
+            </>
+          )}
         </View>
       )}
     </View>

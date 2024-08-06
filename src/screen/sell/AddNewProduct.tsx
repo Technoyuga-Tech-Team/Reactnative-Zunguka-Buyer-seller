@@ -1,6 +1,7 @@
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
+  BackHandler,
   Keyboard,
   Platform,
   Text,
@@ -32,6 +33,7 @@ import {
   CITIES,
   COLORS,
   CONDITIONS,
+  DISTRICT_AND_SECTORS,
   HIT_SLOP2,
   SCREEN_HEIGHT,
   SIZES,
@@ -77,8 +79,15 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [productCategory, setProductCategory] = useState("");
   const [productCategoryError, setProductCategoryError] = useState("");
 
-  const [city, setCity] = useState("");
-  const [cityError, setCityError] = useState("");
+  const [district, setDistrict] = useState("");
+  const [districtError, setDistrictError] = useState("");
+
+  const [sector, setSector] = useState("");
+  const [sectorError, setSectorError] = useState("");
+
+  const [sectorData, setSectorData] = useState<
+    { title: string; key: string }[]
+  >([]);
 
   const [vehicle, setVehicle] = useState("");
   const [vehicleError, setVehicleError] = useState("");
@@ -153,6 +162,35 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     }
   }, [categoriesData]);
 
+  useEffect(() => {
+    if (district) {
+      console.log("district", district);
+      DISTRICT_AND_SECTORS.map((ele) => {
+        if (ele.key == district) {
+          setSectorData(ele.sectors);
+        }
+      });
+    }
+  }, [district]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (visibleCategories || visibleBrands || visibleColor || visibleSize) {
+          setVisibleCategories(false);
+          setVisibleBrands(false);
+          setVisibleColor(false);
+          setVisibleSize(false);
+          return true;
+        }
+        return false;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [visibleCategories, visibleBrands, visibleColor, visibleSize])
+  );
+
   const ModalHeader = ({
     title,
     onPress,
@@ -218,14 +256,19 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const onBlurLocation = () => {
     let isValid = isRequiredFields(productLocation);
     if (!isValid) {
-      setProductLocationError("Location is required");
+      setProductLocationError("Address is required");
     }
   };
 
   const onChangeProductSelling = (val: string) => {
-    setProductSellingPriceError("");
-    const newValue = val.replace(/\./, "");
-    setProductSellingPrice(newValue);
+    if (Number(val) > 0) {
+      setProductSellingPriceError("");
+      const newValue = val.trim();
+      setProductSellingPrice(newValue);
+    } else {
+      setProductSellingPrice("");
+      setProductSellingPriceError("Selling price is not valid");
+    }
   };
 
   const onChangeProductTitle = (val: string) => {
@@ -261,7 +304,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     let isValidBrands = isRequiredFields(selectedBrand.name);
     let isValidColors = isRequiredFields(selectedColors[0]);
     let isValidSize = isRequiredFields(selectedSizeValue[0]);
-    let isValidCity = isRequiredFields(city);
+    let isValidCity = isRequiredFields(district);
     let isValidAddress = isRequiredFields(productLocation);
     let isValidDescription = isRequiredFields(productDescription);
     let isValidModeOfTransport = isRequiredFields(vehicle);
@@ -294,7 +337,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
       return false;
     } else if (!isValidCity) {
-      setCityError("City is required");
+      setDistrictError("District is required");
       return false;
     } else if (!isValidAddress) {
       setProductLocationError("Address is required");
@@ -341,7 +384,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("brand_id", selectedBrand.id);
       formData.append("color", selectedColors.join(", "));
       formData.append("size", selectedSizeValue.join(", "));
-      formData.append("city", city);
+      formData.append("district", district);
+      formData.append("sector", sector);
+      formData.append("city", district);
       formData.append("address", productLocation);
       formData.append("description", productDescription);
       formData.append("mode_of_transport", vehicle.toLocaleLowerCase());
@@ -521,16 +566,29 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <TitleWithInfoIcon title="Location" />
         <View style={style.paddingHorizontal}>
           <CustomDropdown
-            dropDownData={CITIES}
-            placeHolder={"City"}
-            value={city}
+            dropDownData={DISTRICT_AND_SECTORS}
+            placeHolder={"District"}
+            value={district}
             topMargin={20}
             onSelect={(val) => {
-              setCityError("");
-              setCity(val.key);
+              setDistrictError("");
+              setDistrict(val.key);
             }}
-            error={cityError}
+            error={districtError}
           />
+          {sectorData?.length > 0 && (
+            <CustomDropdown
+              dropDownData={sectorData}
+              placeHolder={"Sector"}
+              value={sector}
+              topMargin={20}
+              onSelect={(val) => {
+                setSectorError("");
+                setSector(val.key);
+              }}
+              error={sectorError}
+            />
+          )}
         </View>
         <View style={style.paddingHorizontal}>
           <CustomTxtInput
@@ -568,6 +626,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           error={productDescriptionError}
           touched={productDescriptionError !== ""}
           onSubmitEditing={() => {}}
+          extraPeddingLeft={true}
         />
 
         <TitleWithInfoIcon title="Mode of transports" />
@@ -589,7 +648,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           placeholder="Enter price"
           returnKeyType="done"
           returnKeyLabel="done"
-          keyboardType={"number-pad"}
+          keyboardType={"numeric"}
           icon={<Text style={style.txtrf}>R₣</Text>}
           onChangeText={onChangeProductSelling}
           onBlur={onBlurSellingPrice}
@@ -598,6 +657,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           touched={productSellingPriceError !== ""}
           textInputStyle={style.inputSellingPrice}
           style={style.txtSellingPrice}
+          extraPeddingLeft={true}
         />
         <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
           <TermsAndCondition

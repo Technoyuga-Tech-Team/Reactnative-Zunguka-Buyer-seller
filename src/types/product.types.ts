@@ -87,4 +87,6 @@ export interface ProductDetailsDataProps {
   user: sellerDetailsProps;
   brand: brandInfo;
   likes_count: number;
+  sector: string;
+  district: string;
 }

@@ -44,6 +44,8 @@ const Splash: React.FC<SplashScreenProps> = () => {
         let steps = user_data.step;
         let isStepCompleted = user_data.is_profile_completed;
         let isVerify_by_Admin = user_data.is_kyc_verified_by_admin;
+        console.log("isStepCompleted", isStepCompleted);
+        console.log("isVerify_by_Admin", isVerify_by_Admin);
         console.log("steps", steps);
         if (is_username == 0) {
           // @ts-ignore
@@ -69,16 +71,40 @@ const Splash: React.FC<SplashScreenProps> = () => {
               })
             );
           } else {
-            if (steps == 0 || steps == 1) {
+            if (steps == 0) {
               dispatch(saveAddress(""));
               // @ts-ignore
-              navigation.navigate(Route.navYourAddress, { fromOTP: true });
-            } else if (steps == 2) {
+              // navigation.navigate(Route.navYourAddress, { fromOTP: true });
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: Route.navYourAddress, params: { fromOTP: true } },
+                  ],
+                })
+              );
+            } else if (steps == 1) {
               // @ts-ignore
-              navigation.navigate(Route.navAddKyc, { fromOTP: true });
-            } else if (steps == 3) {
+              // navigation.navigate(Route.navAddKyc, { fromOTP: true });
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: Route.navAddKyc, params: { fromOTP: true } },
+                  ],
+                })
+              );
+            } else if (steps == 2 || steps == 3) {
               // @ts-ignore
-              navigation.navigate(Route.navTakeSelfie);
+              // navigation.navigate(Route.navTakeSelfie, { fromflow: false });
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: Route.navTakeSelfie, params: { fromflow: false } },
+                  ],
+                })
+              );
             }
           }
 

@@ -1,6 +1,6 @@
 import { CommonActions } from "@react-navigation/native";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { Keyboard, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,7 +14,10 @@ import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
 import { userAddUserName } from "../../store/authentication/authentication.thunks";
-import { saveAddress } from "../../store/settings/settings.slice";
+import {
+  saveAddress,
+  setErrorFromSocial,
+} from "../../store/settings/settings.slice";
 import { UsernameFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { AuthNavigationProps } from "../../types/navigation";
@@ -29,6 +32,10 @@ const AddUserName: React.FC<AuthNavigationProps<Route.navAddUserName>> = ({
   const loading = useSelector(selectAuthenticationLoading);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setErrorFromSocial(false));
+  }, []);
 
   const {
     handleChange,
@@ -58,9 +65,25 @@ const AddUserName: React.FC<AuthNavigationProps<Route.navAddUserName>> = ({
           if (steps !== 2) {
             if (steps == 0) {
               dispatch(saveAddress(""));
-              navigation.navigate(Route.navYourAddress, { fromOTP: true });
+              // navigation.navigate(Route.navYourAddress, { fromOTP: true });
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: Route.navYourAddress, params: { fromOTP: true } },
+                  ],
+                })
+              );
             } else if (steps == 1) {
-              navigation.navigate(Route.navAddKyc, { fromOTP: true });
+              // navigation.navigate(Route.navAddKyc, { fromOTP: true });
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    { name: Route.navAddKyc, params: { fromOTP: true } },
+                  ],
+                })
+              );
             }
           } else {
             navigation.dispatch(

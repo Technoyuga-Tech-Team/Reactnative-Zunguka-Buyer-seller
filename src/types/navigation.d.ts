@@ -80,7 +80,7 @@ export type AuthenticationRoutes = {
   Authentication: undefined;
   ResetPassword: { phone?: string; email?: string };
   ChangePassword: undefined;
-  TakeSelfie: undefined;
+  TakeSelfie: { fromflow?: boolean };
 };
 
 export type BottomRoutes = {

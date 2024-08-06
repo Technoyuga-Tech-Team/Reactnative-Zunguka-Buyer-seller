@@ -30,6 +30,7 @@ import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
+import { setUserData } from "../../store/settings/settings.slice";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -75,6 +76,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     // dispatch(logout());
     await setData(secureStoreKeys.JWT_TOKEN, null);
     await setData(USER_DATA, null);
+    dispatch(setUserData({}));
     navigation.dispatch(
       CommonActions.reset({
         index: 0,

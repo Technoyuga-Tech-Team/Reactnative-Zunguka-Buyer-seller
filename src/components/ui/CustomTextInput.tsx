@@ -24,6 +24,7 @@ export interface CustomTxtInputProps extends TextInputProps {
   textInputStyle?: ViewStyleProps;
   isBehindFields?: boolean;
   iconPosition?: "right" | "left";
+  extraPeddingLeft?: boolean;
 }
 
 export const CustomTxtInput = React.forwardRef<TextInput, CustomTxtInputProps>(
@@ -87,7 +88,11 @@ export const CustomTxtInput = React.forwardRef<TextInput, CustomTxtInputProps>(
         </KeyboardAvoidingView>
         {props.touched && props.error && (
           <Text
-            style={[styles.error, props.isBehindFields && styles.widthError]}
+            style={[
+              styles.error,
+              props.isBehindFields && styles.widthError,
+              props.extraPeddingLeft && styles.pl,
+            ]}
           >
             {props.error}
           </Text>
@@ -149,5 +154,8 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: theme.fontSize?.fs11,
     color: theme.colors?.primary,
     fontFamily: theme?.fontFamily?.regular,
+  },
+  pl: {
+    paddingLeft: 20,
   },
 }));

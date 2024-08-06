@@ -1,6 +1,13 @@
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, Platform, RefreshControl, StatusBar, View } from "react-native";
+import {
+  Alert,
+  BackHandler,
+  Platform,
+  RefreshControl,
+  StatusBar,
+  View,
+} from "react-native";
 import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -171,6 +178,7 @@ const ProductDetails: React.FC<
 
   const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
+  console.log("productDetails", productDetails);
   return (
     <KeyboardAwareScrollView
       bounces={false}
