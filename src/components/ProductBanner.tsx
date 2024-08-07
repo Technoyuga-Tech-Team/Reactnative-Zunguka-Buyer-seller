@@ -112,7 +112,7 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
           />
         )}
       />
-      {productBannerData?.length > 2 && (
+      {productBannerData?.length > 1 && (
         <View style={styles.outerPaginatorCont}>
           <Paginator
             data={createArrayUseNumber(productBannerData?.length)}

@@ -227,6 +227,8 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     setSubCatName("");
     setSelectedBrand({ id: null, name: "" });
     setSelectedCondition("");
+    setSelectedConditionValue("");
+    setConditionData(CONDITIONS);
     setSelectedColors([]);
     setSelectedSize([]);
     setSelectedRatingsValues([]);

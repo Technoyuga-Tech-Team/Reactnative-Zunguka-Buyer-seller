@@ -1,16 +1,14 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { HomeNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
+import { View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemeProps } from "../../types/global.types";
 import CustomHeader from "../../components/ui/CustomHeader";
+import { Route } from "../../constant/navigationConstants";
 import { useCategories } from "../../hooks/useCategories";
 import { CategoriesDataProps } from "../../types/dashboard.types";
-import ExpandableView from "../../components/ExpandableView";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import NoDataFound from "../../components/ui/NoDataFound";
+import { ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
 import CategoriesListWithExpand from "./CategoriesListWithExpand";
 
 const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({

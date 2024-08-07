@@ -42,13 +42,13 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     if (subCat) {
       console.log("called subcat");
       setSearchValue(subCat);
-      getSearchedItems(mainCat, 10, 1, true, null);
+      getSearchedItems(subCat, 10, 1, true, null, false);
     } else if (mainCat) {
       console.log("called mainCat");
       setSearchValue(mainCat);
-      getSearchedItems(mainCat, 10, 1, true, null);
+      getSearchedItems(mainCat, 10, 1, true, null, false);
     } else {
-      getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+      getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
     }
   }, [mainCat, subCat, debouncedSearchTerm]);
 
@@ -62,7 +62,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     limit: number,
     page: number,
     fromChangeKeyword: boolean,
-    filterItems: any
+    filterItems: any,
+    fromLoadMore: boolean
   ) => {
     keyword !== "" && setProducts([]);
 
@@ -103,16 +104,19 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       );
 
       if (addProductSearchFilter.fulfilled.match(result)) {
-        console.log("addProductSearchFilter response - - - ", result.payload);
+        // console.log(
+        //   "addProductSearchFilter response - - - ",
+        //   JSON.stringify(result.payload?.data?.data)
+        // );
         if (result.payload.status === 1) {
           if ((fromChangeKeyword && keyword == "") || filterItems) {
+            console.log("in if - - - - -");
             setProducts(result.payload?.data?.data);
           } else {
-            console.log("caledd = == = = = = = == = = = = =");
-            setProducts([...products, ...result.payload?.data?.data]);
-            // keyword !== ""
-            //   ? setProducts([...products, ...result.payload?.data?.data])
-            //   : setProducts([...products, ...result.payload?.data?.data]);
+            console.log("in else - - - - -");
+            keyword !== "" && !fromLoadMore
+              ? setProducts([...result.payload?.data?.data])
+              : setProducts([...products, ...result.payload?.data?.data]);
           }
 
           setTotalPage(result.payload?.data?.totalPages);
@@ -138,7 +142,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loader) {
-      getSearchedItems(debouncedSearchTerm, 10, page, false, filterItems);
+      getSearchedItems(debouncedSearchTerm, 10, page, false, filterItems, true);
     }
   };
 
@@ -230,7 +234,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const clearFilter = () => {
-    getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
+    getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
   };
 
   const onPressShowItem = (
@@ -259,7 +263,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     };
     console.log("filterItems", filter_Items);
     setFilterItems(filter_Items);
-    getSearchedItems(debouncedSearchTerm, 10, 1, false, filter_Items);
+    getSearchedItems(debouncedSearchTerm, 10, 1, false, filter_Items, false);
   };
 
   return (

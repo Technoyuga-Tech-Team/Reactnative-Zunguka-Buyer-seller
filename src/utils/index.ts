@@ -1,4 +1,5 @@
 import { Share } from "react-native";
+import { Images } from "../assets/images";
 
 const getUrlExtension = (url: string) => {
   return url?.split(/[#?]/)[0]?.split(".")?.pop()?.trim();
@@ -46,6 +47,25 @@ const determineCardType = (cardNumber: string) => {
     }
   }
   return "default"; // If the card type is not recognized, show a default image
+};
+
+const getCardImage = (cardType: string | undefined) => {
+  switch (cardType) {
+    case "visa":
+      return Images.VISA;
+    case "master-card":
+      return Images.MC;
+    case "mastercard":
+      return Images.MC;
+    case "american-express":
+      return Images.AMEX;
+    case "american express":
+      return Images.AMEX;
+    case "discover":
+      return Images.DISCOVER;
+    default:
+      return Images.VISA;
+  }
 };
 
 const onShare = async (val: string) => {
@@ -167,4 +187,5 @@ export {
   formatPhoneNumber,
   keepSingleSpace,
   getConditionItemValue,
+  getCardImage,
 };

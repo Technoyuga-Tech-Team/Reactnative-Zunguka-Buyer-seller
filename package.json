@@ -74,6 +74,7 @@
     "react-redux": "8.1.2",
     "rn-android-keyboard-adjust": "^2.1.2",
     "rn-range-slider": "^2.2.2",
+    "socket.io-client": "^4.7.5",
     "yarn": "^1.22.22",
     "yup": "^1.4.0",
     "yup-phone-lite": "^2.0.1"

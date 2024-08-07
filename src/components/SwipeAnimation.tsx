@@ -68,11 +68,6 @@ const SwipeAnimation: React.FC<SwipeAnimationProps> = ({ onRight }) => {
   const unlock = () => {
     reset();
     onRight();
-    // Animated.spring(pan, {
-    //   toValue: { x: finalPosition, y: 0 },
-    //   useNativeDriver: true,
-    //   bounciness: 0,
-    // }).start();
   };
   return (
     <View style={styles.container}>

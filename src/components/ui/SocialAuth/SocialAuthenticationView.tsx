@@ -79,7 +79,8 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
           let is_userName = result.payload?.user?.is_username_added;
           let steps = result.payload?.user?.step;
           let isStepCompleted = result.payload?.user?.is_profile_completed;
-
+          let isVerify_by_Admin =
+            result.payload?.user?.is_kyc_verified_by_admin;
           if (is_userName == 0) {
             navigation.dispatch(
               CommonActions.reset({
@@ -88,7 +89,7 @@ const SocialAuthenticationView: React.FC<SocialAuthenticationViewProps> = ({
               })
             );
           } else {
-            if (isStepCompleted == 1) {
+            if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,

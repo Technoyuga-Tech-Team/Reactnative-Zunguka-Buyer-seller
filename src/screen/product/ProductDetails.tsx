@@ -56,19 +56,31 @@ const ProductDetails: React.FC<
   );
 
   const [productLikes, setProductLikes] = useState(0);
+  const [loader, setLoader] = useState(true);
 
   const {
     data: productDetailsData,
     refetch,
     isLoading,
+    isFetching,
     isError,
-  } = useProductDetails(itemId, { cacheTime: 0, enabled: false });
+  } = useProductDetails(itemId, {
+    staleTime: Infinity,
+    cacheTime: 0,
+    enabled: false,
+  });
 
   useEffect(() => {
     const init = async () => {
       await RNBootSplash.hide();
     };
     init();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -166,9 +178,10 @@ const ProductDetails: React.FC<
   };
 
   const onPressMessage = () => {
-    // navigation.navigate(Route.navChatroom, {
-    //   receiver_id: productDetails?.user_id,
-    // });
+    navigation.navigate(Route.navChatroom, {
+      receiver_id: `${productDetails?.user_id}`,
+      product_id: `${productDetails?.id}`,
+    });
   };
 
   const onRefresh = () => {
@@ -177,7 +190,6 @@ const ProductDetails: React.FC<
 
   const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
-  console.log("productDetails", productDetails);
   return (
     <KeyboardAwareScrollView
       bounces={false}
@@ -185,7 +197,7 @@ const ProductDetails: React.FC<
       contentContainerStyle={style.container}
       refreshControl={
         <RefreshControl
-          refreshing={isLoading}
+          refreshing={isFetching}
           onRefresh={onRefresh}
           tintColor={theme?.colors?.primary}
           // @ts-ignore
@@ -198,7 +210,7 @@ const ProductDetails: React.FC<
         backgroundColor={theme.colors?.transparent}
         barStyle={"light-content"}
       />
-      {isLoading && <Loading />}
+      {/* {isFetching && <Loading />} */}
       <ProductBanner productBannerData={productBannerData} />
       <View style={style.header}>
         <ProductHeader

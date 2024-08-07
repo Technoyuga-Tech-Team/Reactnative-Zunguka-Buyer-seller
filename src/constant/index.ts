@@ -2214,7 +2214,7 @@ export const PAYMENT_METHOD = [
   {
     title: "Pay with credit card visa or Master",
     value: "Pay with credit card visa or Master",
-    selected: false,
+    selected: true,
   },
   {
     title: "Mobile Money",

@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Platform, RefreshControl, StatusBar, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  AppState,
+  Platform,
+  RefreshControl,
+  StatusBar,
+  View,
+} from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,6 +28,7 @@ import { HomeNavigationProps } from "../types/navigation";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setUserData } from "../store/settings/settings.slice";
+import { socket, socketEvent } from "../utils/socket";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -35,13 +42,47 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   });
 
   const { data: dashboardData, refetch, isLoading } = useGetDashboard();
-
+  const appState = useRef(AppState.currentState);
   const [name, setName] = useState(userData?.username);
 
   const [banner, setBanner] = useState<BannerProps[]>([]);
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
   const [hotBrands, setHotBrands] = useState<HotBrandaDataProps[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        refetchUser().then();
+        console.log("App has come to the foreground!");
+        socket.connect();
+        const user_id = userData?.id;
+        socket.on(socketEvent.CONNECT, () => {
+          console.log("Connected to the server");
+          console.log("connected", socket.connected);
+          console.log("Activate", socket.active);
+          console.log("socket.id", socket.id);
+          console.log("user_id - - - -", user_id);
+          socket.emit("conn", userData?.id);
+        });
+      } else {
+        console.log("disconnected - - - userData?.id", userData?.id);
+        socket.emit("disconnected", userData?.id);
+        socket.emit("offline");
+        socket.disconnect();
+      }
+
+      appState.current = nextAppState;
+      console.log("AppState", appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [socket, userData]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {

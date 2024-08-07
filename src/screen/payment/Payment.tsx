@@ -1,26 +1,28 @@
-import { View, Text, Platform, Alert } from "react-native";
+import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { HomeNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
+import DropShadow from "react-native-drop-shadow";
 import { makeStyles, useTheme } from "react-native-elements";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { Images } from "../../assets/images";
+import { AppImage } from "../../components/AppImage/AppImage";
+import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
+import SwipeAnimation from "../../components/SwipeAnimation";
+import CustomHeader from "../../components/ui/CustomHeader";
+import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
+import { PAYMENT_METHOD, SCREEN_WIDTH } from "../../constant";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
-import CustomHeader from "../../components/ui/CustomHeader";
-import DropShadow from "react-native-drop-shadow";
-import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
-import { CONDITIONS, PAYMENT_METHOD, SCREEN_WIDTH } from "../../constant";
+import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
-import { AppImage } from "../../components/AppImage/AppImage";
-import { Images } from "../../assets/images";
+import { determineCardType, getCardImage } from "../../utils";
+import SelectCardView from "../../components/Payment/SelectCardView";
 import CustomButton from "../../components/ui/CustomButton";
-import DoubleRightIcon from "../../components/ui/svg/DoubleRightIcon";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import SwipeAnimation from "../../components/SwipeAnimation";
-import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
-import BottomSheet from "@gorhom/bottom-sheet";
+import TermsAndCondition from "../../components/ui/TermsAndCondition";
 
 const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   navigation,
@@ -32,9 +34,19 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const userData = useSelector(selectUserData);
   const snapPoints = useMemo(() => ["70%", "70%"], []);
   const sheetRef = useRef<BottomSheet>(null);
+  const [checkedReadyToReceive, setReadyToReceive] = React.useState(false);
 
   const [paymentMethods, setPaymentMethods] = useState(PAYMENT_METHOD);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+
+  const [cards, setCards] = useState([
+    { cardNumber: "4111111111111111", selected: false },
+    { cardNumber: "5555555555554444", selected: false },
+  ]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
+    "Pay with credit card visa or Master"
+  );
+
+  const toggleReadyToReceive = () => setReadyToReceive(!checkedReadyToReceive);
 
   const RenderItem = ({ title, value }: { title: string; value: string }) => {
     return (
@@ -55,12 +67,56 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
     );
   };
 
+  const onPressCard = (index: number) => {
+    setSelectedPaymentMethod(paymentMethods[index].title);
+    setCards(
+      cards.map((item, itemIndex) => ({
+        ...item,
+        selected: index === itemIndex,
+      }))
+    );
+  };
+
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
 
   const RenderPaymentItems = () => {
-    return <Text>hello</Text>;
+    return (
+      <View style={style.paymentItemCont}>
+        <View style={{ flex: 1 }}>
+          <View style={style.savedItemCont}>
+            <Text style={style.txtSavedCards}>Saved Cards</Text>
+            <SelectCardView
+              cards={cards}
+              onPressCard={(ind) => onPressCard(ind)}
+            />
+          </View>
+        </View>
+        <View style={style.totalCont}>
+          <Text style={style.txtTotal}>Total</Text>
+          <Text
+            style={[style.txtTotal, { fontFamily: theme?.fontFamily?.bold }]}
+          >
+            R₣ 220
+          </Text>
+        </View>
+        <View style={{ paddingBottom: 10 }}>
+          <TermsAndCondition
+            checked={checkedReadyToReceive}
+            toggleCheckbox={toggleReadyToReceive}
+            title="Ready to receive the item."
+          />
+        </View>
+        <CustomButton
+          onPress={() => {}}
+          title={"Confirm Payment"}
+          buttonWidth="full"
+          variant="primary"
+          type="solid"
+        />
+      </View>
+    );
   };
 
   const onRight = () => {
@@ -192,5 +248,31 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme?.colors?.secondaryText,
     textAlign: "center",
     marginBottom: 30,
+  },
+  txtSavedCards: {
+    fontSize: theme.fontSize?.fs14,
+    fontFamily: theme.fontFamily?.bold,
+    color: theme?.colors?.black,
+  },
+  paymentItemCont: {
+    paddingHorizontal: 20,
+    flex: 1,
+    paddingBottom: props.insets.bottom + 10,
+  },
+  savedItemCont: { backgroundColor: "#F3F4F6", borderRadius: 8, padding: 10 },
+  totalCont: {
+    height: 50,
+    borderTopColor: theme?.colors?.border,
+    borderBottomColor: theme?.colors?.border,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  txtTotal: {
+    fontSize: theme.fontSize?.fs15,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme?.colors?.black,
   },
 }));

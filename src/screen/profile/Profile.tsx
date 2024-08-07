@@ -31,6 +31,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
 import { setUserData } from "../../store/settings/settings.slice";
+import ChatIcon from "../../components/ui/svg/ChatIcon";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -101,6 +102,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     navigation.navigate(Route.navMyStorefront);
   };
 
+  const onPressMessages = () => {
+    navigation.navigate(Route.navMessaging);
+  };
+
   const Profile = profilePicture;
   return (
     <View style={style.container}>
@@ -131,6 +136,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           name="My Items"
           icon={<TagfillIcon color={theme.colors?.primary} />}
           onPress={onPressMyItems}
+        />
+        <ProfileItem
+          name="Masseges"
+          icon={<ChatIcon color={theme.colors?.primary} />}
+          onPress={onPressMessages}
         />
         <ProfileItem
           name="Card Details"

@@ -19,7 +19,7 @@ export interface ChatDataList {
   first_name: string;
   id: number;
   is_read: number;
-  item_id: null;
+  item_id: string;
   last_name: string;
   message: string;
   phone_number: null;
@@ -46,7 +46,7 @@ export interface ChatMessageProps {
 
 export interface MessageList {
   id?: number;
-  receiver_id: number;
+  receiver_id: string;
   sender_id: number;
   item_id?: number;
   message: string;
@@ -60,6 +60,7 @@ export interface receiverDetailsProps {
   id: number;
   first_name: string;
   last_name: string;
+  username: string;
   profile_image: null;
   new_message: number;
   online: number;

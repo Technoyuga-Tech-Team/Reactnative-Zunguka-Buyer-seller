@@ -44,6 +44,13 @@ import SendButtonIcon from "../../components/ui/svg/SendButtonIcon";
 import { ThemeProps } from "../../types/global.types";
 import FilesShareIcon from "../../components/ui/svg/FilesShareIcon";
 import CautionIcon from "../../components/ui/svg/CautionIcon";
+import { socket, socketEvent } from "../../utils/socket";
+import ImagePickerPopup from "../../components/ui/ImagePickerPopup";
+import {
+  getImageFromCamera,
+  getImageFromGallary,
+  requestCameraPermission,
+} from "../../utils/ImagePickerCameraGallary";
 
 const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   navigation,
@@ -53,12 +60,14 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
-  const InputRef = useRef<TextInput>();
+  const InputRef = useRef<TextInput>(null);
 
   const flatlistRef = useRef<FlatList>(null);
   const dispatch = useAppDispatch();
   const receiver_id = route?.params?.receiver_id;
+  const product_id = route?.params?.product_id;
   console.log("receiver_id", receiver_id);
+  console.log("product_id", product_id);
   const userData = useSelector(selectUserData);
 
   const [messages, setMessages] = useState<MessageList[]>([]);
@@ -73,13 +82,14 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   const [inputMessage, setInputMessage] = useState("");
   const [token, setToken] = useState<string | null>(null);
 
+  const [visible, setVisible] = useState(false);
+
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [receiverDetails, setReceiverDetails] =
     useState<receiverDetailsProps>();
-
   const debouncedFilter = useDebounce(search, 500);
 
   useEffect(() => {
@@ -156,12 +166,61 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     // refetch().then();
   }, [receiver_id]);
 
+  const togglePopup = () => {
+    setVisible(!visible);
+  };
+
+  const onPressFromCamera = async () => {
+    togglePopup();
+    setTimeout(async () => {
+      if (Platform.OS === "android") {
+        const hasPermission = await requestCameraPermission();
+        if (hasPermission) {
+          openPickerCameraImage();
+        }
+      } else {
+        openPickerCameraImage();
+      }
+    }, 100);
+  };
+
+  const openPickerCameraImage = async () => {
+    try {
+      const imageObject = await getImageFromCamera({
+        cropping: true,
+        includeBase64: true,
+      });
+      console.log("imageObject - - - ", imageObject);
+      // setProfilePicture(imageObject.uri);
+      // setProfileImage(imageObject);
+      // uploadProfilePicture(imageObject);
+    } catch (error) {
+      // Handle errors here if needed (e.g., display a user-friendly message)
+      console.error("Error using getImageFromCamera:", error);
+    }
+  };
+
+  const onPressFromGallary = async () => {
+    togglePopup();
+    setTimeout(async () => {
+      try {
+        const imageObject = await getImageFromGallary({
+          cropping: true,
+          includeBase64: true,
+        });
+      } catch (error) {
+        // Handle errors here if needed (e.g., display a user-friendly message)
+        console.error("Error using getImageFromGallary:", error);
+      }
+    }, 100);
+  };
+
   const getChatMessages = async (limit: number, page: number) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
     try {
       setLoading(true);
       const response = await fetch(
-        `${BASE_URL}${API.GET_CHAT_ROOM_MESSAGE_LIST}/${receiver_id}/${limit}/${page}`,
+        `${BASE_URL}${API.GET_CHAT_ROOM_MESSAGE_LIST}/${receiver_id}/${product_id}/${limit}/${page}`,
         {
           method: "GET",
           headers: {
@@ -176,7 +235,6 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       // Handle the fetched data here
       if (data.status === 1) {
         setLoading(false);
-        console.log("data?.data", data?.data);
         if (data && data?.data) {
           setReceiverDetails(data?.data?.receiverDetail);
           setMessages([...messages, ...data?.data?.list]);
@@ -193,62 +251,62 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     }
   };
 
-  // useEffect(() => {
-  //   let unsubscribe = navigation.addListener("focus", async () => {
-  //     if (receiver_id && userData) {
-  //       socket.emit("new-user-add", userData?.id);
-  //       socket.on("get-users", (users) => {
-  //         console.log("online users - - - - >", users);
-  //         setOnlineUserList(users);
-  //       });
-  //       socket.emit(
-  //         socketEvent.READ_MESSAGE,
-  //         `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
-  //       );
-  //     }
-  //   });
+  useEffect(() => {
+    let unsubscribe = navigation.addListener("focus", async () => {
+      if (receiver_id && userData) {
+        socket.emit("new-user-add", userData?.id);
+        socket.on("get-users", (users) => {
+          console.log("online users - - - - >", users);
+          setOnlineUserList(users);
+        });
+        socket.emit(
+          socketEvent.READ_MESSAGE,
+          `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
+        );
+      }
+    });
 
-  //   return () => {
-  //     socket.emit(
-  //       socketEvent.LEAVE_ROOM,
-  //       `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
-  //     );
-  //     socket.emit("offline");
-  //     socket.emit(socketEvent.SHOW_OFFLINE, userData);
-  //     unsubscribe();
-  //   };
-  // }, [receiver_id, userData]);
+    return () => {
+      socket.emit(
+        socketEvent.LEAVE_ROOM,
+        `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
+      );
+      socket.emit("offline");
+      socket.emit(socketEvent.SHOW_OFFLINE, userData);
+      unsubscribe();
+    };
+  }, [receiver_id, userData]);
 
-  // useEffect(() => {
-  //   socket.on(socketEvent.MESSAGE, (newMessage) => {
-  //     let t = getTime(new Date());
-  //     if (userData?.id === newMessage?.receiver_id) {
-  //       setMessages([
-  //         {
-  //           receiver_id: newMessage?.receiver_id,
-  //           sender_id: newMessage?.sender_id,
-  //           message: newMessage?.message,
-  //           messageTime: t,
-  //         },
-  //         ...messages,
-  //       ]);
-  //     }
-  //   });
-  // }, [messages]);
+  useEffect(() => {
+    socket.on(socketEvent.MESSAGE, (newMessage) => {
+      let t = getTime(new Date());
+      if (userData?.id == newMessage?.receiver_id) {
+        setMessages([
+          {
+            receiver_id: newMessage?.receiver_id,
+            sender_id: newMessage?.sender_id,
+            message: newMessage?.message,
+            messageTime: t,
+          },
+          ...messages,
+        ]);
+      }
+    });
+  }, [messages]);
 
-  // useEffect(() => {
-  //   socket.on("user_connected", (res) => {
-  //     if (res && res.includes(receiver_id)) {
-  //       setIsOnline(true);
-  //     }
-  //   });
-  //   socket.on(socketEvent.USER_IS_TYPING, (res) => {
-  //     let obj = JSON.parse(res);
-  //     if (obj.user !== userData?.id) {
-  //       setTyping(obj?.typing);
-  //     }
-  //   });
-  // }, [socket]);
+  useEffect(() => {
+    socket.on("user_connected", (res) => {
+      if (res && res.includes(receiver_id)) {
+        setIsOnline(true);
+      }
+    });
+    socket.on(socketEvent.USER_IS_TYPING, (res) => {
+      let obj = JSON.parse(res);
+      if (obj.user !== userData?.id) {
+        setTyping(obj?.typing);
+      }
+    });
+  }, [socket]);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -286,10 +344,10 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       receiver_id: receiver_id,
       sender_id: userData?.id,
       message: inputMessage,
-      user_type: userData?.type,
       token: token,
+      item_id: product_id,
     };
-    // socket.emit(socketEvent.MESSAGE, obj);
+    socket.emit(socketEvent.MESSAGE, obj);
     setMessages([
       {
         receiver_id: receiver_id,
@@ -318,6 +376,10 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       setLoadMoreLoading(true);
       getChatMessages(10, page);
     }
+  };
+
+  const onPressOpenDoc = () => {
+    setVisible(true);
   };
 
   const receiverProfile =
@@ -428,10 +490,10 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                               borderTopLeftRadius: isCurrentUser ? 15 : 0,
                               borderTopRightRadius: isCurrentUser ? 0 : 15,
                               backgroundColor: isSelected
-                                ? theme?.colors?.red
+                                ? theme?.colors?.blackTrans
                                 : isCurrentUser
                                 ? theme.colors?.primary
-                                : theme.colors?.primaryLight,
+                                : "#F2F7FB",
                               alignSelf: isCurrentUser
                                 ? "flex-end"
                                 : "flex-start",
@@ -513,23 +575,25 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                       typing: false,
                       user: userData?.id,
                     };
-                    // socket.emit(
-                    //   socketEvent.USER_IS_TYPING,
-                    //   JSON.stringify(objTrue)
-                    // );
+                    socket.emit(
+                      socketEvent.USER_IS_TYPING,
+                      JSON.stringify(objTrue)
+                    );
                     setInputMessage(text);
-                    // setTimeout(() => {
-                    //   socket.emit(
-                    //     socketEvent.USER_IS_TYPING,
-                    //     JSON.stringify(objFasle)
-                    //   );
-                    // }, 2000);
+                    setTimeout(() => {
+                      socket.emit(
+                        socketEvent.USER_IS_TYPING,
+                        JSON.stringify(objFasle)
+                      );
+                    }, 2000);
                   }}
                 />
-                <FilesShareIcon
-                  style={{ marginRight: 10 }}
-                  hitSlop={HIT_SLOP2}
-                />
+                <TouchableOpacity onPress={onPressOpenDoc}>
+                  <FilesShareIcon
+                    style={{ marginRight: 10 }}
+                    hitSlop={HIT_SLOP2}
+                  />
+                </TouchableOpacity>
               </View>
               <View
                 style={{
@@ -551,6 +615,12 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      <ImagePickerPopup
+        visiblePopup={visible}
+        togglePopup={togglePopup}
+        onPressFromCamera={onPressFromCamera}
+        onPressFromGallary={onPressFromGallary}
+      />
     </View>
   );
 };

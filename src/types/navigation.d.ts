@@ -111,7 +111,8 @@ export type HomeRoutes = {
   Payment: undefined;
   Storefront: undefined;
   TransactionHistory: undefined;
-  Chatroom: { receiver_id: string };
+  Chatroom: { receiver_id: string; product_id: string };
+  Messaging: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

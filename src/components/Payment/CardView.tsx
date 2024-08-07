@@ -1,15 +1,14 @@
 import React from "react";
-import { Image, ImageBackground, Text, View } from "react-native";
+import { ImageBackground, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SCREEN_WIDTH } from "../../constant";
 import { ThemeProps } from "../../types/global.types";
-import { CreditDebitCardNumber } from "../../utils";
+import { CreditDebitCardNumber, getCardImage } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import WaveIcon from "../ui/svg/WaveIcon";
-import { Images } from "../../assets/images";
-import { SCREEN_WIDTH } from "../../constant";
 
 interface CardViewProps {
   source: any;
@@ -35,25 +34,6 @@ const CardView: React.FC<CardViewProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-
-  const getCardImage = (cardType: string | undefined) => {
-    switch (cardType) {
-      case "visa":
-        return Images.VISA;
-      case "master-card":
-        return Images.MC;
-      case "mastercard":
-        return Images.MC;
-      case "american-express":
-        return Images.AMEX;
-      case "american express":
-        return Images.AMEX;
-      case "discover":
-        return Images.DISCOVER;
-      default:
-        return Images.VISA;
-    }
-  };
 
   return (
     <ImageBackground source={source} style={style.imgCard}>

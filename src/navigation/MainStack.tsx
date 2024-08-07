@@ -31,6 +31,7 @@ import TakeSelfie from "../screen/authentication/TakeSelfie";
 import Chatroom from "../screen/chat/Chatroom";
 import MyStorefront from "../screen/Storefront/MyStorefront";
 import TransactionHistory from "../screen/profile/TransactionHistory";
+import Messaging from "../screen/chat/Messaging";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -122,6 +123,7 @@ const MainStack = () => {
             name={Route.navTransactionHistory}
             component={TransactionHistory}
           />
+          <Stack.Screen name={Route.navMessaging} component={Messaging} />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

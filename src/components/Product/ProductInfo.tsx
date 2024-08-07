@@ -12,7 +12,6 @@ import { ProductDetailsDataProps } from "../../types/product.types";
 import moment from "moment";
 import { getConditionItemValue } from "../../utils";
 import FilledHeartIcon from "../ui/svg/filledHeartIcon";
-import InboxIcon from "../ui/svg/InboxIcon";
 import MessageOutlineIcon from "../ui/svg/MessageOutlineIcon";
 
 interface ProductInfoProps {
@@ -77,20 +76,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         </View>
         <View style={style.productNameCont}>
           <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
-          {!isCurrentUsersProduct && (
-            <TouchableOpacity
-              onPress={onPressMessage}
-              activeOpacity={0.8}
-              style={style.heartCont}
-            >
-              <MessageOutlineIcon
-                color={theme?.colors?.unselectedIconColor}
-                height={15}
-                width={15}
-              />
-              {/* <Text style={style.txtCount}>100</Text> */}
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity
+            onPress={onPressMessage}
+            activeOpacity={0.8}
+            style={style.heartCont}
+          >
+            <MessageOutlineIcon
+              color={theme?.colors?.unselectedIconColor}
+              height={15}
+              width={15}
+            />
+            {/* <Text style={style.txtCount}>100</Text> */}
+          </TouchableOpacity>
         </View>
         <View style={style.addrCont}>
           <Text style={style.txtDate}>Posted {time}</Text>
