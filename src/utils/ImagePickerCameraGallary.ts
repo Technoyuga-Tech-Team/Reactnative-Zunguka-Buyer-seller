@@ -52,8 +52,6 @@ const getImageFromCamera = async (options: Options) => {
       ...options,
     });
 
-    console.log("imagesRes", imagesRes);
-
     const imageObject = {
       name:
         imagesRes.filename ||
@@ -92,8 +90,6 @@ const getImageFromGallary = async (options: Options = {}) => {
       mediaType: "photo",
       ...options,
     });
-
-    console.log("imagesRes", imagesRes);
 
     if (options.multiple) {
       if (!imagesRes || !imagesRes.length) {

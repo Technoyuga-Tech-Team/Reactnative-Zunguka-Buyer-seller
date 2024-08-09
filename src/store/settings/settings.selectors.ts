@@ -31,3 +31,8 @@ export const getNotificationCount = createSelector(
   [selectSettings],
   (settings) => settings.notificationCount
 );
+
+export const getProductInfo = createSelector(
+  [selectSettings],
+  (settings) => settings.productInfo
+);

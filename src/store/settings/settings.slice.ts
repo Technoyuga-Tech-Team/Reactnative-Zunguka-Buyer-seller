@@ -74,6 +74,7 @@ const initialState: SettingsStateProps = {
   address: "",
   city: "",
   notificationCount: 0,
+  productInfo: null,
 };
 
 const settings = createSlice({
@@ -101,6 +102,16 @@ const settings = createSlice({
     setSaveNotificationCount: (state, action: PayloadAction<number>) => {
       state.notificationCount = action.payload;
     },
+    setProductInfo: (
+      state,
+      action: PayloadAction<{
+        id: number;
+        price: number;
+        isOutOfKigali: boolean;
+      } | null>
+    ) => {
+      state.productInfo = action.payload;
+    },
   },
 });
 
@@ -111,6 +122,7 @@ export const {
   saveAddress,
   saveCity,
   setSaveNotificationCount,
+  setProductInfo,
 } = settings.actions;
 
 export default settings.reducer;

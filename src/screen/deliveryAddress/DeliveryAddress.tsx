@@ -543,7 +543,8 @@ const DeliveryAddress: React.FC<
 
   const onPressSelectAddress = () => {
     if (selectedAddress) {
-      navigation.navigate(Route.navModeOfDelivery);
+      navigation.navigate(Route.navPayment);
+      // navigation.navigate(Route.navModeOfDelivery);
     } else {
       dispatch(
         setErrors({

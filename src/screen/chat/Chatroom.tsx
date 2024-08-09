@@ -34,7 +34,7 @@ import {
 } from "../../constant";
 import { setErrors } from "../../store/global/global.slice";
 import { API } from "../../constant/apiEndpoints";
-import { AppImage } from "../../components/AppImage/AppImage";
+import { AppImage, ImageSource } from "../../components/AppImage/AppImage";
 import LeftIcon from "../../components/ui/svg/LeftIcon";
 import { Images } from "../../assets/images";
 import Scale from "../../utils/Scale";
@@ -51,6 +51,9 @@ import {
   getImageFromGallary,
   requestCameraPermission,
 } from "../../utils/ImagePickerCameraGallary";
+import * as _ from "lodash";
+import { sendTheMessage } from "../../store/Product/product.thunk";
+import { getUrlExtension } from "../../utils";
 
 const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   navigation,
@@ -188,12 +191,69 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     try {
       const imageObject = await getImageFromCamera({
         cropping: true,
-        includeBase64: true,
       });
-      console.log("imageObject - - - ", imageObject);
-      // setProfilePicture(imageObject.uri);
-      // setProfileImage(imageObject);
-      // uploadProfilePicture(imageObject);
+
+      const formData = new FormData();
+      // Object.entries(imageObject).forEach(([_key, val]) => {
+      //   formData.append(`images[0]`, {
+      //     name:
+      //       val.name ||
+      //       `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+      //     type: `image/${getUrlExtension(val.uri)}`,
+      //     uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+      //   });
+      // });
+
+      formData.append(`images[0]`, {
+        name:
+          imageObject.name ||
+          `${new Date().getTime()}.${getUrlExtension(imageObject.uri)}`,
+        type: imageObject.type,
+        uri:
+          Platform.OS === "ios"
+            ? imageObject.uri.replace("file://", "")
+            : imageObject.uri,
+      });
+
+      formData.append("receiver_id", receiver_id);
+      formData.append("message", null);
+      formData.append("item_id", product_id);
+      console.log("formData", JSON.stringify(formData));
+
+      let myUploadedImages: any[] = [];
+
+      const result = await dispatch(sendTheMessage({ formData: formData }));
+
+      if (sendTheMessage.fulfilled.match(result)) {
+        if (result?.payload?.status == 1) {
+          myUploadedImages = result?.payload?.data?.images;
+        }
+      } else {
+        console.log("sendTheMessage error - - - ", result.payload);
+      }
+      console.log("myUploadedImages - - - - - = = = = =", myUploadedImages);
+      let t = getTime(new Date());
+      let obj = {
+        receiver_id: receiver_id,
+        sender_id: userData?.id,
+        message: null,
+        images: myUploadedImages,
+        token: token,
+        item_id: product_id,
+        isApiCall: false,
+      };
+      console.log("obj", obj);
+      socket.emit(socketEvent.MESSAGE, obj);
+      setMessages([
+        {
+          receiver_id: receiver_id,
+          sender_id: userData?.id,
+          message: null,
+          images: myUploadedImages,
+          messageTime: t,
+        },
+        ...messages,
+      ]);
     } catch (error) {
       // Handle errors here if needed (e.g., display a user-friendly message)
       console.error("Error using getImageFromCamera:", error);
@@ -205,9 +265,59 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     setTimeout(async () => {
       try {
         const imageObject = await getImageFromGallary({
-          cropping: true,
-          includeBase64: true,
+          multiple: true,
         });
+        const formData = new FormData();
+        Object.entries(imageObject).forEach(([_key, val]) => {
+          formData.append(`images[${_key}]`, {
+            name:
+              val.name ||
+              `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+            type: `image/${getUrlExtension(val.uri)}`,
+            uri:
+              Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+          });
+        });
+
+        formData.append("receiver_id", receiver_id);
+        formData.append("message", null);
+        formData.append("item_id", product_id);
+        console.log("formData", JSON.stringify(formData));
+
+        let myUploadedImages: any[] = [];
+
+        const result = await dispatch(sendTheMessage({ formData: formData }));
+
+        if (sendTheMessage.fulfilled.match(result)) {
+          if (result?.payload?.status == 1) {
+            myUploadedImages = result?.payload?.data?.images;
+          }
+        } else {
+          console.log("sendTheMessage error - - - ", result.payload);
+        }
+        console.log("myUploadedImages - - - - - = = = = =", myUploadedImages);
+        let t = getTime(new Date());
+        let obj = {
+          receiver_id: receiver_id,
+          sender_id: userData?.id,
+          message: null,
+          images: myUploadedImages,
+          token: token,
+          item_id: product_id,
+          isApiCall: false,
+        };
+        console.log("obj", obj);
+        socket.emit(socketEvent.MESSAGE, obj);
+        setMessages([
+          {
+            receiver_id: receiver_id,
+            sender_id: userData?.id,
+            message: null,
+            images: myUploadedImages,
+            messageTime: t,
+          },
+          ...messages,
+        ]);
       } catch (error) {
         // Handle errors here if needed (e.g., display a user-friendly message)
         console.error("Error using getImageFromGallary:", error);
@@ -280,12 +390,14 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   useEffect(() => {
     socket.on(socketEvent.MESSAGE, (newMessage) => {
       let t = getTime(new Date());
+      console.log("newMessage - - - - - -- - - ", newMessage);
       if (userData?.id == newMessage?.receiver_id) {
         setMessages([
           {
             receiver_id: newMessage?.receiver_id,
             sender_id: newMessage?.sender_id,
-            message: newMessage?.message,
+            message: newMessage?.isApiCall ? null : newMessage?.message,
+            images: newMessage?.images,
             messageTime: t,
           },
           ...messages,
@@ -346,6 +458,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       message: inputMessage,
       token: token,
       item_id: product_id,
+      isApiCall: true,
     };
     socket.emit(socketEvent.MESSAGE, obj);
     setMessages([
@@ -382,6 +495,8 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     setVisible(true);
   };
 
+  console.log("messages", JSON.stringify(messages));
+
   const receiverProfile =
     receiverDetails?.profile_image || Images.PLACEHOLDER_IMAGE;
   return (
@@ -403,7 +518,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                 resizeMode="cover"
               />
               <View style={style.nameCont}>
-                <Text style={style.txtName}>{receiverDetails?.first_name}</Text>
+                <Text style={style.txtName}>{receiverDetails?.username}</Text>
                 <Text style={style.txtStatus}>
                   {typing ? "Typing..." : isOnline ? "Online" : ""}
                 </Text>
@@ -474,6 +589,9 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                 const isCurrentUser = item.sender_id === userData?.id;
                 const isSelected = searchIndex == index;
                 const time = moment(item?.created_at).format("h:mm A");
+                // const isImageInChat = _.isEmpty(item?.images);
+                // console.log("isImageInChat", isImageInChat);
+                // console.log("item?.images", item?.images);
                 return (
                   <TouchableWithoutFeedback>
                     <View style={{ marginTop: 6 }}>
@@ -500,18 +618,37 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                             },
                           ]}
                         >
-                          <Text
-                            style={[
-                              style.txtMessage,
-                              {
-                                color: isCurrentUser
-                                  ? theme.colors?.white
-                                  : theme.colors?.black,
-                              },
-                            ]}
-                          >
-                            {item.message}
-                          </Text>
+                          {item.message && (
+                            <Text
+                              style={[
+                                style.txtMessage,
+                                {
+                                  color: isCurrentUser
+                                    ? theme.colors?.white
+                                    : theme.colors?.black,
+                                },
+                              ]}
+                            >
+                              {item.message}
+                            </Text>
+                          )}
+                          {item.message == null &&
+                            item?.images &&
+                            item?.images?.map((img: { image: string }) => {
+                              return (
+                                <AppImage
+                                  source={img.image}
+                                  style={{
+                                    height: 250,
+                                    width: 250,
+                                    borderRadius: 10,
+                                    marginTop:
+                                      item?.images?.length > 1 ? 10 : 0,
+                                  }}
+                                  resizeMode="cover"
+                                />
+                              );
+                            })}
                         </View>
                         <Text
                           style={[

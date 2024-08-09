@@ -1,5 +1,11 @@
 import BottomSheet from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import DropShadow from "react-native-drop-shadow";
 import { makeStyles, useTheme } from "react-native-elements";
@@ -15,7 +21,10 @@ import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
 import { PAYMENT_METHOD, SCREEN_WIDTH } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { selectUserData } from "../../store/settings/settings.selectors";
+import {
+  getProductInfo,
+  selectUserData,
+} from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
@@ -32,12 +41,13 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
+  const productInfo = useSelector(getProductInfo);
+
   const snapPoints = useMemo(() => ["70%", "70%"], []);
   const sheetRef = useRef<BottomSheet>(null);
+
   const [checkedReadyToReceive, setReadyToReceive] = React.useState(false);
-
   const [paymentMethods, setPaymentMethods] = useState(PAYMENT_METHOD);
-
   const [cards, setCards] = useState([
     { cardNumber: "4111111111111111", selected: false },
     { cardNumber: "5555555555554444", selected: false },
@@ -45,6 +55,23 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     "Pay with credit card visa or Master"
   );
+  const [transportFee, setTransportFee] = useState("");
+  const [totalPrice, setTotalPrice] = useState("0");
+  const [outOfKigali, setOutOfKigali] = useState(false);
+
+  useEffect(() => {
+    if (productInfo) {
+      if (productInfo?.isOutOfKigali) {
+        setOutOfKigali(true);
+        setTotalPrice((productInfo?.price).toFixed(2));
+      } else {
+        let price1 = (productInfo?.price * 5) / 100;
+        setTransportFee(price1.toFixed(2));
+        setTotalPrice((productInfo?.price + price1).toFixed(2));
+        setOutOfKigali(false);
+      }
+    }
+  }, [productInfo]);
 
   const toggleReadyToReceive = () => setReadyToReceive(!checkedReadyToReceive);
 
@@ -98,7 +125,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           <Text
             style={[style.txtTotal, { fontFamily: theme?.fontFamily?.bold }]}
           >
-            R₣ 220
+            R₣ {totalPrice}
           </Text>
         </View>
         <View style={{ paddingBottom: 10 }}>
@@ -130,10 +157,20 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
       <KeyboardAwareScrollView style={style.innerCont}>
         <Text style={style.txtOrderSummary}>Order summary</Text>
         <View style={style.paddingHorizontal}>
-          <RenderItem title="Item total" value="R₣ 200" />
-          <RenderItem title="Delivery fees" value="R₣ 20" />
-          <View style={style.borderCont} />
-          <RenderItem title="Total" value="R₣ 220" />
+          <RenderItem
+            title="Item total"
+            value={`R₣ ${productInfo?.price.toFixed(2)}`}
+          />
+          {!outOfKigali && (
+            <>
+              <RenderItem
+                title="Transport fee (5%)"
+                value={`R₣ ${transportFee}`}
+              />
+              <View style={style.borderCont} />
+            </>
+          )}
+          <RenderItem title="Total" value={`R₣ ${totalPrice}`} />
           <View style={style.borderCont} />
         </View>
         <Text style={style.txtOrderSummary}>Payment method</Text>

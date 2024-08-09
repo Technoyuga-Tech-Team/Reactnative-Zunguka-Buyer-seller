@@ -33,6 +33,7 @@
     "axios": "^1.7.2",
     "card-validator": "^10.0.0",
     "formik": "^2.4.6",
+    "loadsh": "^0.0.4",
     "moment": "^2.30.1",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",

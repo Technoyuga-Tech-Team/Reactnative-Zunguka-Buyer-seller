@@ -57,6 +57,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import { getUrlExtension } from "../../utils";
 import Scale from "../../utils/Scale";
 import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -644,6 +645,11 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             error={vehicleError}
           />
         </View>
+        <View style={[style.paddingHorizontal, { marginTop: 10 }]}>
+          <InputFieldInfo
+            text={"Moto, Cab and Tricycle apply only in city of Kigali. "}
+          />
+        </View>
         <TitleWithInfoIcon title="Selling Price" />
         <CustomTxtInput
           placeholder="Enter price"
@@ -677,7 +683,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             buttonWidth="full"
             variant="primary"
             type="solid"
-            disabled={loading === LoadingState.CREATE}
+            disabled={loading === LoadingState.CREATE || !checked}
             loading={loading === LoadingState.CREATE}
           />
         </View>

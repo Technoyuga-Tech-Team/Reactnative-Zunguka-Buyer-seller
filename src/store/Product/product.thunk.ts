@@ -118,3 +118,36 @@ export const deleteProduct = createAsyncThunk<
 
   return data;
 });
+
+export const sendTheMessage = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/sendTheMessage",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.SEND_MESSAGE,
+          method: "POST",
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    console.log("data==================", data);
+    console.log("errors==================", errors);
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);

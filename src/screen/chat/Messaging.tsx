@@ -12,6 +12,7 @@ import CustomHeader from "../../components/ui/CustomHeader";
 import ChatListing from "../../components/Chat/ChatListing";
 import NoDataFound from "../../components/ui/NoDataFound";
 import { ThemeProps } from "../../types/global.types";
+import * as _ from "lodash";
 
 const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
   navigation,
@@ -25,6 +26,8 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
   const [loading, setLoading] = useState(false);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [chatData, setChatData] = useState<ChatDataList[]>([]);
+
+  console.log("chatData", chatData);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -59,11 +62,14 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
       if (data.status === 1) {
         setLoading(false);
         if (data && data?.data?.list.length > 0) {
-          if (refresh) {
-            setChatData([...data?.data?.list]);
-          } else {
-            setChatData([...chatData, ...data?.data?.list]);
-          }
+          let total_data = [...chatData, ...data?.data?.list];
+          const uniqueChat = _.uniqBy(total_data, "id");
+          setChatData(uniqueChat);
+          // if (refresh) {
+          //   setChatData([...data?.data?.list]);
+          // } else {
+          //   setChatData([...chatData, ...data?.data?.list]);
+          // }
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }

@@ -68,13 +68,13 @@ const TermsAndCondition: React.FC<TermsAndConditionProps> = ({
 export default TermsAndCondition;
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   txtTC: {
-    fontSize: theme.fontSize?.fs16,
+    fontSize: theme.fontSize?.fs18,
     fontFamily: theme.fontFamily?.regular,
     color: "#777986",
     marginBottom: Platform.OS === "ios" ? 0 : 3,
   },
   txtTC1: {
-    fontSize: theme.fontSize?.fs16,
+    fontSize: theme.fontSize?.fs18,
     fontFamily: theme.fontFamily?.regular,
     color: "#212121",
   },

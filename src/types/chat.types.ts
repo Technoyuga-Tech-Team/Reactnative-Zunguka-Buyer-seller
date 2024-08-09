@@ -17,6 +17,7 @@ export interface ChatDataList {
   user_id: number;
   created_at: string;
   first_name: string;
+  username: string;
   id: number;
   is_read: number;
   item_id: string;
@@ -44,12 +45,24 @@ export interface ChatMessageProps {
   currentPage: number;
 }
 
+interface image {
+  image: string;
+}
+
 export interface MessageList {
   id?: number;
   receiver_id: string;
   sender_id: number;
   item_id?: number;
-  message: string;
+  message: {
+    id: number;
+    user_id: number;
+    chat_id: number;
+    image: string;
+    created_at: string;
+    updated_at: string;
+  };
+  images?: image[];
   is_read?: number;
   user_type?: string;
   messageTime: string;

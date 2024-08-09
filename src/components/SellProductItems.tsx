@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.error,
   },
   txtVal: {
-    fontSize: theme.fontSize?.fs12,
+    fontSize: theme.fontSize?.fs16,
     fontFamily: theme?.fontFamily?.regular,
     color: theme?.colors?.textPrimary,
   },

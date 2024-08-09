@@ -41,7 +41,7 @@ const ClosedItems: React.FC<
     try {
       setLoading(true);
       const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/my/${offset}/${page}`,
+        `${BASE_URL}${API.GET_PRODUCTS}/closed/my/${offset}/${page}`,
         {
           method: "GET",
           headers: {

@@ -31,8 +31,10 @@ const ChatBlock: React.FC<ChatBlockProps> = ({ item, onPress }) => {
       <View style={style.firstCont}>
         <AppImage source={profile} style={style.profile} resizeMode="cover" />
         <View style={style.centerCont}>
-          <Text style={style.txtName}>{item?.first_name}</Text>
-          <Text style={style.txtChat}>{item?.message}</Text>
+          <Text style={style.txtName}>{item?.username}</Text>
+          <Text numberOfLines={2} style={style.txtChat}>
+            {item?.message}
+          </Text>
           {/* <Text style={style.txtLastMessage}>{item.lastMessage}</Text> */}
         </View>
       </View>
@@ -85,6 +87,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   centerCont: {
     marginLeft: 10,
+    flex: 1,
   },
   lastCont: {
     height: Scale(90),
@@ -99,7 +102,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs13,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.greyed,
-    width: "100%",
   },
   txtLastMessage: {
     fontSize: theme.fontSize?.fs11,

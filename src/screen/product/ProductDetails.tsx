@@ -6,6 +6,7 @@ import {
   Platform,
   RefreshControl,
   StatusBar,
+  Text,
   View,
 } from "react-native";
 import RNBootSplash from "react-native-bootsplash";
@@ -35,6 +36,7 @@ import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import { useSelector } from "react-redux";
 import { selectUserData } from "../../store/settings/settings.selectors";
+import { setProductInfo } from "../../store/settings/settings.slice";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -54,9 +56,14 @@ const ProductDetails: React.FC<
   const [productBannerData, setProductBannerData] = useState<productImage[]>(
     []
   );
+  const [payablePrice, setPayablePrice] = useState<string>("");
+  const [priceForPlatForm, setPriceForPlatForm] = useState<string>("");
+  const [sellerWillGetPrice, setSellerWillGetPrice] = useState<string>("");
 
   const [productLikes, setProductLikes] = useState(0);
   const [loader, setLoader] = useState(true);
+
+  const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
   const {
     data: productDetailsData,
@@ -93,8 +100,16 @@ const ProductDetails: React.FC<
       setProductLikes(productDetailsData?.data?.likes_count);
       setProductBannerData(productDetailsData?.data?.images);
       setSavedItem(productDetailsData?.data?.is_like);
+      let price1 = (productDetailsData?.data?.sale_price * 5) / 100;
+      setPriceForPlatForm(price1.toString());
+      let mainPrice = productDetailsData?.data?.sale_price - price1;
+      setSellerWillGetPrice(mainPrice.toString());
+      let payable_price = is_CurrentUsers_product
+        ? mainPrice
+        : productDetailsData?.data?.sale_price;
+      setPayablePrice(payable_price.toString());
     }
-  }, [productDetailsData]);
+  }, [productDetailsData, is_CurrentUsers_product]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -174,7 +189,22 @@ const ProductDetails: React.FC<
   };
 
   const onPressBuyProduct = () => {
-    navigation.navigate(Route.navDeliveryAddress);
+    const is_OutOf_Kigali =
+      (productDetails?.district || productDetails?.sector) == "Out of Kigali";
+
+    productDetails &&
+      dispatch(
+        setProductInfo({
+          id: productDetails?.id,
+          price: productDetails?.sale_price,
+          isOutOfKigali: is_OutOf_Kigali,
+        })
+      );
+    if (is_OutOf_Kigali) {
+      navigation.navigate(Route.navPayment);
+    } else {
+      navigation.navigate(Route.navDeliveryAddress);
+    }
   };
 
   const onPressMessage = () => {
@@ -187,8 +217,6 @@ const ProductDetails: React.FC<
   const onRefresh = () => {
     refetch();
   };
-
-  const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
   return (
     <KeyboardAwareScrollView
@@ -228,9 +256,76 @@ const ProductDetails: React.FC<
         onPressMessage={onPressMessage}
         isCurrentUsersProduct={is_CurrentUsers_product}
       />
+      {/* <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={style.txtPlatform}>Selling price : </Text>
+          <Text style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}>
+            R₣{productDetails?.sale_price}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={style.txtPlatform}>Transport fee (5%) : </Text>
+          <Text style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}>
+            R₣{priceForPlatForm}
+          </Text>
+        </View>
+        {!is_CurrentUsers_product && (
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={style.txtPlatform}>Seller will get : </Text>
+            <Text
+              style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}
+            >
+              R₣{sellerWillGetPrice}
+            </Text>
+          </View>
+        )}
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={style.txtPlatform}>
+            {is_CurrentUsers_product
+              ? "Total receivable amount : "
+              : "Total payable amount : "}
+          </Text>
+          <Text
+            style={[
+              style.txtPlatform,
+              {
+                color: theme.colors?.primary,
+                fontFamily: theme?.fontFamily?.bold,
+              },
+            ]}
+          >
+            R₣{payablePrice}
+          </Text>
+        </View>
+      </View> */}
       {!is_CurrentUsers_product && (
         <View style={style.button}>
           <CustomButton
+            onPress={onPressMessage}
             title={"Message seller"}
             buttonWidth="half"
             width={(SCREEN_WIDTH - 50) / 2}
@@ -277,5 +372,10 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
           ? props.insets.bottom
           : props.insets.bottom + 10
         : props.insets.bottom + 10,
+  },
+  txtPlatform: {
+    fontSize: theme.fontSize?.fs14,
+    color: theme.colors?.black,
+    fontFamily: theme.fontFamily?.medium,
   },
 }));
