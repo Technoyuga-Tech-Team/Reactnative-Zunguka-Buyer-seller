@@ -13,6 +13,7 @@ import { addProductSearchFilter } from "../../store/Product/product.thunk";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
+import { CommonActions } from "@react-navigation/native";
 
 const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   navigation,
@@ -151,7 +152,16 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressBack = () => {
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navDashboard }],
+        })
+      );
+    }
   };
 
   const toggleFilterPopup = () => {

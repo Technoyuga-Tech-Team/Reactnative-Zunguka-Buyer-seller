@@ -12,6 +12,7 @@ import DeliveryMode from "../components/DeliveryMode";
 import SelfPickupIcon from "../components/ui/svg/SelfPickupIcon";
 import ScooterIcon from "../components/ui/svg/ScooterIcon";
 import CustomHeader from "../components/ui/CustomHeader";
+import { CommonActions } from "@react-navigation/native";
 
 const ModeOfDelivery: React.FC<
   HomeNavigationProps<Route.navModeOfDelivery>
@@ -33,11 +34,22 @@ const ModeOfDelivery: React.FC<
   };
 
   const onPressContinue = () => {
-    // if (moverSelected) {
-    //   navigation.navigate(Route.navSelectMover);
-    // } else {
-    //   navigation.navigate(Route.navConfirmSelfPickup);
-    // }
+    if (moverSelected) {
+      navigation.navigate(Route.navPayment);
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: Route.navPayment }],
+      //   })
+      // );
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navDashboard }],
+        })
+      );
+    }
   };
 
   return (

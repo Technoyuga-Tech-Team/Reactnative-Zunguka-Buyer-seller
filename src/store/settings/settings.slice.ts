@@ -108,6 +108,9 @@ const settings = createSlice({
         id: number;
         price: number;
         isOutOfKigali: boolean;
+        name: string;
+        sellerName: string;
+        sellerPhone: string;
       } | null>
     ) => {
       state.productInfo = action.payload;

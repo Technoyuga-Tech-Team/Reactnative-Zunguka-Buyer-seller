@@ -11,5 +11,8 @@ export interface SettingsStateProps {
     id: number;
     price: number;
     isOutOfKigali: boolean;
+    name: string;
+    sellerName: string;
+    sellerPhone: string;
   } | null;
 }

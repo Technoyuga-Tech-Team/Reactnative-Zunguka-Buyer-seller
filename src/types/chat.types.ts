@@ -20,6 +20,7 @@ export interface ChatDataList {
   username: string;
   id: number;
   is_read: number;
+  is_image: number;
   item_id: string;
   last_name: string;
   message: string;

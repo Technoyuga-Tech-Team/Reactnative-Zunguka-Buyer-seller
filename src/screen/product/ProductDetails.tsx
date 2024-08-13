@@ -198,6 +198,9 @@ const ProductDetails: React.FC<
           id: productDetails?.id,
           price: productDetails?.sale_price,
           isOutOfKigali: is_OutOf_Kigali,
+          name: productDetails?.title,
+          sellerName: productDetails?.user?.username,
+          sellerPhone: productDetails?.user?.phone_number,
         })
       );
     if (is_OutOf_Kigali) {
@@ -217,6 +220,8 @@ const ProductDetails: React.FC<
   const onRefresh = () => {
     refetch();
   };
+
+  console.log("productDetails", productDetails);
 
   return (
     <KeyboardAwareScrollView

@@ -49,6 +49,9 @@ export const NEW_MESSAGE_NOTIFICATION = "@new_message";
 export const NEW_ITEMS_NOTIFICATION = "@new_items";
 export const PURCHASE_ITEMS_NOTIFICATION = "@purchase_items";
 
+export const FW_PUBLIC_KEY = "FLWPUBK_TEST-af5d90e18bfbc99046fd58a508d0f6c7-X";
+export const FW_SECRET_KEY = "FLWSECK_TEST-ca4fade6b4b20a473f20c7eb07c1dcd2-X";
+
 export const DUMMY_PLACEHOLDER = require("../assets/images/placeholder.jpg");
 
 export const DUMMY_USER =

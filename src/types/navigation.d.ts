@@ -23,6 +23,7 @@ export type AppRoutes = {
   SearchProduct: undefined;
   AddNewProduct: undefined;
   Congratulations: undefined;
+  Congratulations1: undefined;
   SellAnItem: undefined;
   ListAnother: undefined;
   Storefront: undefined;
@@ -104,6 +105,7 @@ export type HomeRoutes = {
   AddNewProduct: undefined;
   AllCategories: undefined;
   Congratulations: { itemId: number };
+  Congratulations1: undefined;
   DeliveryAddress: undefined;
   ModeOfDelivery: undefined;
   AddCard: undefined;

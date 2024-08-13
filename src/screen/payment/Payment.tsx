@@ -18,7 +18,12 @@ import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet"
 import SwipeAnimation from "../../components/SwipeAnimation";
 import CustomHeader from "../../components/ui/CustomHeader";
 import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
-import { PAYMENT_METHOD, SCREEN_WIDTH } from "../../constant";
+import {
+  FW_PUBLIC_KEY,
+  FW_SECRET_KEY,
+  PAYMENT_METHOD,
+  SCREEN_WIDTH,
+} from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import {
@@ -32,6 +37,16 @@ import { determineCardType, getCardImage } from "../../utils";
 import SelectCardView from "../../components/Payment/SelectCardView";
 import CustomButton from "../../components/ui/CustomButton";
 import TermsAndCondition from "../../components/ui/TermsAndCondition";
+import { PayWithFlutterwave } from "flutterwave-react-native";
+import { notifyMessage } from "../../utils/notifyMessage";
+import { CommonActions } from "@react-navigation/native";
+import axios from "axios";
+
+interface RedirectParams {
+  status: "successful" | "cancelled";
+  transaction_id?: string;
+  tx_ref: string;
+}
 
 const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   navigation,
@@ -55,12 +70,14 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     "Pay with credit card visa or Master"
   );
+  const [productPrice, setProductPrice] = useState("");
   const [transportFee, setTransportFee] = useState("");
   const [totalPrice, setTotalPrice] = useState("0");
   const [outOfKigali, setOutOfKigali] = useState(false);
 
   useEffect(() => {
     if (productInfo) {
+      setProductPrice(`${productInfo?.price}`);
       if (productInfo?.isOutOfKigali) {
         setOutOfKigali(true);
         setTotalPrice((productInfo?.price).toFixed(2));
@@ -150,6 +167,57 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
     sheetRef.current?.snapToIndex(1);
   };
 
+  const handleOnRedirect = (data: RedirectParams) => {
+    console.log(data);
+    if (data.status == "successful") {
+      const endpoint = "https://api.flutterwave.com/v3/transfers";
+
+      const data = {
+        account_bank: "MPS", // Replace with the recipient's bank code
+        account_number: productInfo?.sellerPhone || 250738923170, // Replace with the recipient's account number
+        amount: Number(productPrice), // Replace with the amount to be transferred
+        currency: "RWF", // Replace with the currency
+        narration: `Payment for ${productInfo?.name}`,
+        beneficiary_name: productInfo?.sellerName,
+      };
+
+      const headers = {
+        Authorization: `Bearer ${FW_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      };
+
+      axios
+        .post(endpoint, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log("Transfer result - - - ->", response.data);
+        })
+        .catch((error) => {
+          console.log("error - - - ", error.response.data);
+          notifyMessage(error.response.data.message);
+        });
+      notifyMessage("Payment Successfully");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: Route.navCongratulations1 }],
+        })
+      );
+    }
+  };
+  const generateTransactionRef = (length: number) => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    console.log("result", result);
+    return `flw_tx_ref_${result}`;
+  };
+
   return (
     <View style={style.container}>
       <CustomHeader title="Payment" />
@@ -173,7 +241,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           <RenderItem title="Total" value={`R₣ ${totalPrice}`} />
           <View style={style.borderCont} />
         </View>
-        <Text style={style.txtOrderSummary}>Payment method</Text>
+        {/* <Text style={style.txtOrderSummary}>Payment method</Text>
         <View style={style.paddingHorizontal}>
           <DropShadow style={style.shadow}>
             <View style={style.paymentMethodCont}>
@@ -189,14 +257,41 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           source={Images.PAYMENT_SECURE}
           resizeMode="contain"
           style={style.paymentSecure}
-        />
+        /> */}
       </KeyboardAwareScrollView>
       <View style={style.bottomCont}>
         <Text style={style.txtTandC}>
           I accept the general terms of use and the privacy policy and can start
           using zunguka
         </Text>
-        <SwipeAnimation onRight={onRight} />
+        {/* <SwipeAnimation onRight={onRight} /> */}
+        <PayWithFlutterwave
+          onRedirect={handleOnRedirect}
+          options={{
+            tx_ref: generateTransactionRef(10),
+            authorization: FW_PUBLIC_KEY,
+            customer: {
+              email: userData?.email,
+              name: userData?.username,
+              phonenumber: userData?.phone_number,
+            },
+            amount: Number(totalPrice),
+            currency: "RWF",
+            payment_options: "card",
+          }}
+          style={{ paddingHorizontal: 20 }}
+          customButton={(props) => (
+            <CustomButton
+              onPress={props.onPress}
+              title={"Payment"}
+              disabled={props.disabled}
+              loading={props.disabled}
+              buttonWidth="full"
+              variant="primary"
+              type="solid"
+            />
+          )}
+        />
       </View>
       <AddressDataSheet
         snapPoints={snapPoints}

@@ -32,9 +32,28 @@ const ChatBlock: React.FC<ChatBlockProps> = ({ item, onPress }) => {
         <AppImage source={profile} style={style.profile} resizeMode="cover" />
         <View style={style.centerCont}>
           <Text style={style.txtName}>{item?.username}</Text>
-          <Text numberOfLines={2} style={style.txtChat}>
-            {item?.message}
-          </Text>
+          {item?.is_image == 1 ? (
+            <View
+              style={{
+                marginTop: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+              <AppImage
+                source={Images.PLACEHOLDER_IMAGE}
+                style={{ height: 20, width: 20, borderRadius: 5 }}
+                resizeMode="cover"
+              />
+              <Text style={[style.txtChat, { marginLeft: 5 }]}>Photo</Text>
+            </View>
+          ) : (
+            <Text numberOfLines={2} style={style.txtChat}>
+              {item?.message}
+            </Text>
+          )}
+
           {/* <Text style={style.txtLastMessage}>{item.lastMessage}</Text> */}
         </View>
       </View>

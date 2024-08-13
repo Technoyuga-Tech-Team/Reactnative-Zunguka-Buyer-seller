@@ -32,6 +32,7 @@ import Chatroom from "../screen/chat/Chatroom";
 import MyStorefront from "../screen/Storefront/MyStorefront";
 import TransactionHistory from "../screen/profile/TransactionHistory";
 import Messaging from "../screen/chat/Messaging";
+import Congratulations1 from "../screen/sell/Congratulations1";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -91,6 +92,10 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navCongratulations}
             component={Congratulations}
+          />
+          <Stack.Screen
+            name={Route.navCongratulations1}
+            component={Congratulations1}
           />
           <Stack.Screen
             name={Route.navDeliveryAddress}

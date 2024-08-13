@@ -216,7 +216,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       });
 
       formData.append("receiver_id", receiver_id);
-      formData.append("message", null);
+      // formData.append("message", null);
       formData.append("item_id", product_id);
       console.log("formData", JSON.stringify(formData));
 
@@ -225,6 +225,8 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       const result = await dispatch(sendTheMessage({ formData: formData }));
 
       if (sendTheMessage.fulfilled.match(result)) {
+        console.log("sendTheMessage result - - - ", result.payload);
+
         if (result?.payload?.status == 1) {
           myUploadedImages = result?.payload?.data?.images;
         }
@@ -236,7 +238,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       let obj = {
         receiver_id: receiver_id,
         sender_id: userData?.id,
-        message: null,
+        // message: null,
         images: myUploadedImages,
         token: token,
         item_id: product_id,
@@ -280,7 +282,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
         });
 
         formData.append("receiver_id", receiver_id);
-        formData.append("message", null);
+        // formData.append("message", null);
         formData.append("item_id", product_id);
         console.log("formData", JSON.stringify(formData));
 
@@ -300,7 +302,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
         let obj = {
           receiver_id: receiver_id,
           sender_id: userData?.id,
-          message: null,
+          // message: null,
           images: myUploadedImages,
           token: token,
           item_id: product_id,
@@ -369,10 +371,10 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
           console.log("online users - - - - >", users);
           setOnlineUserList(users);
         });
-        socket.emit(
-          socketEvent.READ_MESSAGE,
-          `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
-        );
+        // socket.emit(
+        //   socketEvent.READ_MESSAGE,
+        //   `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
+        // );
       }
     });
 
@@ -392,11 +394,15 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       let t = getTime(new Date());
       console.log("newMessage - - - - - -- - - ", newMessage);
       if (userData?.id == newMessage?.receiver_id) {
+        socket.emit(
+          socketEvent.READ_MESSAGE,
+          `{receiver_id:${receiver_id},sender_id:${userData?.id}}`
+        );
         setMessages([
           {
             receiver_id: newMessage?.receiver_id,
             sender_id: newMessage?.sender_id,
-            message: newMessage?.isApiCall ? null : newMessage?.message,
+            message: newMessage?.message,
             images: newMessage?.images,
             messageTime: t,
           },
@@ -683,7 +689,15 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
               }}
             >
               <CautionIcon style={{ marginRight: 20 }} />
-              <Text>Providing email, phone number are not allowed.</Text>
+              <Text
+                style={{
+                  fontSize: theme?.fontSize?.fs14,
+                  fontFamily: theme?.fontFamily?.regular,
+                  color: theme?.colors?.greyed,
+                }}
+              >
+                Providing email, phone number are not allowed.
+              </Text>
             </View>
           )}
           <View style={style.bottomCont}>

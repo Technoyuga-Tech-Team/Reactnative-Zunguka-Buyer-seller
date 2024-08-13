@@ -56,6 +56,7 @@ export interface sellerDetailsProps {
   last_name: string;
   username: string;
   profile_image: string;
+  phone_number: string;
 }
 
 export interface ProductDetailsDataProps {
