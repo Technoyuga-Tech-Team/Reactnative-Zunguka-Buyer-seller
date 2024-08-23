@@ -75,15 +75,15 @@ const ClosedItems: React.FC<
     }
   };
 
-  const onPressProductItem = (itemId: number) => {
-    navigation.navigate(Route.navProductDetails, { itemId: itemId });
+  const onPressProductItem = (itemId: number, item: ProductDataProps) => {
+    navigation.navigate(Route.navArchivedProductDetails, { item: item });
   };
 
   return (
     <View style={style.container}>
       <ProductListing
         productData={dealsData}
-        onPress={(item) => onPressProductItem(item)}
+        onPress={(itemId, item) => onPressProductItem(itemId, item)}
         onEndReached={onEndReached}
         isLoading={loading}
         showLoadMore={page <= totalPage}

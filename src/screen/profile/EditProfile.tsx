@@ -64,7 +64,6 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   const { theme } = useTheme();
 
   const userData = useSelector(selectUserData);
-  console.log("userData", userData);
   const userLoading = useSelector(selectUserProfileLoading);
 
   const dispatch = useAppDispatch();

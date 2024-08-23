@@ -16,7 +16,7 @@ import DownArrowIcon from "../ui/svg/DownArrowIcon";
 
 interface ProductProps {
   productData: ProductDataProps[];
-  onPress: (itemId: number) => void;
+  onPress: (itemId: number, item: ProductDataProps) => void;
   refreshControl?: React.ReactElement<RefreshControlProps>;
   onEndReached?: () => void;
   isLoading?: boolean;
@@ -36,7 +36,7 @@ const ProductListing: React.FC<ProductProps> = ({
   const { theme } = useTheme();
 
   const renderItem = ({ item }: { item: ProductDataProps }) => {
-    return <ProductItem item={item} onPress={() => onPress(item.id)} />;
+    return <ProductItem item={item} onPress={() => onPress(item.id, item)} />;
   };
 
   const ItemSeparator = () => {

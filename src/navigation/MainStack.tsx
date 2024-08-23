@@ -35,6 +35,7 @@ import Messaging from "../screen/chat/Messaging";
 import Congratulations1 from "../screen/sell/Congratulations1";
 import InternetConnectivityLabel from "../components/ui/InternetConnectivityLabel";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
+import ArchivedProductDetails from "../screen/product/ArchivedProductDetails";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -106,6 +107,10 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navProductDetails}
             component={ProductDetails}
+          />
+          <Stack.Screen
+            name={Route.navArchivedProductDetails}
+            component={ArchivedProductDetails}
           />
           <Stack.Screen
             name={Route.navCongratulations}

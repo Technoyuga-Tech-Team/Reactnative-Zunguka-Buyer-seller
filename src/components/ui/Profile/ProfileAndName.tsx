@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(64),
     width: Scale(64),
     borderRadius: Scale(64 / 2),
+    borderColor: theme?.colors?.primary,
+    borderWidth: 2,
   },
   txtName: {
     fontSize: theme.fontSize?.fs22,

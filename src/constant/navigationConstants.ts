@@ -52,6 +52,7 @@ export enum Route {
   navDeliveryCompleteAndRateDriver = "DeliveryCompleteAndRateDriver",
   navAllCategories = "AllCategories",
   navProductDetails = "ProductDetails",
+  navArchivedProductDetails = "ArchivedProductDetails",
   navSelectMover = "SelectMover",
   navNotificationSetting = "NotificationSetting",
   navAdd = "Add",

@@ -69,6 +69,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(167),
     width: Scale(167),
     borderRadius: Scale(167 / 2),
+    borderWidth: 2,
+    borderColor: theme?.colors?.primary,
   },
   cameraCont: {
     height: Scale(32),

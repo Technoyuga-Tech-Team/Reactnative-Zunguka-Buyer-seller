@@ -3,11 +3,13 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
+import { ProductDataProps } from "./product.types";
 
 export type TopRoutes = {
   OpenItems: undefined;
   ClosedItems: undefined;
   ProductDetails: { itemId: number };
+  ArchivedProductDetails: { item: ProductDataProps };
 };
 
 export type AppRoutes = {
@@ -35,6 +37,7 @@ export type AppRoutes = {
   Messaging: undefined;
   Chatroom: { receiver_id: string; product_id: string };
   ProductDetails: { itemId: number };
+  ArchivedProductDetails: { item: ProductDataProps };
   DeliveryAddress: undefined;
   TransactionHistory: undefined;
   TransactionDetails: undefined;

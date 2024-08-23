@@ -743,12 +743,12 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                     }, 2000);
                   }}
                 />
-                <TouchableOpacity onPress={onPressOpenDoc}>
+                {/* <TouchableOpacity onPress={onPressOpenDoc}>
                   <FilesShareIcon
                     style={{ marginRight: 10 }}
                     hitSlop={HIT_SLOP2}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <View
                 style={{
@@ -770,12 +770,12 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
-      <ImagePickerPopup
+      {/* <ImagePickerPopup
         visiblePopup={visible}
         togglePopup={togglePopup}
         onPressFromCamera={onPressFromCamera}
         onPressFromGallary={onPressFromGallary}
-      />
+      /> */}
     </View>
   );
 };
