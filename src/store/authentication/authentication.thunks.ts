@@ -80,7 +80,7 @@ export const userRegistration = createAsyncThunk<
 );
 
 export const userAddUserName = createAsyncThunk<
-  true,
+  any,
   {
     username: string;
   },
@@ -328,9 +328,6 @@ export const userResendOTP = createAsyncThunk<
         false
       )
     );
-
-    console.log("errors", errors);
-    console.log("data", data);
 
     if (errors) {
       return rejectWithValue(errors);

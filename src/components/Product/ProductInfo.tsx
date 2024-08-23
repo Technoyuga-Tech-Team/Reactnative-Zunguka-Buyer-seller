@@ -76,19 +76,20 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         </View>
         <View style={style.productNameCont}>
           <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
-
-          <TouchableOpacity
-            onPress={onPressMessage}
-            activeOpacity={0.8}
-            style={style.heartCont}
-          >
-            <MessageOutlineIcon
-              color={theme?.colors?.unselectedIconColor}
-              height={15}
-              width={15}
-            />
-            {/* <Text style={style.txtCount}>100</Text> */}
-          </TouchableOpacity>
+          {!isCurrentUsersProduct && (
+            <TouchableOpacity
+              onPress={onPressMessage}
+              activeOpacity={0.8}
+              style={style.heartCont}
+            >
+              <MessageOutlineIcon
+                color={theme?.colors?.unselectedIconColor}
+                height={15}
+                width={15}
+              />
+              {/* <Text style={style.txtCount}>100</Text> */}
+            </TouchableOpacity>
+          )}
         </View>
         <View style={style.addrCont}>
           <Text style={style.txtDate}>Posted {time}</Text>

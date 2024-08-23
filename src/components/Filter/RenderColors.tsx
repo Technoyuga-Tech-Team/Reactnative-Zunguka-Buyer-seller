@@ -1,12 +1,9 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { CheckBox, makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../../types/global.types";
+import { ScrollView } from "react-native";
+import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import CheckIcon from "../ui/svg/CheckIcon";
+import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
-import SquareCheckIcon from "../ui/svg/SquareCheckIcon";
-import { HIT_SLOP2 } from "../../constant";
 import CheckBoxSelection from "../ui/CheckBoxSelection";
 
 interface RenderColorsProps {

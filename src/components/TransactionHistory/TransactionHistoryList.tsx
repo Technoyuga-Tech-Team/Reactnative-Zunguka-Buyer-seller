@@ -2,14 +2,14 @@ import React from "react";
 import { FlatList } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemeProps } from "../../../types/global.types";
-import { GetProductDetailsDataProps } from "../../../types/product.types";
-import { transactionData } from "../../../types/transaction.types";
 import TransactionItem from "./TransactionItem";
+import { transactionData } from "../../types/transaction.types";
+import { ProductDataProps } from "../../types/product.types";
+import { ThemeProps } from "../../types/global.types";
 
 interface TransactionHistoryListProps {
   transactionHistoryData: transactionData[];
-  onPressItem: (item: GetProductDetailsDataProps) => void;
+  onPressItem: (item: ProductDataProps) => void;
   onEndReached: () => void;
 }
 

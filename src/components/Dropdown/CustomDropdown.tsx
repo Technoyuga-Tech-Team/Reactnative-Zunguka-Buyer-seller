@@ -16,19 +16,12 @@ interface CustomDropdownProps {
   error: string;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  dropDownWidth,
-  topMargin,
-  placeHolder,
-  onFocus,
-  onSelect,
-  value,
-  dropDownData,
-  error,
-}) => {
+export const CustomDropdown = React.forwardRef<
+  SelectDropdown,
+  CustomDropdownProps
+>(({ ...props }, ref) => {
   const style = useStyle();
   const { theme } = useTheme();
-
   const renderDropdownIcon = (selectedItem: any) => {
     return (
       <DownArrowIcon
@@ -39,13 +32,15 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
       />
     );
   };
+
   return (
-    <View style={[topMargin ? { marginTop: topMargin } : null]}>
+    <View style={[props.topMargin ? { marginTop: props.topMargin } : null]}>
       <SelectDropdown
-        data={dropDownData}
-        defaultValue={value}
+        ref={ref}
+        data={props.dropDownData}
+        defaultValue={props.value}
         onSelect={(selectedItem) => {
-          onSelect(selectedItem);
+          props.onSelect(selectedItem);
         }}
         buttonTextAfterSelection={(selectedItem, index) => {
           // text represented after item is selected
@@ -60,20 +55,84 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         dropdownStyle={style.dropdownCont}
         buttonStyle={[
           style.dropdownView,
-          dropDownWidth ? { width: dropDownWidth } : null,
+          props.dropDownWidth ? { width: props.dropDownWidth } : null,
         ]}
-        onFocus={onFocus}
-        defaultButtonText={placeHolder}
+        onFocus={props.onFocus}
+        defaultButtonText={props.placeHolder}
         buttonTextStyle={style.btnTxtStyle}
         renderDropdownIcon={renderDropdownIcon}
         rowStyle={style.rowStyle}
         rowTextStyle={style.txtRow}
         selectedRowStyle={{ backgroundColor: theme.colors?.lightBg }}
       />
-      {error && <Text style={style.error}>{error}</Text>}
+      {props.error && <Text style={style.error}>{props.error}</Text>}
     </View>
   );
-};
+});
+
+// const CustomDropdown: React.FC<CustomDropdownProps> = ({
+//   dropDownWidth,
+//   topMargin,
+//   placeHolder,
+//   onFocus,
+//   onSelect,
+//   value,
+//   dropDownData,
+//   error,
+//   reset,
+// }) => {
+//   const style = useStyle();
+//   const { theme } = useTheme();
+
+//   // const dropDownRef = useRef(null);
+
+//   const renderDropdownIcon = (selectedItem: any) => {
+//     return (
+//       <DownArrowIcon
+//         color={theme.colors?.black}
+//         height={10}
+//         width={10}
+//         style={{ transform: [{ rotate: selectedItem ? "180deg" : "-360deg" }] }}
+//       />
+//     );
+//   };
+
+//   return (
+//     <View style={[topMargin ? { marginTop: topMargin } : null]}>
+//       <SelectDropdown
+//         ref={dropDownRef}
+//         data={dropDownData}
+//         defaultValue={value}
+//         onSelect={(selectedItem) => {
+//           onSelect(selectedItem);
+//         }}
+//         buttonTextAfterSelection={(selectedItem, index) => {
+//           // text represented after item is selected
+//           // if data array is an array of objects then return selectedItem.property to render after item is selected
+//           return selectedItem.title;
+//         }}
+//         rowTextForSelection={(item, index) => {
+//           // text represented for each item in dropdown
+//           // if data array is an array of objects then return item.property to represent item in dropdown
+//           return item.title;
+//         }}
+//         dropdownStyle={style.dropdownCont}
+//         buttonStyle={[
+//           style.dropdownView,
+//           dropDownWidth ? { width: dropDownWidth } : null,
+//         ]}
+//         onFocus={onFocus}
+//         defaultButtonText={placeHolder}
+//         buttonTextStyle={style.btnTxtStyle}
+//         renderDropdownIcon={renderDropdownIcon}
+//         rowStyle={style.rowStyle}
+//         rowTextStyle={style.txtRow}
+//         selectedRowStyle={{ backgroundColor: theme.colors?.lightBg }}
+//       />
+//       {error && <Text style={style.error}>{error}</Text>}
+//     </View>
+//   );
+// };
 
 export default CustomDropdown;
 

@@ -8,6 +8,7 @@ import CardView from "./CardView";
 import { GetPaymentCardData } from "../../types/payment.types";
 import TrashIcon from "../ui/svg/TrashIcon";
 import { Images } from "../../assets/images";
+import { SCREEN_WIDTH } from "../../constant";
 
 const rowTranslateAnimatedValues: any = {};
 

@@ -67,7 +67,7 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
 
   const openPickerCameraImage = async () => {
     try {
-      const imageObject = await getImageFromCamera();
+      const imageObject = await getImageFromCamera({});
       setImages([...images, imageObject]);
     } catch (error) {
       // Handle errors here if needed (e.g., display a user-friendly message)

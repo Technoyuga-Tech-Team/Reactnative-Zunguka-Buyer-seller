@@ -1,13 +1,11 @@
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { HotBrandaDataProps } from "../../types/dashboard.types";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
-import { Images } from "../../assets/images";
-import HomeIcon from "../ui/svg/HomeIcon";
-import { HotBrandaDataProps } from "../../types/dashboard.types";
 
 interface HotBrandsItemProps {
   item: HotBrandaDataProps;

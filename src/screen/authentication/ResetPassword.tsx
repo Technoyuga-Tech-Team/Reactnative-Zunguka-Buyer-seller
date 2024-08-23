@@ -14,6 +14,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { Images } from "../../assets/images";
 import { AppImage } from "../../components/AppImage/AppImage";
 import CustomButton from "../../components/ui/CustomButton";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
@@ -28,12 +30,10 @@ import { selectAuthenticationLoading } from "../../store/authentication/authenti
 import { userResetPassword } from "../../store/authentication/authentication.thunks";
 import { ResetPasswordFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
-import { AuthNavigationProps } from "../../types/navigation";
+import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
-import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
-import { Images } from "../../assets/images";
 
-const ResetPassword: React.FC<AuthNavigationProps<Route.navResetPassword>> = ({
+const ResetPassword: React.FC<HomeNavigationProps<Route.navResetPassword>> = ({
   navigation,
   route,
 }) => {

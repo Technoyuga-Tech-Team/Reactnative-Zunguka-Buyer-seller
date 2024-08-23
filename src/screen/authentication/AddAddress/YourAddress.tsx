@@ -21,7 +21,10 @@ import {
 import { AddAddressProps } from "../../../types/authentication.types";
 import { imagePickerProps } from "../../../types/common.types";
 import { LoadingState, ThemeProps } from "../../../types/global.types";
-import { AuthNavigationProps } from "../../../types/navigation";
+import {
+  AuthNavigationProps,
+  HomeNavigationProps,
+} from "../../../types/navigation";
 import { getUrlExtension } from "../../../utils";
 import { userAddress } from "../../../store/authentication/authentication.thunks";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
@@ -29,7 +32,7 @@ import { CommonActions } from "@react-navigation/native";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import CheckBoxSelection from "../../../components/ui/CheckBoxSelection";
 
-const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
+const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   navigation,
   route,
 }) => {
@@ -176,6 +179,7 @@ const YourAddress: React.FC<AuthNavigationProps<Route.navYourAddress>> = ({
       ? setNoHouseNumber(false)
       : setNoHouseNumber(true);
   }, [values.houseNumber]);
+
   useEffect(() => {
     noHouseNumber && setFieldValue("houseNumber", "");
   }, [noHouseNumber]);

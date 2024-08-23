@@ -77,6 +77,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     // dispatch(logout());
     await setData(secureStoreKeys.JWT_TOKEN, null);
     await setData(USER_DATA, null);
+    // @ts-ignore
     dispatch(setUserData({}));
     navigation.dispatch(
       CommonActions.reset({

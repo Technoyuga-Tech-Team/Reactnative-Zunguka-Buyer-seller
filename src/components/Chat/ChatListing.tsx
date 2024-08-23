@@ -37,7 +37,7 @@ const ChatListing: React.FC<ChatListingProps> = ({
       refreshControl={refreshControl}
       renderItem={renderItem}
       onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={0.1}
       ListFooterComponent={() =>
         loadMoreLoading && <ActivityIndicator color={theme?.colors?.primary} />
       }

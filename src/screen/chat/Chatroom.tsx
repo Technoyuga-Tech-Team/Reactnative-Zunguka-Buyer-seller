@@ -27,6 +27,7 @@ import { MessageList, receiverDetailsProps } from "../../types/chat.types";
 import { getData } from "../../utils/asyncStorage";
 import {
   BASE_URL,
+  GOOGLE_MAP_API_KEY,
   HAS_NOTCH,
   HIT_SLOP2,
   SCREEN_WIDTH,
@@ -53,7 +54,8 @@ import {
 } from "../../utils/ImagePickerCameraGallary";
 import * as _ from "lodash";
 import { sendTheMessage } from "../../store/Product/product.thunk";
-import { getUrlExtension } from "../../utils";
+import { getUrlExtension, hasAddress, hasEmail, hasPhone } from "../../utils";
+import Geocoder from "react-native-geocoding";
 
 const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   navigation,
@@ -69,8 +71,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   const dispatch = useAppDispatch();
   const receiver_id = route?.params?.receiver_id;
   const product_id = route?.params?.product_id;
-  console.log("receiver_id", receiver_id);
-  console.log("product_id", product_id);
+  console.log(" - - receiver_id", receiver_id, "product_id - - ", product_id);
   const userData = useSelector(selectUserData);
 
   const [messages, setMessages] = useState<MessageList[]>([]);
@@ -94,6 +95,10 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   const [receiverDetails, setReceiverDetails] =
     useState<receiverDetailsProps>();
   const debouncedFilter = useDebounce(search, 500);
+
+  useEffect(() => {
+    Geocoder.init(GOOGLE_MAP_API_KEY); // Initialize geocoder with API key
+  }, []);
 
   useEffect(() => {
     if (onlineUserList && onlineUserList?.length > 0) {
@@ -132,6 +137,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
 
   useEffect(() => {
     if (debouncedFilter !== "") {
+      // @ts-ignore
       let ind = messages.findIndex((ele) => ele.message === debouncedFilter);
       if (ind !== -1) {
         setSearchIndex(ind);
@@ -164,7 +170,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
 
   useEffect(() => {
     console.log("called");
-    getChatMessages(10, 1);
+    getChatMessages(20, 1);
     // setPage(1);
     // refetch().then();
   }, [receiver_id]);
@@ -250,6 +256,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
         {
           receiver_id: receiver_id,
           sender_id: userData?.id,
+          // @ts-ignore
           message: null,
           images: myUploadedImages,
           messageTime: t,
@@ -266,7 +273,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     togglePopup();
     setTimeout(async () => {
       try {
-        const imageObject = await getImageFromGallary({
+        const imageObject: any[] = await getImageFromGallary({
           multiple: true,
         });
         const formData = new FormData();
@@ -314,6 +321,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
           {
             receiver_id: receiver_id,
             sender_id: userData?.id,
+            // @ts-ignore
             message: null,
             images: myUploadedImages,
             messageTime: t,
@@ -342,7 +350,6 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       );
 
       const data = await response.json();
-      console.log("data - - -  - - -", data);
 
       // Handle the fetched data here
       if (data.status === 1) {
@@ -368,7 +375,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       if (receiver_id && userData) {
         socket.emit("new-user-add", userData?.id);
         socket.on("get-users", (users) => {
-          console.log("online users - - - - >", users);
+          // console.log("online users - - - - >", users);
           setOnlineUserList(users);
         });
         // socket.emit(
@@ -441,15 +448,14 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     return strTime;
   };
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneRegex = /^\d{10}$/;
-
   const sendMessage = async () => {
-    if (inputMessage === "") {
+    let input_message = inputMessage.trim();
+    if (input_message === "") {
       return setInputMessage("");
     }
 
-    if (emailRegex.test(inputMessage) || phoneRegex.test(inputMessage)) {
+    // const { results } = await Geocoder.from(input_message);
+    if (hasEmail(input_message) || hasPhone(input_message)) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
@@ -461,7 +467,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     let obj = {
       receiver_id: receiver_id,
       sender_id: userData?.id,
-      message: inputMessage,
+      message: input_message,
       token: token,
       item_id: product_id,
       isApiCall: true,
@@ -471,7 +477,8 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       {
         receiver_id: receiver_id,
         sender_id: userData?.id,
-        message: inputMessage,
+        // @ts-ignore
+        message: input_message,
         messageTime: t,
       },
       ...messages,
@@ -493,7 +500,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     console.log("totalPage", totalPage);
     if (page <= totalPage && !loading) {
       setLoadMoreLoading(true);
-      getChatMessages(10, page);
+      getChatMessages(20, page);
     }
   };
 
@@ -501,7 +508,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
     setVisible(true);
   };
 
-  console.log("messages", JSON.stringify(messages));
+  // console.log("messages", JSON.stringify(messages));
 
   const receiverProfile =
     receiverDetails?.profile_image || Images.PLACEHOLDER_IMAGE;
@@ -595,9 +602,6 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
                 const isCurrentUser = item.sender_id === userData?.id;
                 const isSelected = searchIndex == index;
                 const time = moment(item?.created_at).format("h:mm A");
-                // const isImageInChat = _.isEmpty(item?.images);
-                // console.log("isImageInChat", isImageInChat);
-                // console.log("item?.images", item?.images);
                 return (
                   <TouchableWithoutFeedback>
                     <View style={{ marginTop: 6 }}>

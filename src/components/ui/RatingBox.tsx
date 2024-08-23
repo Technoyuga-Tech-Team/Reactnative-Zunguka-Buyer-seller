@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+// @ts-ignore
 import Stars from "react-native-stars";
 import { ThemeProps } from "../../types/global.types";
 import { SCREEN_WIDTH } from "../../constant";

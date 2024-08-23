@@ -8,7 +8,6 @@ const LightThemeColor = {
   primaryLight: "rgba(243, 178, 65, 0.5)",
   primaryLightest: "#FEF7EC",
   backgroundLight1: "#F5F5F5",
-
   transparent: "transparent",
   background: "#FFFFFF",
   textColor: "#000000",

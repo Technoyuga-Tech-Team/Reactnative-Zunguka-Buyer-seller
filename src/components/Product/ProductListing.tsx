@@ -79,7 +79,7 @@ const ProductListing: React.FC<ProductProps> = ({
           renderItem={renderItem}
           ItemSeparatorComponent={ItemSeparator}
           refreshControl={refreshControl}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.1}
           initialNumToRender={10}
           ListFooterComponent={Footer}
         />

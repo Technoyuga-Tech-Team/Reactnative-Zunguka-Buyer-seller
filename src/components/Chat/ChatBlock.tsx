@@ -33,17 +33,10 @@ const ChatBlock: React.FC<ChatBlockProps> = ({ item, onPress }) => {
         <View style={style.centerCont}>
           <Text style={style.txtName}>{item?.username}</Text>
           {item?.is_image == 1 ? (
-            <View
-              style={{
-                marginTop: 5,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "flex-start",
-              }}
-            >
+            <View style={style.lastImgCont}>
               <AppImage
                 source={Images.PLACEHOLDER_IMAGE}
-                style={{ height: 20, width: 20, borderRadius: 5 }}
+                style={{ height: 15, width: 15, borderRadius: 3 }}
                 resizeMode="cover"
               />
               <Text style={[style.txtChat, { marginLeft: 5 }]}>Photo</Text>
@@ -53,8 +46,6 @@ const ChatBlock: React.FC<ChatBlockProps> = ({ item, onPress }) => {
               {item?.message}
             </Text>
           )}
-
-          {/* <Text style={style.txtLastMessage}>{item.lastMessage}</Text> */}
         </View>
       </View>
       <View style={style.lastCont}>
@@ -148,5 +139,11 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     justifyContent: "center",
     backgroundColor: theme.colors?.primary,
     overflow: "hidden",
+  },
+  lastImgCont: {
+    marginTop: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 }));

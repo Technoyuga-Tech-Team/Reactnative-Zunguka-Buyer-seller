@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  Modal,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { SCREEN_WIDTH } from "../../../constant";
 import CustomButton from "../CustomButton";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../../constant";
 
 interface LogoutPopupProps {
   visiblePopup: boolean;

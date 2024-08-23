@@ -1,25 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { HIT_SLOP } from "../constant";
 import { imagePickerProps } from "../types/common.types";
 import { ThemeProps } from "../types/global.types";
-import Scale from "../utils/Scale";
-import { AppImage } from "./AppImage/AppImage";
-import { HIT_SLOP } from "../constant";
-import CloseIcon from "./ui/svg/CloseIcon";
-import PlusIcon from "./ui/svg/PlusIcon";
-import CustomButton from "./ui/CustomButton";
 import {
   getImageFromCamera,
   getImageFromGallary,
   requestCameraPermission,
 } from "../utils/ImagePickerCameraGallary";
+import Scale from "../utils/Scale";
+import { AppImage } from "./AppImage/AppImage";
 import ImagePickerPopup from "./ui/ImagePickerPopup";
+import CloseIcon from "./ui/svg/CloseIcon";
+import PlusIcon from "./ui/svg/PlusIcon";
 
 export type Item = ReturnType<typeof mapIndexToData>;
 
@@ -66,7 +65,7 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
 
   const openPickerCameraImage = async () => {
     try {
-      const imageObject = await getImageFromCamera();
+      const imageObject = await getImageFromCamera({});
       setImages([...images, imageObject]);
     } catch (error) {
       // Handle errors here if needed (e.g., display a user-friendly message)

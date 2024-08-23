@@ -1,15 +1,13 @@
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemeProps } from "../../types/global.types";
-import Scale from "../../utils/Scale";
-import { AppImage } from "../AppImage/AppImage";
 import { DUMMY_PLACEHOLDER } from "../../constant";
+import { ThemeProps } from "../../types/global.types";
 import { ProductDataProps } from "../../types/product.types";
 import { getConditionItemValue } from "../../utils";
-
-//  new_unused,near_unused,no_noticable_scratched_stains,slightly_scratched,scratched_soiled
+import Scale from "../../utils/Scale";
+import { AppImage } from "../AppImage/AppImage";
 
 interface ProductItemProps {
   item: ProductDataProps;

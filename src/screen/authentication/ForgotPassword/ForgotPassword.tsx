@@ -10,26 +10,25 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import ReactNativePhoneInput from "react-native-phone-input";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import { Images } from "../../../assets/images";
+import { AppImage } from "../../../components/AppImage/AppImage";
 import CountryPickerModal from "../../../components/ui/CountryPickerModal";
 import CustomButton from "../../../components/ui/CustomButton";
+import Loading from "../../../components/ui/Loading";
 import { PhoneNumberInput } from "../../../components/ui/PhoneNumberInput";
-import BackIcon from "../../../components/ui/svg/BackIcon";
+import LeftIcon from "../../../components/ui/svg/LeftIcon";
 import { HAS_NOTCH, HIT_SLOP } from "../../../constant";
 import { ForgotPasswordScreenSchema } from "../../../constant/formValidations";
 import { Route } from "../../../constant/navigationConstants";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
+import { userForgotPassword } from "../../../store/authentication/authentication.thunks";
+import { setSuccess } from "../../../store/global/global.slice";
 import { ForgotPasswordFormProps } from "../../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../../types/global.types";
 import { AuthNavigationProps } from "../../../types/navigation";
 import Scale from "../../../utils/Scale";
-import { AppImage } from "../../../components/AppImage/AppImage";
-import LeftIcon from "../../../components/ui/svg/LeftIcon";
-import Loading from "../../../components/ui/Loading";
-import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
-import { useSelector } from "react-redux";
-import { userForgotPassword } from "../../../store/authentication/authentication.thunks";
-import { setSuccess } from "../../../store/global/global.slice";
-import { Images } from "../../../assets/images";
 
 const ForgotPassword: React.FC<
   AuthNavigationProps<Route.navForgotPassword>
@@ -61,7 +60,7 @@ const ForgotPassword: React.FC<
   };
 
   const onPhoneInputChange = (value: string, iso2: string) => {
-    setCountryCode(iso2);
+    setCountryCode(iso2 as CountryCode);
     setFieldValue("phoneNumber", value);
   };
 

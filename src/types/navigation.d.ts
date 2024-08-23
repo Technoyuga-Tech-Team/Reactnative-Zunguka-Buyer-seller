@@ -14,15 +14,14 @@ export type AppRoutes = {
   Onboard: undefined;
   Splash: undefined;
   Authentication: undefined;
-  YourAddress: undefined;
   ChooseAddress: undefined;
-  AddKyc: undefined;
-  TakeSelfie: undefined;
+  AddKyc: { fromOTP?: boolean };
+  TakeSelfie: { fromflow?: boolean };
   Dashboard: undefined;
   Home: undefined;
-  SearchProduct: undefined;
+  SearchProduct: { mainCat: string; subCat: string };
   AddNewProduct: undefined;
-  Congratulations: undefined;
+  Congratulations: { itemId: number };
   Congratulations1: undefined;
   SellAnItem: undefined;
   ListAnother: undefined;
@@ -32,10 +31,10 @@ export type AppRoutes = {
   ChangePassword: undefined;
   SavedItems: undefined;
   PurchasedHistory: undefined;
-  ResetPassword: undefined;
+  ResetPassword: { phone?: string; email?: string };
   Messaging: undefined;
-  Chatroom: undefined;
-  ProductDetails: undefined;
+  Chatroom: { receiver_id: string; product_id: string };
+  ProductDetails: { itemId: number };
   DeliveryAddress: undefined;
   TransactionHistory: undefined;
   TransactionDetails: undefined;
@@ -46,7 +45,7 @@ export type AppRoutes = {
   AllCategories: undefined;
   ModeOfDelivery: undefined;
   ModeOfPayment: undefined;
-  CardDetails: undefined;
+  CardDetails: { from: string };
   AddCard: undefined;
   Payment: undefined;
   DeliveryDetails: undefined;
@@ -62,6 +61,10 @@ export type AppRoutes = {
   PaymentToMover: undefined;
   VisitProfile: undefined;
   JobHistory: undefined;
+  YourAddress: { fromOTP?: boolean };
+  Favourites: undefined;
+  Sell: undefined;
+  Alert: undefined;
 };
 
 export type AuthenticationRoutes = {
@@ -129,9 +132,9 @@ export interface AuthNavigationProps<
   route: RouteProp<AuthenticationRoutes, RouteName>;
 }
 
-export interface HomeNavigationProps<RouteName extends keyof HomeRoutes> {
-  navigation: NativeStackNavigationProp<HomeRoutes, RouteName>;
-  route: RouteProp<HomeRoutes, RouteName>;
+export interface HomeNavigationProps<RouteName extends keyof AppRoutes> {
+  navigation: NativeStackNavigationProp<AppRoutes, RouteName>;
+  route: RouteProp<AppRoutes, RouteName>;
 }
 
 export interface MyFrontStoreNavigationProps<

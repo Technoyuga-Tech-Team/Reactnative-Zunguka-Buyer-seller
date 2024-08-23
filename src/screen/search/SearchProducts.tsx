@@ -14,6 +14,7 @@ import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { CommonActions } from "@react-navigation/native";
+import { notifyMessage } from "../../utils/notifyMessage";
 
 const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   navigation,
@@ -199,12 +200,14 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     const categoryCounts = {};
     data.forEach((item) => {
       item.category_id.split(",").forEach((categoryId: string | number) => {
+        // @ts-ignore
         categoryCounts[categoryId] = (categoryCounts[categoryId] || 0) + 1;
       });
     });
 
     // Find the category ID with the maximum occurrence count
     const maxCategoryId = Object.keys(categoryCounts).reduce((a, b) =>
+      // @ts-ignore
       categoryCounts[a] > categoryCounts[b] ? a : b
     );
 
@@ -236,7 +239,9 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressSort = () => {
-    setVisible(true);
+    products && products.length > 0
+      ? setVisible(true)
+      : notifyMessage("There are no items to sort.");
   };
 
   const togglePopup = () => {

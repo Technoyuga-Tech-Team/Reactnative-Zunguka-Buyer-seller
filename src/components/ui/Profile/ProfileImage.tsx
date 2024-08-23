@@ -19,7 +19,7 @@ interface ProfileImageProps {
   profileImage: string;
   onPressCamera?: () => void;
   showIcon?: boolean;
-  imageStyle: StyleProp<ViewStyle>;
+  imageStyle?: StyleProp<ViewStyle>;
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -36,6 +36,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   return (
     <View style={style.container}>
       <AppImage
+        // @ts-ignore
         style={[style.profile, imageStyle]}
         source={Profile}
         resizeMode="cover"

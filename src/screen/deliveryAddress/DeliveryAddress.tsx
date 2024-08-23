@@ -71,6 +71,8 @@ const DeliveryAddress: React.FC<
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const sheetRef = useRef<BottomSheet>(null);
+  const regionRef = useRef(null);
+  const cityRef = useRef(null);
   const firstNameRef = React.useRef<TextInput>(null);
   const lastnameRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<ReactNativePhoneInput>(null);
@@ -176,8 +178,10 @@ const DeliveryAddress: React.FC<
     setFieldValue("phoneNumber", item.phone_number);
     setTamp_phone(item.phone_number);
     setFieldValue("deliveryAddress", item.address);
+    // @ts-ignore
     setRegion({ key: item.region, title: item.region });
     setFieldValue("region", item.region);
+    // @ts-ignore
     setCity({ key: item.city, title: item.city });
     setFieldValue("city", item.city);
     setMakeDefault(item.is_default);
@@ -267,17 +271,22 @@ const DeliveryAddress: React.FC<
   });
 
   const onPressNewAddress = () => {
+    setMakeDefault(0);
+    phoneRef.current?.selectCountry("rw");
+    phoneRef.current?.setValue("250");
+    // @ts-ignore
+    regionRef?.current?.reset();
+    // @ts-ignore
+    cityRef?.current?.reset();
+    // setRegion({ key: "", title: "" });
+    // setCity({ key: "", title: "" });
     setFieldValue("firstName", "");
     setFieldValue("lastName", "");
     setFieldValue("phoneNumber", "");
     setFieldValue("deliveryAddress", "");
     setFieldValue("region", "");
     setFieldValue("city", "");
-    setMakeDefault(0);
-    phoneRef.current?.selectCountry("rw");
-    phoneRef.current?.setValue("");
-    setRegion("");
-    setCity("");
+
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
     }, 500);
@@ -481,6 +490,7 @@ const DeliveryAddress: React.FC<
           <Text style={style.txtChooseLocation}>Auto-locate address</Text>
         </TouchableOpacity>
         <CustomDropdown
+          ref={regionRef}
           dropDownData={CITIES}
           placeHolder={"Region"}
           value={region}
@@ -493,6 +503,7 @@ const DeliveryAddress: React.FC<
           error={regionError}
         />
         <CustomDropdown
+          ref={cityRef}
           dropDownData={CITIES}
           placeHolder={"City"}
           value={city}
@@ -579,6 +590,7 @@ const DeliveryAddress: React.FC<
           onEndReached={onEndReached}
         />
       </View>
+      <View style={{ height: 15 }} />
       <CustomButton
         onPress={onPressSelectAddress}
         title={"Select address"}

@@ -1,22 +1,14 @@
-import { CommonActions, useFocusEffect } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  BackHandler,
-  Platform,
-  RefreshControl,
-  StatusBar,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Platform, RefreshControl, StatusBar, View } from "react-native";
 import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import ProductInfo from "../../components/Product/ProductInfo";
 import ProductBanner from "../../components/ProductBanner";
 import CustomButton from "../../components/ui/CustomButton";
-import Loading from "../../components/ui/Loading";
 import ProductHeader from "../../components/ui/ProductHeader";
 import { HAS_NOTCH, SCREEN_WIDTH } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
@@ -26,6 +18,8 @@ import {
   deleteProduct,
   likeDislikeProduct,
 } from "../../store/Product/product.thunk";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import { setProductInfo } from "../../store/settings/settings.slice";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import {
@@ -34,9 +28,6 @@ import {
 } from "../../types/product.types";
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
-import { useSelector } from "react-redux";
-import { selectUserData } from "../../store/settings/settings.selectors";
-import { setProductInfo } from "../../store/settings/settings.slice";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -220,8 +211,6 @@ const ProductDetails: React.FC<
   const onRefresh = () => {
     refetch();
   };
-
-  console.log("productDetails", productDetails);
 
   return (
     <KeyboardAwareScrollView

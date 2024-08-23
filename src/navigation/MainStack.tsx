@@ -33,18 +33,36 @@ import MyStorefront from "../screen/Storefront/MyStorefront";
 import TransactionHistory from "../screen/profile/TransactionHistory";
 import Messaging from "../screen/chat/Messaging";
 import Congratulations1 from "../screen/sell/Congratulations1";
+import InternetConnectivityLabel from "../components/ui/InternetConnectivityLabel";
+import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
 const MainStack = () => {
   const styles = useStyles();
 
+  const [isConnected, setIsConnected] = React.useState<boolean | null>(true);
+
+  React.useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
+      setIsConnected(state.isConnected);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <BottomSheetModalProvider>
+        <InternetConnectivityLabel isConnected={isConnected} />
         <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
         <Stack.Navigator
-          screenOptions={{ headerShown: false }}
+          screenOptions={{
+            headerShown: false,
+            animation: "ios",
+            animationDuration: 1000,
+          }}
           initialRouteName={Route.navSplash}
         >
           <Stack.Screen
@@ -112,7 +130,6 @@ const MainStack = () => {
           />
           <Stack.Screen name={Route.navAddKyc} component={AddKyc} />
           <Stack.Screen name={Route.navTakeSelfie} component={TakeSelfie} />
-
           <Stack.Screen name={Route.navEditProfile} component={EditProfile} />
           <Stack.Screen
             name={Route.navChangePassword}
@@ -140,5 +157,6 @@ export default MainStack;
 const useStyles = makeStyles(() => ({
   container: {
     flex: 1,
+    zIndex: 11,
   },
 }));

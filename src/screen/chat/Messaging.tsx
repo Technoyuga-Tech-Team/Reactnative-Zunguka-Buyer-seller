@@ -27,8 +27,6 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [chatData, setChatData] = useState<ChatDataList[]>([]);
 
-  console.log("chatData", chatData);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getAllMessages(10, 0, true);
@@ -63,13 +61,22 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
         setLoading(false);
         if (data && data?.data?.list.length > 0) {
           let total_data = [...chatData, ...data?.data?.list];
-          const uniqueChat = _.uniqBy(total_data, "id");
-          setChatData(uniqueChat);
-          // if (refresh) {
-          //   setChatData([...data?.data?.list]);
-          // } else {
-          //   setChatData([...chatData, ...data?.data?.list]);
-          // }
+          // const uniqueChat = _.uniqBy(total_data, "id");
+          const groupedData: ChatDataList[] = total_data.reduce((acc, curr) => {
+            const key = curr.username;
+            if (!acc.hasOwnProperty(key)) {
+              acc[key] = curr;
+            } else if (curr.created_at > acc[key].created_at) {
+              acc[key] = curr;
+            }
+            return acc;
+          }, {});
+
+          // Convert the grouped object to an array
+          const latestData = Object.values(groupedData);
+          console.log("latestData = = = ", latestData);
+
+          setChatData(latestData);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
@@ -84,7 +91,6 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
-      console.log("called");
       getAllMessages(10, page, false);
     }
   };

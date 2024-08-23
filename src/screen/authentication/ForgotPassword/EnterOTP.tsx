@@ -12,32 +12,31 @@ import {
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { AuthNavigationProps } from "../../../types/navigation";
+import { Images } from "../../../assets/images";
+import { AppImage } from "../../../components/AppImage/AppImage";
+import SmoothOtpInput from "../../../components/SmoothOtpInput";
+import CustomButton from "../../../components/ui/CustomButton";
+import Loading from "../../../components/ui/Loading";
+import LeftIcon from "../../../components/ui/svg/LeftIcon";
+import { HAS_NOTCH, HIT_SLOP } from "../../../constant";
+import { OTPScreenSchema } from "../../../constant/formValidations";
 import { Route } from "../../../constant/navigationConstants";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { OTPFormProps } from "../../../types/authentication.types";
-import { OTPScreenSchema } from "../../../constant/formValidations";
-import { HAS_NOTCH, HIT_SLOP } from "../../../constant";
-import BackIcon from "../../../components/ui/svg/BackIcon";
-import Scale from "../../../utils/Scale";
-import CustomButton from "../../../components/ui/CustomButton";
-import { LoadingState, ThemeProps } from "../../../types/global.types";
-import SmoothOtpInput from "../../../components/SmoothOtpInput";
-import { AppImage } from "../../../components/AppImage/AppImage";
-import LeftIcon from "../../../components/ui/svg/LeftIcon";
+import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import {
   userOTPCode,
   userResendOTP,
 } from "../../../store/authentication/authentication.thunks";
 import { setSuccess } from "../../../store/global/global.slice";
-import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
-import Loading from "../../../components/ui/Loading";
 import { saveAddress } from "../../../store/settings/settings.slice";
+import { OTPFormProps } from "../../../types/authentication.types";
+import { LoadingState, ThemeProps } from "../../../types/global.types";
+import { AuthNavigationProps } from "../../../types/navigation";
 import { formatPhoneNumber } from "../../../utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Images } from "../../../assets/images";
+import Scale from "../../../utils/Scale";
 
 const INITIAL_TIME = { minutes: 1, seconds: 0 };
 let store_time = { minutes: 1, seconds: 0 };
@@ -52,28 +51,23 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
 
   const loading = useSelector(selectAuthenticationLoading);
 
-  const phone = route?.params?.phone;
-  const type = route?.params?.type;
+  const phone = route?.params?.phone || "";
+  const type = route?.params?.type || "";
 
   const timerRef = useRef();
 
   const [time, setTime] = useState(INITIAL_TIME);
 
-  const [intervalId, setIntervalId] = useState(null); // Store interval ID
-
   useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "background") {
         storeTimerTime(); // Store time in AsyncStorage on background
       } else if (nextAppState === "active") {
         retrieveTimerTime(); // Retrieve time from AsyncStorage on foreground
       }
-    };
-
-    AppState.addEventListener("change", handleAppStateChange);
-
+    });
     return () => {
-      clearInterval(intervalId); // Clear interval on unmount to avoid leaks
+      subscription.remove();
     };
   }, []);
 
@@ -101,6 +95,7 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
   }, [time.seconds, time.minutes]);
 
   const startInterval = () => {
+    // @ts-ignore
     timerRef.current = setTimeout(() => {
       if (time.seconds > 0) {
         setTime({ seconds: time.seconds - 1, minutes: time.minutes });
@@ -303,7 +298,6 @@ const EnterOTP: React.FC<AuthNavigationProps<Route.navEnterOTP>> = ({
           cellSpacing={10}
           onChangeText={handleChange("otp")}
           onTextChange={handleChange("otp")}
-          //   onBlur={handleBlur("otp")}
           value={values.otp}
           error={errors.otp}
           touched={touched.otp}

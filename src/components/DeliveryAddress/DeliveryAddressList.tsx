@@ -56,7 +56,7 @@ const DeliveryAddressList: React.FC<DeliveryAddressListProps> = ({
           }
         />
       ) : (
-        <NoDataFound title="No Products found!" isLoading={isLoading} />
+        <NoDataFound title="No Address found!" isLoading={isLoading} />
       )}
     </>
   );

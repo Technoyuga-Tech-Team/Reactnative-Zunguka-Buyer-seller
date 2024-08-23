@@ -1,4 +1,7 @@
 import BottomSheet from "@gorhom/bottom-sheet";
+import { CommonActions } from "@react-navigation/native";
+import axios from "axios";
+import { PayWithFlutterwave } from "flutterwave-react-native";
 import React, {
   useCallback,
   useEffect,
@@ -6,18 +9,16 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
-import DropShadow from "react-native-drop-shadow";
+import { Platform, StatusBar, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { Images } from "../../assets/images";
-import { AppImage } from "../../components/AppImage/AppImage";
 import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
-import SwipeAnimation from "../../components/SwipeAnimation";
+import SelectCardView from "../../components/Payment/SelectCardView";
+import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
-import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
+import TermsAndCondition from "../../components/ui/TermsAndCondition";
 import {
   FW_PUBLIC_KEY,
   FW_SECRET_KEY,
@@ -32,15 +33,8 @@ import {
 } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
-import Scale from "../../utils/Scale";
-import { determineCardType, getCardImage } from "../../utils";
-import SelectCardView from "../../components/Payment/SelectCardView";
-import CustomButton from "../../components/ui/CustomButton";
-import TermsAndCondition from "../../components/ui/TermsAndCondition";
-import { PayWithFlutterwave } from "flutterwave-react-native";
 import { notifyMessage } from "../../utils/notifyMessage";
-import { CommonActions } from "@react-navigation/native";
-import axios from "axios";
+import Scale from "../../utils/Scale";
 
 interface RedirectParams {
   status: "successful" | "cancelled";
@@ -168,42 +162,47 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   };
 
   const handleOnRedirect = (data: RedirectParams) => {
-    console.log(data);
+    console.log("data", data);
     if (data.status == "successful") {
-      const endpoint = "https://api.flutterwave.com/v3/transfers";
-
-      const data = {
-        account_bank: "MPS", // Replace with the recipient's bank code
-        account_number: productInfo?.sellerPhone || 250738923170, // Replace with the recipient's account number
-        amount: Number(productPrice), // Replace with the amount to be transferred
-        currency: "RWF", // Replace with the currency
-        narration: `Payment for ${productInfo?.name}`,
-        beneficiary_name: productInfo?.sellerName,
-      };
-
-      const headers = {
-        Authorization: `Bearer ${FW_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      };
-
-      axios
-        .post(endpoint, data, {
-          headers: headers,
-        })
-        .then((response) => {
-          console.log("Transfer result - - - ->", response.data);
-        })
-        .catch((error) => {
-          console.log("error - - - ", error.response.data);
-          notifyMessage(error.response.data.message);
-        });
       notifyMessage("Payment Successfully");
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: Route.navCongratulations1 }],
-        })
-      );
+      // const endpoint = "https://api.flutterwave.com/v3/transfers";
+
+      // const data = {
+      //   account_bank: "MPS", // Replace with the recipient's bank code
+      //   account_number: productInfo?.sellerPhone || 250738923170, // Replace with the recipient's account number
+      //   amount: Number(productPrice), // Replace with the amount to be transferred
+      //   currency: "RWF", // Replace with the currency
+      //   narration: `Payment for ${productInfo?.name}`,
+      //   beneficiary_name: productInfo?.sellerName,
+      // };
+
+      // const headers = {
+      //   Authorization: `Bearer ${FW_SECRET_KEY}`,
+      //   "Content-Type": "application/json",
+      // };
+
+      // axios
+      //   .post(endpoint, data, {
+      //     headers: headers,
+      //   })
+      //   .then((response) => {
+      //     console.log("Transfer result - - - ->", response.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log("error - - - ", error.response.data);
+      //     notifyMessage(error.response.data.message);
+      //   });
+      // notifyMessage("Payment Successfully");
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: Route.navCongratulations1 }],
+      //   })
+      // );
+    } else {
+      if (data.status == "cancelled") {
+        notifyMessage("User cancelled the payment!");
+      }
     }
   };
   const generateTransactionRef = (length: number) => {
@@ -220,6 +219,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
 
   return (
     <View style={style.container}>
+      <StatusBar barStyle={"dark-content"} />
       <CustomHeader title="Payment" />
       <View style={style.borderCont} />
       <KeyboardAwareScrollView style={style.innerCont}>

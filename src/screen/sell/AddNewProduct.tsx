@@ -22,6 +22,7 @@ import SellProductItems from "../../components/SellProductItems";
 import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 import NoDataFound from "../../components/ui/NoDataFound";
 import PickSellProduct from "../../components/ui/PickSellProduct";
 import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
@@ -30,19 +31,20 @@ import PencilIcon from "../../components/ui/svg/PencilIcon";
 import TermsAndCondition from "../../components/ui/TermsAndCondition";
 import TitleWithInfoIcon from "../../components/ui/TitleWithInfoIcon";
 import {
-  CITIES,
+  BASE_URL,
   COLORS,
   CONDITIONS,
   DISTRICT_AND_SECTORS,
   HIT_SLOP2,
   SCREEN_HEIGHT,
+  secureStoreKeys,
   SIZES,
   VEHICLE_TYPE_DATA,
 } from "../../constant";
+import { API } from "../../constant/apiEndpoints";
 import { isRequiredFields } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { useBrands } from "../../hooks/useBrands";
 import { useCategories } from "../../hooks/useCategories";
 import { setErrors } from "../../store/global/global.slice";
 import { selectProductLoading } from "../../store/Product/product.selectors";
@@ -55,9 +57,9 @@ import {
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { getUrlExtension } from "../../utils";
+import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
 import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
-import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -142,14 +144,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [subParantCat, setSubParantCat] = useState<string>("");
 
   const { data: categoriesData, isFetching } = useCategories();
-
-  const { data: brandsData } = useBrands(`${parantCategoryId}`);
-
-  useEffect(() => {
-    if (brandsData?.data?.data) {
-      setBrands(brandsData?.data?.data);
-    }
-  }, [brandsData]);
 
   useEffect(() => {
     if (parantCatName && subCatName) {
@@ -428,6 +422,32 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     setParantCatName(parantCatName);
     setSubCategoryId(subCatId);
     setParantCategoryId(parantCatId);
+    getBrands(parantCatId);
+  };
+
+  const getBrands = async (parantCatId: number) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    try {
+      const response = await fetch(
+        `${BASE_URL}${API.GET_BRANDS}/${parantCatId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      // Handle the fetched data here
+      if (data && data?.data?.data?.length > 0) {
+        setBrands(data?.data?.data);
+      } else {
+        setBrands([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const onExpand = (id: number) => {

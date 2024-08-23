@@ -16,8 +16,11 @@ import HomeBanner from "../components/HomeBanner";
 import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
 import SeeAllItem from "../components/SeeAllItem";
 import { Route } from "../constant/navigationConstants";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useGetDashboard } from "../hooks/useDashboard";
+import { useMeQuery } from "../hooks/useMeQuery";
 import { selectUserData } from "../store/settings/settings.selectors";
+import { setUserData } from "../store/settings/settings.slice";
 import {
   BannerProps,
   CategoriesDataProps,
@@ -25,9 +28,6 @@ import {
 } from "../types/dashboard.types";
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
-import { useMeQuery } from "../hooks/useMeQuery";
-import { useAppDispatch } from "../hooks/useAppDispatch";
-import { setUserData } from "../store/settings/settings.slice";
 import { socket, socketEvent } from "../utils/socket";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
@@ -95,9 +95,19 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   useEffect(() => {
     if (currentUser?.user) {
+      socket.connect();
+      const user_id = currentUser?.user?.id;
+      socket.on(socketEvent.CONNECT, () => {
+        console.log(" - - Connected to the server - - ");
+        console.log("connected", socket.connected);
+        console.log("Activate", socket.active);
+        console.log("socket.id", socket.id);
+        console.log("user_id - - - -", user_id);
+        socket.emit("conn", user_id);
+      });
       dispatch(setUserData(currentUser?.user));
     }
-  }, [currentUser]);
+  }, [currentUser, socket]);
 
   useEffect(() => {
     if (dashboardData?.data) {
@@ -145,7 +155,6 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAllCategories);
   };
   const onPressCategory = (item: CategoriesDataProps) => {
-    console.log("item", item.id, item.parent_id);
     navigation.navigate(Route.navSearchProduct, {
       mainCat: item.name,
       subCat: "",
@@ -158,8 +167,8 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     });
   };
   const onPressSeeAllHotBrands = () => {};
-  const onPressBanner = () => {
-    navigation.navigate(Route.navPayment);
+  const onPressBanner = async () => {
+    // navigation.navigate(Route.navPayment);
     // navigation.navigate(Route.navModeOfDelivery);
     // navigation.navigate(Route.navDeliveryAddress);
     // navigation.navigate(Route.navAuthentication, {

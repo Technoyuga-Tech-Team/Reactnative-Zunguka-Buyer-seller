@@ -60,17 +60,8 @@ const getImageFromCamera = async (options: Options) => {
       uri: imagesRes.path,
     };
 
-    const imageBase64Object = {
-      data: imagesRes.data,
-      uri: imagesRes.path,
-      type: imagesRes.mime,
-    };
+    return imageObject;
 
-    if (options.includeBase64) {
-      return imageBase64Object;
-    } else {
-      return imageObject;
-    }
     // Resolve the promise with the image object
   } catch (error: any) {
     console.error("Error getting image from camera:", error);
@@ -123,17 +114,7 @@ const getImageFromGallary = async (options: Options = {}) => {
         uri: imagesRes.path,
       };
 
-      const imageBase64Object = {
-        data: imagesRes.data,
-        uri: imagesRes.path,
-        type: imagesRes.mime,
-      };
-
-      if (options.includeBase64) {
-        return imageBase64Object;
-      } else {
-        return imageObject; // Resolve the promise with the image object
-      }
+      return imageObject; // Resolve the promise with the image object
     }
   } catch (error: any) {
     console.error("Error getting image from camera:", error);

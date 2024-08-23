@@ -1,35 +1,35 @@
-import { View, Text, Platform, BackHandler } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { AuthNavigationProps } from "../../../types/navigation";
-import { Route } from "../../../constant/navigationConstants";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BackHandler, Platform, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { LoadingState, ThemeProps } from "../../../types/global.types";
-import CustomHeader from "../../../components/ui/CustomHeader";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CustomButton from "../../../components/ui/CustomButton";
-import KycIcon from "../../../components/ui/svg/KycIcon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import CustomDropdown from "../../../components/Dropdown/CustomDropdown";
-import { COUNTRIES, ID_TYPES } from "../../../constant";
 import RenderSelectedImage from "../../../components/RenderSelectedImage/RenderSelectedImage";
-import { imagePickerProps } from "../../../types/common.types";
 import UploadProofPhotos from "../../../components/UploadProofPhotos";
+import CustomButton from "../../../components/ui/CustomButton";
+import CustomHeader from "../../../components/ui/CustomHeader";
 import ImagePickerPopup from "../../../components/ui/ImagePickerPopup";
+import KycIcon from "../../../components/ui/svg/KycIcon";
+import { COUNTRIES, ID_TYPES } from "../../../constant";
+import { Route } from "../../../constant/navigationConstants";
+import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
+import { userVerifyId } from "../../../store/authentication/authentication.thunks";
+import { setErrors, setSuccess } from "../../../store/global/global.slice";
+import { selectUserData } from "../../../store/settings/settings.selectors";
+import { imagePickerProps } from "../../../types/common.types";
+import { LoadingState, ThemeProps } from "../../../types/global.types";
+import { HomeNavigationProps } from "../../../types/navigation";
+import { getUrlExtension } from "../../../utils";
 import {
   getImageFromCamera,
   getImageFromGallary,
   requestCameraPermission,
 } from "../../../utils/ImagePickerCameraGallary";
-import { getUrlExtension } from "../../../utils";
-import { userVerifyId } from "../../../store/authentication/authentication.thunks";
-import { setErrors, setSuccess } from "../../../store/global/global.slice";
-import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
-import { useSelector } from "react-redux";
-import { CommonActions } from "@react-navigation/native";
-import { selectUserData } from "../../../store/settings/settings.selectors";
 
-const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
+const AddKyc: React.FC<HomeNavigationProps<Route.navAddKyc>> = ({
   navigation,
   route,
 }) => {
@@ -43,7 +43,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
 
   const loading = useSelector(selectAuthenticationLoading);
 
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState("");
   const [countryError, setCountryError] = useState("");
 
   const [IdType, setIdType] = useState("");
@@ -78,6 +78,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
   }, []);
 
   useEffect(() => {
+    // @ts-ignore
     setCountry({ key: "RW", title: "Rwanda" });
   }, []);
 
@@ -119,7 +120,7 @@ const AddKyc: React.FC<AuthNavigationProps<Route.navAddKyc>> = ({
 
   const openPickerCameraImage = async () => {
     try {
-      const imageObject = await getImageFromCamera();
+      const imageObject = await getImageFromCamera({});
       setSelectedImage([...selectedImage, imageObject.uri]);
       setImage([...image, imageObject]);
     } catch (error) {
