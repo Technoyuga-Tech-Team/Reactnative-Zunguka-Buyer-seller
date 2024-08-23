@@ -75,4 +75,6 @@ export const API = {
   ADD_DELIVERY_ADDRESS: "/add-delivery-address",
   UPDATE_DELIVERY_ADDRESS: "/update_delivery_address",
   GET_SAVED_DELIVERY_ADDRESS: "/get_all_addresses",
+  // Payment
+  PAY_DEPOSIT_SELLER: "/pay-deposit-seller",
 };

@@ -15,6 +15,10 @@ import { HomeNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { CommonActions } from "@react-navigation/native";
 import { notifyMessage } from "../../utils/notifyMessage";
+import {
+  setProductInfo,
+  setSelectedDeliveryAddress,
+} from "../../store/settings/settings.slice";
 
 const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   navigation,
@@ -139,6 +143,18 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressProduct = (itemId: number) => {
+    dispatch(
+      setProductInfo({
+        id: null,
+        price: null,
+        isOutOfKigali: false,
+        modeOfTransport: "",
+        name: "",
+        sellerName: "",
+        sellerPhone: "",
+      })
+    );
+    dispatch(setSelectedDeliveryAddress(null));
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 

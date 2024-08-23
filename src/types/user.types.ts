@@ -70,6 +70,7 @@ export type UserData = {
   is_kyc_verified_by_admin: number;
   selfie_image: string;
   is_selfie_uploaded: number;
+  total_earning: number;
 };
 
 export interface getUserData {

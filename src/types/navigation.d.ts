@@ -47,7 +47,7 @@ export type AppRoutes = {
   ModeOfPayment: undefined;
   CardDetails: { from: string };
   AddCard: undefined;
-  Payment: undefined;
+  Payment: { modeOfDelivery?: string; deliveryPrice?: string };
   DeliveryDetails: undefined;
   DeliveryCompleteAndRateDriver: undefined;
   SelectMover: undefined;

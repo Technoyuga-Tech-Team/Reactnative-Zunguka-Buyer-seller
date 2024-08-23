@@ -63,6 +63,10 @@ import CheckBoxSelection from "../../components/ui/CheckBoxSelection";
 import { getData } from "../../utils/asyncStorage";
 import { API } from "../../constant/apiEndpoints";
 import { DeliveryAddressDataProps } from "../../types/payment.types";
+import {
+  setProductInfo,
+  setSelectedDeliveryAddress,
+} from "../../store/settings/settings.slice";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -554,7 +558,8 @@ const DeliveryAddress: React.FC<
 
   const onPressSelectAddress = () => {
     if (selectedAddress) {
-      // navigation.navigate(Route.navPayment);
+      console.log("selectedAddress", selectedAddress);
+      dispatch(setSelectedDeliveryAddress(selectedAddress));
       navigation.navigate(Route.navModeOfDelivery);
     } else {
       dispatch(

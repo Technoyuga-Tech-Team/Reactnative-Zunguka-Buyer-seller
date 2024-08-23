@@ -192,10 +192,14 @@ const ProductDetails: React.FC<
           name: productDetails?.title,
           sellerName: productDetails?.user?.username,
           sellerPhone: productDetails?.user?.phone_number,
+          modeOfTransport: productDetails?.mode_of_transport,
         })
       );
     if (is_OutOf_Kigali) {
-      navigation.navigate(Route.navPayment);
+      navigation.navigate(Route.navPayment, {
+        deliveryPrice: "",
+        modeOfDelivery: "",
+      });
     } else {
       navigation.navigate(Route.navDeliveryAddress);
     }
@@ -211,6 +215,8 @@ const ProductDetails: React.FC<
   const onRefresh = () => {
     refetch();
   };
+
+  console.log("productDetails", productDetails);
 
   return (
     <KeyboardAwareScrollView

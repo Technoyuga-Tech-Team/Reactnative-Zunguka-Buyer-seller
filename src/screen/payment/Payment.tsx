@@ -29,12 +29,24 @@ import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import {
   getProductInfo,
+  getSelectedDeliveryAddress,
   selectUserData,
 } from "../../store/settings/settings.selectors";
-import { ThemeProps } from "../../types/global.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { notifyMessage } from "../../utils/notifyMessage";
 import Scale from "../../utils/Scale";
+import { userPayDepositSeller } from "../../store/PaymentCard/paymentCard.thunk";
+import DropShadow from "react-native-drop-shadow";
+import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
+import { AppImage } from "../../components/AppImage/AppImage";
+import { Images } from "../../assets/images";
+import SelectPaymentMethod from "../../components/ui/SelectPaymentMethod";
+import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
+import {
+  setProductInfo,
+  setSelectedDeliveryAddress,
+} from "../../store/settings/settings.slice";
 
 interface RedirectParams {
   status: "successful" | "cancelled";
@@ -44,6 +56,7 @@ interface RedirectParams {
 
 const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -51,7 +64,10 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
   const productInfo = useSelector(getProductInfo);
+  const deliveryAddress = useSelector(getSelectedDeliveryAddress);
+  const loading = useSelector(selectPaymentCardLoading);
 
+  const { deliveryPrice, modeOfDelivery } = route.params;
   const snapPoints = useMemo(() => ["70%", "70%"], []);
   const sheetRef = useRef<BottomSheet>(null);
 
@@ -61,9 +77,8 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
     { cardNumber: "4111111111111111", selected: false },
     { cardNumber: "5555555555554444", selected: false },
   ]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
-    "Pay with credit card visa or Master"
-  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState("mobile_money");
   const [productPrice, setProductPrice] = useState("");
   const [transportFee, setTransportFee] = useState("");
   const [totalPrice, setTotalPrice] = useState("0");
@@ -78,7 +93,9 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
       } else {
         let price1 = (productInfo?.price * 5) / 100;
         setTransportFee(price1.toFixed(2));
-        setTotalPrice((productInfo?.price + price1).toFixed(2));
+        setTotalPrice(
+          (productInfo?.price + price1 + Number(deliveryPrice)).toFixed(2)
+        );
         setOutOfKigali(false);
       }
     }
@@ -96,7 +113,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   };
 
   const onPressItem = (index: number) => {
-    setSelectedPaymentMethod(paymentMethods[index].title);
+    setSelectedPaymentMethod(paymentMethods[index].type);
     setPaymentMethods(
       paymentMethods.map((item, itemIndex) => ({
         ...item,
@@ -161,10 +178,10 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
     sheetRef.current?.snapToIndex(1);
   };
 
-  const handleOnRedirect = (data: RedirectParams) => {
+  const handleOnRedirect = async (data: RedirectParams) => {
     console.log("data", data);
     if (data.status == "successful") {
-      notifyMessage("Payment Successfully");
+      paymentDepositSeller(data);
       // const endpoint = "https://api.flutterwave.com/v3/transfers";
 
       // const data = {
@@ -205,6 +222,51 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
       }
     }
   };
+
+  const paymentDepositSeller = async (data: RedirectParams | null) => {
+    const formData = new FormData();
+    formData.append("item_id", productInfo?.id);
+    modeOfDelivery && formData.append("mode_of_delivery", modeOfDelivery);
+    formData.append("mode_of_payment", selectedPaymentMethod);
+
+    formData.append("delivery_address_id", deliveryAddress);
+    deliveryPrice && formData.append("delivery_price", deliveryPrice);
+    data &&
+      data?.transaction_id &&
+      formData.append("transaction_id", data.transaction_id);
+    data && data.tx_ref && formData.append("tx_ref", data.tx_ref);
+
+    console.log("formData", JSON.stringify(formData));
+
+    const result = await dispatch(userPayDepositSeller({ formData: formData }));
+    if (userPayDepositSeller.fulfilled.match(result)) {
+      if (result.payload.status === 1) {
+        console.log("userPayDepositSeller result - - - ", result.payload);
+        notifyMessage("Payment Successfully");
+        dispatch(
+          setProductInfo({
+            id: null,
+            price: null,
+            isOutOfKigali: false,
+            modeOfTransport: "",
+            name: "",
+            sellerName: "",
+            sellerPhone: "",
+          })
+        );
+        dispatch(setSelectedDeliveryAddress(null));
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navCongratulations1 }],
+          })
+        );
+      }
+    } else {
+      console.log("userPayDepositSeller error - - - ", result.payload);
+    }
+  };
+
   const generateTransactionRef = (length: number) => {
     var result = "";
     var characters =
@@ -227,8 +289,13 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
         <View style={style.paddingHorizontal}>
           <RenderItem
             title="Item total"
-            value={`R₣ ${productInfo?.price.toFixed(2)}`}
+            value={`R₣ ${Number(productInfo?.price).toFixed(2)}`}
           />
+          {!outOfKigali && modeOfDelivery !== "" && (
+            <>
+              <RenderItem title="Delivery fees" value={`R₣ ${deliveryPrice}`} />
+            </>
+          )}
           {!outOfKigali && (
             <>
               <RenderItem
@@ -238,17 +305,19 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
               <View style={style.borderCont} />
             </>
           )}
+
           <RenderItem title="Total" value={`R₣ ${totalPrice}`} />
           <View style={style.borderCont} />
         </View>
-        {/* <Text style={style.txtOrderSummary}>Payment method</Text>
+        <Text style={style.txtOrderSummary}>Payment method</Text>
         <View style={style.paddingHorizontal}>
           <DropShadow style={style.shadow}>
             <View style={style.paymentMethodCont}>
-              <RenderSortItemsList
+              <SelectPaymentMethod
                 sortData={paymentMethods}
                 onPressItem={onPressItem}
                 isBoarderBottom={false}
+                totalUsersEarning={`${userData?.total_earning}`}
               />
             </View>
           </DropShadow>
@@ -257,7 +326,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           source={Images.PAYMENT_SECURE}
           resizeMode="contain"
           style={style.paymentSecure}
-        /> */}
+        />
       </KeyboardAwareScrollView>
       <View style={style.bottomCont}>
         <Text style={style.txtTandC}>
@@ -282,10 +351,21 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           style={{ paddingHorizontal: 20 }}
           customButton={(props) => (
             <CustomButton
-              onPress={props.onPress}
+              onPress={() => {
+                console.log("selectedPaymentMethod", selectedPaymentMethod);
+                if (selectedPaymentMethod !== "") {
+                  if (selectedPaymentMethod == "earning") {
+                    paymentDepositSeller(null);
+                  } else {
+                    props.onPress();
+                  }
+                } else {
+                  notifyMessage("Please select the Payment method");
+                }
+              }}
               title={"Payment"}
-              disabled={props.disabled}
-              loading={props.disabled}
+              disabled={props.disabled || loading === LoadingState.CREATE}
+              loading={props.disabled || loading === LoadingState.CREATE}
               buttonWidth="full"
               variant="primary"
               type="solid"

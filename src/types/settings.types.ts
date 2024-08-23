@@ -8,11 +8,13 @@ export interface SettingsStateProps {
   city: string;
   notificationCount: number;
   productInfo: {
-    id: number;
-    price: number;
+    id: number | null;
+    price: number | null;
     isOutOfKigali: boolean;
     name: string;
     sellerName: string;
     sellerPhone: string;
+    modeOfTransport: string;
   } | null;
+  selectedDeliveryAddress: number | null;
 }

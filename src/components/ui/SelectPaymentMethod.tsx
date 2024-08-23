@@ -12,29 +12,31 @@ export interface SortData {
   key?: number | undefined;
 }
 
-interface RenderSortItemsListProps {
+interface SelectPaymentMethodProps {
   sortData: SortData[];
   onPressItem: (index: number, key: number | undefined) => void;
   isBoarderBottom?: boolean;
+  totalUsersEarning: string;
 }
 
-const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
+const SelectPaymentMethod: React.FC<SelectPaymentMethodProps> = ({
   sortData,
   onPressItem,
   isBoarderBottom = true,
+  totalUsersEarning,
 }) => {
   const style = useStyle();
   const { theme } = useTheme();
-
   return (
     <View style={style.cont}>
       {sortData?.map((item, index) => {
         const btn = item?.selected
           ? Images.CHECKED_RADIO
           : Images.UNCHECKED_RADIO;
-
+        const isDisable = index == 1 && Number(totalUsersEarning) <= 0;
         return (
           <TouchableOpacity
+            disabled={isDisable}
             key={index}
             onPress={() => onPressItem(index, item?.key)}
             activeOpacity={0.8}
@@ -44,8 +46,27 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
               source={btn}
               style={style.radioButton}
               resizeMode="cover"
+              tintColor={
+                isDisable ? theme?.colors?.lightGrey : theme?.colors?.black
+              }
             />
-            <Text style={[style.txtTitle]}>{item.title}</Text>
+            <Text
+              style={[
+                style.txtTitle,
+                {
+                  color: isDisable
+                    ? theme?.colors?.lightGrey
+                    : theme?.colors?.black,
+                },
+              ]}
+            >
+              {item.title}{" "}
+              <Text style={style.txtTitle1}>
+                {index == 1 &&
+                  Number(totalUsersEarning) > 0 &&
+                  `(R₣ ${totalUsersEarning})`}
+              </Text>
+            </Text>
           </TouchableOpacity>
         );
       })}
@@ -53,7 +74,7 @@ const RenderSortItemsList: React.FC<RenderSortItemsListProps> = ({
   );
 };
 
-export default RenderSortItemsList;
+export default SelectPaymentMethod;
 
 const useStyle = makeStyles((theme) => ({
   cont: {
@@ -83,6 +104,11 @@ const useStyle = makeStyles((theme) => ({
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.black,
     marginLeft: 10,
+  },
+  txtTitle1: {
+    fontSize: theme.fontSize?.fs13,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.grey11,
   },
   borderBottom: {
     borderBottomColor: theme?.colors?.border,

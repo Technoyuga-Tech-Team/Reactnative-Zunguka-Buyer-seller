@@ -36,3 +36,8 @@ export const getProductInfo = createSelector(
   [selectSettings],
   (settings) => settings.productInfo
 );
+
+export const getSelectedDeliveryAddress = createSelector(
+  [selectSettings],
+  (settings) => settings.selectedDeliveryAddress
+);

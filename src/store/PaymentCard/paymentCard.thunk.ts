@@ -145,6 +145,38 @@ export const MakePaymentToMover = createAsyncThunk<
   }
 );
 
+// pay-deposit-seller
+export const userPayDepositSeller = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "payment/userPayDepositSeller",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.PAY_DEPOSIT_SELLER,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);
+
 // Delivery address
 export const userDeliveryAddress = createAsyncThunk<
   any,

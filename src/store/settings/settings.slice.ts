@@ -69,12 +69,14 @@ const initialState: SettingsStateProps = {
     is_kyc_verified_by_admin: 0,
     selfie_image: "",
     is_selfie_uploaded: 0,
+    total_earning: 0,
   },
   errorFromSocial: false,
   address: "",
   city: "",
   notificationCount: 0,
   productInfo: null,
+  selectedDeliveryAddress: null,
 };
 
 const settings = createSlice({
@@ -105,15 +107,22 @@ const settings = createSlice({
     setProductInfo: (
       state,
       action: PayloadAction<{
-        id: number;
-        price: number;
+        id: number | null;
+        price: number | null;
         isOutOfKigali: boolean;
         name: string;
         sellerName: string;
         sellerPhone: string;
+        modeOfTransport: string;
       } | null>
     ) => {
       state.productInfo = action.payload;
+    },
+    setSelectedDeliveryAddress: (
+      state,
+      action: PayloadAction<number | null>
+    ) => {
+      state.selectedDeliveryAddress = action.payload;
     },
   },
 });
@@ -126,6 +135,7 @@ export const {
   saveCity,
   setSaveNotificationCount,
   setProductInfo,
+  setSelectedDeliveryAddress,
 } = settings.actions;
 
 export default settings.reducer;

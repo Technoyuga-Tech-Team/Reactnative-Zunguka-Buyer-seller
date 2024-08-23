@@ -2215,18 +2215,15 @@ export const AddressData = [
 
 export const PAYMENT_METHOD = [
   {
-    title: "Pay with credit card visa or Master",
-    value: "Pay with credit card visa or Master",
+    title: "Mobile Money or Card",
+    value: "Mobile Money or Card",
+    type: "mobile_money",
     selected: true,
-  },
-  {
-    title: "Mobile Money",
-    value: "Mobile Money",
-    selected: false,
   },
   {
     title: "My Earning",
     value: "My Earning",
+    type: "earning",
     selected: false,
   },
 ];

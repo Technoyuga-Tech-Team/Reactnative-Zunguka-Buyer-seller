@@ -13,6 +13,8 @@ import SelfPickupIcon from "../components/ui/svg/SelfPickupIcon";
 import ScooterIcon from "../components/ui/svg/ScooterIcon";
 import CustomHeader from "../components/ui/CustomHeader";
 import { CommonActions } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { getProductInfo } from "../store/settings/settings.selectors";
 
 const ModeOfDelivery: React.FC<
   HomeNavigationProps<Route.navModeOfDelivery>
@@ -20,6 +22,8 @@ const ModeOfDelivery: React.FC<
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+
+  const productInfo = useSelector(getProductInfo);
 
   const [selfPickupSelected, setSelfPickupSelected] = useState(false);
   const [moverSelected, setMoverSelected] = useState(false);
@@ -35,13 +39,10 @@ const ModeOfDelivery: React.FC<
 
   const onPressContinue = () => {
     if (moverSelected) {
-      navigation.navigate(Route.navPayment);
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{ name: Route.navPayment }],
-      //   })
-      // );
+      navigation.navigate(Route.navPayment, {
+        modeOfDelivery: "delivery_service",
+        deliveryPrice: getDeliveryServiceAmount(productInfo?.modeOfTransport),
+      });
     } else {
       navigation.dispatch(
         CommonActions.reset({
@@ -50,6 +51,12 @@ const ModeOfDelivery: React.FC<
         })
       );
     }
+  };
+
+  const getDeliveryServiceAmount = (mode: string | undefined) => {
+    // we added 50 as a static value
+    return "50";
+    // return mode == "moto" ? "2000" : mode == "cab" ? "10,000" : "12,000";
   };
 
   return (
@@ -67,7 +74,9 @@ const ModeOfDelivery: React.FC<
         <DeliveryMode
           onPress={onPressMover}
           title={"Delivery service"}
-          title1={"R₣ 200"}
+          title1={`R₣ ${getDeliveryServiceAmount(
+            productInfo?.modeOfTransport
+          )}`}
           icon={<ScooterIcon />}
           isSelected={moverSelected}
         />
