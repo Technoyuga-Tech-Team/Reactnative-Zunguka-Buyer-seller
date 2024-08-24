@@ -77,6 +77,7 @@ const initialState: SettingsStateProps = {
   notificationCount: 0,
   productInfo: null,
   selectedDeliveryAddress: null,
+  latlng: { lat: 0, lng: 0 },
 };
 
 const settings = createSlice({
@@ -97,6 +98,12 @@ const settings = createSlice({
     },
     saveAddress: (state, action: PayloadAction<string>) => {
       state.address = action.payload;
+    },
+    saveLatLng: (
+      state,
+      action: PayloadAction<{ lat: number; lng: number }>
+    ) => {
+      state.latlng = action.payload;
     },
     saveCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
@@ -132,6 +139,7 @@ export const {
   setUserData,
   setErrorFromSocial,
   saveAddress,
+  saveLatLng,
   saveCity,
   setSaveNotificationCount,
   setProductInfo,

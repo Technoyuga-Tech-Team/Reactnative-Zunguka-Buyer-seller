@@ -5,6 +5,7 @@ export interface SettingsStateProps {
   userData: UserData;
   errorFromSocial: boolean;
   address: string;
+  latlng: { lat: number; lng: number };
   city: string;
   notificationCount: number;
   productInfo: {

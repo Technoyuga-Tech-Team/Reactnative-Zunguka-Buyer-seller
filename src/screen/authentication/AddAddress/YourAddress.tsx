@@ -17,6 +17,7 @@ import { setErrors, setSuccess } from "../../../store/global/global.slice";
 import {
   getCityAddress,
   getSavedAddress,
+  getSavedLatLng,
 } from "../../../store/settings/settings.selectors";
 import { AddAddressProps } from "../../../types/authentication.types";
 import { imagePickerProps } from "../../../types/common.types";
@@ -48,6 +49,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   const zipRef = React.useRef<TextInput>(null);
 
   const savedAddress = useSelector(getSavedAddress);
+  const savedLatLng = useSelector(getSavedLatLng);
   const savedCity = useSelector(getCityAddress);
   const loading = useSelector(selectAuthenticationLoading);
 
@@ -136,6 +138,8 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       formData.append("street_number", `${streetNumber}`);
       formData.append("district", `${district}`);
       formData.append("sector", `${sector}`);
+      formData.append("latitude", `${savedLatLng.lat}`);
+      formData.append("longitude", `${savedLatLng.lng}`);
 
       Object.entries(houseImage).forEach(([_key, val]) => {
         formData.append(`house_images[${_key}]`, {

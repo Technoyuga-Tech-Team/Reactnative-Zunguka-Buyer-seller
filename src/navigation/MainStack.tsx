@@ -36,6 +36,8 @@ import Congratulations1 from "../screen/sell/Congratulations1";
 import InternetConnectivityLabel from "../components/ui/InternetConnectivityLabel";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import ArchivedProductDetails from "../screen/product/ArchivedProductDetails";
+import Earnings from "../screen/Earnings";
+import Withdraw from "../screen/Withdraw";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -151,6 +153,8 @@ const MainStack = () => {
             component={TransactionHistory}
           />
           <Stack.Screen name={Route.navMessaging} component={Messaging} />
+          <Stack.Screen name={Route.navEarnings} component={Earnings} />
+          <Stack.Screen name={Route.navWithdraw} component={Withdraw} />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

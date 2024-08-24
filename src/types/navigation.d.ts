@@ -68,6 +68,8 @@ export type AppRoutes = {
   Favourites: undefined;
   Sell: undefined;
   Alert: undefined;
+  Earnings: undefined;
+  Withdraw: { earning: string };
 };
 
 export type AuthenticationRoutes = {

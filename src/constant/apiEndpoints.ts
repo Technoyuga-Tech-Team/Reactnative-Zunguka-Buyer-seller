@@ -68,7 +68,7 @@ export const API = {
   // rating mover
   ADD_RATING: "/add-rating",
   // my earning
-  GET_MOVER_EARNING: "/mover-earnings",
+  GET_MY_EARNING: "/my-earnings",
   GET_PAYOUT_HISTORY: "/get-withdraw-requests",
   SEND_PAYOUT_REQUEST: "/send_withdraw_request",
   // Delivery address

@@ -26,7 +26,7 @@ const TransactionHistory: React.FC<
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      // getAllTransaction(10, 1);
+      getAllTransaction(10, 1);
     });
     return () => {
       unsubscribe();
@@ -76,7 +76,6 @@ const TransactionHistory: React.FC<
   return (
     <View style={style.container}>
       <CustomHeader title="Transactions History" />
-
       {transactionData && transactionData?.length > 0 ? (
         <TransactionHistoryList
           transactionHistoryData={transactionData}

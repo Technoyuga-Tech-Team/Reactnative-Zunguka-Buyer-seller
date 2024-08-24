@@ -22,6 +22,11 @@ export const getSavedAddress = createSelector(
   (settings) => settings.address
 );
 
+export const getSavedLatLng = createSelector(
+  [selectSettings],
+  (settings) => settings.latlng
+);
+
 export const getCityAddress = createSelector(
   [selectSettings],
   (settings) => settings.city

@@ -19,7 +19,11 @@ import { GOOGLE_MAP_API_KEY } from "../../../constant";
 import { Route } from "../../../constant/navigationConstants";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { setErrors } from "../../../store/global/global.slice";
-import { saveAddress, saveCity } from "../../../store/settings/settings.slice";
+import {
+  saveAddress,
+  saveCity,
+  saveLatLng,
+} from "../../../store/settings/settings.slice";
 import { ThemeProps } from "../../../types/global.types";
 import { AuthNavigationProps } from "../../../types/navigation";
 import Scale from "../../../utils/Scale";
@@ -198,7 +202,10 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   const handleMapPress = (event: MapPressEvent) => {
     const newCoordinate = event.nativeEvent.coordinate;
     setMarkerCoordinate(newCoordinate);
-
+    setAddressLatLng({
+      lat: Number(newCoordinate.latitude),
+      lng: Number(newCoordinate.longitude),
+    });
     // Get address using geocoding library
     Geocoder.from(newCoordinate)
       .then((json) => {
@@ -211,6 +218,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   const onPressSave = () => {
     if (address) {
       dispatch(saveAddress(address));
+      dispatch(saveLatLng({ lat: addressLatLng.lat, lng: addressLatLng.lng }));
       dispatch(saveCity(city));
       navigation.goBack();
     }

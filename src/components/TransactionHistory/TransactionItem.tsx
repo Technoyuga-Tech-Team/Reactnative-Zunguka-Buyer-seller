@@ -49,7 +49,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ item, onPress }) => {
         style={[
           style.txtAmount,
           {
-            color: isCredited ? theme.colors?.primary : theme.colors?.pinkDark,
+            color: isCredited ? theme.colors?.green : theme.colors?.pinkDark,
           },
         ]}
       >

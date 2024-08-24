@@ -99,6 +99,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const onPressTransactionHistroy = () => {
     navigation.navigate(Route.navTransactionHistory);
   };
+  const onPressMyEarnings = () => {
+    navigation.navigate(Route.navEarnings);
+  };
   const onPressMyItems = () => {
     navigation.navigate(Route.navMyStorefront);
   };
@@ -152,6 +155,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           name="Transaction History"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressTransactionHistroy}
+        />
+        <ProfileItem
+          name="My Earnings"
+          icon={<MoneybillsIcon color={theme.colors?.primary} />}
+          onPress={onPressMyEarnings}
         />
         <ProfileItem
           name="About Us"
