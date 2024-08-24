@@ -59,6 +59,22 @@ export interface sellerDetailsProps {
   phone_number: string;
 }
 
+interface image {
+  image: string;
+  item_id: number;
+}
+
+export interface similarDataProps {
+  added_at: string;
+  created_at: string;
+  id: number;
+  images: image[];
+  is_like: false;
+  sale_price: number;
+  title: string;
+  user_id: number;
+}
+
 export interface ProductDetailsDataProps {
   id: number;
   user_id: number;
@@ -90,4 +106,5 @@ export interface ProductDetailsDataProps {
   likes_count: number;
   sector: string;
   district: string;
+  similar_products: similarDataProps[];
 }

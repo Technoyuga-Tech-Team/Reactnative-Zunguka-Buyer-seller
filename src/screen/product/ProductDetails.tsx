@@ -216,8 +216,6 @@ const ProductDetails: React.FC<
     refetch();
   };
 
-  console.log("productDetails", productDetails);
-
   return (
     <KeyboardAwareScrollView
       bounces={false}

@@ -4,9 +4,10 @@ import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeProps } from "../../types/global.types";
 import SimilarProductItem from "./SimilarProductItem";
+import { similarDataProps } from "../../types/product.types";
 
 interface SimilarProductListingProps {
-  similarProductData: any;
+  similarProductData: similarDataProps[];
   onPressProduct: (item: any) => void;
 }
 
@@ -17,7 +18,7 @@ const SimilarProductListing: React.FC<SimilarProductListingProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
 
-  const renderItem = ({ item }: { item: any }) => {
+  const renderItem = ({ item }: { item: similarDataProps }) => {
     return (
       <SimilarProductItem
         item={item}

@@ -166,7 +166,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           Similar items
         </Text>
         <SimilarProductListing
-          similarProductData={HOT_BRANDS}
+          similarProductData={productDetails?.similar_products}
           onPressProduct={(item) => onPressProduct(item)}
         />
       </View>

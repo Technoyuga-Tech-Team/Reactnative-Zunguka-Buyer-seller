@@ -6,9 +6,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Images } from "../../assets/images";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
+import { similarDataProps } from "../../types/product.types";
 
 interface SimilarProductItemProps {
-  item: any;
+  item: similarDataProps;
   onPressProduct: () => void;
 }
 
@@ -33,27 +34,21 @@ const SimilarProductItem: React.FC<SimilarProductItemProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-
-  const product_image = getIcons(item.key) || Images.PLACEHOLDER_IMAGE;
-
+  const img = { uri: item?.images[0].image } || Images.PLACEHOLDER_IMAGE;
   return (
     <TouchableOpacity
       onPress={onPressProduct}
       activeOpacity={0.9}
       style={style.container}
     >
-      <ImageBackground
-        source={product_image}
-        style={style.product}
-        resizeMode="cover"
-      >
+      <ImageBackground source={img} style={style.product} resizeMode="cover">
         <LinearGradient
           colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
           style={style.linearCont}
         >
           <View style={style.txtCont}>
-            <Text style={style.txtTitle}>{item.name}</Text>
-            <Text style={style.txtPrice}>R₣ 200</Text>
+            <Text style={style.txtTitle}>{item.title}</Text>
+            <Text style={style.txtPrice}>R₣ {item.sale_price}</Text>
           </View>
         </LinearGradient>
       </ImageBackground>
