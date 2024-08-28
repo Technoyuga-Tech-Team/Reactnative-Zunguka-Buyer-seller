@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DUMMY_PLACEHOLDER } from "../../constant";
+import { DUMMY_PLACEHOLDER, RWF } from "../../constant";
 import { ThemeProps } from "../../types/global.types";
 import { ProductDataProps } from "../../types/product.types";
 import { getConditionItemValue } from "../../utils";
@@ -54,7 +54,9 @@ const ProductItem: React.FC<ProductItemProps> = ({ item, onPress }) => {
         >
           {item?.category?.map((ele) => ele.name).join(", ")}
         </Text>
-        <Text style={style.txtPrice}>R₣{item.sale_price}</Text>
+        <Text style={style.txtPrice}>
+          {RWF} {item.sale_price}
+        </Text>
       </View>
     </TouchableOpacity>
   );

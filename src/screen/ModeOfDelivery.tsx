@@ -7,7 +7,7 @@ import { HomeNavigationProps } from "../types/navigation";
 import { Route } from "../constant/navigationConstants";
 import CustomButton from "../components/ui/CustomButton";
 import { ThemeProps } from "../types/global.types";
-import { HAS_NOTCH } from "../constant";
+import { HAS_NOTCH, RWF } from "../constant";
 import DeliveryMode from "../components/DeliveryMode";
 import SelfPickupIcon from "../components/ui/svg/SelfPickupIcon";
 import ScooterIcon from "../components/ui/svg/ScooterIcon";
@@ -74,7 +74,7 @@ const ModeOfDelivery: React.FC<
         <DeliveryMode
           onPress={onPressMover}
           title={"Delivery service"}
-          title1={`R₣ ${getDeliveryServiceAmount(
+          title1={`${RWF} ${getDeliveryServiceAmount(
             productInfo?.modeOfTransport
           )}`}
           icon={<ScooterIcon />}

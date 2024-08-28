@@ -7,6 +7,7 @@ import { Images } from "../../assets/images";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 import { similarDataProps } from "../../types/product.types";
+import { RWF } from "../../constant";
 
 interface SimilarProductItemProps {
   item: similarDataProps;
@@ -48,7 +49,9 @@ const SimilarProductItem: React.FC<SimilarProductItemProps> = ({
         >
           <View style={style.txtCont}>
             <Text style={style.txtTitle}>{item.title}</Text>
-            <Text style={style.txtPrice}>R₣ {item.sale_price}</Text>
+            <Text style={style.txtPrice}>
+              {RWF} {item.sale_price}
+            </Text>
           </View>
         </LinearGradient>
       </ImageBackground>

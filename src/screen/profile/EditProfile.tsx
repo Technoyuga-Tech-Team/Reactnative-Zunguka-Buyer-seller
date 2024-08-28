@@ -319,6 +319,22 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
           <View style={style.txtInCont}>
             <CustomTxtInput
+              ref={usernameRef}
+              placeholder="Username"
+              returnKeyType="next"
+              returnKeyLabel="next"
+              keyboardType={"default"}
+              maxLength={MAX_CHAR_LENGTH}
+              onChangeText={handleChange("username")}
+              onBlur={handleBlur("username")}
+              editable={enableUsername}
+              value={values.username}
+              error={errors.username}
+              touched={touched.username}
+              onSubmitEditing={() => emaiRef.current?.focus()}
+            />
+            <InputFieldInfo text={"Username view for publicly"} />
+            <CustomTxtInput
               placeholder="Enter your first name"
               returnKeyType="next"
               returnKeyLabel="next"
@@ -346,22 +362,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               onSubmitEditing={() => usernameRef.current?.focus()}
             />
             <InputFieldInfo text={"Name view only for admin."} />
-            <CustomTxtInput
-              ref={usernameRef}
-              placeholder="Username"
-              returnKeyType="next"
-              returnKeyLabel="next"
-              keyboardType={"default"}
-              maxLength={MAX_CHAR_LENGTH}
-              onChangeText={handleChange("username")}
-              onBlur={handleBlur("username")}
-              editable={enableUsername}
-              value={values.username}
-              error={errors.username}
-              touched={touched.username}
-              onSubmitEditing={() => emaiRef.current?.focus()}
-            />
-            <InputFieldInfo text={"Username view for publicly"} />
+
             <CustomTxtInput
               ref={emaiRef}
               placeholder="Enter email"

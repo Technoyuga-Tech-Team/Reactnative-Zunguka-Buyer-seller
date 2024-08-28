@@ -1862,10 +1862,10 @@
   dependencies:
     plist "^3.1.0"
 
-"@react-native-firebase/dynamic-links@18.7.3":
-  version "18.7.3"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-18.7.3.tgz#c9e1ce4df5e71bc15531531806ed04a8174b07ac"
-  integrity sha512-Q22+3ZXsUfSdYGmhQHE1BiJJFx53SK/OpsrxytyV6PJz4acA8bN/ADh84mCbYTr0Mz6JiwSGrjBkDVkOS9Co7w==
+"@react-native-firebase/dynamic-links@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-20.4.0.tgz#2a2f75231516c52ccac1e18b54f0416ca3bf9b98"
+  integrity sha512-6NvdDs4OuEYRn1E+oS3DDeplpF+tMeA22hToaC1IXYOX7z8esVZ36k6Nb7VDpbmC3vxoCZadUc30rsCNjJr65w==
 
 "@react-native-firebase/messaging@18.7.3":
   version "18.7.3"

@@ -653,7 +653,7 @@ PODS:
     - Firebase/Auth (= 10.19.0)
     - React-Core
     - RNFBApp
-  - RNFBDynamicLinks (18.7.3):
+  - RNFBDynamicLinks (20.4.0):
     - Firebase/DynamicLinks (= 10.19.0)
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
@@ -1093,7 +1093,7 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: c21258de1485419a845efbba9c09ec946c89891d
   RNFBAuth: 079bb1bc37a912a277aedf366fe5bf4632b069c9
-  RNFBDynamicLinks: 48b581c9ea46ea1edcf088c6a95cb7416e41a190
+  RNFBDynamicLinks: 9300cd3e0885acc263b9fa23001fd3e2ac0cfca7
   RNFBMessaging: e52a76a97ec5ff75e186c150e2bfab86c9e655d1
   RNGestureHandler: 38aa38413896620338948fbb5c90579a7b1c3fde
   RNGoogleSignin: aac5c1ec73422109dec1da770247a1e410dcc620

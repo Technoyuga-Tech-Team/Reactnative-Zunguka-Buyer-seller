@@ -7,7 +7,7 @@ import OutlineHeartIcon from "../ui/svg/OutlineHeartIcon";
 import Scale from "../../utils/Scale";
 import SellerProfileWithStar from "../ui/SellerProfileWithStar";
 import SimilarProductListing from "../SimilarProduct/SimilarProductListing";
-import { HOT_BRANDS } from "../../constant";
+import { HOT_BRANDS, RWF } from "../../constant";
 import { ProductDetailsDataProps } from "../../types/product.types";
 import moment from "moment";
 import { getConditionItemValue } from "../../utils";
@@ -48,10 +48,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     ? moment(productDetails?.created_at).format("DD/MM/YYYY")
     : "";
 
-  const Addr =
-    productDetails?.district && productDetails?.sector
-      ? `${productDetails?.district}, ${productDetails?.sector}`
-      : productDetails?.address;
+  const Addr = productDetails?.sector || productDetails?.district;
+  const Addr1 = productDetails?.district || productDetails?.sector;
+  // productDetails?.district && productDetails?.sector
+  //   ? `${productDetails?.district}, ${productDetails?.sector}`
+  //   : productDetails?.address;
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
@@ -75,7 +76,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           )}
         </View>
         <View style={style.productNameCont}>
-          <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
+          <Text style={style.txtPrice}>
+            {RWF} {productDetails?.sale_price}
+          </Text>
           {!isCurrentUsersProduct && (
             <TouchableOpacity
               onPress={onPressMessage}
@@ -145,7 +148,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Address
           </Text>
-          <Text style={style.txtAddress}>{productDetails?.address}</Text>
+          <Text style={style.txtAddress}>{Addr1}</Text>
         </View>
       </View>
       <ItemSeparator />

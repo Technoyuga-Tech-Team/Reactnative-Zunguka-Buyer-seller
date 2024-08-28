@@ -9,6 +9,7 @@ import {
   CONDITIONS,
   HIT_SLOP2,
   RATINGS,
+  RWF,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   SIZES,
@@ -278,7 +279,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
           <FilterItem
             onPress={onPressPrice}
             title="Price"
-            value={`R₣${sliderVal.low} - R₣${sliderVal.high}`}
+            value={`${RWF} ${sliderVal.low} - ${RWF} ${sliderVal.high}`}
             isSelected={visiblePrice}
           />
           {visiblePrice && (

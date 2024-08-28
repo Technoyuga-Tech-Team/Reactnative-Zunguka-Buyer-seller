@@ -3,8 +3,9 @@ import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { makeStyles, useTheme } from "react-native-elements";
 import { ThemeProps } from "../../types/global.types";
-import { HIT_SLOP2 } from "../../constant";
+import { HIT_SLOP2, RWF } from "../../constant";
 import StarOutlineIcon from "../ui/svg/StarOutlineIcon";
+import moment from "moment";
 
 interface PackageItemProps {
   item: any;
@@ -25,6 +26,7 @@ const PackageItem: React.FC<PackageItemProps> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const isReviewPending = item.is_rating == 0;
+  const date = moment(item.created_at).format("MMM DD, yyyy hh:mm a");
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -33,24 +35,21 @@ const PackageItem: React.FC<PackageItemProps> = ({
     >
       <View style={style.innerCont}>
         <Text numberOfLines={1} style={style.txtAddress}>
-          {item?.delivery_point_address}
+          order {item?.order?.order_id}
         </Text>
         <Text
           style={[
             style.txtOrder,
             {
-              color: isCompleted ? theme.colors?.primary : theme.colors?.red,
+              color: theme.colors?.primary,
             },
           ]}
         >
-          order {item?.order?.order_id}
+          {RWF} {item?.amount}
         </Text>
       </View>
       <View style={style.innerCont}>
-        {/* <Text style={style.txtDate}>
-          {item?.package_delivery_date} • {item?.package_delivery_time}
-        </Text> */}
-        <Text style={style.txtPrice}>R₣ {item?.amount}</Text>
+        <Text style={style.txtPrice}>{date}</Text>
       </View>
       {isReviewPending && isFromMover && isCompleted && (
         <TouchableOpacity
@@ -92,14 +91,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     width: "70%",
   },
   txtOrder: {
-    fontSize: theme.fontSize?.fs11,
-    fontFamily: theme.fontFamily?.regular,
+    fontSize: theme.fontSize?.fs15,
+    fontFamily: theme.fontFamily?.medium,
     color: theme.colors?.red,
   },
   txtPrice: {
-    fontSize: theme.fontSize?.fs13,
+    fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.black,
+    marginTop: 5,
   },
   txtDate: {
     fontSize: theme.fontSize?.fs12,

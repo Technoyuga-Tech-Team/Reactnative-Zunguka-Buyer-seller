@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import RangeSlider from "rn-range-slider";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
+import { RWF } from "../../constant";
 
 interface CustomRangeSliderProps {
   sliderVal: { low: number; high: number };
@@ -85,7 +86,12 @@ const CustomRangeSlider: React.FC<CustomRangeSliderProps> = ({
         keyExtractor={(_item, index) => index.toString()}
         contentContainerStyle={style.scrollCont}
         renderItem={({ item }) => {
-          return <Text style={style.txtItem}>R₣{item}</Text>;
+          return (
+            <Text style={style.txtItem}>
+              {RWF}
+              {item}
+            </Text>
+          );
         }}
       />
     </View>

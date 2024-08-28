@@ -7,7 +7,7 @@ import SimilarProductItem from "./SimilarProductItem";
 import { similarDataProps } from "../../types/product.types";
 
 interface SimilarProductListingProps {
-  similarProductData: similarDataProps[];
+  similarProductData: similarDataProps[] | undefined;
   onPressProduct: (item: any) => void;
 }
 

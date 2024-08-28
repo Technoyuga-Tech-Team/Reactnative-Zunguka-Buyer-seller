@@ -9,6 +9,7 @@ import Scale from "../../utils/Scale";
 import NoDataFound from "../ui/NoDataFound";
 import MessageOutlineIcon from "../ui/svg/MessageOutlineIcon";
 import OutlineHeartIcon from "../ui/svg/OutlineHeartIcon";
+import { RWF } from "../../constant";
 
 interface ArchivedProductInfoProps {
   productDetails: ProductDetailsDataProps;
@@ -45,7 +46,9 @@ const ArchivedProductInfo: React.FC<ArchivedProductInfoProps> = ({
             </TouchableOpacity>
           </View>
           <View style={style.productNameCont}>
-            <Text style={style.txtPrice}>R₣ {productDetails?.sale_price}</Text>
+            <Text style={style.txtPrice}>
+              {RWF} {productDetails?.sale_price}
+            </Text>
 
             <TouchableOpacity activeOpacity={0.8} style={style.heartCont}>
               <MessageOutlineIcon

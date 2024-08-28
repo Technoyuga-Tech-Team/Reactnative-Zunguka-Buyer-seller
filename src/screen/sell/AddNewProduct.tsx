@@ -298,13 +298,12 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     let isValidConditionOfItems = isRequiredFields(selectedCondition);
     let isValidBrands = isRequiredFields(selectedBrand.name);
     let isValidColors = isRequiredFields(selectedColors[0]);
-    let isValidSize = isRequiredFields(selectedSizeValue[0]);
+    // let isValidSize = isRequiredFields(selectedSizeValue[0]);
     let isValidCity = isRequiredFields(district);
-    let isValidAddress = isRequiredFields(productLocation);
+    // let isValidAddress = isRequiredFields(productLocation);
     let isValidDescription = isRequiredFields(productDescription);
     let isValidModeOfTransport = isRequiredFields(vehicle);
     let isValidPrice = isRequiredFields(productSellingPrice);
-    console.log("isValidTitle", isValidTitle);
     if (!isValidProductImage) {
       setProductImageError("Product photos are required");
       scrollRef?.current?.scrollToPosition(0, 0, true);
@@ -326,18 +325,23 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
       return false;
     } else if (!isValidColors) {
+      setSelectedColorsError("Please select the color.");
       scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
       return false;
-    } else if (!isValidSize) {
-      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
-      return false;
-    } else if (!isValidCity) {
+    }
+    // else if (!isValidSize) {
+    //   scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
+    //   return false;
+    // }
+    else if (!isValidCity) {
       setDistrictError("District is required");
       return false;
-    } else if (!isValidAddress) {
-      setProductLocationError("Address is required");
-      return false;
-    } else if (!isValidDescription) {
+    }
+    // else if (!isValidAddress) {
+    //   setProductLocationError("Address is required");
+    //   return false;
+    // }
+    else if (!isValidDescription) {
       setProductDescriptionError("Description is required");
       return false;
     } else if (!isValidModeOfTransport) {
@@ -361,6 +365,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressSubmit = async () => {
+    console.log("checkIsValidForm()", checkIsValidForm());
     if (checkIsValidForm()) {
       const formData = new FormData();
 
@@ -622,7 +627,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
             onPressOuterRightIcon={onPressSelectEnterAddress}
             onChangeText={onChangeLocation}
-            onBlur={onBlurLocation}
+            // onBlur={onBlurLocation}
             value={productLocation}
             error={productLocationError}
             touched={productLocationError !== ""}
@@ -676,7 +681,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           returnKeyType="done"
           returnKeyLabel="done"
           keyboardType={"numeric"}
-          icon={<Text style={style.txtrf}>R₣</Text>}
+          icon={<Text style={style.txtrf}>RW₣</Text>}
           onChangeText={onChangeProductSelling}
           onBlur={onBlurSellingPrice}
           value={productSellingPrice}
@@ -703,7 +708,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             buttonWidth="full"
             variant="primary"
             type="solid"
-            disabled={loading === LoadingState.CREATE || !checked}
+            disabled={loading === LoadingState.CREATE}
             loading={loading === LoadingState.CREATE}
           />
         </View>

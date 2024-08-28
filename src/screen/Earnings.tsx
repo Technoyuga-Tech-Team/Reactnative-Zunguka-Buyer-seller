@@ -1,4 +1,3 @@
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
@@ -10,14 +9,14 @@ import {
 } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Route } from "../constant/navigationConstants";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import {
   BASE_URL,
   HIT_SLOP2,
   SCREEN_WIDTH,
   secureStoreKeys,
 } from "../constant";
+import { Route } from "../constant/navigationConstants";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 import { ThemeProps } from "../types/global.types";
 
 import { Images } from "../assets/images";
@@ -79,7 +78,6 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
       );
 
       const data = await response.json();
-      console.log("data", data?.data?.total_earning);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setLoading(false);

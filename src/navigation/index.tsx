@@ -1,4 +1,5 @@
 import {
+  CommonActions,
   DefaultTheme,
   LinkingOptions,
   NavigationContainer,
@@ -27,7 +28,8 @@ import notifee, { AuthorizationStatus } from "@notifee/react-native";
 import messaging, {
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
-import store from "../store/store";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
+import { Route } from "../constant/navigationConstants";
 
 const linking: LinkingOptions<{}> = {
   prefixes: [`http://${BASE_PORT}/`, `zunguka://`],
@@ -63,6 +65,33 @@ const MainNavigator = () => {
   const { theme } = useTheme();
 
   const [notificationCount, setNotificationCount] = useState(0);
+
+  const handleDynamicLink = (link: { url: string }) => {
+    var url = link.url;
+    let split_data = url.split("?");
+    let id = split_data[1].split("=");
+    setTimeout(() => {
+      navigationRef.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: Route.navProductDetails, params: { itemId: id[1] } },
+          ],
+        })
+      );
+    }, 1000);
+  };
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then((link) => {
+        link && handleDynamicLink(link);
+      });
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    // When the component is unmounted, remove the listener
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (

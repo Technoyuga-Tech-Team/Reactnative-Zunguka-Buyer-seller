@@ -23,6 +23,7 @@ import {
   FW_PUBLIC_KEY,
   FW_SECRET_KEY,
   PAYMENT_METHOD,
+  RWF,
   SCREEN_WIDTH,
 } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
@@ -89,12 +90,14 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
       setProductPrice(`${productInfo?.price}`);
       if (productInfo?.isOutOfKigali) {
         setOutOfKigali(true);
-        setTotalPrice((productInfo?.price).toFixed(2));
+        setTotalPrice(Number(productInfo?.price).toFixed(2));
       } else {
-        let price1 = (productInfo?.price * 5) / 100;
+        let price1 = (Number(productInfo?.price) * 5) / 100;
         setTransportFee(price1.toFixed(2));
         setTotalPrice(
-          (productInfo?.price + price1 + Number(deliveryPrice)).toFixed(2)
+          (Number(productInfo?.price) + price1 + Number(deliveryPrice)).toFixed(
+            2
+          )
         );
         setOutOfKigali(false);
       }
@@ -153,7 +156,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           <Text
             style={[style.txtTotal, { fontFamily: theme?.fontFamily?.bold }]}
           >
-            R₣ {totalPrice}
+            {RWF} {totalPrice}
           </Text>
         </View>
         <View style={{ paddingBottom: 10 }}>
@@ -289,24 +292,27 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
         <View style={style.paddingHorizontal}>
           <RenderItem
             title="Item total"
-            value={`R₣ ${Number(productInfo?.price).toFixed(2)}`}
+            value={`${RWF} ${Number(productInfo?.price).toFixed(2)}`}
           />
           {!outOfKigali && modeOfDelivery !== "" && (
             <>
-              <RenderItem title="Delivery fees" value={`R₣ ${deliveryPrice}`} />
+              <RenderItem
+                title="Delivery fees"
+                value={`${RWF} ${deliveryPrice}`}
+              />
             </>
           )}
           {!outOfKigali && (
             <>
               <RenderItem
                 title="Transport fee (5%)"
-                value={`R₣ ${transportFee}`}
+                value={`${RWF} ${transportFee}`}
               />
               <View style={style.borderCont} />
             </>
           )}
 
-          <RenderItem title="Total" value={`R₣ ${totalPrice}`} />
+          <RenderItem title="Total" value={`${RWF} ${totalPrice}`} />
           <View style={style.borderCont} />
         </View>
         <Text style={style.txtOrderSummary}>Payment method</Text>
@@ -318,6 +324,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
                 onPressItem={onPressItem}
                 isBoarderBottom={false}
                 totalUsersEarning={`${userData?.total_earning}`}
+                totalAmount={totalPrice}
               />
             </View>
           </DropShadow>

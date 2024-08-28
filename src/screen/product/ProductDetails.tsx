@@ -28,6 +28,7 @@ import {
 } from "../../types/product.types";
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -132,9 +133,36 @@ const ProductDetails: React.FC<
       );
     }
   };
-  const onPressShare = () => {
-    onShare(`Link will here for product`);
+
+  const onPressShare = async () => {
+    // onShare(productDetails?.id);
+    const link = await dynamicLinks().buildLink({
+      link: `https://zunguka.page.link/H3Ed?itemId=${productDetails?.id}`,
+      // domainUriPrefix is created in your Firebase console
+      domainUriPrefix: "https://zunguka.page.link",
+      // optional setup which updates Firebase analytics campaign
+      // "banner". This also needs setting up before hand
+      android: {
+        packageName: "com.zunguka",
+        fallbackUrl: "https://google.com",
+      },
+      ios: {
+        bundleId: "com.zunguka",
+        fallbackUrl: "https://google.com",
+      },
+      navigation: {
+        forcedRedirectEnabled: true,
+      },
+      analytics: {
+        campaign: "banner",
+      },
+    });
+
+    if (link) {
+      onShare(link);
+    }
   };
+
   const onPressDelete = () => {
     Alert.alert("", "Are you sure you want to delete?", [
       {
@@ -254,72 +282,6 @@ const ProductDetails: React.FC<
         onPressMessage={onPressMessage}
         isCurrentUsersProduct={is_CurrentUsers_product}
       />
-      {/* <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={style.txtPlatform}>Selling price : </Text>
-          <Text style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}>
-            R₣{productDetails?.sale_price}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={style.txtPlatform}>Transport fee (5%) : </Text>
-          <Text style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}>
-            R₣{priceForPlatForm}
-          </Text>
-        </View>
-        {!is_CurrentUsers_product && (
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={style.txtPlatform}>Seller will get : </Text>
-            <Text
-              style={[style.txtPlatform, { color: theme.colors?.pinkDark }]}
-            >
-              R₣{sellerWillGetPrice}
-            </Text>
-          </View>
-        )}
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={style.txtPlatform}>
-            {is_CurrentUsers_product
-              ? "Total receivable amount : "
-              : "Total payable amount : "}
-          </Text>
-          <Text
-            style={[
-              style.txtPlatform,
-              {
-                color: theme.colors?.primary,
-                fontFamily: theme?.fontFamily?.bold,
-              },
-            ]}
-          >
-            R₣{payablePrice}
-          </Text>
-        </View>
-      </View> */}
       {!is_CurrentUsers_product && (
         <View style={style.button}>
           <CustomButton

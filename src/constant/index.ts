@@ -44,6 +44,8 @@ export const USER_ROLE = "@user_role";
 
 export const MAX_CHAR_LENGTH = 35;
 
+export const RWF = "RW₣";
+
 export const ENABLE_PUSH_NOTIFICATION = "@enable_push_notification";
 export const NEW_MESSAGE_NOTIFICATION = "@new_message";
 export const NEW_ITEMS_NOTIFICATION = "@new_items";

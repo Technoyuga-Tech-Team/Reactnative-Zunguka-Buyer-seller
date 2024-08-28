@@ -4,6 +4,7 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { AppImage } from "../AppImage/AppImage";
 import Scale from "../../utils/Scale";
 import { Images } from "../../assets/images";
+import { RWF } from "../../constant";
 
 export interface SortData {
   title: string;
@@ -17,6 +18,7 @@ interface SelectPaymentMethodProps {
   onPressItem: (index: number, key: number | undefined) => void;
   isBoarderBottom?: boolean;
   totalUsersEarning: string;
+  totalAmount: string;
 }
 
 const SelectPaymentMethod: React.FC<SelectPaymentMethodProps> = ({
@@ -24,6 +26,7 @@ const SelectPaymentMethod: React.FC<SelectPaymentMethodProps> = ({
   onPressItem,
   isBoarderBottom = true,
   totalUsersEarning,
+  totalAmount,
 }) => {
   const style = useStyle();
   const { theme } = useTheme();
@@ -33,7 +36,11 @@ const SelectPaymentMethod: React.FC<SelectPaymentMethodProps> = ({
         const btn = item?.selected
           ? Images.CHECKED_RADIO
           : Images.UNCHECKED_RADIO;
-        const isDisable = index == 1 && Number(totalUsersEarning) <= 0;
+        const isDisable =
+          index == 1 &&
+          (Number(totalUsersEarning) <= 0 ||
+            Number(totalAmount) >= Number(totalUsersEarning));
+
         return (
           <TouchableOpacity
             disabled={isDisable}
@@ -64,7 +71,7 @@ const SelectPaymentMethod: React.FC<SelectPaymentMethodProps> = ({
               <Text style={style.txtTitle1}>
                 {index == 1 &&
                   Number(totalUsersEarning) > 0 &&
-                  `(R₣ ${totalUsersEarning})`}
+                  `(${RWF} ${totalUsersEarning})`}
               </Text>
             </Text>
           </TouchableOpacity>
