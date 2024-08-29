@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   BASE_URL,
   HIT_SLOP2,
+  RWF,
   SCREEN_WIDTH,
   secureStoreKeys,
 } from "../constant";
@@ -145,16 +146,20 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={HIT_SLOP2}
-            onPress={onPressShowPayoutHistory}
+            // onPress={onPressShowPayoutHistory}
           >
-            <PayoutHistory color={theme.colors?.white} height={18} width={18} />
+            <PayoutHistory
+              color={theme.colors?.transparent}
+              height={18}
+              width={18}
+            />
           </TouchableOpacity>
         </View>
         <View style={style.firstCont}>
           <View style={style.firstInnerCont}>
             <View>
               <Text style={style.txtEarning}>
-                ${parseFloat(`${totalEarning}`).toFixed(2)}
+                {RWF} {parseFloat(`${totalEarning}`).toFixed(2)}
               </Text>
               <Text style={style.txtBalance}>Balance</Text>
             </View>

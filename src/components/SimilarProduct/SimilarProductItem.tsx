@@ -67,6 +67,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     marginRight: 20,
     width: Scale(109),
     height: Scale(109),
+    borderRadius: Scale(4),
+    overflow: "hidden",
   },
   product: {
     width: Scale(109),

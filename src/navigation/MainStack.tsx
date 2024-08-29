@@ -38,6 +38,8 @@ import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import ArchivedProductDetails from "../screen/product/ArchivedProductDetails";
 import Earnings from "../screen/Earnings";
 import Withdraw from "../screen/Withdraw";
+import Notification from "../screen/Notification/Notification";
+import MySavedKeywords from "../screen/MySavedKeywords";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -155,6 +157,11 @@ const MainStack = () => {
           <Stack.Screen name={Route.navMessaging} component={Messaging} />
           <Stack.Screen name={Route.navEarnings} component={Earnings} />
           <Stack.Screen name={Route.navWithdraw} component={Withdraw} />
+          <Stack.Screen name={Route.navNotification} component={Notification} />
+          <Stack.Screen
+            name={Route.navMySavedKeyword}
+            component={MySavedKeywords}
+          />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

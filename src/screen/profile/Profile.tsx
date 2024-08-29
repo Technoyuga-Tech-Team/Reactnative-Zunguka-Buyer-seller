@@ -110,6 +110,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     navigation.navigate(Route.navMessaging);
   };
 
+  const onPressKeywords = () => {
+    navigation.navigate(Route.navMySavedKeyword);
+  };
+
   const Profile = profilePicture;
   return (
     <View style={style.container}>
@@ -152,15 +156,21 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressCardDetails}
         />
         <ProfileItem
+          name="My Earnings"
+          icon={<MoneybillsIcon color={theme.colors?.primary} />}
+          onPress={onPressMyEarnings}
+        />
+        <ProfileItem
           name="Transaction History"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressTransactionHistroy}
         />
         <ProfileItem
-          name="My Earnings"
+          name="My Keywords"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
-          onPress={onPressMyEarnings}
+          onPress={onPressKeywords}
         />
+
         <ProfileItem
           name="About Us"
           icon={<InfocircleIcon color={theme.colors?.primary} />}

@@ -91,8 +91,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         );
       formData.append("brand_id", filterItems?.brand || "");
       formData.append("city", filterItems?.city || "");
-      formData.append("maxPrice", filterItems?.maxPrice || "");
-      formData.append("minPrice", filterItems?.minPrice || "");
+      // formData.append("maxPrice", filterItems?.maxPrice || "");
+      // formData.append("minPrice", filterItems?.minPrice || "");
       formData.append("color", filterItems?.selectedColors || "");
       formData.append(
         "condition_of_item",
@@ -115,9 +115,15 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         //   JSON.stringify(result.payload?.data?.data)
         // );
         if (result.payload.status === 1) {
-          if ((fromChangeKeyword && keyword == "") || filterItems) {
+          if (
+            (fromChangeKeyword && keyword == "") ||
+            filterItems ||
+            fromLoadMore
+          ) {
             console.log("in if - - - - -");
-            setProducts(result.payload?.data?.data);
+            !fromLoadMore
+              ? setProducts([...result.payload?.data?.data])
+              : setProducts([...products, ...result.payload?.data?.data]);
           } else {
             console.log("in else - - - - -");
             keyword !== "" && !fromLoadMore
@@ -132,7 +138,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         }
       } else {
         setLoader(false);
-        // setProducts([]);
+        setProducts([]);
         setVisibleFilter(false);
         console.log("addProductSearchFilter error - - - ", result.payload);
       }
@@ -292,7 +298,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       selectedSize,
       city,
     };
-    console.log("filterItems", filter_Items);
     setFilterItems(filter_Items);
     getSearchedItems(debouncedSearchTerm, 10, 1, false, filter_Items, false);
   };

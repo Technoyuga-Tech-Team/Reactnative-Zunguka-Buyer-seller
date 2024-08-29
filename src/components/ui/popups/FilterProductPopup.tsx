@@ -224,6 +224,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const onPressClear = () => {
     setClearPressed(true);
     setVisiblePrice(false);
+    setParantCategoryId(null);
     setSubCategoryId(null);
     setSubCatName("");
     setSelectedBrand({ id: null, name: "" });

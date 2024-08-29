@@ -146,7 +146,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   };
 
   const onPressNotification = () => {
-    navigation.navigate(Route.navAlert);
+    navigation.navigate(Route.navNotification);
   };
   const onPressSearch = () => {
     navigation.navigate(Route.navSearchProduct, { mainCat: "", subCat: "" });

@@ -13,7 +13,9 @@ const InputFieldInfo: React.FC<InputFieldInfoProps> = ({ text }) => {
   return (
     <View style={style.container}>
       <InfoIcon color={theme?.colors?.primary} />
-      <Text style={style.text}>{text}</Text>
+      <Text numberOfLines={3} style={style.text}>
+        {text}
+      </Text>
     </View>
   );
 };
@@ -23,7 +25,7 @@ export default InputFieldInfo;
 const useStyles = makeStyles((theme) => ({
   container: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
   },
   text: {
@@ -32,5 +34,6 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.secondaryText,
     marginLeft: 5,
+    width: "90%",
   },
 }));

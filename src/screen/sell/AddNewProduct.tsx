@@ -36,6 +36,7 @@ import {
   CONDITIONS,
   DISTRICT_AND_SECTORS,
   HIT_SLOP2,
+  RWF,
   SCREEN_HEIGHT,
   secureStoreKeys,
   SIZES,
@@ -296,8 +297,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     let isValidTitle = isRequiredFields(productTitle);
     let isValidProductCategory = isRequiredFields(subParantCat);
     let isValidConditionOfItems = isRequiredFields(selectedCondition);
-    let isValidBrands = isRequiredFields(selectedBrand.name);
-    let isValidColors = isRequiredFields(selectedColors[0]);
+    // let isValidBrands = isRequiredFields(selectedBrand.name);
+    // let isValidColors = isRequiredFields(selectedColors[0]);
     // let isValidSize = isRequiredFields(selectedSizeValue[0]);
     let isValidCity = isRequiredFields(district);
     // let isValidAddress = isRequiredFields(productLocation);
@@ -320,15 +321,17 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       setSelectedConditionError("Condition Of Items is required");
       scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
       return false;
-    } else if (!isValidBrands) {
-      setSelectedBrandError("Brands are required");
-      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
-      return false;
-    } else if (!isValidColors) {
-      setSelectedColorsError("Please select the color.");
-      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
-      return false;
     }
+    // else if (!isValidBrands) {
+    //   setSelectedBrandError("Brands are required");
+    //   scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
+    //   return false;
+    // }
+    // else if (!isValidColors) {
+    //   setSelectedColorsError("Please select the color.");
+    //   scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
+    //   return false;
+    // }
     // else if (!isValidSize) {
     //   scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT, true);
     //   return false;
@@ -365,7 +368,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressSubmit = async () => {
-    console.log("checkIsValidForm()", checkIsValidForm());
     if (checkIsValidForm()) {
       const formData = new FormData();
 
@@ -616,7 +618,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             />
           )}
         </View>
-        <View style={style.paddingHorizontal}>
+        {/* <View style={style.paddingHorizontal}>
           <CustomTxtInput
             ref={locationRef}
             placeholder="Enter address"
@@ -634,7 +636,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             textInputStyle={style.inputWithoutBgColor}
             style={style.txtInputWithoutBgColor}
           />
-        </View>
+        </View> */}
         <TitleWithInfoIcon title="Description" />
 
         <CustomTxtInput
@@ -672,7 +674,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         </View>
         <View style={[style.paddingHorizontal, { marginTop: 10 }]}>
           <InputFieldInfo
-            text={"Moto, Cab and Tricycle apply only in city of Kigali. "}
+            text={
+              "Moto, Cab and Tricycle apply only in city of Kigali. \nTransport costs vary for each mode you choose and are charged to the buyer."
+            }
           />
         </View>
         <TitleWithInfoIcon title="Selling Price" />
@@ -681,7 +685,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           returnKeyType="done"
           returnKeyLabel="done"
           keyboardType={"numeric"}
-          icon={<Text style={style.txtrf}>RW₣</Text>}
+          icon={<Text style={style.txtrf}>{RWF}</Text>}
           onChangeText={onChangeProductSelling}
           onBlur={onBlurSellingPrice}
           value={productSellingPrice}

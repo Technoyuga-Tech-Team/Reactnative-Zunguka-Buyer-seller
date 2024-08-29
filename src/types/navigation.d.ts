@@ -69,6 +69,7 @@ export type AppRoutes = {
   Sell: undefined;
   Alert: undefined;
   Earnings: undefined;
+  MySavedKeyword: undefined;
   Withdraw: { earning: string };
 };
 

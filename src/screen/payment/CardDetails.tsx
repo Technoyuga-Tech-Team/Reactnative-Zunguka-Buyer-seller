@@ -2,25 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 
-import { CommonActions } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { HomeNavigationProps } from "../../types/navigation";
+import CardList from "../../components/Payment/CardList";
+import CustomButton from "../../components/ui/CustomButton";
+import CustomHeader from "../../components/ui/CustomHeader";
+import NoDataFound from "../../components/ui/NoDataFound";
+import AddRoundedIcon from "../../components/ui/svg/AddRoundedIcon";
+import PayDepositeIcon from "../../components/ui/svg/PayDepositeIcon";
+import { BASE_URL, HAS_NOTCH, secureStoreKeys } from "../../constant";
+import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import CustomButton from "../../components/ui/CustomButton";
-import NoDataFound from "../../components/ui/NoDataFound";
-import CardList from "../../components/Payment/CardList";
-import CustomHeader from "../../components/ui/CustomHeader";
-import { GetPaymentCardData } from "../../types/payment.types";
-import { useGetPaymentCard } from "../../hooks/useGetPaymentCard";
-import PayDepositeIcon from "../../components/ui/svg/PayDepositeIcon";
-import AddRoundedIcon from "../../components/ui/svg/AddRoundedIcon";
 import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
-import { BASE_URL, HAS_NOTCH, secureStoreKeys } from "../../constant";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import { GetPaymentCardData } from "../../types/payment.types";
 import { getData } from "../../utils/asyncStorage";
-import { API } from "../../constant/apiEndpoints";
 
 const CardDetails: React.FC<HomeNavigationProps<Route.navCardDetails>> = ({
   navigation,
@@ -34,11 +32,6 @@ const CardDetails: React.FC<HomeNavigationProps<Route.navCardDetails>> = ({
   const loading = useSelector(selectPaymentCardLoading);
 
   const fromProfile = route?.params?.from === "profile";
-
-  // const { data, isLoading, isError, refetch } = useGetPaymentCard({
-  //   staleTime: Infinity,
-  //   cacheTime: 0,
-  // });
 
   const [cardData, setCardData] = useState<GetPaymentCardData[]>([]);
   const [selectedCard, setSelectedCard] = useState<string>("");
