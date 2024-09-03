@@ -3,24 +3,22 @@ import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import AlertIcon from "../../components/ui/svg/AlertIcon";
+import CameraLIcon from "../../components/ui/svg/CameraLIcon";
 import FavouriteIcon from "../../components/ui/svg/FavouriteIcon";
 import HomeIcon from "../../components/ui/svg/HomeIcon";
-import SellIcon from "../../components/ui/svg/SellIcon";
 import UserIcon from "../../components/ui/svg/UserIcon";
 import { HIT_SLOP, SCREEN_WIDTH } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
+import { getNotificationCount } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
-import InboxIcon from "../../components/ui/svg/InboxIcon";
-import CameraLIcon from "../../components/ui/svg/CameraLIcon";
-import AlertIcon from "../../components/ui/svg/AlertIcon";
 
 const BottomTabBar = ({ state, navigation }: any) => {
-  const dispatch = useDispatch();
-
   const insets = useSafeAreaInsets();
   const Style = useStyle({ insets });
+  const notificationCount = useSelector(getNotificationCount);
 
   const { theme } = useTheme();
 
@@ -80,15 +78,18 @@ const BottomTabBar = ({ state, navigation }: any) => {
                       width={25}
                     />
                   ) : route.name === Route.navAlert ? (
-                    <AlertIcon
-                      color={
-                        isFocused
-                          ? theme.colors?.primary
-                          : theme.colors?.unselectedIconColor
-                      }
-                      height={22}
-                      width={22}
-                    />
+                    <>
+                      <AlertIcon
+                        color={
+                          isFocused
+                            ? theme.colors?.primary
+                            : theme.colors?.unselectedIconColor
+                        }
+                        height={22}
+                        width={22}
+                      />
+                      {notificationCount > 0 && <View style={Style.redDot} />}
+                    </>
                   ) : (
                     <UserIcon
                       color={
@@ -212,5 +213,16 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
   },
   circlePlusCont: {
     marginBottom: 25,
+  },
+  redDot: {
+    height: Scale(12),
+    width: Scale(12),
+    borderRadius: Scale(12 / 2),
+    backgroundColor: theme.colors?.pinkDark,
+    borderWidth: 1.5,
+    borderColor: theme.colors?.white,
+    position: "absolute",
+    right: 25,
+    top: 0,
   },
 }));

@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { Platform, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";

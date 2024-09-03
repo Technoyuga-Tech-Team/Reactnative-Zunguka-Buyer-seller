@@ -63,11 +63,7 @@ const MainStack = () => {
         <InternetConnectivityLabel isConnected={isConnected} />
         <StatusBar backgroundColor={"white"} barStyle={"dark-content"} />
         <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            animation: "ios",
-            animationDuration: 1000,
-          }}
+          screenOptions={{ headerShown: false }}
           initialRouteName={Route.navSplash}
         >
           <Stack.Screen
@@ -84,15 +80,7 @@ const MainStack = () => {
             name={Route.navAuthentication}
             component={Authentication}
           />
-          <Stack.Screen
-            name={Route.navDashboard}
-            component={Bottombar}
-            options={{
-              contentStyle: {
-                backgroundColor: "transparent",
-              },
-            }}
-          />
+          <Stack.Screen name={Route.navDashboard} component={Bottombar} />
           <Stack.Screen
             name={Route.navAddNewProduct}
             component={AddNewProduct}

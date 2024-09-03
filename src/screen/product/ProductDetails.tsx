@@ -17,6 +17,7 @@ import { useProductDetails } from "../../hooks/useProductDetails";
 import {
   deleteProduct,
   likeDislikeProduct,
+  publishUnpublishProduct,
 } from "../../store/Product/product.thunk";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { setProductInfo } from "../../store/settings/settings.slice";
@@ -25,6 +26,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import {
   ProductDetailsDataProps,
   productImage,
+  PRODUCT_STATUS_DRAFT,
 } from "../../types/product.types";
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
@@ -51,6 +53,7 @@ const ProductDetails: React.FC<
   const [payablePrice, setPayablePrice] = useState<string>("");
   const [priceForPlatForm, setPriceForPlatForm] = useState<string>("");
   const [sellerWillGetPrice, setSellerWillGetPrice] = useState<string>("");
+  const [productStatus, setProductStatus] = useState<string>("");
 
   const [productLikes, setProductLikes] = useState(0);
   const [loader, setLoader] = useState(true);
@@ -92,6 +95,7 @@ const ProductDetails: React.FC<
       setProductLikes(productDetailsData?.data?.likes_count);
       setProductBannerData(productDetailsData?.data?.images);
       setSavedItem(productDetailsData?.data?.is_like);
+      setProductStatus(productDetailsData?.data?.status);
       let price1 = (productDetailsData?.data?.sale_price * 5) / 100;
       setPriceForPlatForm(price1.toString());
       let mainPrice = productDetailsData?.data?.sale_price - price1;
@@ -244,6 +248,27 @@ const ProductDetails: React.FC<
     refetch();
   };
 
+  const onPressStopPublish = async () => {
+    // productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+    //   ? setProductStatus(PRODUCT_STATUS_DRAFT.DRAFT)
+    //   : setProductStatus(PRODUCT_STATUS_DRAFT.ACTIVE);
+    const formData = new FormData();
+    console.log("productDetails?.id", productDetails?.id);
+    formData.append("item_id", productDetails?.id);
+    const result = await dispatch(publishUnpublishProduct({ formData }));
+    if (publishUnpublishProduct.fulfilled.match(result)) {
+      if (result.payload.status === 1) {
+        let status = result.payload.data.status;
+        setProductStatus(status);
+        console.log("result publishUnpublishProduct --->", result.payload);
+      }
+    } else {
+      console.log("errror publishUnpublishProduct --->", result.payload);
+    }
+  };
+
+  console.log("productStatus", productStatus);
+
   return (
     <KeyboardAwareScrollView
       bounces={false}
@@ -282,6 +307,28 @@ const ProductDetails: React.FC<
         onPressMessage={onPressMessage}
         isCurrentUsersProduct={is_CurrentUsers_product}
       />
+      {/* for temporary stop and start the publish this product */}
+      {is_CurrentUsers_product && (
+        <View style={style.button}>
+          <CustomButton
+            onPress={onPressStopPublish}
+            title={
+              productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                ? "Stop Publish"
+                : "Resume Publish"
+            }
+            buttonWidth="full"
+            width={SCREEN_WIDTH - 100}
+            variant="primary"
+            type="solid"
+            backgroundColor={
+              productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                ? theme?.colors?.pinkDark
+                : theme?.colors?.primary
+            }
+          />
+        </View>
+      )}
       {!is_CurrentUsers_product && (
         <View style={style.button}>
           <CustomButton

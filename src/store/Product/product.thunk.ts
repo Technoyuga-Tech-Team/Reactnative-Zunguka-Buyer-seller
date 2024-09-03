@@ -141,9 +141,36 @@ export const sendTheMessage = createAsyncThunk<
         true
       )
     );
+    if (errors) {
+      return rejectWithValue(errors);
+    }
 
-    console.log("data==================", data);
-    console.log("errors==================", errors);
+    return data;
+  }
+);
+
+export const publishUnpublishProduct = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/publishUnpublishProduct",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.STAR_STOP_PUBLISH_PRODUCT,
+          method: "POST",
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
     if (errors) {
       return rejectWithValue(errors);
     }

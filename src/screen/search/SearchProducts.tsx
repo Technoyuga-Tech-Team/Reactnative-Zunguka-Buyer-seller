@@ -247,7 +247,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressShowItems = (key: number | null) => {
-    console.log("key", key);
     if (key == 1) {
       bestMatchData();
     } else if (key == 2) {

@@ -51,7 +51,6 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
       );
 
       const data = await response.json();
-      console.log("data", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setLoader(false);

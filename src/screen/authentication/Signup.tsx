@@ -40,6 +40,7 @@ import Scale from "../../utils/Scale";
 import InputFieldInfo from "../../components/ui/InputFieldInfo";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { keepSingleSpace } from "../../utils";
+import { useGetFCMToken } from "../../hooks/useGetFCMToken";
 
 const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
   navigation,
@@ -79,15 +80,15 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
     };
   }, []);
 
-  // useEffect(() => {
-  //   const Init = async () => {
-  //     useGetFCMToken().then((token) => {
-  //       console.log(" - - - - - - FCM token - - - - - - ", token);
-  //       token && setFcmToken(token);
-  //     });
-  //   };
-  //   Init();
-  // }, []);
+  useEffect(() => {
+    const Init = async () => {
+      useGetFCMToken().then((token) => {
+        console.log(" - - - - - - FCM token - - - - - - ", token);
+        token && setFcmToken(token);
+      });
+    };
+    Init();
+  }, []);
 
   const onPressSignin = () => {
     navigation.navigate(Route.navLogin);
@@ -165,7 +166,6 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
       );
       if (userRegistration.fulfilled.match(result)) {
         if (result.payload) {
-          console.log("result", result);
           navigation.navigate(Route.navEnterOTP, {
             phone: phoneNumber,
             type: "otp_verification",

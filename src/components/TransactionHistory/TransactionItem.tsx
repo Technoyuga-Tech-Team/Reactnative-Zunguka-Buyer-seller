@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native";
 import { transactionData } from "../../types/transaction.types";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
-import { SCREEN_WIDTH } from "../../constant";
+import { RWF, SCREEN_WIDTH } from "../../constant";
 import ArrowUpRightCircle from "../ui/svg/ArrowUpRightCircle";
 import ArrowDownLeftCircle from "../ui/svg/ArrowDownLeftCircle";
 
@@ -53,7 +53,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ item, onPress }) => {
           },
         ]}
       >
-        $ {item.amount}
+        {RWF} {item.amount}
       </Text>
     </TouchableOpacity>
   );

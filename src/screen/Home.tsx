@@ -19,7 +19,10 @@ import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useGetDashboard } from "../hooks/useDashboard";
 import { useMeQuery } from "../hooks/useMeQuery";
-import { selectUserData } from "../store/settings/settings.selectors";
+import {
+  getNotificationCount,
+  selectUserData,
+} from "../store/settings/settings.selectors";
 import { setUserData } from "../store/settings/settings.slice";
 import {
   BannerProps,
@@ -36,6 +39,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
+  const notificationCount = useSelector(getNotificationCount);
 
   const { data: currentUser, refetch: refetchUser } = useMeQuery({
     staleTime: Infinity,
@@ -182,6 +186,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         name={name}
         onPressNotification={onPressNotification}
         onPressSearch={onPressSearch}
+        notificationCount={notificationCount}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}

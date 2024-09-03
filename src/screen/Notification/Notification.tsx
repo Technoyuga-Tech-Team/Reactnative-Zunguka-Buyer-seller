@@ -34,7 +34,7 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       dispatch(setSaveNotificationCount(0));
-      // getNotifications(10, 1);
+      getNotifications(10, 1);
     });
     return () => {
       unsubscribe();

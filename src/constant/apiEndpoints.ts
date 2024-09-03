@@ -21,6 +21,9 @@ export const API = {
   UPDATE_PROFILE_PICTURE: "/profile",
   UPDATE_NOTIFICATION: "/profile",
   SETUP_PROFILE: "/setup-profile",
+  SAVE_KEYWORD: "/save-keyword",
+  LIST_SAVED_KEYWORD: "/list-keyword",
+  DELETE_KEYWORD: "/delete-keyword",
   // product
   GET_ALL_DEALS: "/list-item",
   GET_CATEGORIES: "/categories",
@@ -36,6 +39,7 @@ export const API = {
   DELETE_PRODUCT: "/delete-item",
   GET_SAVED_PRODUCTS: "/saved-items",
   GET_PURCHASED_PRODUCTS: "/purchased-history",
+  STAR_STOP_PUBLISH_PRODUCT: "/stop_start_publising",
   // dashboard
   GET_DASHBOARD: "/home",
   // notification

@@ -3,6 +3,7 @@ import { LoadingState } from "../../types/global.types";
 import {
   addProductForSell,
   addProductSearchFilter,
+  publishUnpublishProduct,
   sendTheMessage,
 } from "./product.thunk";
 import { ProductState } from "../../types/product.types";
@@ -21,7 +22,8 @@ const product = createSlice({
         isAnyOf(
           addProductForSell.pending,
           addProductSearchFilter.pending,
-          sendTheMessage.pending
+          sendTheMessage.pending,
+          publishUnpublishProduct.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -32,9 +34,11 @@ const product = createSlice({
           addProductForSell.fulfilled,
           addProductSearchFilter.fulfilled,
           sendTheMessage.fulfilled,
+          publishUnpublishProduct.fulfilled,
           addProductForSell.rejected,
           addProductSearchFilter.rejected,
-          sendTheMessage.rejected
+          sendTheMessage.rejected,
+          publishUnpublishProduct.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

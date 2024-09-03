@@ -14,20 +14,6 @@ interface SimilarProductItemProps {
   onPressProduct: () => void;
 }
 
-const getIcons = (key: number) => {
-  return key == 1
-    ? Images.ADIDAS_IMAGE
-    : key == 2
-    ? Images.ROLEX_IMAGE
-    : key == 3
-    ? Images.GUCCI_IMAGE
-    : key == 4
-    ? Images.NIKE_IMAGE
-    : key == 5
-    ? Images.SAMSUNG_IMAGE
-    : Images.APPLE_IMAGE;
-};
-
 const SimilarProductItem: React.FC<SimilarProductItemProps> = ({
   item,
   onPressProduct,

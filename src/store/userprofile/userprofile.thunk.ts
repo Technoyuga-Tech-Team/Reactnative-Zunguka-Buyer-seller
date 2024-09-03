@@ -131,3 +131,56 @@ export const updateNotificationProfile = createAsyncThunk<
     return data;
   }
 );
+
+export const userSavedKeyword = createAsyncThunk<
+  any,
+  { formData: FormData },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "user/userSavedKeyword",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.SAVE_KEYWORD,
+          method: "POST",
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);
+
+export const deleteSavedKeyword = createAsyncThunk<
+  any,
+  {
+    id: number | undefined;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>("user/deleteSavedKeyword", async ({ id }, { dispatch, rejectWithValue }) => {
+  const { errors, data } = await dispatch(
+    fetchAction<TokenPayload1>(
+      {
+        url: `${API.DELETE_KEYWORD}/${id}`,
+        method: "DELETE",
+      },
+      true
+    )
+  );
+
+  if (errors) {
+    return rejectWithValue(errors);
+  }
+
+  return data;
+});

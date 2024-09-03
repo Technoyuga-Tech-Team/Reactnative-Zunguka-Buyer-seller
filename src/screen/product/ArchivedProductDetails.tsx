@@ -21,6 +21,7 @@ import {
 } from "../../types/product.types";
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
 
 const ArchivedProductDetails: React.FC<
   HomeNavigationProps<Route.navArchivedProductDetails>
@@ -83,8 +84,32 @@ const ArchivedProductDetails: React.FC<
     }
   };
 
-  const onPressShare = () => {
-    onShare(`Link will here for product`);
+  const onPressShare = async () => {
+    const link = await dynamicLinks().buildLink({
+      link: `https://zunguka.page.link/H3Ed?itemId=${productDetails?.id}`,
+      // domainUriPrefix is created in your Firebase console
+      domainUriPrefix: "https://zunguka.page.link",
+      // optional setup which updates Firebase analytics campaign
+      // "banner". This also needs setting up before hand
+      android: {
+        packageName: "com.zunguka",
+        fallbackUrl: "https://google.com",
+      },
+      ios: {
+        bundleId: "com.zunguka",
+        fallbackUrl: "https://google.com",
+      },
+      navigation: {
+        forcedRedirectEnabled: true,
+      },
+      analytics: {
+        campaign: "banner",
+      },
+    });
+
+    if (link) {
+      onShare(link);
+    }
   };
 
   return (

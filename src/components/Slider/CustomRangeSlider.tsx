@@ -86,12 +86,7 @@ const CustomRangeSlider: React.FC<CustomRangeSliderProps> = ({
         keyExtractor={(_item, index) => index.toString()}
         contentContainerStyle={style.scrollCont}
         renderItem={({ item }) => {
-          return (
-            <Text style={style.txtItem}>
-              {RWF}
-              {item}
-            </Text>
-          );
+          return <Text style={style.txtItem}>{item}</Text>;
         }}
       />
     </View>

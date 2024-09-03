@@ -22,11 +22,15 @@ import {
   TranslationLanguageCodeMap,
 } from "react-native-country-picker-modal";
 import { makeStyles, useTheme } from "react-native-elements";
+import Geocoder from "react-native-geocoding";
+import Geolocation from "react-native-geolocation-service";
 import ReactNativePhoneInput from "react-native-phone-input";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
 import DeliveryAddressList from "../../components/DeliveryAddress/DeliveryAddressList";
 import CustomDropdown from "../../components/Dropdown/CustomDropdown";
+import CheckBoxSelection from "../../components/ui/CheckBoxSelection";
 import CountryPickerModal from "../../components/ui/CountryPickerModal";
 import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
@@ -35,7 +39,6 @@ import { PhoneNumberInput } from "../../components/ui/PhoneNumberInput";
 import LocationIcon from "../../components/ui/svg/LocationIcon";
 import SinglePlusIcon from "../../components/ui/svg/SinglePlusIcon";
 import {
-  AddressData,
   BASE_URL,
   CITIES,
   GOOGLE_MAP_API_KEY,
@@ -43,30 +46,23 @@ import {
   SCREEN_WIDTH,
   secureStoreKeys,
 } from "../../constant";
+import { API } from "../../constant/apiEndpoints";
 import { DeliveryAddressScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
-import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import { HomeNavigationProps } from "../../types/navigation";
-import Scale from "../../utils/Scale";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setErrors } from "../../store/global/global.slice";
-import Geocoder from "react-native-geocoding";
-import Geolocation from "react-native-geolocation-service";
+import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
 import {
   userDeliveryAddress,
   userUpdateDeliveryAddress,
 } from "../../store/PaymentCard/paymentCard.thunk";
-import { useSelector } from "react-redux";
-import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
-import CheckBoxSelection from "../../components/ui/CheckBoxSelection";
-import { getData } from "../../utils/asyncStorage";
-import { API } from "../../constant/apiEndpoints";
+import { setSelectedDeliveryAddress } from "../../store/settings/settings.slice";
+import { DeliveryAddressFormProps } from "../../types/deliveryaddress.types";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
 import { DeliveryAddressDataProps } from "../../types/payment.types";
-import {
-  setProductInfo,
-  setSelectedDeliveryAddress,
-} from "../../store/settings/settings.slice";
+import { getData } from "../../utils/asyncStorage";
+import Scale from "../../utils/Scale";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -115,6 +111,7 @@ const DeliveryAddress: React.FC<
   const [totalPage, setTotalPage] = useState(0);
 
   const [editOn, setEditOn] = useState(false);
+  const [latlng, setLatLng] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -172,6 +169,7 @@ const DeliveryAddress: React.FC<
   }, []);
 
   const onPressItem = (item: DeliveryAddressDataProps) => {
+    console.log("item", item);
     setSelectedAddress(item.id);
   };
   const onPressEdit = (item: DeliveryAddressDataProps) => {
@@ -233,6 +231,8 @@ const DeliveryAddress: React.FC<
         formData.append("region", region);
         formData.append("city", city);
         formData.append("is_default", makeDefault);
+        formData.append("latitude", latlng.lat);
+        formData.append("longitude", latlng.lng);
         editOn && formData.append("address_id", selectedAddress);
 
         if (editOn) {
@@ -374,6 +374,7 @@ const DeliveryAddress: React.FC<
 
         //getting the Latitude from the location json
         const currentLatitude = position.coords.latitude;
+        setLatLng({ lat: currentLatitude, lng: currentLongitude });
         getCurrentAddress(currentLatitude, currentLongitude);
       },
       (error) => {
@@ -476,6 +477,8 @@ const DeliveryAddress: React.FC<
           value={values.deliveryAddress}
           error={errors.deliveryAddress}
           touched={touched.deliveryAddress}
+          onPress={onPressCurrentLocation}
+          onPressIn={onPressCurrentLocation}
         />
         <TouchableOpacity
           style={style.locationCont}

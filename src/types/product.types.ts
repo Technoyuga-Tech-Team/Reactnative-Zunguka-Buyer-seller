@@ -64,6 +64,11 @@ interface image {
   item_id: number;
 }
 
+export enum PRODUCT_STATUS_DRAFT {
+  DRAFT = "Draft",
+  ACTIVE = "Active",
+}
+
 export interface similarDataProps {
   added_at: string;
   created_at: string;

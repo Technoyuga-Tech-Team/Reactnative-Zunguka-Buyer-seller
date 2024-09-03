@@ -3,7 +3,9 @@ import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { LoadingState } from "../../types/global.types";
 import { UserProfileState } from "../../types/user.types";
 import {
+  deleteSavedKeyword,
   updateNotificationProfile,
+  userSavedKeyword,
   userSetupProfile,
   userUpdateProfile,
   userUpdateProfilePicture,
@@ -24,7 +26,9 @@ const userprofile = createSlice({
           userUpdateProfilePicture.pending,
           userUpdateProfile.pending,
           updateNotificationProfile.pending,
-          userSetupProfile.pending
+          userSetupProfile.pending,
+          userSavedKeyword.pending,
+          deleteSavedKeyword.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -36,10 +40,14 @@ const userprofile = createSlice({
           userUpdateProfile.fulfilled,
           updateNotificationProfile.fulfilled,
           userSetupProfile.fulfilled,
+          userSavedKeyword.fulfilled,
+          deleteSavedKeyword.fulfilled,
           userUpdateProfilePicture.rejected,
           userUpdateProfile.rejected,
           updateNotificationProfile.rejected,
-          userSetupProfile.rejected
+          userSetupProfile.rejected,
+          userSavedKeyword.rejected,
+          deleteSavedKeyword.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

@@ -178,7 +178,6 @@ const MainNavigator = () => {
   const handleClickedNotitfaction = (
     notification: FirebaseMessagingTypes.RemoteMessage
   ): void => {
-    // navigationRef?.current?.navigate(Route.navSignup);
     // if (notification && notification.data && notification.data.type) {
     //   switch (notification.data.type) {
     //     case "Product":
@@ -257,16 +256,8 @@ const MainNavigator = () => {
     });
   }, []);
 
-  const MyTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: "#ffffff",
-    },
-  };
-
   return (
-    <NavigationContainer ref={navigationRef} linking={linking} theme={MyTheme}>
+    <NavigationContainer ref={navigationRef} linking={linking}>
       <MainStack />
     </NavigationContainer>
   );
