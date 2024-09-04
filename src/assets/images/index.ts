@@ -7,6 +7,7 @@ export enum Images {
   LOADER = require("../images/loading.png"),
   OOPS = require("../images/oops.png"),
   CHEARS = require("../images/confetti.png"),
+  DELIVERY_COMPLETE = require("../images/deliveryComplete.png"),
 
   PLACEHOLDER_IMAGE = require("../images/placeholder.jpg"),
   HEADER_HOME_IMAGE = require("../images/home_header.png"),

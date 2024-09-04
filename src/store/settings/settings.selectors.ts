@@ -46,3 +46,13 @@ export const getSelectedDeliveryAddress = createSelector(
   [selectSettings],
   (settings) => settings.selectedDeliveryAddress
 );
+
+export const getIsPackageDelivered = createSelector(
+  [selectSettings],
+  (settings) => settings.isNewPackageDelivered
+);
+
+export const selectMoverInfo = createSelector(
+  [selectSettings],
+  (settings) => settings.moverInfo
+);

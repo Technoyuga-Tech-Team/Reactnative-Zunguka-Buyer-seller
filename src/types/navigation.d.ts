@@ -52,16 +52,25 @@ export type AppRoutes = {
   AddCard: undefined;
   Payment: { modeOfDelivery?: string; deliveryPrice?: string };
   DeliveryDetails: undefined;
-  DeliveryCompleteAndRateDriver: undefined;
+  DeliveryCompleteAndRateDriver: {
+    user_id: string;
+    package_details_id: string;
+  };
   SelectMover: undefined;
   PackageInfo: undefined;
   ConfirmPackageInfo: undefined;
-  DeliveryDetails1: undefined;
+  DeliveryDetails1: { package_details_id: string; from?: string };
   MoverHistory: undefined;
   ConfirmSelfPickup: undefined;
   CategoryProduct: undefined;
   RequestToMover: undefined;
-  PaymentToMover: undefined;
+  PaymentToMover: {
+    pickup_Address: string;
+    delivery_Address: string;
+    price: string;
+    item_name: string;
+    package_details_id: string;
+  };
   VisitProfile: undefined;
   JobHistory: undefined;
   YourAddress: { fromOTP?: boolean };
@@ -70,6 +79,7 @@ export type AppRoutes = {
   Alert: undefined;
   Earnings: undefined;
   MySavedKeyword: undefined;
+  PayMover: { package_details_id: string; price: string };
   Withdraw: { earning: string };
 };
 
@@ -124,6 +134,7 @@ export type HomeRoutes = {
   TransactionHistory: undefined;
   Chatroom: { receiver_id: string; product_id: string };
   Messaging: undefined;
+  DeliveryCompleteAndRateDriver: undefined;
 };
 
 export interface MainNavigationProps<RouteName extends keyof AppRoutes> {

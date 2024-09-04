@@ -40,6 +40,12 @@ import Earnings from "../screen/Earnings";
 import Withdraw from "../screen/Withdraw";
 import Notification from "../screen/Notification/Notification";
 import MySavedKeywords from "../screen/MySavedKeywords";
+import RequestToMover from "../screen/delivery/RequestToMover";
+import PaymentToMover from "../screen/delivery/PaymentToMover";
+import PayMover from "../screen/delivery/PayMover";
+import DeliveryDetails1 from "../screen/delivery/DeliveryDetails1";
+import DeliveryCompleteAndRateDriver from "../screen/delivery/DeliveryCompleteAndRateDriver";
+import PurchasedHistory from "../screen/profile/PurchasedHistory";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -149,6 +155,27 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navMySavedKeyword}
             component={MySavedKeywords}
+          />
+          <Stack.Screen
+            name={Route.navRequestToMover}
+            component={RequestToMover}
+          />
+          <Stack.Screen
+            name={Route.navPaymentToMover}
+            component={PaymentToMover}
+          />
+          <Stack.Screen name={Route.navPayMover} component={PayMover} />
+          <Stack.Screen
+            name={Route.navDeliveryDetails1}
+            component={DeliveryDetails1}
+          />
+          <Stack.Screen
+            name={Route.navDeliveryCompleteAndRateDriver}
+            component={DeliveryCompleteAndRateDriver}
+          />
+          <Stack.Screen
+            name={Route.navPurchasedHistory}
+            component={PurchasedHistory}
           />
         </Stack.Navigator>
       </BottomSheetModalProvider>

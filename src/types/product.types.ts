@@ -113,3 +113,78 @@ export interface ProductDetailsDataProps {
   district: string;
   similar_products: similarDataProps[];
 }
+
+export interface GetPurchasedHistoryProps {
+  message: string;
+  status: number;
+  data: {
+    data: GetProductDetailsDataProps[];
+    totalRecords: number;
+    totalPages: number;
+    currentPage: number;
+  };
+}
+
+export interface GetProductDetailsDataProps {
+  id: number;
+  user_id: number;
+  category_id: number;
+  sub_category_id: number;
+  title: string;
+  address: string;
+  city: string;
+  description: string;
+  actual_price: number;
+  sale_price: number;
+  payment_terms: string;
+  deposit_percentage: number;
+  status: string;
+  image: string;
+  created_at: string;
+  updated_at: string;
+  location: string;
+  latitude: string;
+  longitude: string;
+  images: productImagesProps[];
+  category: CategoriesDataProps;
+  sub_category: SubCategoriesDataProps;
+  is_like: boolean;
+  order: {
+    id: number;
+    item_id: number;
+    transaction_type: string;
+  }[];
+  is_mover_booked: number;
+  user: UserData;
+}
+
+export interface productImagesProps {
+  id: number;
+  user_id: number;
+  item_id: number;
+  image: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type CategoriesDataProps = {
+  created_at: string;
+  icon: string;
+  id: number;
+  parent_id: string;
+  updated_at: string;
+  name: string;
+  title: string;
+  key: string;
+};
+
+export type SubCategoriesDataProps = {
+  created_at: string;
+  icon: string;
+  id: number;
+  name: string;
+  parent_id: string;
+  updated_at: string;
+  title: string;
+  key: string;
+};

@@ -32,6 +32,9 @@ import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
 import { setUserData } from "../../store/settings/settings.slice";
 import ChatIcon from "../../components/ui/svg/ChatIcon";
+import BellIcon from "../../components/ui/svg/BellIcon";
+import AlertIcon from "../../components/ui/svg/AlertIcon";
+import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -99,6 +102,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const onPressTransactionHistroy = () => {
     navigation.navigate(Route.navTransactionHistory);
   };
+  const onPressPurchasedHistory = () => {
+    navigation.navigate(Route.navPurchasedHistory);
+  };
   const onPressMyEarnings = () => {
     navigation.navigate(Route.navEarnings);
   };
@@ -112,6 +118,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
 
   const onPressKeywords = () => {
     navigation.navigate(Route.navMySavedKeyword);
+  };
+
+  const onPressRequestPage = () => {
+    navigation.navigate(Route.navRequestToMover);
   };
 
   const Profile = profilePicture;
@@ -146,6 +156,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressMyItems}
         />
         <ProfileItem
+          name="Request page"
+          icon={<AlertIcon color={theme.colors?.primary} />}
+          onPress={onPressRequestPage}
+        />
+        <ProfileItem
           name="Masseges"
           icon={<ChatIcon color={theme.colors?.primary} />}
           onPress={onPressMessages}
@@ -166,11 +181,21 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressTransactionHistroy}
         />
         <ProfileItem
+          name="Purchased History"
+          icon={
+            <PurchasedProductIcon
+              color={theme.colors?.primary}
+              height={22}
+              width={22}
+            />
+          }
+          onPress={onPressPurchasedHistory}
+        />
+        <ProfileItem
           name="My Keywords"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressKeywords}
         />
-
         <ProfileItem
           name="About Us"
           icon={<InfocircleIcon color={theme.colors?.primary} />}

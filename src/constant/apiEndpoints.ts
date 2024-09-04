@@ -81,4 +81,5 @@ export const API = {
   GET_SAVED_DELIVERY_ADDRESS: "/get_all_addresses",
   // Payment
   PAY_DEPOSIT_SELLER: "/pay-deposit-seller",
+  PAY_DEPOSIT_MOVER: "/pay_deposit_to_mover",
 };

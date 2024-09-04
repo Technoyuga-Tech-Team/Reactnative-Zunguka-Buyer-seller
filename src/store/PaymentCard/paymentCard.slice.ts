@@ -7,6 +7,7 @@ import {
   MakePayment,
   MakePaymentToMover,
   userDeliveryAddress,
+  userPayDepositMover,
   userPayDepositSeller,
   userUpdateDeliveryAddress,
 } from "./paymentCard.thunk";
@@ -29,7 +30,8 @@ const payment = createSlice({
           MakePaymentToMover.pending,
           userDeliveryAddress.pending,
           userUpdateDeliveryAddress.pending,
-          userPayDepositSeller.pending
+          userPayDepositSeller.pending,
+          userPayDepositMover.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -44,13 +46,15 @@ const payment = createSlice({
           userDeliveryAddress.fulfilled,
           userUpdateDeliveryAddress.fulfilled,
           userPayDepositSeller.fulfilled,
+          userPayDepositMover.fulfilled,
           AddNewCard.rejected,
           deletePaymentCard.rejected,
           MakePayment.rejected,
           MakePaymentToMover.rejected,
           userDeliveryAddress.rejected,
           userUpdateDeliveryAddress.rejected,
-          userPayDepositSeller.rejected
+          userPayDepositSeller.rejected,
+          userPayDepositMover.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

@@ -1,18 +1,23 @@
 import {
   CommonActions,
-  DefaultTheme,
   LinkingOptions,
   NavigationContainer,
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Linking, PermissionsAndroid, Platform } from "react-native";
+import { useTheme } from "react-native-elements";
 import Snackbar from "react-native-snackbar";
 import { useSelector } from "react-redux";
-import { useTheme } from "react-native-elements";
 // Relative path
+import notifee, { AuthorizationStatus } from "@notifee/react-native";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
+import messaging, {
+  FirebaseMessagingTypes,
+} from "@react-native-firebase/messaging";
+import DeliveryConfirmationPopup from "../components/ui/popups/DeliveryConfirmationPopup";
 import { BASE_PORT } from "../constant";
-import MainStack from "./MainStack";
+import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import {
   selectGlobalErrors,
@@ -22,14 +27,10 @@ import { clearErrors, clearSuccess } from "../store/global/global.slice";
 import { selectSocialError } from "../store/settings/settings.selectors";
 import {
   setErrorFromSocial,
+  setIsNewPackageDeliverd,
   setSaveNotificationCount,
 } from "../store/settings/settings.slice";
-import notifee, { AuthorizationStatus } from "@notifee/react-native";
-import messaging, {
-  FirebaseMessagingTypes,
-} from "@react-native-firebase/messaging";
-import dynamicLinks from "@react-native-firebase/dynamic-links";
-import { Route } from "../constant/navigationConstants";
+import MainStack from "./MainStack";
 
 const linking: LinkingOptions<{}> = {
   prefixes: [`http://${BASE_PORT}/`, `zunguka://`],
@@ -65,6 +66,9 @@ const MainNavigator = () => {
   const { theme } = useTheme();
 
   const [notificationCount, setNotificationCount] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [moverId, setMoverId] = useState("");
+  const [packageDetailsId, setPackageDetailsId] = useState("");
 
   const handleDynamicLink = (link: { url: string }) => {
     var url = link.url;
@@ -206,6 +210,14 @@ const MainNavigator = () => {
     console.log("message - - - ", message);
     dispatch(setSaveNotificationCount(notificationCount + 1));
 
+    if (message?.data?.type === "endjob") {
+      dispatch(setIsNewPackageDeliverd(notificationCount + 1));
+      let user = JSON.parse(message?.data?.user);
+      setMoverId(user.mover_id);
+      setPackageDetailsId(user.id);
+      setVisible(true);
+    }
+
     const channelId = await notifee.createChannel({
       id: "default",
       name: "Default Channel",
@@ -256,8 +268,44 @@ const MainNavigator = () => {
     });
   }, []);
 
+  const togglePopup = () => {
+    setVisible(!visible);
+  };
+
+  const onPressOkay = () => {
+    togglePopup();
+    setTimeout(() => {
+      navigationRef.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: Route.navDashboard,
+              state: {
+                routes: [
+                  {
+                    name: Route.navDeliveryCompleteAndRateDriver,
+                    params: {
+                      user_id: moverId,
+                      package_details_id: packageDetailsId,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        })
+      );
+    }, 500);
+  };
+
   return (
     <NavigationContainer ref={navigationRef} linking={linking}>
+      <DeliveryConfirmationPopup
+        visiblePopup={visible}
+        togglePopup={togglePopup}
+        onPressOkay={onPressOkay}
+      />
       <MainStack />
     </NavigationContainer>
   );

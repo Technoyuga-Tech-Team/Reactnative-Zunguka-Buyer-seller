@@ -6967,6 +6967,11 @@ react-native-animatable@^1.4.0:
   dependencies:
     prop-types "^15.8.1"
 
+react-native-blur-effect@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-blur-effect/-/react-native-blur-effect-1.1.3.tgz#cb5f3f267fb8babe03c83b95f754d74d5d989884"
+  integrity sha512-WNVEM/GklIeYNjWIIJz+bfmPBu5Wq9cjIRk0SUCSBJ7fHX9AS5chQ7a9m55LvDJThDuQkaEGMTgNqgQ7ZJKBXw==
+
 react-native-bootsplash@^5.5.3:
   version "5.5.3"
   resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-5.5.3.tgz#341a2b3df7609ef7cb1a88063dcac17aab0a28f8"
