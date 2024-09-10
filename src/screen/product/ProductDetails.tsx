@@ -249,11 +249,7 @@ const ProductDetails: React.FC<
   };
 
   const onPressStopPublish = async () => {
-    // productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
-    //   ? setProductStatus(PRODUCT_STATUS_DRAFT.DRAFT)
-    //   : setProductStatus(PRODUCT_STATUS_DRAFT.ACTIVE);
     const formData = new FormData();
-    console.log("productDetails?.id", productDetails?.id);
     formData.append("item_id", productDetails?.id);
     const result = await dispatch(publishUnpublishProduct({ formData }));
     if (publishUnpublishProduct.fulfilled.match(result)) {
@@ -266,8 +262,6 @@ const ProductDetails: React.FC<
       console.log("errror publishUnpublishProduct --->", result.payload);
     }
   };
-
-  console.log("productStatus", productStatus);
 
   return (
     <KeyboardAwareScrollView

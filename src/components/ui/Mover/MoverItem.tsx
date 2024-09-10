@@ -133,7 +133,7 @@ const MoverItem: React.FC<MoverItemProps> = ({ item, onPressHire }) => {
               width={15}
             />
             <Text numberOfLines={1} style={style?.txtLocationRate}>
-              {item?.address || item?.city}
+              {item?.sector || item?.address}
             </Text>
           </TouchableOpacity>
         </View>

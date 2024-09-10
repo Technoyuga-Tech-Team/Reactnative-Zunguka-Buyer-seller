@@ -18,12 +18,14 @@ import RatingBox from "../RatingBox";
 import { CustomTxtInput } from "../CustomTextInput";
 import CustomButton from "../CustomButton";
 import { selectMoverInfo } from "../../../store/settings/settings.selectors";
+import { UserData } from "../../../types/user.types";
 
 interface RatingPopupProps {
   visiblePopup: boolean;
   togglePopup: () => void;
   isLoading: boolean;
   onPressConfirmSendReview: (rate: number, comment: string) => void;
+  moverData?: UserData;
 }
 
 const RatingPopup: React.FC<RatingPopupProps> = ({
@@ -31,6 +33,7 @@ const RatingPopup: React.FC<RatingPopupProps> = ({
   togglePopup,
   onPressConfirmSendReview,
   isLoading,
+  moverData,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
@@ -39,6 +42,8 @@ const RatingPopup: React.FC<RatingPopupProps> = ({
   const moverItem = useSelector(selectMoverInfo);
   const [currentRating, setCurrentRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
+
+  let moverDetails = moverData || moverItem;
 
   useEffect(() => {
     setCurrentRating(0);
@@ -76,7 +81,7 @@ const RatingPopup: React.FC<RatingPopupProps> = ({
           {/* {isLoading ? (
             <ActivityIndicator color={theme.colors?.primary} />
           ) : ( */}
-          <>{moverItem && <MoverItem item={moverItem} />}</>
+          <>{moverDetails && <MoverItem item={moverDetails} />}</>
           {/* // )} */}
           <RatingBox
             rating={currentRating}
@@ -147,7 +152,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
   },
   txtDesc: {
     height: Scale(123),
-    backgroundColor: theme?.colors?.lightGrey,
+    backgroundColor: theme?.colors?.borderButtonColor,
     paddingLeft: 10,
     paddingTop: 5,
     borderRadius: 4,

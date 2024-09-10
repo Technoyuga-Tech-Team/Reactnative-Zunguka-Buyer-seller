@@ -52,38 +52,20 @@ const DeliveryDetails1: React.FC<
   }, []);
 
   const getDeliveryDetails = async () => {
-    if (from_mover) {
-      const result = await dispatch(
-        orderDetails({
-          package_details_id,
-        })
-      );
-      if (orderDetails.fulfilled.match(result)) {
-        if (result.payload.status == 1) {
-          setDeliveryDetailsData(result.payload.data);
-        }
-      } else {
-        if (result.payload?.status == 0) {
-          setDeliveryDetailsData({});
-        }
-        console.log("errror orderDetails --->", result.payload);
+    const result = await dispatch(
+      deliveryDetailsWithOTP({
+        package_details_id,
+      })
+    );
+    if (deliveryDetailsWithOTP.fulfilled.match(result)) {
+      if (result.payload.status == 1) {
+        setDeliveryDetailsData(result.payload.data);
       }
     } else {
-      const result = await dispatch(
-        deliveryDetailsWithOTP({
-          package_details_id,
-        })
-      );
-      if (deliveryDetailsWithOTP.fulfilled.match(result)) {
-        if (result.payload.status == 1) {
-          setDeliveryDetailsData(result.payload.data);
-        }
-      } else {
-        if (result.payload?.status == 0) {
-          setDeliveryDetailsData({});
-        }
-        console.log("errror deliveryDetailsWithOTP --->", result.payload);
+      if (result.payload?.status == 0) {
+        setDeliveryDetailsData({});
       }
+      console.log("errror deliveryDetailsWithOTP --->", result.payload);
     }
   };
 
@@ -106,12 +88,9 @@ const DeliveryDetails1: React.FC<
           index: 0,
           routes: [
             {
-              name: Route.navBuyerSellerStack,
+              name: Route.navDashboard,
               state: {
-                routes: [
-                  { name: Route.navDashboard },
-                  { name: Route.navRequestToMover },
-                ],
+                routes: [{ name: Route.navRequestToMover }],
               },
             },
           ],
@@ -142,9 +121,9 @@ const DeliveryDetails1: React.FC<
       : status === "startjob"
       ? "Ongoing Job"
       : status === "completed"
-      ? "Start This Job"
+      ? "Delivery location"
       : status === "confirmed"
-      ? "Waiting For Payment"
+      ? "yet to start job"
       : status;
   };
 
@@ -183,7 +162,7 @@ const DeliveryDetails1: React.FC<
               phone_number: deliveryDetailsData?.phone_number,
               vehicle_type: deliveryDetailsData?.vehicle_type,
               rate: deliveryDetailsData?.rate,
-              address: deliveryDetailsData?.city,
+              address: deliveryDetailsData?.city || "Kigali",
               avg_rate: deliveryDetailsData?.avg_rate,
             }}
           />

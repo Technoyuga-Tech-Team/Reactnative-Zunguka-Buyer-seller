@@ -359,7 +359,6 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
           customButton={(props) => (
             <CustomButton
               onPress={() => {
-                console.log("selectedPaymentMethod", selectedPaymentMethod);
                 if (selectedPaymentMethod !== "") {
                   if (selectedPaymentMethod == "earning") {
                     paymentDepositSeller(null);

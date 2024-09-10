@@ -10,6 +10,7 @@ export type TopRoutes = {
   ClosedItems: undefined;
   ProductDetails: { itemId: number };
   ArchivedProductDetails: { item: ProductDataProps };
+  RequestToMover: undefined;
 };
 
 export type AppRoutes = {
@@ -81,6 +82,7 @@ export type AppRoutes = {
   MySavedKeyword: undefined;
   PayMover: { package_details_id: string; price: string };
   Withdraw: { earning: string };
+  PayoutHistory: undefined;
 };
 
 export type AuthenticationRoutes = {

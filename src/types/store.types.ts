@@ -7,6 +7,7 @@ import { ProductState } from "./product.types";
 import { PaymentCardState } from "./payment.types";
 import { MyEarningState } from "./myEarning.types";
 import { MoverBookingState } from "./moverBooking.types";
+import { PackageStatusState } from "./packageStatus.types";
 
 export interface RootReduxState {
   global: GlobalState;
@@ -17,6 +18,7 @@ export interface RootReduxState {
   paymentCard: PaymentCardState;
   myEarning: MyEarningState;
   moverBooking: MoverBookingState;
+  packageStatus: PackageStatusState;
 }
 
 export type AppDispatch = ThunkDispatch<

@@ -16,6 +16,7 @@ import Scale from "../../utils/Scale";
 import { moverRequestedDetails } from "../../store/MoverBooking/moverBooking.thunk";
 import { selectMoverBookingLoading } from "../../store/MoverBooking/moverBooking.selectors";
 import PickupsListing from "../../components/PickupsListing";
+import { socket, socketEvent } from "../../utils/socket";
 
 const RequestToMover: React.FC<
   HomeNavigationProps<Route.navRequestToMover>
@@ -28,6 +29,24 @@ const RequestToMover: React.FC<
   const loading = useSelector(selectMoverBookingLoading);
 
   const [requestData, setRequestData] = useState<any[]>([]);
+  console.log("requestData", requestData);
+  useEffect(() => {
+    socket.on(socketEvent.COMPLETED_TASK, (task) => {
+      console.log("task - - - - - -- - - ", task);
+      if (task.item_id) {
+        let data = [...requestData];
+        console.log("requestData", requestData);
+        data?.length > 0 &&
+          data.map((ele) => {
+            if (ele.id == task.item_id) {
+              return (ele.status = "completed");
+            }
+          });
+        console.log("data - - - - - - ", data);
+        setRequestData(data);
+      }
+    });
+  }, [requestData]);
 
   useEffect(() => {
     getMoverRequestedData();
@@ -80,36 +99,36 @@ const RequestToMover: React.FC<
   };
 
   const onPressItem = (item: any) => {
-    if (item.status === "pending") {
-      dispatch(
-        setErrors({
-          message: "The Mover has not accepted your request yet!",
-          status: 0,
-          statusCode: null,
-        })
-      );
-    } else if (item.status === "completed") {
-      dispatch(
-        setErrors({
-          message: "The mover has not started the job yet.",
-          status: 0,
-          statusCode: null,
-        })
-      );
-    } else if (item.status === "confirmed") {
-      navigation.navigate(Route.navPaymentToMover, {
-        pickup_Address: item.pickup_point_address,
-        delivery_Address: item.delivery_point_address,
-        price: item.price,
-        item_name: item.item_name,
-        package_details_id: item.id,
-      });
-    } else {
+    if (item.status === "completed") {
       navigation.navigate(Route.navDeliveryDetails1, {
         package_details_id: item.id,
         from: "buyer-seller",
       });
     }
+    // if (item.status === "pending") {
+    //   dispatch(
+    //     setErrors({
+    //       message: "The Mover has not accepted your request yet!",
+    //       status: 0,
+    //       statusCode: null,
+    //     })
+    //   );
+    // } else if (item.status === "completed") {
+    //   dispatch(
+    //     setErrors({
+    //       message: "The mover has not started the job yet.",
+    //       status: 0,
+    //       statusCode: null,
+    //     })
+    //   );
+    // } else if (item.status === "confirmed") {
+
+    // } else {
+    //   // navigation.navigate(Route.navDeliveryDetails1, {
+    //   //   package_details_id: item.id,
+    //   //   from: "buyer-seller",
+    //   // });
+    // }
   };
 
   const onRefresh = () => {
@@ -182,10 +201,5 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-  },
-  txtPackageDetails: {
-    fontSize: theme.fontSize?.fs20,
-    fontFamily: theme.fontFamily?.regular,
-    color: theme.colors?.white,
   },
 }));

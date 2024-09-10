@@ -21,6 +21,8 @@ interface ProductProps {
   onEndReached?: () => void;
   isLoading?: boolean;
   showLoadMore?: boolean;
+  fromClosedItem?: boolean;
+  onPressHireMover?: (itemId: number) => void;
 }
 
 const ProductListing: React.FC<ProductProps> = ({
@@ -30,13 +32,22 @@ const ProductListing: React.FC<ProductProps> = ({
   onEndReached,
   isLoading,
   showLoadMore,
+  fromClosedItem = false,
+  onPressHireMover,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
   const renderItem = ({ item }: { item: ProductDataProps }) => {
-    return <ProductItem item={item} onPress={() => onPress(item.id, item)} />;
+    return (
+      <ProductItem
+        item={item}
+        fromClosedItem={fromClosedItem}
+        onPress={() => onPress(item.id, item)}
+        onPressHireMover={() => onPressHireMover && onPressHireMover(item.id)}
+      />
+    );
   };
 
   const ItemSeparator = () => {

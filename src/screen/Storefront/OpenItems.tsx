@@ -21,13 +21,10 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
-  const [visiblePopup, setVisiblePopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-
-  console.log("dealsData", dealsData);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -53,7 +50,6 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
       );
 
       const data = await response.json();
-      console.log("data", data);
 
       // Handle the fetched data here
       if (data.status === 1) {

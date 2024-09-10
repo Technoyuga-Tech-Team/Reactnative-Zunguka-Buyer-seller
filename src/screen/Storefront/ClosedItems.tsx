@@ -12,6 +12,7 @@ import { MyFrontStoreNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
+import { sendRequestToNearbyMovers } from "../../store/Product/product.thunk";
 
 const ClosedItems: React.FC<
   MyFrontStoreNavigationProps<Route.navClosedItems>
@@ -79,14 +80,34 @@ const ClosedItems: React.FC<
     navigation.navigate(Route.navArchivedProductDetails, { item: item });
   };
 
+  const onPressHireMover = async (itemId: number) => {
+    try {
+      const formData = new FormData();
+      formData.append("item_id", itemId);
+      const result = await dispatch(sendRequestToNearbyMovers({ formData }));
+      if (sendRequestToNearbyMovers.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          getClosedData(10, 1);
+          navigation.navigate(Route.navRequestToMover);
+          console.log("result sendRequestToNearbyMovers --->", result.payload);
+        }
+      } else {
+        console.log("errror sendRequestToNearbyMovers --->", result.payload);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <View style={style.container}>
       <ProductListing
         productData={dealsData}
         onPress={(itemId, item) => onPressProductItem(itemId, item)}
+        onPressHireMover={(itemId) => onPressHireMover(itemId)}
         onEndReached={onEndReached}
         isLoading={loading}
         showLoadMore={page <= totalPage}
+        fromClosedItem={true}
       />
     </View>
   );

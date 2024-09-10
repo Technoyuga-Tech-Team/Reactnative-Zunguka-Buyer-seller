@@ -81,6 +81,8 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
       const data = await response.json();
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
+        console.log("data - - - - -", data?.data?.data);
+
         setLoading(false);
         setMyEarningData([...myEarningData, ...data?.data?.data]);
         setTotalEarning(data?.data?.total_earning);
@@ -108,7 +110,7 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
   };
 
   const onPressShowPayoutHistory = () => {
-    // navigation.navigate(Route.navPayoutHistory);
+    navigation.navigate(Route.navPayoutHistory);
   };
 
   const onPressBack = () => {
@@ -146,13 +148,9 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={HIT_SLOP2}
-            // onPress={onPressShowPayoutHistory}
+            onPress={onPressShowPayoutHistory}
           >
-            <PayoutHistory
-              color={theme.colors?.transparent}
-              height={18}
-              width={18}
-            />
+            <PayoutHistory color={theme.colors?.white} height={18} width={18} />
           </TouchableOpacity>
         </View>
         <View style={style.firstCont}>
@@ -184,6 +182,7 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
           data={myEarningData}
           isCompleted={true}
           isFromMover={true}
+          fromJobHistory={false}
           onPress={() => {}}
           onPressRating={() => {}}
           onEndReached={onEndReached}

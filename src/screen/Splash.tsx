@@ -107,24 +107,6 @@ const Splash: React.FC<SplashScreenProps> = () => {
               );
             }
           }
-
-          // if (steps !== 2) {
-          //   if (steps == 0) {
-          //     dispatch(saveAddress(""));
-          //     // @ts-ignore
-          //     navigation.navigate(Route.navYourAddress, { fromOTP: true }); // here i have take fromOTP only for navigate to the login screen back from your address
-          //   } else if (steps == 1) {
-          //     // @ts-ignore
-          //     navigation.navigate(Route.navAddKyc, { fromOTP: true });
-          //   }
-          // } else {
-          //   navigation.dispatch(
-          //     CommonActions.reset({
-          //       index: 0,
-          //       routes: [{ name: Route.navDashboard }],
-          //     })
-          //   );
-          // }
         }
       } else {
         if (await appAlreadyOpen()) {

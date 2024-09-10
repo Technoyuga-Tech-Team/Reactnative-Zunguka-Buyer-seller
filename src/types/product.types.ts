@@ -29,6 +29,7 @@ export interface ProductDataProps {
   brand: brandInfo;
   color: string;
   condition_of_item: string;
+  is_delivery_button: boolean;
 }
 export interface productImage {
   item_id: number;

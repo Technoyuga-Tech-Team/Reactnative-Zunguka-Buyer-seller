@@ -46,6 +46,8 @@ import PayMover from "../screen/delivery/PayMover";
 import DeliveryDetails1 from "../screen/delivery/DeliveryDetails1";
 import DeliveryCompleteAndRateDriver from "../screen/delivery/DeliveryCompleteAndRateDriver";
 import PurchasedHistory from "../screen/profile/PurchasedHistory";
+import JobHistory from "../screen/JobHistory";
+import PayoutHistory from "../screen/profile/PayoutHistory";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -176,6 +178,11 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navPurchasedHistory}
             component={PurchasedHistory}
+          />
+          <Stack.Screen name={Route.navJobHistory} component={JobHistory} />
+          <Stack.Screen
+            name={Route.navPayoutHistory}
+            component={PayoutHistory}
           />
         </Stack.Navigator>
       </BottomSheetModalProvider>

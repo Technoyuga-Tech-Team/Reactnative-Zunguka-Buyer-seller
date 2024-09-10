@@ -202,6 +202,9 @@ const settings = createSlice({
     setIsNewPackageDeliverd: (state, action: PayloadAction<number>) => {
       state.isNewPackageDelivered = action.payload;
     },
+    setMoverInfo: (state, action: PayloadAction<UserData>) => {
+      state.moverInfo = action.payload;
+    },
   },
 });
 
@@ -216,6 +219,7 @@ export const {
   setProductInfo,
   setSelectedDeliveryAddress,
   setIsNewPackageDeliverd,
+  setMoverInfo,
 } = settings.actions;
 
 export default settings.reducer;

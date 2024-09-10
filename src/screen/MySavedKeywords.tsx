@@ -64,7 +64,6 @@ const MySavedKeywords: React.FC<
         },
       });
       const data = await response.json();
-      console.log("data", data?.data);
       // Handle the fetched data here
       if (data && data?.data?.length > 0) {
         setKeywords("");

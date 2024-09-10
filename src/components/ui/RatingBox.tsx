@@ -77,8 +77,8 @@ const RatingBox = ({
             emptyStar={
               <StarIcon
                 color={theme.colors?.borderButtonColor}
-                height={14}
-                width={14}
+                height={26}
+                width={26}
                 style={{ marginRight: 5 }}
               />
             }

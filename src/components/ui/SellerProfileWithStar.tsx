@@ -27,10 +27,10 @@ const SellerProfileWithStar: React.FC<SellerProfileWithStarProps> = ({
       <AppImage source={profile} style={style.profile} resizeMode="cover" />
       <View style={style.innerCont}>
         <Text style={style.txtName}>{userData?.username}</Text>
-        <View style={style.rateCont}>
+        {/* <View style={style.rateCont}>
           <RatingBox rating={3} onlyStar={true} />
           <Text style={style.txtRatingCount}>(17)</Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );

@@ -13,6 +13,7 @@ interface PackageItemProps {
   onPress: () => void;
   onPressRating: () => void;
   isFromMover?: boolean;
+  fromJobHistory?: boolean;
 }
 
 const PackageItem: React.FC<PackageItemProps> = ({
@@ -21,12 +22,15 @@ const PackageItem: React.FC<PackageItemProps> = ({
   onPress,
   onPressRating,
   isFromMover,
+  fromJobHistory,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const isReviewPending = item.is_rating == 0;
   const date = moment(item.created_at).format("MMM DD, yyyy hh:mm a");
+  let price = fromJobHistory ? item?.price : item?.order.amount;
+  let orderId = fromJobHistory ? item?.order : item?.order?.order_id;
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -35,7 +39,7 @@ const PackageItem: React.FC<PackageItemProps> = ({
     >
       <View style={style.innerCont}>
         <Text numberOfLines={1} style={style.txtAddress}>
-          order {item?.order?.order_id}
+          order {orderId}
         </Text>
         <Text
           style={[
@@ -45,7 +49,7 @@ const PackageItem: React.FC<PackageItemProps> = ({
             },
           ]}
         >
-          {RWF} {item?.amount}
+          {RWF} {price}
         </Text>
       </View>
       <View style={style.innerCont}>

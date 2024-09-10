@@ -39,6 +39,7 @@ export type UserData = {
   step: number;
   profile_percentage: number;
   address: string;
+  sector: string;
   insurance_number: string;
   insurance_copies: string;
   address_proofs: string;

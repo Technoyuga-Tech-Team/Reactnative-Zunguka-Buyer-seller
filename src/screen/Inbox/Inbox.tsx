@@ -101,6 +101,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flex: 1,
     backgroundColor: theme.colors?.background,
     paddingTop: props.insets.top,
+    paddingBottom: props.insets.bottom + 10,
   },
   txtHeaderTitle: {
     fontSize: theme.fontSize?.fs20,

@@ -10,7 +10,10 @@ import { useTheme } from "react-native-elements";
 import Snackbar from "react-native-snackbar";
 import { useSelector } from "react-redux";
 // Relative path
-import notifee, { AuthorizationStatus } from "@notifee/react-native";
+import notifee, {
+  AuthorizationStatus,
+  Notification,
+} from "@notifee/react-native";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import messaging, {
   FirebaseMessagingTypes,
@@ -180,23 +183,34 @@ const MainNavigator = () => {
   };
 
   const handleClickedNotitfaction = (
-    notification: FirebaseMessagingTypes.RemoteMessage
+    notification: FirebaseMessagingTypes.RemoteMessage | Notification
   ): void => {
-    // if (notification && notification.data && notification.data.type) {
-    //   switch (notification.data.type) {
-    //     case "Product":
-    //       // set default type wise
-    //       break;
-    //     case "Category":
-    //       // set default type wise
-    //       break;
-    //     case "Brand":
-    //       // set default type wise
-    //       break;
-    //     default:
-    //     // set default notification
-    //   }
-    // }
+    if (notification && notification.data && notification.data.type) {
+      switch (notification.data.type) {
+        case "new_message":
+          const user = notification.data.user as string;
+          let data = JSON.parse(user);
+          let product_id = notification?.data?.chat_ref_id;
+          // @ts-ignore
+          navigationRef.navigate(Route.navChatroom, {
+            receiver_id: data?.id,
+            product_id: product_id,
+          });
+          break;
+        case "new_item":
+          let itemId = notification?.data?.ref_id;
+          // @ts-ignore
+          navigationRef.navigate(Route.navProductDetails, { itemId: itemId });
+          // set default type wise
+          break;
+        case "Brand":
+          // set default type wise
+          break;
+        default:
+          null;
+        // set default notification
+      }
+    }
   };
 
   notifee.onBackgroundEvent(async (localMessage) => {
@@ -204,6 +218,7 @@ const MainNavigator = () => {
       "notifee setBackgroundMessageHandler localMessage",
       JSON.stringify(localMessage)
     );
+    handleClickedNotitfaction(localMessage.detail.notification);
   });
 
   const onNotifeeMessageReceived = async (message: any) => {
@@ -229,6 +244,7 @@ const MainNavigator = () => {
       data: message.data,
       android: {
         channelId: channelId,
+        sound: "default",
         pressAction: {
           id: "default",
         },

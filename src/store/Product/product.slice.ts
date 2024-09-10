@@ -4,6 +4,7 @@ import {
   addProductForSell,
   addProductSearchFilter,
   publishUnpublishProduct,
+  sendRequestToNearbyMovers,
   sendTheMessage,
 } from "./product.thunk";
 import { ProductState } from "../../types/product.types";
@@ -23,7 +24,8 @@ const product = createSlice({
           addProductForSell.pending,
           addProductSearchFilter.pending,
           sendTheMessage.pending,
-          publishUnpublishProduct.pending
+          publishUnpublishProduct.pending,
+          sendRequestToNearbyMovers.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -35,10 +37,12 @@ const product = createSlice({
           addProductSearchFilter.fulfilled,
           sendTheMessage.fulfilled,
           publishUnpublishProduct.fulfilled,
+          sendRequestToNearbyMovers.fulfilled,
           addProductForSell.rejected,
           addProductSearchFilter.rejected,
           sendTheMessage.rejected,
-          publishUnpublishProduct.rejected
+          publishUnpublishProduct.rejected,
+          sendRequestToNearbyMovers.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

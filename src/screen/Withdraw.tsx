@@ -49,7 +49,7 @@ const Withdraw: React.FC<MainNavigationProps<Route.navWithdraw>> = ({
         setErrors("");
         setAmount("");
         dispatch(setSuccess(result.payload?.message));
-        // navigation.navigate(Route.navPayoutHistory);
+        navigation.navigate(Route.navPayoutHistory);
       }
     } else {
       console.log("errror getMyEarningData --->", result.payload);

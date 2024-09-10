@@ -15,14 +15,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ item }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const time = moment(item?.created_at).startOf("hour").fromNow();
+  const profile = item.user.profile_image || Images.PLACEHOLDER_IMAGE;
   return (
     <View style={style.container}>
       <View style={style.imgCont}>
-        <AppImage
-          source={Images.EMPTY_PRODUCT_IMAGE}
-          style={style.profile}
-          resizeMode="cover"
-        />
+        <AppImage source={profile} style={style.profile} resizeMode="cover" />
       </View>
       <View style={style.txtCont}>
         <Text style={style.txtTitle}>{item.message}</Text>

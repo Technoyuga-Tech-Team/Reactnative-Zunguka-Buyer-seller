@@ -16,40 +16,17 @@ interface PickupItemProps {
   onPressShowDetails: () => void;
 }
 
-const getStatusStrings = (status: string, fromRequestPage: boolean) => {
-  if (fromRequestPage) {
-    return status === "pending"
-      ? "Request Pending"
-      : status === "startjob"
-      ? "Ongoing Job"
-      : status === "completed"
-      ? "Wait For The Start Job"
-      : status === "confirmed"
-      ? "Pay To Mover"
-      : "";
-  } else {
-    return status === "pending"
-      ? "Request Pending"
-      : status === "startjob"
-      ? "Ongoing Job"
-      : status === "completed"
-      ? "Start This Job"
-      : status === "confirmed"
-      ? "Waiting For Payment"
-      : "";
-  }
-};
-
-const getColorFromStatus = (status: string, theme: Partial<FullTheme>) => {
+const getStatusStrings = (status: string) => {
+  console.log("status", status);
   return status === "pending"
-    ? theme.colors?.primary
+    ? "Request Pending"
     : status === "startjob"
-    ? theme.colors?.primary
+    ? "Ongoing Job"
     : status === "completed"
-    ? theme.colors?.primary
+    ? "Delivery location"
     : status === "confirmed"
-    ? theme.colors?.primary
-    : theme.colors?.primaryText;
+    ? "yet to start job"
+    : "";
 };
 
 const PickupItem: React.FC<PickupItemProps> = ({
@@ -120,7 +97,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
               },
             ]}
           >
-            {getStatusStrings(item.status, fromRequestPage)}
+            {getStatusStrings(item.status)}
             {/* {item.status} */}
           </Text>
           {/* {isfromMover && (

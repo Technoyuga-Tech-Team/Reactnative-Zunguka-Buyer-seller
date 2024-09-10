@@ -35,6 +35,9 @@ import ChatIcon from "../../components/ui/svg/ChatIcon";
 import BellIcon from "../../components/ui/svg/BellIcon";
 import AlertIcon from "../../components/ui/svg/AlertIcon";
 import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
+import PackageIcon from "../../components/ui/svg/PackageIcon";
+import { logout } from "../../store/authentication/authentication.thunks";
+import DeleteIcon from "../../components/ui/svg/DeleteIcon";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -46,6 +49,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const userData = useSelector(selectUserData);
 
   const [visible, setVisible] = useState(false);
+  const [title1, setTitle1] = useState("");
+  const [title2, setTitle2] = useState("");
+  const [title3, setTitle3] = useState("");
+
+  const [popupType, setPopupType] = useState(1);
 
   const [profilePicture, setProfilePicture] = useState<string>(
     userData?.profile_image
@@ -77,7 +85,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
       await GoogleSignin.signOut();
     }
     setVisible(false);
-    // dispatch(logout());
+    dispatch(logout());
     await setData(secureStoreKeys.JWT_TOKEN, null);
     await setData(USER_DATA, null);
     // @ts-ignore
@@ -90,7 +98,20 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     );
   };
 
+  const deleteAccount = () => {};
+
   const onPressLogoutPopup = () => {
+    setPopupType(1);
+    setTitle1("Log Out?");
+    setTitle2("Are you sure you want to log out from Zunguka?");
+    setTitle3("Yes, Log Out");
+    setVisible(true);
+  };
+  const onPressDeleteAccount = () => {
+    setPopupType(0);
+    setTitle1("Delete Account?");
+    setTitle2("Are you sure you want to delete this account?");
+    setTitle3("Yes, Delete");
     setVisible(true);
   };
   const onPressMyProfile = () => {
@@ -104,6 +125,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   };
   const onPressPurchasedHistory = () => {
     navigation.navigate(Route.navPurchasedHistory);
+  };
+  const onPressJobHistroy = () => {
+    navigation.navigate(Route.navJobHistory);
   };
   const onPressMyEarnings = () => {
     navigation.navigate(Route.navEarnings);
@@ -155,25 +179,26 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           icon={<TagfillIcon color={theme.colors?.primary} />}
           onPress={onPressMyItems}
         />
-        <ProfileItem
-          name="Request page"
-          icon={<AlertIcon color={theme.colors?.primary} />}
-          onPress={onPressRequestPage}
-        />
+
         <ProfileItem
           name="Masseges"
           icon={<ChatIcon color={theme.colors?.primary} />}
           onPress={onPressMessages}
         />
-        <ProfileItem
+        {/* <ProfileItem
           name="Card Details"
           icon={<CreditcardIcon color={theme.colors?.primary} />}
           onPress={onPressCardDetails}
-        />
+        /> */}
         <ProfileItem
           name="My Earnings"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressMyEarnings}
+        />
+        <ProfileItem
+          name="Request page"
+          icon={<AlertIcon color={theme.colors?.primary} />}
+          onPress={onPressRequestPage}
         />
         <ProfileItem
           name="Transaction History"
@@ -192,6 +217,13 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressPurchasedHistory}
         />
         <ProfileItem
+          name="Job History"
+          icon={
+            <PackageIcon color={theme.colors?.primary} height={24} width={24} />
+          }
+          onPress={onPressJobHistroy}
+        />
+        <ProfileItem
           name="My Keywords"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressKeywords}
@@ -205,8 +237,47 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           icon={<DocslistIcon color={theme.colors?.primary} />}
         />
       </KeyboardAwareScrollView>
-      <View style={{ marginHorizontal: 20 }}>
+      <View
+        style={{
+          marginHorizontal: 20,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingTop: 10,
+        }}
+      >
         <CustomButton
+          onPress={onPressDeleteAccount}
+          title={"Delete Account"}
+          buttonWidth="half"
+          width={(SCREEN_WIDTH - 50) / 2}
+          variant="secondary"
+          type="outline"
+          borderColor={theme?.colors?.red}
+          titleStyle={style.txtTitleStyle}
+          icon={
+            <DeleteIcon
+              height={18}
+              width={18}
+              color={theme.colors?.red}
+              style={{ marginRight: 5 }}
+            />
+          }
+        />
+        <CustomButton
+          onPress={onPressLogoutPopup}
+          title={"Logout"}
+          buttonWidth="half"
+          width={(SCREEN_WIDTH - 50) / 2}
+          variant="secondary"
+          type="outline"
+          borderColor={theme?.colors?.red}
+          titleStyle={style.txtTitleStyle}
+          icon={
+            <LogoutIcon color={theme.colors?.red} style={{ marginRight: 5 }} />
+          }
+        />
+        {/* <CustomButton
           onPress={onPressLogoutPopup}
           title={"Logout"}
           buttonWidth="full"
@@ -217,12 +288,21 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           containerStyle={style.btnLogout}
           buttonStyle={style.btnLogout1}
           titleStyle={style.txtTitleStyle}
-        />
+        /> */}
       </View>
       <LogoutPopup
+        title1={title1}
+        title2={title2}
+        title3={title3}
         visiblePopup={visible}
         togglePopup={togglePopup}
-        onPressLogout={onPressLogout}
+        onPressLogout={() => {
+          if (popupType == 1) {
+            onPressLogout();
+          } else {
+            deleteAccount();
+          }
+        }}
       />
     </View>
   );
@@ -235,10 +315,11 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flex: 1,
     backgroundColor: theme.colors?.background,
     paddingTop: props.insets.top,
-    paddingBottom: 100,
+    paddingBottom: props.insets.bottom + 80,
   },
   scrollCont: {
     flexGrow: 1,
+    paddingBottom: 10,
   },
   profileCont: {
     marginVertical: 20,

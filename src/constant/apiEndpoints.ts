@@ -40,6 +40,7 @@ export const API = {
   GET_SAVED_PRODUCTS: "/saved-items",
   GET_PURCHASED_PRODUCTS: "/purchased-history",
   STAR_STOP_PUBLISH_PRODUCT: "/stop_start_publising",
+  SEND_REQUEST_TO_NEARBY_MOVERS: "/send_request_to_nearby_movers",
   // dashboard
   GET_DASHBOARD: "/home",
   // notification
@@ -73,8 +74,8 @@ export const API = {
   ADD_RATING: "/add-rating",
   // my earning
   GET_MY_EARNING: "/my-earnings",
-  GET_PAYOUT_HISTORY: "/get-withdraw-requests",
-  SEND_PAYOUT_REQUEST: "/send_withdraw_request",
+  GET_PAYOUT_HISTORY: "/get-withdraw-requests-user",
+  SEND_PAYOUT_REQUEST: "/send_withdraw_request_user",
   // Delivery address
   ADD_DELIVERY_ADDRESS: "/add-delivery-address",
   UPDATE_DELIVERY_ADDRESS: "/update_delivery_address",

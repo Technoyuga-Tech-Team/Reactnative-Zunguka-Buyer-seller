@@ -178,3 +178,33 @@ export const publishUnpublishProduct = createAsyncThunk<
     return data;
   }
 );
+
+export const sendRequestToNearbyMovers = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/sendRequestToNearbyMovers",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.SEND_REQUEST_TO_NEARBY_MOVERS,
+          method: "POST",
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);

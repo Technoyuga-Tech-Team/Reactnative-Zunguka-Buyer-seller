@@ -16,6 +16,7 @@ interface PackageListProps {
   refreshControl?: React.ReactElement<RefreshControlProps>;
   isFromMover?: boolean;
   ListHeaderComponent?: React.JSX.Element;
+  fromJobHistory?: boolean;
 }
 
 const PackageList: React.FC<PackageListProps> = ({
@@ -28,6 +29,7 @@ const PackageList: React.FC<PackageListProps> = ({
   refreshControl,
   isFromMover = true,
   ListHeaderComponent,
+  fromJobHistory = false,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -40,6 +42,7 @@ const PackageList: React.FC<PackageListProps> = ({
         isCompleted={isCompleted}
         onPress={() => onPress(item)}
         isFromMover={isFromMover}
+        fromJobHistory={fromJobHistory}
         onPressRating={() => onPressRating(item)}
       />
     );
