@@ -6,6 +6,7 @@ import { TouchableWithoutFeedback } from "react-native";
 import Scale from "../../../utils/Scale";
 import FrameIcon from "../svg/FrameIcon";
 import CustomButton from "../CustomButton";
+import { SCREEN_WIDTH } from "../../../constant";
 
 interface DeliveryConfirmationPopupProps {
   visiblePopup: boolean;
@@ -45,6 +46,7 @@ const DeliveryConfirmationPopup: React.FC<DeliveryConfirmationPopupProps> = ({
                 onPress={onPressOkay}
                 title={"Okay"}
                 buttonWidth="half"
+                width={SCREEN_WIDTH - 100}
                 variant="primary"
                 type="solid"
               />

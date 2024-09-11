@@ -145,7 +145,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
   txtTitle1: {
     fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
-    color: theme.colors?.secondaryText,
+    color: theme.colors?.white,
     textAlign: "center",
     lineHeight: 16,
     marginTop: 10,

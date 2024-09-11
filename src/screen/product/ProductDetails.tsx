@@ -230,7 +230,7 @@ const ProductDetails: React.FC<
     if (is_OutOf_Kigali) {
       navigation.navigate(Route.navPayment, {
         deliveryPrice: "",
-        modeOfDelivery: "",
+        modeOfDelivery: "outofkigali",
       });
     } else {
       navigation.navigate(Route.navDeliveryAddress);

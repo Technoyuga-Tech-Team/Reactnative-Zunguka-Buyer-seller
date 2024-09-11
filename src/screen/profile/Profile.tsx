@@ -10,12 +10,16 @@ import CustomButton from "../../components/ui/CustomButton";
 import ProfileAndName from "../../components/ui/Profile/ProfileAndName";
 import ProfileItem from "../../components/ui/Profile/ProfileItem";
 import LogoutPopup from "../../components/ui/popups/LogoutPopup";
-import CreditcardIcon from "../../components/ui/svg/CreditcardIcon";
+import AlertIcon from "../../components/ui/svg/AlertIcon";
+import ChatIcon from "../../components/ui/svg/ChatIcon";
+import DeleteIcon from "../../components/ui/svg/DeleteIcon";
 import DocslistIcon from "../../components/ui/svg/DocslistIcon";
 import InfocircleIcon from "../../components/ui/svg/InfocircleIcon";
 import LogoutIcon from "../../components/ui/svg/LogoutIcon";
 import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
+import PackageIcon from "../../components/ui/svg/PackageIcon";
 import ProfileIcon from "../../components/ui/svg/ProfileIcon";
+import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
 import TagfillIcon from "../../components/ui/svg/TagfillIcon";
 import {
   GOOGLE_WEB_CLIENT_ID,
@@ -25,19 +29,15 @@ import {
 } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { logout } from "../../store/authentication/authentication.thunks";
 import { selectUserData } from "../../store/settings/settings.selectors";
-import { ThemeProps } from "../../types/global.types";
+import { setUserData } from "../../store/settings/settings.slice";
+import { deleteAccount } from "../../store/userprofile/userprofile.thunk";
+import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
-import { setUserData } from "../../store/settings/settings.slice";
-import ChatIcon from "../../components/ui/svg/ChatIcon";
-import BellIcon from "../../components/ui/svg/BellIcon";
-import AlertIcon from "../../components/ui/svg/AlertIcon";
-import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
-import PackageIcon from "../../components/ui/svg/PackageIcon";
-import { logout } from "../../store/authentication/authentication.thunks";
-import DeleteIcon from "../../components/ui/svg/DeleteIcon";
+import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -47,6 +47,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
+  const userLoading = useSelector(selectUserProfileLoading);
 
   const [visible, setVisible] = useState(false);
   const [title1, setTitle1] = useState("");
@@ -98,7 +99,35 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     );
   };
 
-  const deleteAccount = () => {};
+  const deleteYourAccount = async () => {
+    try {
+      const result = await dispatch(deleteAccount({}));
+      if (deleteAccount.fulfilled.match(result)) {
+        if (result.payload?.status === 1) {
+          console.log("response deleteAccount - - - ", result.payload);
+          if (userData?.is_social == 1) {
+            await GoogleSignin.signOut();
+          }
+          setVisible(false);
+          dispatch(logout());
+          await setData(secureStoreKeys.JWT_TOKEN, null);
+          await setData(USER_DATA, null);
+          // @ts-ignore
+          dispatch(setUserData({}));
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: Route.navAuthentication }],
+            })
+          );
+        }
+      } else {
+        console.log("errror deleteAccount --->", result.payload);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const onPressLogoutPopup = () => {
     setPopupType(1);
@@ -295,12 +324,13 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
         title2={title2}
         title3={title3}
         visiblePopup={visible}
+        loading={userLoading === LoadingState.CREATE}
         togglePopup={togglePopup}
         onPressLogout={() => {
           if (popupType == 1) {
             onPressLogout();
           } else {
-            deleteAccount();
+            deleteYourAccount();
           }
         }}
       />

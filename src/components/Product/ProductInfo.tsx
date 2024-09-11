@@ -13,6 +13,7 @@ import moment from "moment";
 import { getConditionItemValue } from "../../utils";
 import FilledHeartIcon from "../ui/svg/filledHeartIcon";
 import MessageOutlineIcon from "../ui/svg/MessageOutlineIcon";
+import { isEmpty, isUndefined } from "lodash";
 
 interface ProductInfoProps {
   productDetails: ProductDetailsDataProps | null;
@@ -53,6 +54,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   // productDetails?.district && productDetails?.sector
   //   ? `${productDetails?.district}, ${productDetails?.sector}`
   //   : productDetails?.address;
+
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
@@ -113,10 +115,14 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
               </Text>
             )}
           </View>
-          <View style={style.fdCont}>
-            <Text style={style.txtDetails1}>Brand</Text>
-            <Text style={style.txtDetails2}>{productDetails?.brand?.name}</Text>
-          </View>
+          {!isUndefined(productDetails?.brand?.name) && (
+            <View style={style.fdCont}>
+              <Text style={style.txtDetails1}>Brand</Text>
+              <Text style={style.txtDetails2}>
+                {productDetails?.brand?.name}
+              </Text>
+            </View>
+          )}
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Category</Text>
             <Text

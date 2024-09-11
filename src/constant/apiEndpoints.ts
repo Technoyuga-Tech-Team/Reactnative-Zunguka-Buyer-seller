@@ -24,6 +24,7 @@ export const API = {
   SAVE_KEYWORD: "/save-keyword",
   LIST_SAVED_KEYWORD: "/list-keyword",
   DELETE_KEYWORD: "/delete-keyword",
+  DELETE_ACCOUNT: "/delete-account",
   // product
   GET_ALL_DEALS: "/list-item",
   GET_CATEGORIES: "/categories",

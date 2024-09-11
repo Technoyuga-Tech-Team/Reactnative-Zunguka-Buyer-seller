@@ -296,17 +296,10 @@ const MainNavigator = () => {
           index: 0,
           routes: [
             {
-              name: Route.navDashboard,
-              state: {
-                routes: [
-                  {
-                    name: Route.navDeliveryCompleteAndRateDriver,
-                    params: {
-                      user_id: moverId,
-                      package_details_id: packageDetailsId,
-                    },
-                  },
-                ],
+              name: Route.navDeliveryCompleteAndRateDriver,
+              params: {
+                user_id: moverId,
+                package_details_id: packageDetailsId,
               },
             },
           ],

@@ -229,6 +229,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const paymentDepositSeller = async (data: RedirectParams | null) => {
     const formData = new FormData();
     formData.append("item_id", productInfo?.id);
+    console.log("modeOfDelivery", modeOfDelivery);
     modeOfDelivery && formData.append("mode_of_delivery", modeOfDelivery);
     formData.append("mode_of_payment", selectedPaymentMethod);
 

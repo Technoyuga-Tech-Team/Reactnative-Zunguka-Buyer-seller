@@ -81,7 +81,7 @@ const DeliveryCompleteAndRateDriver: React.FC<
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: Route.navBuyerSellerStack }],
+          routes: [{ name: Route.navDashboard }],
         })
       );
     }
@@ -104,7 +104,7 @@ const DeliveryCompleteAndRateDriver: React.FC<
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: Route.navBuyerSellerStack }],
+            routes: [{ name: Route.navDashboard }],
           })
         );
       }
@@ -266,7 +266,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   txtDesc: {
     height: Scale(123),
-    backgroundColor: theme?.colors?.lightGrey,
+    backgroundColor: theme?.colors?.textInputFieldBg,
     paddingLeft: 10,
     paddingTop: 5,
     borderRadius: 4,
@@ -289,7 +289,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   txtTitle1: {
     fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
-    color: theme.colors?.secondaryText,
+    color: theme.colors?.white,
     textAlign: "center",
     lineHeight: 16,
     marginTop: 10,

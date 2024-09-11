@@ -32,7 +32,7 @@ const RequestToMover: React.FC<
   console.log("requestData", requestData);
   useEffect(() => {
     socket.on(socketEvent.COMPLETED_TASK, (task) => {
-      console.log("task - - - - - -- - - ", task);
+      console.log("task - - - - - -- - - ", task, typeof task);
       if (task.item_id) {
         let data = [...requestData];
         console.log("requestData", requestData);

@@ -37,6 +37,7 @@ const DeliveryDetails1: React.FC<
   const loading = useSelector(selectMoverBookingLoading);
   const isPackageDeliverd = useSelector(getIsPackageDelivered);
 
+  const [distance, setDistance] = useState<string>("");
   const [visibleRatePopup, setVisibleRatePopup] = useState<boolean>(false);
   const [deliveryDetailsData, setDeliveryDetailsData] =
     useState<DeliveryDetailsData>({});
@@ -50,6 +51,46 @@ const DeliveryDetails1: React.FC<
       unsubscribe();
     };
   }, []);
+
+  const calculateDistance = (
+    currentLatitude: number,
+    currentLongitude: number,
+    destinationLatitude: number,
+    destinationLongitude: number
+  ) => {
+    var R = 6371; // km
+    var dLat = toRad(destinationLatitude - currentLatitude);
+    var dLon = toRad(destinationLongitude - currentLongitude);
+    var lat1 = toRad(currentLatitude);
+    var lat2 = toRad(destinationLatitude);
+
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d;
+  };
+
+  function toRad(Value: number) {
+    return (Value * Math.PI) / 180;
+  }
+
+  useEffect(() => {
+    let distance = calculateDistance(
+      Number(deliveryDetailsData.pickup_point_lat),
+      Number(deliveryDetailsData.pickup_point_lng),
+      Number(deliveryDetailsData.delivery_point_lat),
+      Number(deliveryDetailsData.delivery_point_lng)
+    );
+    setDistance(`${distance.toFixed(2)}`);
+    console.log("distance - - - ", distance);
+  }, [
+    deliveryDetailsData.pickup_point_lat,
+    deliveryDetailsData.pickup_point_lng,
+    deliveryDetailsData.delivery_point_lat,
+    deliveryDetailsData.delivery_point_lng,
+  ]);
 
   const getDeliveryDetails = async () => {
     const result = await dispatch(
@@ -193,6 +234,15 @@ const DeliveryDetails1: React.FC<
             numberOfLines={3}
             showblur={from_mover ? true : false}
           />
+          {distance && distance !== "" && (
+            <BorderBottomItem
+              title="Distance"
+              value={`${distance} KM`}
+              from_mover={false}
+              numberOfLines={3}
+              showblur={from_mover ? true : false}
+            />
+          )}
           {deliveryDetailsData?.item_size && (
             <BorderBottomItem
               title="Size"
