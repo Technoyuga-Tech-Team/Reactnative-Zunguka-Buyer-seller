@@ -192,7 +192,9 @@ const DeliveryDetails1: React.FC<
           />
         }
       >
-        {!from_mover && <PredefineOTPCodeView OTP={deliveryDetailsData?.otp} />}
+        {!from_mover && deliveryDetailsData?.otp && (
+          <PredefineOTPCodeView OTP={deliveryDetailsData?.otp} />
+        )}
         {deliveryDetailsData?.profile_image && (
           <MoverItem
             item={{
@@ -209,11 +211,11 @@ const DeliveryDetails1: React.FC<
           />
         )}
         <View style={{ flex: 1, marginTop: 10 }}>
-          <BorderBottomItem
+          {/* <BorderBottomItem
             title="Item name"
             value={deliveryDetailsData?.item_name}
             from_mover={false}
-          />
+          /> */}
           <BorderBottomItem
             title="Receiver"
             value={deliveryDetailsData?.receiver_name}

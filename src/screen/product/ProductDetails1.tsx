@@ -32,8 +32,8 @@ import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 
-const ProductDetails: React.FC<
-  HomeNavigationProps<Route.navProductDetails>
+const ProductDetails1: React.FC<
+  HomeNavigationProps<Route.navProductDetails1>
 > = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -278,7 +278,6 @@ const ProductDetails: React.FC<
 
   const onPressSimilarProduct = (id: number) => {
     console.log("id - - ", id);
-    navigation.navigate(Route.navProductDetails1, { itemId: id });
   };
 
   console.log("productDetails", productDetails);
@@ -317,7 +316,7 @@ const ProductDetails: React.FC<
       <ProductInfo
         productDetails={productDetails}
         onPressSavedItem={onPressSavedItem}
-        showSimilarItem={true}
+        showSimilarItem={false}
         onPressSimilarProduct={(id) => onPressSimilarProduct(id)}
         isProductLike={savedItem}
         productLikes={productLikes}
@@ -370,7 +369,7 @@ const ProductDetails: React.FC<
   );
 };
 
-export default ProductDetails;
+export default ProductDetails1;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {

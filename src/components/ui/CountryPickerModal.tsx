@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Text, TextInput, TouchableOpacity } from "react-native";
+import React from "react";
+import { Text, TouchableOpacity } from "react-native";
 import CountryPicker, {
-  Country,
   CountryCode,
   TranslationLanguageCodeMap,
-  getAllCountries,
 } from "react-native-country-picker-modal";
 import { makeStyles, useTheme } from "react-native-elements";
 import Scale from "../../utils/Scale";

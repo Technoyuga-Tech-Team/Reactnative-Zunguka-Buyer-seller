@@ -5,21 +5,20 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { HomeNavigationProps } from "../../types/navigation";
+import PickupsListing from "../../components/PickupsListing";
+import CustomHeader from "../../components/ui/CustomHeader";
+import NoDataFound from "../../components/ui/NoDataFound";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { setErrors } from "../../store/global/global.slice";
-import CustomHeader from "../../components/ui/CustomHeader";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import NoDataFound from "../../components/ui/NoDataFound";
-import Scale from "../../utils/Scale";
-import { moverRequestedDetails } from "../../store/MoverBooking/moverBooking.thunk";
 import { selectMoverBookingLoading } from "../../store/MoverBooking/moverBooking.selectors";
-import PickupsListing from "../../components/PickupsListing";
+import { moverRequestedDetails } from "../../store/MoverBooking/moverBooking.thunk";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import Scale from "../../utils/Scale";
 import { socket, socketEvent } from "../../utils/socket";
 
-const RequestToMover: React.FC<
-  HomeNavigationProps<Route.navRequestToMover>
+const OngoingMoverRequest: React.FC<
+  HomeNavigationProps<Route.navOngoingMoverRequest>
 > = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -104,31 +103,6 @@ const RequestToMover: React.FC<
       package_details_id: item.id,
       from: "buyer-seller",
     });
-    // }
-    // if (item.status === "pending") {
-    //   dispatch(
-    //     setErrors({
-    //       message: "The Mover has not accepted your request yet!",
-    //       status: 0,
-    //       statusCode: null,
-    //     })
-    //   );
-    // } else if (item.status === "completed") {
-    //   dispatch(
-    //     setErrors({
-    //       message: "The mover has not started the job yet.",
-    //       status: 0,
-    //       statusCode: null,
-    //     })
-    //   );
-    // } else if (item.status === "confirmed") {
-
-    // } else {
-    //   // navigation.navigate(Route.navDeliveryDetails1, {
-    //   //   package_details_id: item.id,
-    //   //   from: "buyer-seller",
-    //   // });
-    // }
   };
 
   const onRefresh = () => {
@@ -137,22 +111,19 @@ const RequestToMover: React.FC<
 
   return (
     <>
-      <SafeAreaView
-        style={{ flex: 0, backgroundColor: theme.colors?.primary }}
-      />
       <View style={style.container}>
         {/* {loading && loading === LoadingState.CREATE && <Loading />} */}
         <StatusBar
           backgroundColor={theme.colors?.primary}
           barStyle={"light-content"}
         />
-        <CustomHeader
+        {/* <CustomHeader
           title="Mover Request Page"
           isOutsideBack={true}
           onPressBackBtn={onPressBack}
           backgroundColor={theme.colors?.primary}
           textColor={theme.colors?.white}
-        />
+        /> */}
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
@@ -185,12 +156,11 @@ const RequestToMover: React.FC<
   );
 };
 
-export default RequestToMover;
+export default OngoingMoverRequest;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
     flex: 1,
-    paddingTop: props.insets.top,
     // backgroundColor: theme.colors?.background,
   },
   scrollcont: { paddingHorizontal: 20, flexGrow: 1 },

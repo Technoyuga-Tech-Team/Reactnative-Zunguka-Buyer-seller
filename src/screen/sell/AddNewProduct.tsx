@@ -61,6 +61,8 @@ import { getUrlExtension } from "../../utils";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
 import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
+import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
+import { notifyMessage } from "../../utils/notifyMessage";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -110,6 +112,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [checked, setChecked] = React.useState(false);
   const [checkedNotDamaged, setCheckedNotDamaged] = React.useState(false);
+  const [checkedSelfPickup, setCheckedSelfPickup] = React.useState(false);
 
   const [productImages, setProductImages] = useState<imagePickerProps[]>([]);
   const [productImageError, setProductImageError] = useState<string>("");
@@ -145,6 +148,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [subParantCat, setSubParantCat] = useState<string>("");
 
   const { data: categoriesData, isFetching } = useCategories();
+
+  useEffect(() => {
+    setAdjustResize();
+    return () => {
+      setAdjustPan();
+    };
+  }, []);
 
   useEffect(() => {
     if (parantCatName && subCatName) {
@@ -211,6 +221,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const toggleCheckbox = () => setChecked(!checked);
   const toggleCheckboxNotDamage = () =>
     setCheckedNotDamaged(!checkedNotDamaged);
+  const toggleCheckSelfPickup = () => setCheckedSelfPickup(!checkedSelfPickup);
 
   const onPressItem = (index: number) => {
     setSelectedConditionError("");
@@ -393,6 +404,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("description", productDescription);
       formData.append("mode_of_transport", vehicle.toLocaleLowerCase());
       formData.append("sale_price", productSellingPrice);
+      formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
 
       const result = await dispatch(addProductForSell({ formData: formData }));
 
@@ -508,8 +520,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <PickSellProduct
           images={productImages}
           setImages={(val) => {
-            setProductImageError("");
-            setProductImages(val);
+            if (val.length > 6) {
+              notifyMessage("Product Image length can't be more than 6");
+              setProductImageError("Product Image length can't be more than 6");
+            } else {
+              setProductImageError("");
+              setProductImages(val);
+            }
           }}
         />
         {(productImageError || productImages?.length <= 0) && (
@@ -530,9 +547,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             returnKeyType="next"
             returnKeyLabel="next"
             keyboardType={"default"}
-            iconPosition={"right"}
-            icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
-            onPressOuterRightIcon={onPressTitleIcon}
+            // iconPosition={"right"}
+            // icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            // onPressOuterRightIcon={onPressTitleIcon}
             onChangeText={onChangeProductTitle}
             onBlur={onBlurProductTitle}
             value={productTitle}
@@ -549,14 +566,14 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             returnKeyType="next"
             returnKeyLabel="next"
             keyboardType={"default"}
-            iconPosition={"right"}
-            icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            // iconPosition={"right"}
+            // icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
+            // onPressOuterRightIcon={onPressSelectCategory}
             value={subParantCat}
             error={productCategoryError}
             touched={productCategoryError !== ""}
             onPress={onPressSelectCategory}
             onPressIn={onPressSelectCategory}
-            onPressOuterRightIcon={onPressSelectCategory}
             editable={false}
             textInputStyle={style.inputWithoutBgColor}
             style={style.txtInputWithoutBgColor}
@@ -677,6 +694,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             text={
               "Moto, Cab and Tricycle apply only in city of Kigali. \nTransport costs vary for each mode you choose and are charged to the buyer."
             }
+          />
+        </View>
+        <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
+          <TermsAndCondition
+            checked={checkedSelfPickup}
+            toggleCheckbox={toggleCheckSelfPickup}
+            title="Self pickup available"
           />
         </View>
         <TitleWithInfoIcon title="Selling Price" />

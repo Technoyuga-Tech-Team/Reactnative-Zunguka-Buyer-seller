@@ -8,7 +8,7 @@ import { similarDataProps } from "../../types/product.types";
 
 interface SimilarProductListingProps {
   similarProductData: similarDataProps[] | undefined;
-  onPressProduct: (item: any) => void;
+  onPressProduct: (id: any) => void;
 }
 
 const SimilarProductListing: React.FC<SimilarProductListingProps> = ({
@@ -22,7 +22,7 @@ const SimilarProductListing: React.FC<SimilarProductListingProps> = ({
     return (
       <SimilarProductItem
         item={item}
-        onPressProduct={() => onPressProduct(item)}
+        onPressProduct={() => onPressProduct(item.id)}
       />
     );
   };

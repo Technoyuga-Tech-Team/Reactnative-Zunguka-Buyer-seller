@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   AppState,
+  PermissionsAndroid,
   Platform,
   RefreshControl,
   StatusBar,
@@ -32,6 +33,10 @@ import {
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { socket, socketEvent } from "../utils/socket";
+import notifee, {
+  AuthorizationStatus,
+  Notification,
+} from "@notifee/react-native";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -53,6 +58,37 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
   const [hotBrands, setHotBrands] = useState<HotBrandaDataProps[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(() => {
+    async function checkNotificationPermission() {
+      const settings = await notifee.getNotificationSettings();
+      if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
+        console.log("Notification permissions has been authorized");
+      } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
+        console.log("Notification permissions has been denied");
+        requestUserPermission();
+      }
+    }
+
+    checkNotificationPermission().then();
+  }, []);
+
+  const requestUserPermission = async () => {
+    if (Platform.OS === "ios") {
+      const settings = await notifee.requestPermission();
+
+      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+        console.log("Permission settings:", settings);
+      } else {
+        console.log("User declined permissions");
+        await notifee.requestPermission();
+      }
+    } else {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
+    }
+  };
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {

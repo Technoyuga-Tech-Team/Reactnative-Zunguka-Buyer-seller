@@ -112,6 +112,7 @@ export interface ProductDetailsDataProps {
   likes_count: number;
   sector: string;
   district: string;
+  is_selfpickup_available: number;
   similar_products: similarDataProps[];
 }
 

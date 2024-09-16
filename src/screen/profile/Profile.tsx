@@ -109,7 +109,6 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             await GoogleSignin.signOut();
           }
           setVisible(false);
-          dispatch(logout());
           await setData(secureStoreKeys.JWT_TOKEN, null);
           await setData(USER_DATA, null);
           // @ts-ignore
@@ -225,7 +224,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressMyEarnings}
         />
         <ProfileItem
-          name="Request page"
+          name="Mover Request page"
           icon={<AlertIcon color={theme.colors?.primary} />}
           onPress={onPressRequestPage}
         />
@@ -234,7 +233,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           icon={<MoneybillsIcon color={theme.colors?.primary} />}
           onPress={onPressTransactionHistroy}
         />
-        <ProfileItem
+        {/* <ProfileItem
           name="Purchased History"
           icon={
             <PurchasedProductIcon
@@ -244,14 +243,14 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             />
           }
           onPress={onPressPurchasedHistory}
-        />
-        <ProfileItem
+        /> */}
+        {/* <ProfileItem
           name="Job History"
           icon={
             <PackageIcon color={theme.colors?.primary} height={24} width={24} />
           }
           onPress={onPressJobHistroy}
-        />
+        /> */}
         <ProfileItem
           name="My Keywords"
           icon={<MoneybillsIcon color={theme.colors?.primary} />}

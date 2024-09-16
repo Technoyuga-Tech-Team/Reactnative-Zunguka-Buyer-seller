@@ -70,6 +70,7 @@ const initialState: SettingsStateProps = {
     selfie_image: "",
     is_selfie_uploaded: 0,
     total_earning: 0,
+    sector: "",
   },
   errorFromSocial: false,
   address: "",
@@ -145,6 +146,7 @@ const initialState: SettingsStateProps = {
     selfie_image: "",
     is_selfie_uploaded: 0,
     total_earning: 0,
+    sector: "",
   },
 };
 
@@ -185,6 +187,7 @@ const settings = createSlice({
         id: number | null;
         price: number | null;
         isOutOfKigali: boolean;
+        selfPickupAvailable: boolean;
         name: string;
         sellerName: string;
         sellerPhone: string;

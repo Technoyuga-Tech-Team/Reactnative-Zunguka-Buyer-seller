@@ -63,6 +63,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import { DeliveryAddressDataProps } from "../../types/payment.types";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
+import { getProductInfo } from "../../store/settings/settings.selectors";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -83,6 +84,7 @@ const DeliveryAddress: React.FC<
   const dispatch = useAppDispatch();
 
   const loading = useSelector(selectPaymentCardLoading);
+  const productInfo = useSelector(getProductInfo);
 
   const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
   const [visibleCountryPicker, setVisibleCountryPicker] =
@@ -559,11 +561,18 @@ const DeliveryAddress: React.FC<
     );
   };
 
+  const getDeliveryServiceAmount = (mode: string | undefined) => {
+    // we added 50 as a static value
+    return mode == "moto" ? 2500 : mode == "cab" ? 10000 : 12000;
+  };
+
   const onPressSelectAddress = () => {
     if (selectedAddress) {
-      console.log("selectedAddress", selectedAddress);
       dispatch(setSelectedDeliveryAddress(selectedAddress));
-      navigation.navigate(Route.navModeOfDelivery);
+      navigation.navigate(Route.navPayment, {
+        modeOfDelivery: "delivery_service",
+        deliveryPrice: getDeliveryServiceAmount(productInfo?.modeOfTransport),
+      });
     } else {
       dispatch(
         setErrors({

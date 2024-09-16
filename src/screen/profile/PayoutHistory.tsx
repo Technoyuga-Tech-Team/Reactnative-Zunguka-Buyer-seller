@@ -16,9 +16,17 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { PayoutHistoryItem } from "../../types/myEarning.types";
 import { useGetPayoutHistory } from "../../hooks/useGetPayoutHistory";
 import CustomHeader from "../../components/ui/CustomHeader";
-import { HIT_SLOP, RWF, SCREEN_HEIGHT } from "../../constant";
+import {
+  BASE_URL,
+  HIT_SLOP,
+  RWF,
+  SCREEN_HEIGHT,
+  secureStoreKeys,
+} from "../../constant";
 import NoDataFound from "../../components/ui/NoDataFound";
 import { ThemeProps } from "../../types/global.types";
+import { getData } from "../../utils/asyncStorage";
+import { API } from "../../constant/apiEndpoints";
 
 const PayoutHistory: React.FC<HomeNavigationProps<Route.navPayoutHistory>> = ({
   navigation,
@@ -36,33 +44,52 @@ const PayoutHistory: React.FC<HomeNavigationProps<Route.navPayoutHistory>> = ({
     PayoutHistoryItem[]
   >([]);
 
-  const { data, refetch, isLoading, isError } = useGetPayoutHistory(
-    `${10}`,
-    `${page}`,
-    { enabled: false }
-  );
-
-  useEffect(() => {
-    if (!isError && data?.data?.data) {
-      setPayoutHistoryData([...payoutHistoryData, ...data?.data?.data]);
-      setTotalPage(data?.data?.totalPages);
-      setPage(page + 1);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    setLoader(isLoading);
-  }, [isLoading]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      setPage(1);
-      refetch().then();
+      getPayoutHistory(10, 1, true);
     });
     return () => {
       unsubscribe();
     };
   }, []);
+
+  const getPayoutHistory = async (
+    limit: number,
+    page: number,
+    refresh: boolean
+  ) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    try {
+      setLoader(true);
+      const response = await fetch(
+        `${BASE_URL}${API.GET_PAYOUT_HISTORY}/${limit}/${page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log("data", data);
+      // Handle the fetched data here
+      if (data && data?.data?.data?.length > 0) {
+        setLoader(false);
+        refresh
+          ? setPayoutHistoryData([...data?.data?.data])
+          : setPayoutHistoryData([...payoutHistoryData, ...data?.data?.data]);
+
+        setTotalPage(data?.data?.totalPages);
+        setPage(page + 1);
+      } else {
+        setLoader(false);
+      }
+    } catch (error) {
+      setLoader(false);
+      console.error(error);
+    }
+  };
 
   const getStatus = (status: string) => {
     return status == "pending"
@@ -74,7 +101,7 @@ const PayoutHistory: React.FC<HomeNavigationProps<Route.navPayoutHistory>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loader) {
-      refetch().then();
+      getPayoutHistory(10, page, false);
     }
   };
 

@@ -1,6 +1,6 @@
 import { useDebounce } from "@uidotdev/usehooks";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomSearchBarWithSortAndFilter from "../../components/CustomSearchBarWithSortAndFilter";
@@ -57,11 +57,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
     }
   }, [mainCat, subCat, debouncedSearchTerm]);
-
-  // useEffect(() => {
-  //   console.log("debouncedSearchTerm - - - - - -", debouncedSearchTerm);
-  // getSearchedItems(debouncedSearchTerm, 10, 1, true, null);
-  // }, [debouncedSearchTerm, mainCat, subCat]);
 
   const getSearchedItems = async (
     keyword: string,
@@ -301,6 +296,10 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     getSearchedItems(debouncedSearchTerm, 10, 1, false, filter_Items, false);
   };
 
+  const onRefresh = () => {
+    getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
+  };
+
   return (
     <View style={style.container}>
       <CustomSearchBarWithSortAndFilter
@@ -315,6 +314,13 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       <ProductListing
         isLoading={loader}
         productData={products}
+        refreshControl={
+          <RefreshControl
+            refreshing={loader}
+            onRefresh={onRefresh}
+            tintColor={theme?.colors?.primary}
+          />
+        }
         onPress={onPressProduct}
         onEndReached={onEndReached}
         showLoadMore={page <= totalPage}

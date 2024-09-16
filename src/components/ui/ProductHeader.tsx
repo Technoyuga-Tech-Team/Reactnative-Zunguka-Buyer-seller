@@ -13,6 +13,7 @@ interface ProductHeaderProps {
   onPressShare: () => void;
   onPressDelete: () => void;
   showDelete: boolean;
+  disableShare?: boolean;
 }
 
 const ProductHeader: React.FC<ProductHeaderProps> = ({
@@ -20,6 +21,7 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
   onPressShare,
   onPressDelete,
   showDelete,
+  disableShare,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -28,13 +30,16 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
     icon,
     onPress,
     marginLeft,
+    disable,
   }: {
     icon: any;
     onPress: () => void;
     marginLeft?: number;
+    disable?: boolean;
   }) => {
     return (
       <TouchableOpacity
+        disabled={disable}
         activeOpacity={0.8}
         onPress={onPress}
         style={[style.roundCont, { marginLeft }]}
@@ -56,6 +61,7 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
         }}
       >
         <RoundButton
+          disable={disableShare}
           onPress={onPressShare}
           icon={
             <ShareIcon color={theme?.colors?.white} height={15} width={15} />

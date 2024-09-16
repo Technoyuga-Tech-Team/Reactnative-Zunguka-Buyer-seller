@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../../components/Product/ProductListing";
@@ -98,12 +98,24 @@ const ClosedItems: React.FC<
       console.log("error", error);
     }
   };
+
   return (
     <View style={style.container}>
       <ProductListing
         productData={dealsData}
         onPress={(itemId, item) => onPressProductItem(itemId, item)}
-        onPressHireMover={(itemId) => onPressHireMover(itemId)}
+        onPressHireMover={(itemId) => {
+          Alert.alert("Hire Mover", "Are you sure you want to Hire?", [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+            },
+            {
+              text: "Yes",
+              onPress: () => onPressHireMover(itemId),
+            },
+          ]);
+        }}
         onEndReached={onEndReached}
         isLoading={loading}
         showLoadMore={page <= totalPage}

@@ -39,24 +39,18 @@ const ModeOfDelivery: React.FC<
 
   const onPressContinue = () => {
     if (moverSelected) {
-      navigation.navigate(Route.navPayment, {
-        modeOfDelivery: "delivery_service",
-        deliveryPrice: getDeliveryServiceAmount(productInfo?.modeOfTransport),
-      });
+      navigation.navigate(Route.navDeliveryAddress);
     } else {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: Route.navDashboard }],
-        })
-      );
+      navigation.navigate(Route.navPayment, {
+        deliveryPrice: 0,
+        modeOfDelivery: "self_pickup",
+      });
     }
   };
 
   const getDeliveryServiceAmount = (mode: string | undefined) => {
     // we added 50 as a static value
-    return "2";
-    // return mode == "moto" ? "2000" : mode == "cab" ? "10,000" : "12,000";
+    return mode == "moto" ? 2500 : mode == "cab" ? 10000 : 12000;
   };
 
   return (

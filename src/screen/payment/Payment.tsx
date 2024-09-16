@@ -88,7 +88,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   useEffect(() => {
     if (productInfo) {
       setProductPrice(`${productInfo?.price}`);
-      if (productInfo?.isOutOfKigali) {
+      if (productInfo?.isOutOfKigali || modeOfDelivery == "self_pickup") {
         setOutOfKigali(true);
         setTotalPrice(Number(productInfo?.price).toFixed(2));
       } else {
@@ -185,40 +185,6 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
     console.log("data", data);
     if (data.status == "successful") {
       paymentDepositSeller(data);
-      // const endpoint = "https://api.flutterwave.com/v3/transfers";
-
-      // const data = {
-      //   account_bank: "MPS", // Replace with the recipient's bank code
-      //   account_number: productInfo?.sellerPhone || 250738923170, // Replace with the recipient's account number
-      //   amount: Number(productPrice), // Replace with the amount to be transferred
-      //   currency: "RWF", // Replace with the currency
-      //   narration: `Payment for ${productInfo?.name}`,
-      //   beneficiary_name: productInfo?.sellerName,
-      // };
-
-      // const headers = {
-      //   Authorization: `Bearer ${FW_SECRET_KEY}`,
-      //   "Content-Type": "application/json",
-      // };
-
-      // axios
-      //   .post(endpoint, data, {
-      //     headers: headers,
-      //   })
-      //   .then((response) => {
-      //     console.log("Transfer result - - - ->", response.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log("error - - - ", error.response.data);
-      //     notifyMessage(error.response.data.message);
-      //   });
-      // notifyMessage("Payment Successfully");
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{ name: Route.navCongratulations1 }],
-      //   })
-      // );
     } else {
       if (data.status == "cancelled") {
         notifyMessage("User cancelled the payment!");
@@ -229,7 +195,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
   const paymentDepositSeller = async (data: RedirectParams | null) => {
     const formData = new FormData();
     formData.append("item_id", productInfo?.id);
-    console.log("modeOfDelivery", modeOfDelivery);
+
     modeOfDelivery && formData.append("mode_of_delivery", modeOfDelivery);
     formData.append("mode_of_payment", selectedPaymentMethod);
 
@@ -256,6 +222,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
             name: "",
             sellerName: "",
             sellerPhone: "",
+            selfPickupAvailable: false,
           })
         );
         dispatch(setSelectedDeliveryAddress(null));

@@ -5,15 +5,12 @@ import {
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Linking, PermissionsAndroid, Platform } from "react-native";
+import { Linking } from "react-native";
 import { useTheme } from "react-native-elements";
 import Snackbar from "react-native-snackbar";
 import { useSelector } from "react-redux";
 // Relative path
-import notifee, {
-  AuthorizationStatus,
-  Notification,
-} from "@notifee/react-native";
+import notifee, { EventType, Notification } from "@notifee/react-native";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import messaging, {
   FirebaseMessagingTypes,
@@ -151,37 +148,6 @@ const MainNavigator = () => {
     theme.colors?.grey5,
   ]);
 
-  useEffect(() => {
-    async function checkNotificationPermission() {
-      const settings = await notifee.getNotificationSettings();
-      if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
-        console.log("Notification permissions has been authorized");
-      } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
-        console.log("Notification permissions has been denied");
-        requestUserPermission();
-      }
-    }
-
-    checkNotificationPermission().then();
-  }, []);
-
-  const requestUserPermission = async () => {
-    if (Platform.OS === "ios") {
-      const settings = await notifee.requestPermission();
-
-      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-        console.log("Permission settings:", settings);
-      } else {
-        console.log("User declined permissions");
-        await notifee.requestPermission();
-      }
-    } else {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-      );
-    }
-  };
-
   const handleClickedNotitfaction = (
     notification: FirebaseMessagingTypes.RemoteMessage | Notification
   ): void => {
@@ -278,6 +244,11 @@ const MainNavigator = () => {
 
   // @todo - handle in-app notifications
   useEffect(() => {
+    notifee.onForegroundEvent(({ type, detail }) => {
+      if (type === EventType.PRESS) {
+        handleClickedNotitfaction(detail?.notification);
+      }
+    });
     messaging().onMessage(onNotifeeMessageReceived);
     messaging().setBackgroundMessageHandler(async (message) => {
       console.log("in background message", message);

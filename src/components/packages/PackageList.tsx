@@ -80,7 +80,6 @@ export default PackageList;
 const useStyles = makeStyles((theme) => ({
   scrollCont: {
     flex: 1,
-    backgroundColor: theme.colors?.background,
     paddingHorizontal: 20,
   },
 }));

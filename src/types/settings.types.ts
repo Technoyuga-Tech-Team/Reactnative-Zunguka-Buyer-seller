@@ -13,6 +13,7 @@ export interface SettingsStateProps {
     id: number | null;
     price: number | null;
     isOutOfKigali: boolean;
+    selfPickupAvailable: boolean;
     name: string;
     sellerName: string;
     sellerPhone: string;

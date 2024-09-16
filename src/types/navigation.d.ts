@@ -13,6 +13,11 @@ export type TopRoutes = {
   RequestToMover: undefined;
 };
 
+export type MoverRequestTopRoutes = {
+  OngoingMoverRequest: undefined;
+  PastMoverRequest: undefined;
+};
+
 export type AppRoutes = {
   Onboard: undefined;
   Splash: undefined;
@@ -38,6 +43,7 @@ export type AppRoutes = {
   Messaging: undefined;
   Chatroom: { receiver_id: string; product_id: string };
   ProductDetails: { itemId: number };
+  ProductDetails1: { itemId: number };
   ArchivedProductDetails: { item: ProductDataProps };
   DeliveryAddress: undefined;
   TransactionHistory: undefined;
@@ -51,7 +57,7 @@ export type AppRoutes = {
   ModeOfPayment: undefined;
   CardDetails: { from: string };
   AddCard: undefined;
-  Payment: { modeOfDelivery?: string; deliveryPrice?: string };
+  Payment: { modeOfDelivery?: string; deliveryPrice?: number };
   DeliveryDetails: undefined;
   DeliveryCompleteAndRateDriver: {
     user_id: string;
@@ -83,6 +89,8 @@ export type AppRoutes = {
   PayMover: { package_details_id: string; price: string };
   Withdraw: { earning: string };
   PayoutHistory: undefined;
+  OngoingMoverRequest: undefined;
+  PastMoverRequest: undefined;
 };
 
 export type AuthenticationRoutes = {

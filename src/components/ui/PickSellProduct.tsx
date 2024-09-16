@@ -1,23 +1,22 @@
-import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
-import { ThemeProps } from "../../types/global.types";
-import { imagePickerProps } from "../../types/common.types";
-import { AppImage } from "../AppImage/AppImage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Images } from "../../assets/images";
 import { HIT_SLOP, PRDUCT_EMPTY_CELLS, SCREEN_WIDTH } from "../../constant";
-import Scale from "../../utils/Scale";
-import CloseIcon from "./svg/CloseIcon";
-import PhotoPlusIcon from "./svg/PhotoPlusIcon";
-import ImagePickerPopup from "./ImagePickerPopup";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setErrors } from "../../store/global/global.slice";
+import { imagePickerProps } from "../../types/common.types";
+import { ThemeProps } from "../../types/global.types";
 import {
   getImageFromCamera,
   getImageFromGallary,
   requestCameraPermission,
 } from "../../utils/ImagePickerCameraGallary";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { setErrors } from "../../store/global/global.slice";
-import { Images } from "../../assets/images";
+import Scale from "../../utils/Scale";
+import { AppImage } from "../AppImage/AppImage";
+import ImagePickerPopup from "./ImagePickerPopup";
+import CloseIcon from "./svg/CloseIcon";
 
 interface PickSellProductProps {
   images: imagePickerProps[];

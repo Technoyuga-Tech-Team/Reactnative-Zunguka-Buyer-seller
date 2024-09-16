@@ -1,53 +1,54 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { StatusBar } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 // relative path
+import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
+import InternetConnectivityLabel from "../components/ui/InternetConnectivityLabel";
 import { Route } from "../constant/navigationConstants";
-import { AppRoutes } from "../types/navigation";
 import AllCategories from "../screen/Categories/AllCategories";
+import Earnings from "../screen/Earnings";
+import JobHistory from "../screen/JobHistory";
 import ModeOfDelivery from "../screen/ModeOfDelivery";
+import MoverRequestTab from "../screen/MoverRequest/MoverRequest";
+import MySavedKeywords from "../screen/MySavedKeywords";
+import Notification from "../screen/Notification/Notification";
 import Splash from "../screen/Splash";
+import MyStorefront from "../screen/Storefront/MyStorefront";
+import Withdraw from "../screen/Withdraw";
 import AddKyc from "../screen/authentication/Add kyc/AddKyc";
 import ChooseAddress from "../screen/authentication/AddAddress/ChooseAddress";
 import YourAddress from "../screen/authentication/AddAddress/YourAddress";
 import ResetPassword from "../screen/authentication/ResetPassword";
+import TakeSelfie from "../screen/authentication/TakeSelfie";
+import Chatroom from "../screen/chat/Chatroom";
+import Messaging from "../screen/chat/Messaging";
+import DeliveryCompleteAndRateDriver from "../screen/delivery/DeliveryCompleteAndRateDriver";
+import DeliveryDetails1 from "../screen/delivery/DeliveryDetails1";
+import PayMover from "../screen/delivery/PayMover";
+import PaymentToMover from "../screen/delivery/PaymentToMover";
 import DeliveryAddress from "../screen/deliveryAddress/DeliveryAddress";
 import Onboard from "../screen/onboard/Onboard";
 import AddCard from "../screen/payment/AddCard";
 import CardDetails from "../screen/payment/CardDetails";
 import Payment from "../screen/payment/Payment";
+import ArchivedProductDetails from "../screen/product/ArchivedProductDetails";
 import ProductDetails from "../screen/product/ProductDetails";
+import ProductDetails1 from "../screen/product/ProductDetails1";
 import ChangePassword from "../screen/profile/ChangePassword";
 import EditProfile from "../screen/profile/EditProfile";
+import PayoutHistory from "../screen/profile/PayoutHistory";
+import PurchasedHistory from "../screen/profile/PurchasedHistory";
+import TransactionHistory from "../screen/profile/TransactionHistory";
 import SearchProducts from "../screen/search/SearchProducts";
 import AddNewProduct from "../screen/sell/AddNewProduct";
 import Congratulations from "../screen/sell/Congratulations";
+import Congratulations1 from "../screen/sell/Congratulations1";
+import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
-import TakeSelfie from "../screen/authentication/TakeSelfie";
-import Chatroom from "../screen/chat/Chatroom";
-import MyStorefront from "../screen/Storefront/MyStorefront";
-import TransactionHistory from "../screen/profile/TransactionHistory";
-import Messaging from "../screen/chat/Messaging";
-import Congratulations1 from "../screen/sell/Congratulations1";
-import InternetConnectivityLabel from "../components/ui/InternetConnectivityLabel";
-import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
-import ArchivedProductDetails from "../screen/product/ArchivedProductDetails";
-import Earnings from "../screen/Earnings";
-import Withdraw from "../screen/Withdraw";
-import Notification from "../screen/Notification/Notification";
-import MySavedKeywords from "../screen/MySavedKeywords";
-import RequestToMover from "../screen/delivery/RequestToMover";
-import PaymentToMover from "../screen/delivery/PaymentToMover";
-import PayMover from "../screen/delivery/PayMover";
-import DeliveryDetails1 from "../screen/delivery/DeliveryDetails1";
-import DeliveryCompleteAndRateDriver from "../screen/delivery/DeliveryCompleteAndRateDriver";
-import PurchasedHistory from "../screen/profile/PurchasedHistory";
-import JobHistory from "../screen/JobHistory";
-import PayoutHistory from "../screen/profile/PayoutHistory";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -109,6 +110,10 @@ const MainStack = () => {
             component={ProductDetails}
           />
           <Stack.Screen
+            name={Route.navProductDetails1}
+            component={ProductDetails1}
+          />
+          <Stack.Screen
             name={Route.navArchivedProductDetails}
             component={ArchivedProductDetails}
           />
@@ -160,7 +165,7 @@ const MainStack = () => {
           />
           <Stack.Screen
             name={Route.navRequestToMover}
-            component={RequestToMover}
+            component={MoverRequestTab}
           />
           <Stack.Screen
             name={Route.navPaymentToMover}

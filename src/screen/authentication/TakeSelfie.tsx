@@ -103,10 +103,6 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
   useEffect(() => {
     if (userData) {
       setProfilePicture(userData?.selfie_image);
-      console.log(
-        "userData?.is_kyc_verified_by_admin",
-        userData?.is_kyc_verified_by_admin
-      );
       setIsVerifiedByAdmin(userData?.is_kyc_verified_by_admin);
       setSelfieUploded(userData?.is_selfie_uploaded);
     }
@@ -493,8 +489,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     marginHorizontal: 20,
   },
   profileImage: {
-    height: Scale(180),
-    width: Scale(180),
-    borderRadius: Scale(180 / 2),
+    height: Scale(300),
+    width: Scale(300),
+    borderRadius: 20,
   },
 }));

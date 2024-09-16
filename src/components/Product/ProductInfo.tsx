@@ -14,23 +14,31 @@ import { getConditionItemValue } from "../../utils";
 import FilledHeartIcon from "../ui/svg/filledHeartIcon";
 import MessageOutlineIcon from "../ui/svg/MessageOutlineIcon";
 import { isEmpty, isUndefined } from "lodash";
+import { useNavigation } from "@react-navigation/native";
+import { Route } from "../../constant/navigationConstants";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { HomeRoutes } from "../../types/navigation";
 
 interface ProductInfoProps {
   productDetails: ProductDetailsDataProps | null;
   onPressSavedItem: () => void;
+  onPressSimilarProduct: (id: number) => void;
   isProductLike: boolean;
   onPressMessage: () => void;
   productLikes: number;
   isCurrentUsersProduct?: boolean;
+  showSimilarItem?: boolean;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
   productDetails,
+  showSimilarItem,
   onPressSavedItem,
   isProductLike,
   onPressMessage,
   productLikes,
   isCurrentUsersProduct,
+  onPressSimilarProduct,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -42,8 +50,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const ItemSeparator1 = () => {
     return <View style={style.border1} />;
   };
-
-  const onPressProduct = (item: any) => {};
 
   const time = productDetails?.created_at
     ? moment(productDetails?.created_at).format("DD/MM/YYYY")
@@ -169,16 +175,20 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <SellerProfileWithStar userData={productDetails?.user} />
         )}
       </View>
-      <ItemSeparator />
-      <View style={style.paddingCont}>
-        <Text style={[style.txtProductName, { marginBottom: 10 }]}>
-          Similar items
-        </Text>
-        <SimilarProductListing
-          similarProductData={productDetails?.similar_products}
-          onPressProduct={(item) => onPressProduct(item)}
-        />
-      </View>
+      {showSimilarItem && (
+        <>
+          <ItemSeparator />
+          <View style={style.paddingCont}>
+            <Text style={[style.txtProductName, { marginBottom: 10 }]}>
+              Similar items
+            </Text>
+            <SimilarProductListing
+              similarProductData={productDetails?.similar_products}
+              onPressProduct={(item) => onPressSimilarProduct(item)}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
