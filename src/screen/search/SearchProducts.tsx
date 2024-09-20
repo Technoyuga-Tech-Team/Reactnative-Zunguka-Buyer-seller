@@ -93,8 +93,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         "condition_of_item",
         filterItems?.selectedConditionValue || ""
       );
-      formData.append("size", filterItems?.selectedSize || "");
-      // formData.append("rating", filterItems?.selectedRatings);
+      // formData.append("size", filterItems?.selectedSize || "");
+      formData.append("rating", filterItems?.selectedRatings);
 
       formData.append("limit", limit);
       formData.append("offset", page);
@@ -153,6 +153,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         name: "",
         sellerName: "",
         sellerPhone: "",
+        selfPickupAvailable: false,
       })
     );
     dispatch(setSelectedDeliveryAddress(null));

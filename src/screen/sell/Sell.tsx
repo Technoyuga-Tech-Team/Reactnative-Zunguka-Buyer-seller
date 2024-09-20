@@ -69,8 +69,12 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
     }
   };
 
-  const onPressProduct = (itemId: number) => {
-    navigation.navigate(Route.navProductDetails, { itemId: itemId });
+  const onPressProduct = (itemId: number, item: ProductDataProps) => {
+    if (item.status == "Archived") {
+      navigation.navigate(Route.navArchivedProductDetails, { item: item });
+    } else {
+      navigation.navigate(Route.navProductDetails, { itemId: itemId });
+    }
   };
 
   const onPressCreateListing = () => {

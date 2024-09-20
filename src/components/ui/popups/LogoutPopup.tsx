@@ -6,7 +6,7 @@ import CustomButton from "../CustomButton";
 
 interface LogoutPopupProps {
   visiblePopup: boolean;
-  togglePopup: () => void;
+  togglePopup?: () => void;
   onPressLogout: () => void;
   title1: string;
   title2: string;

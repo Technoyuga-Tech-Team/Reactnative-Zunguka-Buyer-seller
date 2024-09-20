@@ -39,6 +39,7 @@ export enum Route {
   navCategoryProduct = "CategoryProduct",
   navHomeMover = "HomeMover",
   navAllDeals = "AllDeals",
+  navAllBrand = "AllBrand",
   navModeOfPayment = "ModeOfPayment",
   navCardDetails = "CardDetails",
   navAddCard = "AddCard",

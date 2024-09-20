@@ -14,7 +14,7 @@ interface NotificationItemProps {
 const NotificationItem: React.FC<NotificationItemProps> = ({ item }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
-  const time = moment(item?.created_at).startOf("hour").fromNow();
+  const time = moment(item?.created_at).fromNow();
   const profile = item.user.profile_image || Images.PLACEHOLDER_IMAGE;
   return (
     <View style={style.container}>

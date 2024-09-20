@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
   PermissionsAndroid,
   Platform,
   StatusBar,
@@ -41,6 +42,7 @@ import SinglePlusIcon from "../../components/ui/svg/SinglePlusIcon";
 import {
   BASE_URL,
   CITIES,
+  CURRENT_COUNTRY_CODE,
   GOOGLE_MAP_API_KEY,
   MAX_CHAR_LENGTH,
   SCREEN_WIDTH,
@@ -64,6 +66,11 @@ import { DeliveryAddressDataProps } from "../../types/payment.types";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
 import { getProductInfo } from "../../store/settings/settings.selectors";
+import GooglePlaceAutoCompleteModal from "../../components/GooglePlaceAutoCompleteModel";
+import {
+  GooglePlaceData,
+  GooglePlaceDetail,
+} from "react-native-google-places-autocomplete";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -95,6 +102,7 @@ const DeliveryAddress: React.FC<
   );
   const [loader, setLoader] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [visibleAddress, setVisibleAddress] = useState<boolean>(false);
 
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
@@ -408,6 +416,10 @@ const DeliveryAddress: React.FC<
     setMakeDefault(makeDefault == 1 ? 0 : 1);
   };
 
+  const onPressVisibleAddress = () => {
+    setVisibleAddress(true);
+  };
+
   const RenderAddressItems = () => {
     return (
       <View style={style.inputCont}>
@@ -479,8 +491,9 @@ const DeliveryAddress: React.FC<
           value={values.deliveryAddress}
           error={errors.deliveryAddress}
           touched={touched.deliveryAddress}
-          onPress={onPressCurrentLocation}
-          onPressIn={onPressCurrentLocation}
+          onPress={onPressVisibleAddress}
+          onPressIn={onPressVisibleAddress}
+          editable={false}
         />
         <TouchableOpacity
           style={style.locationCont}
@@ -590,6 +603,31 @@ const DeliveryAddress: React.FC<
     }
   };
 
+  const toggleAddressModal = () => {
+    setVisibleAddress(false);
+  };
+
+  const onPressGetAddress = (
+    data: GooglePlaceData | GooglePlaceDetail,
+    details: GooglePlaceDetail
+  ) => {
+    const location_address =
+      // @ts-ignore
+      data.description !== undefined
+        ? // @ts-ignore
+          data.description
+        : // @ts-ignore
+          data?.formatted_address;
+    console.log("location_address", location_address);
+    setFieldValue("deliveryAddress", location_address);
+    setLatLng({
+      lat: Number(details?.geometry?.location?.lat),
+      lng: Number(details?.geometry?.location?.lng),
+    });
+    toggleAddressModal();
+    Keyboard.dismiss();
+  };
+
   return (
     <View style={style.container}>
       <StatusBar
@@ -637,6 +675,20 @@ const DeliveryAddress: React.FC<
         handleClosePress={handleClosePress}
         children={RenderAddressItems()}
       />
+      {visibleAddress && (
+        <GooglePlaceAutoCompleteModal
+          countryCode={CURRENT_COUNTRY_CODE}
+          onPressAddress={(
+            data: GooglePlaceData,
+            details: GooglePlaceDetail
+          ) => {
+            console.log("data, details", data, details);
+            onPressGetAddress(data, details);
+          }}
+          visiblePopup={visibleAddress}
+          togglePopup={toggleAddressModal}
+        />
+      )}
     </View>
   );
 };

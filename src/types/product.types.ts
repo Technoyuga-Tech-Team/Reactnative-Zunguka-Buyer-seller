@@ -30,6 +30,9 @@ export interface ProductDataProps {
   color: string;
   condition_of_item: string;
   is_delivery_button: boolean;
+  is_searching_button: boolean;
+  pickup_otp: number;
+  is_otp: boolean;
 }
 export interface productImage {
   item_id: number;

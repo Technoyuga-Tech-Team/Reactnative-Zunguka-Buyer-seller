@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../../components/Product/ProductListing";
@@ -13,6 +13,8 @@ import { ProductDataProps } from "../../types/product.types";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
 import { sendRequestToNearbyMovers } from "../../store/Product/product.thunk";
+import { useSelector } from "react-redux";
+import { getClosedItem } from "../../store/settings/settings.selectors";
 
 const ClosedItems: React.FC<
   MyFrontStoreNavigationProps<Route.navClosedItems>
@@ -22,11 +24,19 @@ const ClosedItems: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
+  const closedItems = useSelector(getClosedItem);
+
   const [loading, setLoading] = useState(false);
   const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
+  useEffect(() => {
+    if (closedItems?.length > 0) {
+      setDealsData(closedItems);
+    }
+  }, [closedItems]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -87,9 +97,9 @@ const ClosedItems: React.FC<
       const result = await dispatch(sendRequestToNearbyMovers({ formData }));
       if (sendRequestToNearbyMovers.fulfilled.match(result)) {
         if (result.payload.status === 1) {
-          getClosedData(10, 1);
-          navigation.navigate(Route.navRequestToMover);
           console.log("result sendRequestToNearbyMovers --->", result.payload);
+          getClosedData(10, 1);
+          // navigation.navigate(Route.navRequestToMover);
         }
       } else {
         console.log("errror sendRequestToNearbyMovers --->", result.payload);
@@ -97,6 +107,10 @@ const ClosedItems: React.FC<
     } catch (error) {
       console.log("error", error);
     }
+  };
+
+  const onRefresh = () => {
+    getClosedData(10, 1);
   };
 
   return (
@@ -120,6 +134,15 @@ const ClosedItems: React.FC<
         isLoading={loading}
         showLoadMore={page <= totalPage}
         fromClosedItem={true}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            tintColor={theme?.colors?.primary}
+            // @ts-ignore
+            colors={[theme?.colors?.primary]}
+          />
+        }
       />
     </View>
   );

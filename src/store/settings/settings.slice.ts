@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SettingsStateProps } from "../../types/settings.types";
 import { UserData } from "../../types/user.types";
+import { ChatDataList } from "../../types/chat.types";
 
 const initialState: SettingsStateProps = {
   isDark: true,
@@ -148,6 +149,8 @@ const initialState: SettingsStateProps = {
     total_earning: 0,
     sector: "",
   },
+  closedItem: [],
+  messagingData: [],
 };
 
 const settings = createSlice({
@@ -208,6 +211,12 @@ const settings = createSlice({
     setMoverInfo: (state, action: PayloadAction<UserData>) => {
       state.moverInfo = action.payload;
     },
+    setClosedItems: (state, action: PayloadAction<any[]>) => {
+      state.closedItem = action.payload;
+    },
+    setMessagingData: (state, action: PayloadAction<ChatDataList[]>) => {
+      state.messagingData = action.payload;
+    },
   },
 });
 
@@ -223,6 +232,8 @@ export const {
   setSelectedDeliveryAddress,
   setIsNewPackageDeliverd,
   setMoverInfo,
+  setClosedItems,
+  setMessagingData,
 } = settings.actions;
 
 export default settings.reducer;

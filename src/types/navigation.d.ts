@@ -52,6 +52,7 @@ export type AppRoutes = {
   ProductFilter: undefined;
   Notification: undefined;
   AllDeals: undefined;
+  AllBrand: undefined;
   AllCategories: undefined;
   ModeOfDelivery: undefined;
   ModeOfPayment: undefined;

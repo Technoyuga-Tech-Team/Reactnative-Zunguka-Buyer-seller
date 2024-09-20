@@ -9,6 +9,8 @@ import { getConditionItemValue } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import CustomButton from "../ui/CustomButton";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import { useSelector } from "react-redux";
 
 interface ProductItemProps {
   item: ProductDataProps;
@@ -24,8 +26,14 @@ const ProductItem: React.FC<ProductItemProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
+  const userData = useSelector(selectUserData);
+
   const product_image = item?.images[0]?.image || DUMMY_PLACEHOLDER;
   const showRequestBtn = item?.is_delivery_button;
+  const isSearch = item?.is_searching_button;
+  const is_otp = item?.is_otp;
+  const currentUsersProduct = item?.user_id == userData?.id;
+
   return (
     <View style={style.container}>
       <TouchableOpacity
@@ -35,6 +43,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "flex-start",
+          flex: 1,
         }}
       >
         <AppImage
@@ -53,7 +62,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
             <Text numberOfLines={1} style={style.txtTitle}>
               {item?.title}
             </Text>
-            {/* <Text style={style.txtSold}>Sold</Text> */}
+            {item.status == "Archived" &&
+              currentUsersProduct &&
+              !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
           </View>
 
           <Text numberOfLines={1} style={style.txtTypeAndCategories}>
@@ -75,8 +86,18 @@ const ProductItem: React.FC<ProductItemProps> = ({
       {fromClosedItem && showRequestBtn && (
         <View style={{ marginTop: 10 }}>
           <CustomButton
-            onPress={onPressHireMover}
-            title={"Hire mover"}
+            onPress={() => {
+              if (!(isSearch || is_otp)) {
+                onPressHireMover();
+              }
+            }}
+            title={
+              isSearch
+                ? "Searching Mover..."
+                : is_otp
+                ? `OTP ${item?.pickup_otp}`
+                : "Hire mover"
+            }
             buttonWidth="full"
             variant="primary"
             type="solid"
@@ -110,8 +131,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.black,
   },
   txtSold: {
-    fontSize: theme.fontSize?.fs12,
-    fontFamily: theme.fontFamily?.regular,
+    fontSize: theme.fontSize?.fs14,
+    fontFamily: theme.fontFamily?.bold,
     color: theme.colors?.red,
     textDecorationLine: "underline",
   },
@@ -130,5 +151,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flex: 1,
     minHeight: Scale(97),
     justifyContent: "space-between",
+    marginRight: 20,
   },
 }));

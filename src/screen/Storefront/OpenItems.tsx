@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { RefreshControl, TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MyFrontStoreNavigationProps } from "../../types/navigation";
@@ -48,7 +48,6 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
           },
         }
       );
-
       const data = await response.json();
 
       // Handle the fetched data here
@@ -65,7 +64,7 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
       }
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -79,6 +78,10 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 
+  const onRefresh = () => {
+    getOpenData(10, 1);
+  };
+
   return (
     <View style={style.container}>
       <ProductListing
@@ -87,6 +90,15 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
         onEndReached={onEndReached}
         isLoading={loading}
         showLoadMore={page <= totalPage}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            tintColor={theme?.colors?.primary}
+            // @ts-ignore
+            colors={[theme?.colors?.primary]}
+          />
+        }
       />
     </View>
   );

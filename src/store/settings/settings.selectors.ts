@@ -56,3 +56,13 @@ export const selectMoverInfo = createSelector(
   [selectSettings],
   (settings) => settings.moverInfo
 );
+
+export const getClosedItem = createSelector(
+  [selectSettings],
+  (settings) => settings.closedItem
+);
+
+export const getMessagingData = createSelector(
+  [selectSettings],
+  (settings) => settings.messagingData
+);

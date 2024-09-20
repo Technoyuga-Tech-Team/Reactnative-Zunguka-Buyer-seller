@@ -24,7 +24,7 @@ export const User_Role_Buyer_Seller = "buyer_seller";
 export const User_Role_Mover = "mover";
 
 /* when you sent a build please set to US*/
-export const CURRENT_COUNTRY_CODE = "US";
+export const CURRENT_COUNTRY_CODE = "IN";
 
 // Google map key
 export const GOOGLE_MAP_API_KEY = "AIzaSyCVccOgy8-HJMjKuUCNC6B1_4z2WOoyRK4";

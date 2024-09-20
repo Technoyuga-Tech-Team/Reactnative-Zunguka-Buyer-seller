@@ -1,3 +1,4 @@
+import notifee from "@notifee/react-native";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
@@ -17,9 +18,7 @@ import DocslistIcon from "../../components/ui/svg/DocslistIcon";
 import InfocircleIcon from "../../components/ui/svg/InfocircleIcon";
 import LogoutIcon from "../../components/ui/svg/LogoutIcon";
 import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
-import PackageIcon from "../../components/ui/svg/PackageIcon";
 import ProfileIcon from "../../components/ui/svg/ProfileIcon";
-import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
 import TagfillIcon from "../../components/ui/svg/TagfillIcon";
 import {
   GOOGLE_WEB_CLIENT_ID,
@@ -32,12 +31,12 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { logout } from "../../store/authentication/authentication.thunks";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { setUserData } from "../../store/settings/settings.slice";
+import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
 import { deleteAccount } from "../../store/userprofile/userprofile.thunk";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
-import { selectUserProfileLoading } from "../../store/userprofile/userprofile.selectors";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -89,6 +88,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     dispatch(logout());
     await setData(secureStoreKeys.JWT_TOKEN, null);
     await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
     // @ts-ignore
     dispatch(setUserData({}));
     navigation.dispatch(
@@ -111,6 +111,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           setVisible(false);
           await setData(secureStoreKeys.JWT_TOKEN, null);
           await setData(USER_DATA, null);
+          notifee.cancelAllNotifications();
           // @ts-ignore
           dispatch(setUserData({}));
           navigation.dispatch(

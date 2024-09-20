@@ -1,6 +1,6 @@
 import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Platform, StatusBar, View } from "react-native";
+import { Alert, Platform, StatusBar, View } from "react-native";
 import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -22,6 +22,7 @@ import {
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
+import { deleteProduct } from "../../store/Product/product.thunk";
 
 const ArchivedProductDetails: React.FC<
   HomeNavigationProps<Route.navArchivedProductDetails>
@@ -112,6 +113,30 @@ const ArchivedProductDetails: React.FC<
     }
   };
 
+  const onPressDelete = () => {
+    Alert.alert("", "Are you sure you want to delete?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+      {
+        text: "Yes",
+        onPress: () => deleteItem(),
+      },
+    ]);
+  };
+
+  const deleteItem = async () => {
+    const result = await dispatch(deleteProduct({ id: productDetails?.id }));
+    if (deleteProduct.fulfilled.match(result)) {
+      if (result.payload?.status === 1) {
+        navigation.goBack();
+      }
+    } else {
+      console.log("errror deleteProduct --->", result.payload);
+    }
+  };
+
   return (
     <KeyboardAwareScrollView
       bounces={false}
@@ -128,8 +153,8 @@ const ArchivedProductDetails: React.FC<
         <ProductHeader
           onPressBack={onPressBack}
           onPressShare={onPressShare}
-          showDelete={false}
-          onPressDelete={() => {}}
+          showDelete={true}
+          onPressDelete={onPressDelete}
         />
       </View>
 

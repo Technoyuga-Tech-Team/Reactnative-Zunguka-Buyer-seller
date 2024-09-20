@@ -49,6 +49,7 @@ import Congratulations1 from "../screen/sell/Congratulations1";
 import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
+import AllBrands from "../screen/AllBrands";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -189,6 +190,7 @@ const MainStack = () => {
             name={Route.navPayoutHistory}
             component={PayoutHistory}
           />
+          <Stack.Screen name={Route.navAllBrand} component={AllBrands} />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

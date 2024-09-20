@@ -280,7 +280,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
           <FilterItem
             onPress={onPressPrice}
             title="Price"
-            value={`${RWF} ${sliderVal.low} - ${RWF} ${sliderVal.high}`}
+            value={`${RWF} ${sliderVal.low} - ${sliderVal.high}`}
             isSelected={visiblePrice}
           />
           {visiblePrice && (
@@ -291,7 +291,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
               />
             </View>
           )}
-          <FilterItem
+          {/* <FilterItem
             onPress={onPressRating}
             title="Rating"
             value={
@@ -299,13 +299,13 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
                 ? selectedRatings?.map((item) => item.itemName).join(", ")
                 : ""
             }
-          />
+          /> */}
 
-          <FilterItem
+          {/* <FilterItem
             onPress={onPressSize}
             title="Size"
             value={selectedSizeValue?.join(", ")}
-          />
+          /> */}
 
           <FilterItem onPress={onPressCity} title="City" value={city} />
 

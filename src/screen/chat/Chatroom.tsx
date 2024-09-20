@@ -399,7 +399,6 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   useEffect(() => {
     socket.on(socketEvent.MESSAGE, (newMessage) => {
       let t = getTime(new Date());
-      console.log("newMessage - - - - - -- - - ", newMessage);
       if (userData?.id == newMessage?.receiver_id) {
         socket.emit(
           socketEvent.READ_MESSAGE,

@@ -1,3 +1,4 @@
+import { ChatDataList } from "./chat.types";
 import { UserData } from "./user.types";
 
 export interface SettingsStateProps {
@@ -21,4 +22,6 @@ export interface SettingsStateProps {
   } | null;
   selectedDeliveryAddress: number | null;
   isNewPackageDelivered: number;
+  closedItem: any;
+  messagingData: ChatDataList[];
 }

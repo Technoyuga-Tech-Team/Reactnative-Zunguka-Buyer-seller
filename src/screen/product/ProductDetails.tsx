@@ -251,6 +251,7 @@ const ProductDetails: React.FC<
   };
 
   const onPressMessage = () => {
+    console.log("productDetails?.id", productDetails?.id);
     navigation.navigate(Route.navChatroom, {
       receiver_id: `${productDetails?.user_id}`,
       product_id: `${productDetails?.id}`,

@@ -1,3 +1,4 @@
+import notifee, { AuthorizationStatus } from "@notifee/react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   AppState,
@@ -33,10 +34,6 @@ import {
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { socket, socketEvent } from "../utils/socket";
-import notifee, {
-  AuthorizationStatus,
-  Notification,
-} from "@notifee/react-native";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -206,7 +203,9 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
       subCat: "",
     });
   };
-  const onPressSeeAllHotBrands = () => {};
+  const onPressSeeAllHotBrands = () => {
+    navigation.navigate(Route.navAllBrand);
+  };
   const onPressBanner = async () => {
     // navigation.navigate(Route.navPayment);
     // navigation.navigate(Route.navModeOfDelivery);

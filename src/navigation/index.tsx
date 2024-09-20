@@ -16,7 +16,13 @@ import messaging, {
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
 import DeliveryConfirmationPopup from "../components/ui/popups/DeliveryConfirmationPopup";
-import { BASE_PORT } from "../constant";
+import {
+  BASE_PORT,
+  BASE_URL,
+  GOOGLE_WEB_CLIENT_ID,
+  secureStoreKeys,
+  USER_DATA,
+} from "../constant";
 import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import {
@@ -26,11 +32,21 @@ import {
 import { clearErrors, clearSuccess } from "../store/global/global.slice";
 import { selectSocialError } from "../store/settings/settings.selectors";
 import {
+  setClosedItems,
   setErrorFromSocial,
   setIsNewPackageDeliverd,
+  setMessagingData,
   setSaveNotificationCount,
+  setUserData,
 } from "../store/settings/settings.slice";
 import MainStack from "./MainStack";
+import { getData, setData } from "../utils/asyncStorage";
+import { API } from "../constant/apiEndpoints";
+import { ChatDataList } from "../types/chat.types";
+import store from "../store/store";
+import { logout } from "../store/authentication/authentication.thunks";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import LogoutPopup from "../components/ui/popups/LogoutPopup";
 
 const linking: LinkingOptions<{}> = {
   prefixes: [`http://${BASE_PORT}/`, `zunguka://`],
@@ -67,6 +83,7 @@ const MainNavigator = () => {
 
   const [notificationCount, setNotificationCount] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [visibleDeleteAccount, setVisibleDeleteAccount] = useState(false);
   const [moverId, setMoverId] = useState("");
   const [packageDetailsId, setPackageDetailsId] = useState("");
 
@@ -148,6 +165,14 @@ const MainNavigator = () => {
     theme.colors?.grey5,
   ]);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID,
+      offlineAccess: true,
+      // scopes: ['https://www.googleapis.com/auth/user.phonenumbers.read'],
+    });
+  }, []);
+
   const handleClickedNotitfaction = (
     notification: FirebaseMessagingTypes.RemoteMessage | Notification
   ): void => {
@@ -197,6 +222,95 @@ const MainNavigator = () => {
       setMoverId(user.mover_id);
       setPackageDetailsId(user.id);
       setVisible(true);
+    }
+
+    if (message?.data?.type === "confirmed") {
+      const token = await getData(secureStoreKeys.JWT_TOKEN);
+      try {
+        const response = await fetch(
+          `${BASE_URL}${API.GET_PRODUCTS}/closed/my/10/1`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        // Handle the fetched data here
+        if (data.status === 1) {
+          if (data && data?.data?.data.length > 0) {
+            dispatch(setClosedItems(data?.data?.data));
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (message?.data?.type === "new_message") {
+      let message = store.getState().settings.messagingData;
+      const token = await getData(secureStoreKeys.JWT_TOKEN);
+      try {
+        const response = await fetch(
+          `${BASE_URL}${API.GET_ALL_CHATS_LIST}/10/0`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        // Handle the fetched data here
+        if (data.status === 1) {
+          if (data && data?.data?.list?.length > 0) {
+            let total_data = [...message, ...data?.data?.list];
+            // const uniqueChat = _.uniqBy(total_data, "id");
+            const groupedData: ChatDataList[] = total_data.reduce(
+              (acc, curr) => {
+                const key = curr.username;
+                if (!acc.hasOwnProperty(key)) {
+                  acc[key] = curr;
+                } else if (curr.created_at > acc[key].created_at) {
+                  acc[key] = curr;
+                }
+                return acc;
+              },
+              {}
+            );
+
+            // Convert the grouped object to an array
+            const latestData = Object.values(groupedData);
+            dispatch(setMessagingData(latestData));
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (message?.data?.type === "logout") {
+      setVisibleDeleteAccount(true);
+      // let userData = store.getState().settings.userData;
+      // if (userData?.is_social == 1) {
+      //   await GoogleSignin.signOut();
+      // }
+      // setVisible(false);
+      // // dispatch(logout());
+      // await setData(secureStoreKeys.JWT_TOKEN, null);
+      // await setData(USER_DATA, null);
+      // dispatch(setSaveNotificationCount(0));
+      // notifee.cancelAllNotifications();
+      // // @ts-ignore
+      // dispatch(setUserData({}));
+      // navigationRef.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{ name: Route.navAuthentication }],
+      //   })
+      // );
     }
 
     const channelId = await notifee.createChannel({
@@ -285,6 +399,32 @@ const MainNavigator = () => {
         visiblePopup={visible}
         togglePopup={togglePopup}
         onPressOkay={onPressOkay}
+      />
+      <LogoutPopup
+        title1={"Account Terminated"}
+        title2={"Admin terminated your account"}
+        title3={"Dismiss"}
+        visiblePopup={visibleDeleteAccount}
+        loading={false}
+        onPressLogout={async () => {
+          let userData = store.getState().settings.userData;
+          if (userData?.is_social == 1) {
+            await GoogleSignin.signOut();
+          }
+          await setData(secureStoreKeys.JWT_TOKEN, null);
+          await setData(USER_DATA, null);
+          dispatch(setSaveNotificationCount(0));
+          notifee.cancelAllNotifications();
+          // @ts-ignore
+          dispatch(setUserData({}));
+          setVisibleDeleteAccount(false);
+          navigationRef.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: Route.navAuthentication }],
+            })
+          );
+        }}
       />
       <MainStack />
     </NavigationContainer>

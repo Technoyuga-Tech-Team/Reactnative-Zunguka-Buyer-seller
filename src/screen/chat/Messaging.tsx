@@ -13,6 +13,9 @@ import ChatListing from "../../components/Chat/ChatListing";
 import NoDataFound from "../../components/ui/NoDataFound";
 import { ThemeProps } from "../../types/global.types";
 import * as _ from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { getMessagingData } from "../../store/settings/settings.selectors";
+import { setMessagingData } from "../../store/settings/settings.slice";
 
 const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
   navigation,
@@ -20,12 +23,20 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+  const dispatch = useDispatch();
+  const messagingData = useSelector(getMessagingData);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
   const [chatData, setChatData] = useState<ChatDataList[]>([]);
+
+  useEffect(() => {
+    if (messagingData?.length > 0) {
+      setChatData(messagingData);
+    }
+  }, [messagingData]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -74,8 +85,7 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
 
           // Convert the grouped object to an array
           const latestData = Object.values(groupedData);
-          console.log("latestData = = = ", latestData);
-
+          dispatch(setMessagingData(latestData));
           setChatData(latestData);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);

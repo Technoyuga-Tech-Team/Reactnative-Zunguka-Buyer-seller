@@ -22,7 +22,7 @@ interface ProductProps {
   isLoading?: boolean;
   showLoadMore?: boolean;
   fromClosedItem?: boolean;
-  onPressHireMover?: (itemId: number) => void;
+  onPressHireMover?: (itemId: number, item: ProductDataProps) => void;
 }
 
 const ProductListing: React.FC<ProductProps> = ({
@@ -45,7 +45,9 @@ const ProductListing: React.FC<ProductProps> = ({
         item={item}
         fromClosedItem={fromClosedItem}
         onPress={() => onPress(item.id, item)}
-        onPressHireMover={() => onPressHireMover && onPressHireMover(item.id)}
+        onPressHireMover={() =>
+          onPressHireMover && onPressHireMover(item.id, item)
+        }
       />
     );
   };

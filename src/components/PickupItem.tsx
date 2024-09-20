@@ -43,7 +43,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
 
   const navigation = useNavigation();
 
-  const time = moment(item?.createdAt).startOf("hour").fromNow();
+  const time = moment(item?.createdAt).fromNow();
 
   return (
     <TouchableOpacity
@@ -61,7 +61,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
           }}
         >
           {item?.username && (
-            <Text style={style.txtDate}>{item?.username} - </Text>
+            <Text style={style.txtUsername}>{item?.username} - </Text>
           )}
           <Text style={style.txtDate}>
             {RWF} {item?.price}
@@ -170,6 +170,11 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   txtDate: {
     fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.white,
+  },
+  txtUsername: {
+    fontSize: theme.fontSize?.fs14,
+    fontFamily: theme.fontFamily?.medium,
     color: theme.colors?.white,
   },
   txtProductType: {

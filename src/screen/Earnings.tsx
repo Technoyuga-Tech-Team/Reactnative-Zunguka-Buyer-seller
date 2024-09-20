@@ -157,9 +157,9 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
           <View style={style.firstInnerCont}>
             <View>
               <Text style={style.txtEarning}>
-                {RWF} {parseFloat(`${totalEarning}`).toFixed(2)}
+                {parseFloat(`${totalEarning}`).toFixed(2)}
               </Text>
-              <Text style={style.txtBalance}>Balance</Text>
+              <Text style={style.txtBalance}>{RWF} Balance</Text>
             </View>
             <CustomButton
               disabled={totalEarning == 0}

@@ -358,7 +358,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     else if (!isValidDescription) {
       setProductDescriptionError("Description is required");
       return false;
-    } else if (!isValidModeOfTransport) {
+    } else if (!isValidModeOfTransport && district !== "Out of Kigali") {
       setVehicleError("Mode of transport is required");
       return false;
     } else if (!isValidPrice) {
@@ -674,35 +674,40 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           onSubmitEditing={() => {}}
           extraPeddingLeft={true}
         />
-
-        <TitleWithInfoIcon title="Mode of transports" />
-        <View style={style.paddingHorizontal}>
-          <CustomDropdown
-            dropDownData={VEHICLE_TYPE_DATA}
-            placeHolder={"Select"}
-            value={vehicle}
-            topMargin={20}
-            onSelect={(val) => {
-              setVehicleError("");
-              setVehicle(val.key);
-            }}
-            error={vehicleError}
-          />
-        </View>
-        <View style={[style.paddingHorizontal, { marginTop: 10 }]}>
-          <InputFieldInfo
-            text={
-              "Moto, Cab and Tricycle apply only in city of Kigali. \nTransport costs vary for each mode you choose and are charged to the buyer."
-            }
-          />
-        </View>
-        <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
-          <TermsAndCondition
-            checked={checkedSelfPickup}
-            toggleCheckbox={toggleCheckSelfPickup}
-            title="Self pickup available"
-          />
-        </View>
+        {district !== "Out of Kigali" && (
+          <>
+            <TitleWithInfoIcon title="Mode of transports" />
+            <View style={style.paddingHorizontal}>
+              <CustomDropdown
+                dropDownData={VEHICLE_TYPE_DATA}
+                placeHolder={"Select"}
+                value={vehicle}
+                topMargin={20}
+                onSelect={(val) => {
+                  setVehicleError("");
+                  setVehicle(val.key);
+                }}
+                error={vehicleError}
+              />
+            </View>
+            <View style={[style.paddingHorizontal, { marginTop: 10 }]}>
+              <InputFieldInfo
+                text={
+                  "Moto, Cab and Tricycle apply only in city of Kigali. \nTransport costs vary for each mode you choose and are charged to the buyer."
+                }
+              />
+            </View>
+          </>
+        )}
+        {district !== "Out of Kigali" && (
+          <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
+            <TermsAndCondition
+              checked={checkedSelfPickup}
+              toggleCheckbox={toggleCheckSelfPickup}
+              title="Self pickup available"
+            />
+          </View>
+        )}
         <TitleWithInfoIcon title="Selling Price" />
         <CustomTxtInput
           placeholder="Enter price"
