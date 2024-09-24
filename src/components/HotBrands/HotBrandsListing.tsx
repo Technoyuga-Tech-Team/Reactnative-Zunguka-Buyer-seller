@@ -25,10 +25,17 @@ const HotBrandsListing: React.FC<CategoryDataProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
 
-  const renderItem = ({ item }: { item: HotBrandaDataProps }) => {
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: HotBrandaDataProps;
+    index: number;
+  }) => {
     return (
       <HotBrandsItem
         item={item}
+        index={index}
         onPressHotBrands={() => onPressHotBrands(item)}
       />
     );
@@ -60,8 +67,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flexGrow: 1,
   },
   columnWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    // flexDirection: "row",
+    // alignItems: "center",
   },
 }));

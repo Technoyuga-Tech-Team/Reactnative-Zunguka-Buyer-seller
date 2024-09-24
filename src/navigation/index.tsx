@@ -176,32 +176,73 @@ const MainNavigator = () => {
   const handleClickedNotitfaction = (
     notification: FirebaseMessagingTypes.RemoteMessage | Notification
   ): void => {
-    if (notification && notification.data && notification.data.type) {
-      switch (notification.data.type) {
-        case "new_message":
-          const user = notification.data.user as string;
-          let data = JSON.parse(user);
-          let product_id = notification?.data?.chat_ref_id;
-          // @ts-ignore
-          navigationRef.navigate(Route.navChatroom, {
-            receiver_id: data?.id,
-            product_id: product_id,
-          });
-          break;
-        case "new_item":
-          let itemId = notification?.data?.ref_id;
-          // @ts-ignore
-          navigationRef.navigate(Route.navProductDetails, { itemId: itemId });
-          // set default type wise
-          break;
-        case "Brand":
-          // set default type wise
-          break;
-        default:
-          null;
-        // set default notification
+    setTimeout(() => {
+      if (notification && notification.data && notification.data.type) {
+        switch (notification.data.type) {
+          case "new_message":
+            const user = notification.data.user as string;
+            let data = JSON.parse(user);
+            let product_id = notification?.data?.chat_ref_id;
+            // @ts-ignore
+            navigationRef.navigate(Route.navChatroom, {
+              receiver_id: data?.id,
+              product_id: product_id,
+            });
+            // navigationRef.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: Route.navDashboard,
+            //         state: {
+            //           routes: [
+            //             {
+            //               name: Route.navChatroom,
+            //               params: {
+            //                 receiver_id: data?.id,
+            //                 product_id: product_id,
+            //               },
+            //             },
+            //           ],
+            //         },
+            //       },
+            //     ],
+            //   })
+            // );
+            break;
+          case "new_item":
+            let itemId = notification?.data?.ref_id;
+            // @ts-ignore
+            navigationRef.navigate(Route.navProductDetails, { itemId: itemId });
+            // navigationRef.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: Route.navDashboard,
+            //         state: {
+            //           routes: [
+            //             {
+            //               name: Route.navProductDetails,
+            //               params: { itemId: itemId },
+            //             },
+            //           ],
+            //         },
+            //       },
+            //     ],
+            //   })
+            // );
+            // set default type wise
+            break;
+          case "Brand":
+            // set default type wise
+            break;
+          default:
+            null;
+          // set default notification
+        }
       }
-    }
+    }, 1000);
   };
 
   notifee.onBackgroundEvent(async (localMessage) => {

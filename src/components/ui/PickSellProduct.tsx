@@ -121,6 +121,7 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
                   source={source}
                   style={style.imgCont}
                   resizeMode={isHaveImage ? "cover" : "contain"}
+                  zoomViewDisable={false}
                 />
               ) : (
                 <TouchableOpacity activeOpacity={0.8} onPress={onPressAddImage}>

@@ -44,7 +44,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
   const navigation = useNavigation();
 
   const time = moment(item?.createdAt).fromNow();
-
+  console.log("item", item);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -64,7 +64,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
             <Text style={style.txtUsername}>{item?.username} - </Text>
           )}
           <Text style={style.txtDate}>
-            {RWF} {item?.price}
+            {RWF} {Number(item?.price).toFixed(2)}
           </Text>
         </View>
       </View>

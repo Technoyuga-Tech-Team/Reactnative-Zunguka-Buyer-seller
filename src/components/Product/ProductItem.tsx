@@ -32,6 +32,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const showRequestBtn = item?.is_delivery_button;
   const isSearch = item?.is_searching_button;
   const is_otp = item?.is_otp;
+
   const currentUsersProduct = item?.user_id == userData?.id;
 
   return (

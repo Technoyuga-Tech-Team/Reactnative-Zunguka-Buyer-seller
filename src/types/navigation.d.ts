@@ -92,6 +92,7 @@ export type AppRoutes = {
   PayoutHistory: undefined;
   OngoingMoverRequest: undefined;
   PastMoverRequest: undefined;
+  AdminVerification: undefined;
 };
 
 export type AuthenticationRoutes = {

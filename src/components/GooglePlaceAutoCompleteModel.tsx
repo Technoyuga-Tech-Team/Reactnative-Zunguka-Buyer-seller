@@ -121,7 +121,7 @@ const GooglePlaceAutoCompleteModal: React.FC<
           query={{
             key: GOOGLE_MAP_API_KEY,
             language: "en",
-            components: `country:in`,
+            // components: `country:in`,
           }}
           autoFillOnNotFound={true}
           currentLocation={true}

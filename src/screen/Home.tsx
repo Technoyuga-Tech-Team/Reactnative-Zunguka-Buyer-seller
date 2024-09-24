@@ -207,12 +207,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAllBrand);
   };
   const onPressBanner = async () => {
-    // navigation.navigate(Route.navPayment);
-    // navigation.navigate(Route.navModeOfDelivery);
-    // navigation.navigate(Route.navDeliveryAddress);
-    // navigation.navigate(Route.navAuthentication, {
-    //   screen: Route.navTakeSelfie,
-    // });
+    navigation.navigate(Route.navAdminVerification);
   };
 
   return (
@@ -259,7 +254,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
                 onPressSeeAll={onPressSeeAllHotBrands}
               />
               <HotBrandsListing
-                HotBrandsData={hotBrands}
+                HotBrandsData={hotBrands.slice(0, 6)}
                 onPressHotBrands={(item) => onPressHotBrands(item)}
               />
             </>

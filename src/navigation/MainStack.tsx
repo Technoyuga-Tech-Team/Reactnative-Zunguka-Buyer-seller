@@ -50,6 +50,7 @@ import { AppRoutes } from "../types/navigation";
 import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
 import AllBrands from "../screen/AllBrands";
+import AdminVerification from "../screen/authentication/AdminVerification";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -191,6 +192,10 @@ const MainStack = () => {
             component={PayoutHistory}
           />
           <Stack.Screen name={Route.navAllBrand} component={AllBrands} />
+          <Stack.Screen
+            name={Route.navAdminVerification}
+            component={AdminVerification}
+          />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

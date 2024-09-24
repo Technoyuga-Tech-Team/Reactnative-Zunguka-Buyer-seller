@@ -50,17 +50,17 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
     useState<string>("");
 
   const onPressFromCamera = async () => {
-    togglePopup();
-    setTimeout(async () => {
-      if (Platform.OS === "android") {
-        const hasPermission = await requestCameraPermission();
-        if (hasPermission) {
-          openPickerCameraImage();
-        }
-      } else {
+    // togglePopup();
+    // setTimeout(async () => {
+    if (Platform.OS === "android") {
+      const hasPermission = await requestCameraPermission();
+      if (hasPermission) {
         openPickerCameraImage();
       }
-    }, 100);
+    } else {
+      openPickerCameraImage();
+    }
+    // }, 100);
   };
 
   const openPickerCameraImage = async () => {
@@ -91,7 +91,7 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
   };
 
   const onPressUploadPhotos = () => {
-    setVisible(true);
+    onPressFromCamera();
   };
 
   useEffect(() => {
@@ -122,6 +122,7 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
               source={item.uri}
               style={style.imgCont}
               resizeMode="cover"
+              zoomViewDisable={false}
             />
             <TouchableOpacity
               onPress={() => onPressCloseIcon(item)}
@@ -156,12 +157,12 @@ const UploadPhotos: React.FC<UploadPhotosProps> = ({
           <PlusIcon />
         </TouchableOpacity>
       )}
-      <ImagePickerPopup
+      {/* <ImagePickerPopup
         visiblePopup={visible}
         togglePopup={togglePopup}
         onPressFromCamera={onPressFromCamera}
         onPressFromGallary={onPressFromGallary}
-      />
+      /> */}
     </View>
   );
 };

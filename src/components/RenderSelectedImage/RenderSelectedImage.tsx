@@ -11,11 +11,13 @@ import CloseIcon from "../ui/svg/CloseIcon";
 interface RenderSelectedImageProps {
   data: any[];
   onPressCloseIcon: (item: any) => void;
+  largSize?: boolean;
 }
 
 const RenderSelectedImage: React.FC<RenderSelectedImageProps> = ({
   data,
   onPressCloseIcon,
+  largSize,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -32,8 +34,9 @@ const RenderSelectedImage: React.FC<RenderSelectedImageProps> = ({
             <View>
               <AppImage
                 source={item.uri || item}
-                style={style.img}
+                style={largSize ? style.img1 : style.img}
                 resizeMode="cover"
+                zoomViewDisable={false}
               />
               <TouchableOpacity
                 onPress={() => onPressCloseIcon(item)}
@@ -70,5 +73,11 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     width: Scale(100),
     borderRadius: 10,
     marginHorizontal: 10,
+  },
+  img1: {
+    borderRadius: 10,
+    marginHorizontal: 10,
+    height: Scale(170),
+    width: Scale(300),
   },
 }));

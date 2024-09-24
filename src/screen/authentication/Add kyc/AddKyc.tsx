@@ -280,6 +280,7 @@ const AddKyc: React.FC<HomeNavigationProps<Route.navAddKyc>> = ({
           {image && image.length > 0 ? (
             <RenderSelectedImage
               data={image}
+              largSize={true}
               onPressCloseIcon={onPressCloseIcon}
             />
           ) : (

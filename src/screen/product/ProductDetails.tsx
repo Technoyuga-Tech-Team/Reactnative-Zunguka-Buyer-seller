@@ -282,7 +282,7 @@ const ProductDetails: React.FC<
     navigation.navigate(Route.navProductDetails1, { itemId: id });
   };
 
-  console.log("productDetails", productDetails);
+  console.log("productStatus", productStatus);
 
   return (
     <KeyboardAwareScrollView
@@ -329,9 +329,12 @@ const ProductDetails: React.FC<
       {is_CurrentUsers_product && (
         <View style={style.button}>
           <CustomButton
+            disabled={productStatus == "Archived"}
             onPress={onPressStopPublish}
             title={
-              productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+              productStatus == "Archived"
+                ? "Sold"
+                : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
                 ? "Stop Publish"
                 : "Resume Publish"
             }

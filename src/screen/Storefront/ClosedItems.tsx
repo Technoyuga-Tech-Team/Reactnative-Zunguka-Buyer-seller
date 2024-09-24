@@ -113,6 +113,8 @@ const ClosedItems: React.FC<
     getClosedData(10, 1);
   };
 
+  console.log("dealsData", JSON.stringify(dealsData));
+
   return (
     <View style={style.container}>
       <ProductListing

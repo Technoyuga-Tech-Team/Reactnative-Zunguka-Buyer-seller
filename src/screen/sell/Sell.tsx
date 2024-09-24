@@ -41,7 +41,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
     try {
       setLoader(true);
       const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/open/my/${limit}/${page}`,
+        `${BASE_URL}${API.GET_PRODUCTS}/all/my/${limit}/${page}`,
         {
           method: "GET",
           headers: {

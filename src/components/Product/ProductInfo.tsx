@@ -60,7 +60,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   // productDetails?.district && productDetails?.sector
   //   ? `${productDetails?.district}, ${productDetails?.sector}`
   //   : productDetails?.address;
-
+  const selfPickupAvailable = productDetails?.is_selfpickup_available == 1;
   return (
     <View style={style.container}>
       <View style={style.paddingCont}>
@@ -146,6 +146,30 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <View style={style.fdCont}>
             <Text style={style.txtDetails1}>Model</Text>
             <Text style={style.txtDetails2}>Other</Text>
+          </View>
+          <View style={style.fdCont}>
+            <Text
+              style={[
+                style.txtDetails1,
+                {
+                  fontFamily: theme.fontFamily?.bold,
+                  fontSize: theme.fontSize?.fs15,
+                },
+              ]}
+            >
+              Self pickup Avaialble
+            </Text>
+            <Text
+              style={[
+                style.txtDetails2,
+                {
+                  fontFamily: theme.fontFamily?.bold,
+                  fontSize: theme.fontSize?.fs15,
+                },
+              ]}
+            >
+              {selfPickupAvailable ? "Yes" : "No"}
+            </Text>
           </View>
         </View>
         <ItemSeparator1 />

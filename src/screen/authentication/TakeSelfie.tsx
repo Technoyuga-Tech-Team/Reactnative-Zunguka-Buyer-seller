@@ -334,10 +334,10 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                     color: theme?.colors?.black,
                   }}
                 >
-                  Profile under review
+                  Selfie picture under review
                 </Text>
                 <Text style={style.txtFace}>
-                  Your profile is under review, Admin will verify soon
+                  Your Selfie picture is under review, Admin will verify soon
                 </Text>
               </View>
             </>
@@ -373,8 +373,8 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                       resizeMode="contain"
                     />
                     <Text style={[style.txtFace, { marginTop: 20 }]}>
-                      Your Profile is Rejeceted by Admin, please upload new
-                      selfie!
+                      Your Selfie picture is Rejeceted by Admin, please upload
+                      new selfie!
                     </Text>
                   </View>
                 )}
@@ -392,7 +392,8 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                       resizeMode="contain"
                     />
                     <Text style={[style.txtFace, { marginTop: 20 }]}>
-                      Your Profile is Verified by Admin, You are good to go!
+                      Your Selfie picture is Verified by Admin, You are good to
+                      go!
                     </Text>
                   </View>
                 )}
@@ -421,7 +422,8 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                         } else {
                           dispatch(
                             setErrors({
-                              message: "Your Profile is rejected by the Admin.",
+                              message:
+                                "Your Selfie picture is rejected by the Admin.",
                               status: 0,
                               statusCode: null,
                             })

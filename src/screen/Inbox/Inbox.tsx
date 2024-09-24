@@ -33,7 +33,7 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       dispatch(setSaveNotificationCount(0));
-      // getNotifications(10, 1);
+      getNotifications(10, 1);
     });
     return () => {
       unsubscribe();
