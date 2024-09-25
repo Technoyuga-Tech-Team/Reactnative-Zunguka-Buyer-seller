@@ -207,8 +207,10 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     navigation.navigate(Route.navAllBrand);
   };
   const onPressBanner = async () => {
-    navigation.navigate(Route.navAdminVerification);
+    // navigation.navigate(Route.navAdminVerification);
   };
+
+  console.log("userData - - ", userData);
 
   return (
     <View style={style.container}>

@@ -200,7 +200,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: Route.navDashboard }],
+                routes: [{ name: Route.navAdminVerification }],
               })
             );
           } else {
@@ -320,6 +320,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                   flex: 1,
                   alignItems: "center",
                   justifyContent: "center",
+                  paddingHorizontal: 5,
                 }}
               >
                 <AppImage
@@ -407,7 +408,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                         navigation.dispatch(
                           CommonActions.reset({
                             index: 0,
-                            routes: [{ name: Route.navDashboard }],
+                            routes: [{ name: Route.navAdminVerification }],
                           })
                         );
                       } else {

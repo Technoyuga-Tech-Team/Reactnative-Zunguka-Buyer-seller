@@ -49,7 +49,7 @@ const PackageItem: React.FC<PackageItemProps> = ({
             },
           ]}
         >
-          {RWF} {price}
+          {RWF} {Number(price).toFixed(2)}
         </Text>
       </View>
       <View style={style.innerCont}>

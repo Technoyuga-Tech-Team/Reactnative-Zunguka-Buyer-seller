@@ -71,7 +71,7 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     } catch (error) {
       setLoading(false);
       setLoadMoreLoading(false);
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -79,6 +79,26 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     if (page <= totalPage && !loading) {
       setLoadMoreLoading(true);
       getNotifications(10, page);
+    }
+  };
+
+  const onPressItem = (item: GetNotificationDataList) => {
+    console.log("item - - -", item);
+    if (item.type == "mover_status") {
+      // navigate to request mover page
+      navigation.navigate(Route.navRequestToMover);
+    } else if (item.type == "sold_item") {
+      // navigate to Closed item
+      // @ts-ignore
+      navigation.navigate(Route.navMyStorefront, {
+        screen: Route.navClosedItems,
+      });
+    } else if (item.type == "new_item") {
+      // navigate to product details
+      navigation.navigate(Route.navProductDetails, { itemId: item?.item_id });
+    } else if (item.type == "new_message") {
+      // navigate to Search screen
+      // navigation.navigate(Route.navChatroom,{product_id:"",receiver_id:""})
     }
   };
 
@@ -90,6 +110,7 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
         notificationLoading={loading}
         onEndReached={onEndReached}
         loadMoreLoading={loadMoreLoading}
+        onPressItem={onPressItem}
       />
     </View>
   );

@@ -132,7 +132,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       const formData = new FormData();
       const is_house_num = noHouseNumber ? 0 : 1;
       formData.append("is_gps_location", `${gpsAddressHave}`);
-      formData.append("address", `${gpsAddress}`);
+      formData.append("address", `${gpsAddress || "kigali"}`);
       formData.append("house_number", `${houseNumber}`);
       formData.append("is_house_number", `${is_house_num}`);
       formData.append("street_number", `${streetNumber}`);

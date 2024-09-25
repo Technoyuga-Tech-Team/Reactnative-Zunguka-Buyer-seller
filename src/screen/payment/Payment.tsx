@@ -1,6 +1,5 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { CommonActions } from "@react-navigation/native";
-import axios from "axios";
 import { PayWithFlutterwave } from "flutterwave-react-native";
 import React, {
   useCallback,
@@ -10,44 +9,42 @@ import React, {
   useState,
 } from "react";
 import { Platform, StatusBar, Text, View } from "react-native";
+import DropShadow from "react-native-drop-shadow";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { Images } from "../../assets/images";
+import { AppImage } from "../../components/AppImage/AppImage";
 import AddressDataSheet from "../../components/DeliveryAddress/AddressDataSheet";
 import SelectCardView from "../../components/Payment/SelectCardView";
 import CustomButton from "../../components/ui/CustomButton";
 import CustomHeader from "../../components/ui/CustomHeader";
+import SelectPaymentMethod from "../../components/ui/SelectPaymentMethod";
 import TermsAndCondition from "../../components/ui/TermsAndCondition";
 import {
   FW_PUBLIC_KEY,
-  FW_SECRET_KEY,
   PAYMENT_METHOD,
   RWF,
   SCREEN_WIDTH,
 } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
+import { userPayDepositSeller } from "../../store/PaymentCard/paymentCard.thunk";
 import {
   getProductInfo,
   getSelectedDeliveryAddress,
   selectUserData,
 } from "../../store/settings/settings.selectors";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import { HomeNavigationProps } from "../../types/navigation";
-import { notifyMessage } from "../../utils/notifyMessage";
-import Scale from "../../utils/Scale";
-import { userPayDepositSeller } from "../../store/PaymentCard/paymentCard.thunk";
-import DropShadow from "react-native-drop-shadow";
-import RenderSortItemsList from "../../components/ui/RenderSortItemsList";
-import { AppImage } from "../../components/AppImage/AppImage";
-import { Images } from "../../assets/images";
-import SelectPaymentMethod from "../../components/ui/SelectPaymentMethod";
-import { selectPaymentCardLoading } from "../../store/PaymentCard/paymentCard.selectors";
 import {
   setProductInfo,
   setSelectedDeliveryAddress,
 } from "../../store/settings/settings.slice";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import { notifyMessage } from "../../utils/notifyMessage";
+import Scale from "../../utils/Scale";
 
 interface RedirectParams {
   status: "successful" | "cancelled";
@@ -324,6 +321,9 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
             payment_options: "card",
           }}
           style={{ paddingHorizontal: 20 }}
+          onInitializeError={(err) => {
+            console.log("err - - - ", err);
+          }}
           customButton={(props) => (
             <CustomButton
               onPress={() => {

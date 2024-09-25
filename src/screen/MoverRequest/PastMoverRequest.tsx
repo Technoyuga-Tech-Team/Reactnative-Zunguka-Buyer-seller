@@ -3,22 +3,21 @@ import { RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { HomeNavigationProps } from "../../types/navigation";
-import { Route } from "../../constant/navigationConstants";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { selectPackageStatusLoading } from "../../store/PackageStatus/packageStatus.selectors";
-import { selectMoverBookingLoading } from "../../store/MoverBooking/moverBooking.selectors";
-import { getUserData, UserData } from "../../types/user.types";
-import { moverPackageStatusDetails } from "../../store/PackageStatus/packageStatus.thunk";
-import { API } from "../../constant/apiEndpoints";
-import { fetch } from "../../store/fetch";
-import { setMoverInfo } from "../../store/settings/settings.slice";
-import { LoadingState, ThemeProps } from "../../types/global.types";
-import { addRating } from "../../store/MoverBooking/moverBooking.thunk";
-import { setSuccess } from "../../store/global/global.slice";
-import CustomHeader from "../../components/ui/CustomHeader";
 import PackageList from "../../components/packages/PackageList";
 import RatingPopup from "../../components/ui/popups/RatingPopup";
+import { API } from "../../constant/apiEndpoints";
+import { Route } from "../../constant/navigationConstants";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { selectMoverBookingLoading } from "../../store/MoverBooking/moverBooking.selectors";
+import { addRating } from "../../store/MoverBooking/moverBooking.thunk";
+import { selectPackageStatusLoading } from "../../store/PackageStatus/packageStatus.selectors";
+import { moverPackageStatusDetails } from "../../store/PackageStatus/packageStatus.thunk";
+import { fetch } from "../../store/fetch";
+import { setSuccess } from "../../store/global/global.slice";
+import { setMoverInfo } from "../../store/settings/settings.slice";
+import { LoadingState, ThemeProps } from "../../types/global.types";
+import { HomeNavigationProps } from "../../types/navigation";
+import { getUserData, UserData } from "../../types/user.types";
 
 const PastMoverRequest: React.FC<
   HomeNavigationProps<Route.navPastMoverRequest>
@@ -136,8 +135,6 @@ const PastMoverRequest: React.FC<
     setPage(0);
     getCompletedData(10, 1);
   };
-
-  console.log("compeltedData", JSON.stringify(compeltedData));
 
   return (
     <View style={style.scrollCont}>

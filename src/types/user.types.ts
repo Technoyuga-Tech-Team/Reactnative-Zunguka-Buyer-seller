@@ -69,6 +69,7 @@ export type UserData = {
   kyc_documents: string;
   id_type: null;
   is_kyc_verified_by_admin: number;
+  all_documentation_approved_by_admin: number;
   selfie_image: string;
   is_selfie_uploaded: number;
   total_earning: number;

@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Scale from "../../utils/Scale";
@@ -10,22 +10,28 @@ import { Images } from "../../assets/images";
 
 interface NotificationItemProps {
   item: GetNotificationDataList;
+  onPressItem: () => void;
 }
-const NotificationItem: React.FC<NotificationItemProps> = ({ item }) => {
+const NotificationItem: React.FC<NotificationItemProps> = ({
+  item,
+  onPressItem,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const time = moment(item?.created_at).fromNow();
   const profile = item.user.profile_image || Images.PLACEHOLDER_IMAGE;
   return (
-    <View style={style.container}>
-      <View style={style.imgCont}>
-        <AppImage source={profile} style={style.profile} resizeMode="cover" />
+    <TouchableOpacity onPress={onPressItem}>
+      <View style={style.container}>
+        <View style={style.imgCont}>
+          <AppImage source={profile} style={style.profile} resizeMode="cover" />
+        </View>
+        <View style={style.txtCont}>
+          <Text style={style.txtTitle}>{item.message}</Text>
+          <Text style={style.txtTime}>{time}</Text>
+        </View>
       </View>
-      <View style={style.txtCont}>
-        <Text style={style.txtTitle}>{item.message}</Text>
-        <Text style={style.txtTime}>{time}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

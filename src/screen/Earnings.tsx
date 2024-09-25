@@ -79,6 +79,7 @@ const Earnings: React.FC<HomeNavigationProps<Route.navEarnings>> = ({
       );
 
       const data = await response.json();
+      console.log("data - - - - ", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         console.log("data - - - - -", data?.data?.data);

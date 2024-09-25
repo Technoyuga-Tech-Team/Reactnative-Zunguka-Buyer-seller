@@ -121,7 +121,7 @@ const ClosedItems: React.FC<
         productData={dealsData}
         onPress={(itemId, item) => onPressProductItem(itemId, item)}
         onPressHireMover={(itemId) => {
-          Alert.alert("Hire Mover", "Are you sure you want to Hire?", [
+          Alert.alert("Hire Mover", "Is items packed and ready to ship?", [
             {
               text: "Cancel",
               onPress: () => console.log("Cancel Pressed"),

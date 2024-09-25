@@ -44,8 +44,11 @@ const Splash: React.FC<SplashScreenProps> = () => {
         let steps = user_data.step;
         let isStepCompleted = user_data.is_profile_completed;
         let isVerify_by_Admin = user_data.is_kyc_verified_by_admin;
+        let isAdmin_verify_account =
+          user_data?.all_documentation_approved_by_admin;
         console.log("isStepCompleted", isStepCompleted);
         console.log("isVerify_by_Admin", isVerify_by_Admin);
+        console.log("isAdmin_verify_account", isAdmin_verify_account);
         console.log("steps", steps);
         if (is_username == 0) {
           // @ts-ignore
@@ -63,13 +66,22 @@ const Splash: React.FC<SplashScreenProps> = () => {
             })
           );
         } else {
-          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: Route.navDashboard }],
-              })
-            );
+          if (isStepCompleted == 1) {
+            if (isVerify_by_Admin == 1 && isAdmin_verify_account == 1) {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: Route.navDashboard }],
+                })
+              );
+            } else if (isVerify_by_Admin == 1) {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: Route.navAdminVerification }],
+                })
+              );
+            }
           } else {
             if (steps == 0) {
               dispatch(saveAddress(""));
