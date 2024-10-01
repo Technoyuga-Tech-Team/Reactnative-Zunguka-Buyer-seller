@@ -55,6 +55,8 @@ export interface DashboardDataProps {
   banners: BannerProps[];
   categories: CategoriesDataProps[];
   brands: HotBrandaDataProps[];
+  unread_notifications: number;
+  unread_alerts: number;
 }
 
 export interface DashboardProps {

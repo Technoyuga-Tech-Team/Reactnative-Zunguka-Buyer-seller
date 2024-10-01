@@ -200,7 +200,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: Route.navAdminVerification }],
+                routes: [{ name: Route.navDashboard }],
               })
             );
           } else {
@@ -335,10 +335,11 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                     color: theme?.colors?.black,
                   }}
                 >
-                  Selfie picture under review
+                  Profile under review
                 </Text>
                 <Text style={style.txtFace}>
-                  Your Selfie picture is under review, Admin will verify soon
+                  Your profile is under review, please wait for 24 hours admin
+                  will verify
                 </Text>
               </View>
             </>
@@ -374,8 +375,8 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                       resizeMode="contain"
                     />
                     <Text style={[style.txtFace, { marginTop: 20 }]}>
-                      Your Selfie picture is Rejeceted by Admin, please upload
-                      new selfie!
+                      Your profile is Rejeceted by Admin, please upload new
+                      selfie!
                     </Text>
                   </View>
                 )}
@@ -393,8 +394,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                       resizeMode="contain"
                     />
                     <Text style={[style.txtFace, { marginTop: 20 }]}>
-                      Your Selfie picture is Verified by Admin, You are good to
-                      go!
+                      Your profile is Verified by Admin, You are good to go!
                     </Text>
                   </View>
                 )}
@@ -408,7 +408,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                         navigation.dispatch(
                           CommonActions.reset({
                             index: 0,
-                            routes: [{ name: Route.navAdminVerification }],
+                            routes: [{ name: Route.navDashboard }],
                           })
                         );
                       } else {
@@ -423,8 +423,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                         } else {
                           dispatch(
                             setErrors({
-                              message:
-                                "Your Selfie picture is rejected by the Admin.",
+                              message: "Your profile is rejected by the Admin.",
                               status: 0,
                               statusCode: null,
                             })

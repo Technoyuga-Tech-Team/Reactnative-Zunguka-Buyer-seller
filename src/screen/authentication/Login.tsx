@@ -122,22 +122,13 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
           let isAdmin_verify_account =
             result.payload?.user?.all_documentation_approved_by_admin;
 
-          if (isStepCompleted == 1) {
-            if (isVerify_by_Admin == 1 && isAdmin_verify_account == 1) {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: Route.navDashboard }],
-                })
-              );
-            } else if (isVerify_by_Admin == 1) {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: Route.navAdminVerification }],
-                })
-              );
-            }
+          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: Route.navDashboard }],
+              })
+            );
           } else {
             if (steps == 0) {
               dispatch(saveAddress(""));

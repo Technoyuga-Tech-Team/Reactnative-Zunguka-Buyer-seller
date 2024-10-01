@@ -38,6 +38,10 @@ export const SignupScreenSchema = (countryCode: CountryCode) => {
     username: Yup.string().trim().required("Username is required"),
     email: Yup.string()
       .trim()
+      .matches(
+        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        "Invalid email address"
+      )
       .email("Invalid email address")
       .required("Email is required"),
 

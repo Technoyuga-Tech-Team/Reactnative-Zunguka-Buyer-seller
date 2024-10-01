@@ -66,3 +66,13 @@ export const getMessagingData = createSelector(
   [selectSettings],
   (settings) => settings.messagingData
 );
+
+export const getUnreadCount = createSelector(
+  [selectSettings],
+  (settings) => settings.unread_count
+);
+
+export const getUnreadAlertCount = createSelector(
+  [selectSettings],
+  (settings) => settings.unread_alert_count
+);

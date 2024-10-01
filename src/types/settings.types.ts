@@ -24,4 +24,6 @@ export interface SettingsStateProps {
   isNewPackageDelivered: number;
   closedItem: any;
   messagingData: ChatDataList[];
+  unread_count: number;
+  unread_alert_count: number;
 }

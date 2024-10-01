@@ -2,15 +2,15 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DUMMY_PLACEHOLDER, RWF, SCREEN_WIDTH } from "../../constant";
+import { useSelector } from "react-redux";
+import { DUMMY_PLACEHOLDER, RWF } from "../../constant";
+import { selectUserData } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import { ProductDataProps } from "../../types/product.types";
 import { getConditionItemValue } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import CustomButton from "../ui/CustomButton";
-import { selectUserData } from "../../store/settings/settings.selectors";
-import { useSelector } from "react-redux";
 
 interface ProductItemProps {
   item: ProductDataProps;

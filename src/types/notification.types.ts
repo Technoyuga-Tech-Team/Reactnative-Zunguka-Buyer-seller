@@ -1,4 +1,9 @@
+import { LoadingState } from "./global.types";
 import { UserData } from "./user.types";
+
+export interface NotificationStatusState {
+  loading: LoadingState;
+}
 
 export interface GetNotificationDataProps {
   message: string;
@@ -11,6 +16,7 @@ export interface GetNotificationData {
   totalRecords: number;
   totalPages: number;
   currentPage: number;
+  unread_notifications: number;
 }
 
 export interface GetNotificationDataList {

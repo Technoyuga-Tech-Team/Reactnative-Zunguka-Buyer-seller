@@ -23,9 +23,15 @@ import { useGetDashboard } from "../hooks/useDashboard";
 import { useMeQuery } from "../hooks/useMeQuery";
 import {
   getNotificationCount,
+  getUnreadAlertCount,
+  getUnreadCount,
   selectUserData,
 } from "../store/settings/settings.selectors";
-import { setUserData } from "../store/settings/settings.slice";
+import {
+  setTotalUnreadAlertCount,
+  setTotalUnreadNotificationCount,
+  setUserData,
+} from "../store/settings/settings.slice";
 import {
   BannerProps,
   CategoriesDataProps,
@@ -34,6 +40,7 @@ import {
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { socket, socketEvent } from "../utils/socket";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -42,6 +49,8 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
   const notificationCount = useSelector(getNotificationCount);
+  const unread_notification_Count = useSelector(getUnreadCount);
+  const unread_alert_Count = useSelector(getUnreadAlertCount);
 
   const { data: currentUser, refetch: refetchUser } = useMeQuery({
     staleTime: Infinity,
@@ -55,6 +64,17 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
   const [hotBrands, setHotBrands] = useState<HotBrandaDataProps[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [unreadNotificationCount, setUnreadNotificationCount] =
+    React.useState(0);
+  const [unreadAlertCount, setUnreadAlertCount] = React.useState(0);
+
+  useEffect(() => {
+    setUnreadAlertCount(unread_alert_Count);
+  }, [unread_alert_Count]);
+
+  useEffect(() => {
+    setUnreadNotificationCount(unread_notification_Count);
+  }, [unread_notification_Count]);
 
   useEffect(() => {
     async function checkNotificationPermission() {
@@ -110,6 +130,11 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         socket.emit("disconnected", userData?.id);
         socket.emit("offline");
         socket.disconnect();
+        const setNotificationHandled = async () => {
+          console.log("Called  notificationHandled to FALSE");
+          await AsyncStorage.setItem("notificationHandled", "false");
+        };
+        setNotificationHandled();
       }
 
       appState.current = nextAppState;
@@ -148,9 +173,18 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   useEffect(() => {
     if (dashboardData?.data) {
+      console.log("dashboardData?.data", dashboardData?.data);
       setBanner(dashboardData?.data?.banners);
       setCategories(dashboardData?.data?.categories);
       setHotBrands(dashboardData?.data?.brands);
+      setUnreadNotificationCount(dashboardData?.data?.unread_notifications);
+      setUnreadAlertCount(dashboardData?.data?.unread_alerts);
+      dispatch(
+        setTotalUnreadNotificationCount(
+          dashboardData?.data?.unread_notifications
+        )
+      );
+      dispatch(setTotalUnreadAlertCount(dashboardData?.data?.unread_alerts));
     }
   }, [dashboardData]);
 
@@ -218,7 +252,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         name={name}
         onPressNotification={onPressNotification}
         onPressSearch={onPressSearch}
-        notificationCount={notificationCount}
+        notificationCount={unreadNotificationCount}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}

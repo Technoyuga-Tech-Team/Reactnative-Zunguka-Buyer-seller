@@ -8,11 +8,16 @@ import { BASE_URL, secureStoreKeys } from "../../constant";
 import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { setSaveNotificationCount } from "../../store/settings/settings.slice";
+import {
+  setMessagingData,
+  setSaveNotificationCount,
+  setTotalUnreadNotificationCount,
+} from "../../store/settings/settings.slice";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { GetNotificationDataList } from "../../types/notification.types";
 import { getData } from "../../utils/asyncStorage";
+import { readUnreadNotification } from "../../store/Notification/notification.thunk";
 
 const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
   navigation,
@@ -25,11 +30,16 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [unreadNotification, setUnreadNotificationCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadMoreLoading, setLoadMoreLoading] = useState(true);
   const [notifications, setNotifications] = useState<GetNotificationDataList[]>(
     []
   );
+
+  useEffect(() => {
+    dispatch(setTotalUnreadNotificationCount(unreadNotification));
+  }, [unreadNotification]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -61,6 +71,7 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
       if (data && data?.data?.data?.length > 0) {
         setLoading(false);
         setNotifications([...notifications, ...data?.data?.data]);
+        setUnreadNotificationCount(data?.data?.unread_notifications);
         setTotalPage(data?.data?.totalPages);
         setPage(page + 1);
         setLoadMoreLoading(false);
@@ -82,7 +93,27 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     }
   };
 
-  const onPressItem = (item: GetNotificationDataList) => {
+  const onPressItem = async (item: GetNotificationDataList) => {
+    if (item.is_read == 0) {
+      let data = [...notifications];
+      data.map((ele) => {
+        if (ele.id == item.id) {
+          return (ele.is_read = 1);
+        }
+      });
+      setNotifications(data);
+      const result = await dispatch(
+        readUnreadNotification({ notification_id: `${item.id}` })
+      );
+      if (readUnreadNotification.fulfilled.match(result)) {
+        if (result.payload.status == 1) {
+          setUnreadNotificationCount(unreadNotification - 1);
+        }
+      } else {
+        console.log("errror getMyEarningData --->", result.payload);
+      }
+    }
+
     console.log("item - - -", item);
     if (item.type == "mover_status") {
       // navigate to request mover page
@@ -90,15 +121,19 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     } else if (item.type == "sold_item") {
       // navigate to Closed item
       // @ts-ignore
-      navigation.navigate(Route.navMyStorefront, {
-        screen: Route.navClosedItems,
-      });
+      // navigation.navigate(Route.navMyStorefront, {
+      //   screen: Route.navClosedItems,
+      // });
+      navigation.navigate(Route.navArchivedProductDetails, { item: item.item });
     } else if (item.type == "new_item") {
       // navigate to product details
       navigation.navigate(Route.navProductDetails, { itemId: item?.item_id });
     } else if (item.type == "new_message") {
       // navigate to Search screen
-      // navigation.navigate(Route.navChatroom,{product_id:"",receiver_id:""})
+      navigation.navigate(Route.navChatroom, {
+        product_id: null,
+        receiver_id: item?.reference_id,
+      });
     }
   };
 

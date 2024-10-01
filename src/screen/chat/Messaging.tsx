@@ -116,6 +116,8 @@ const Messaging: React.FC<HomeNavigationProps<Route.navMessaging>> = ({
     getAllMessages(10, 0, true);
   };
 
+  console.log("chatData - - ", JSON.stringify(chatData));
+
   return (
     <View style={style.container}>
       <StatusBar

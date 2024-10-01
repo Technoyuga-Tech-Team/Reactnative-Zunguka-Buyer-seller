@@ -37,18 +37,22 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
   const [selectedImageForDelete, setSelectedImageForDelete] =
     useState<string>("");
 
-  useEffect(() => {
-    if (selectedImageForDelete !== "") {
-      const filterArr = images.filter((ele) => {
-        return ele.name !== selectedImageForDelete;
-      });
-      setImages(filterArr);
-      setSelectedImageForDelete("");
-    }
-  }, [selectedImageForDelete]);
+  // useEffect(() => {
+  //   if (selectedImageForDelete !== "") {
+  //     const filterArr = images.filter((ele) => {
+  //       return ele.name !== selectedImageForDelete;
+  //     });
+  //     setImages(filterArr);
+  //     setSelectedImageForDelete("");
+  //   }
+  // }, [selectedImageForDelete]);
 
   const onPressCloseIcon = (item: imagePickerProps) => {
-    setSelectedImageForDelete(item.name);
+    // setSelectedImageForDelete(item.name);
+    const filterArr = images.filter((ele) => {
+      return ele.name !== item.name;
+    });
+    setImages(filterArr);
   };
   const onPressFromCamera = async () => {
     togglePopup();

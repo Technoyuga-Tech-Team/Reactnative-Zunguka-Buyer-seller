@@ -448,6 +448,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
   };
 
   const sendMessage = async () => {
+    console.log("product_id", product_id);
     let input_message = inputMessage.trim();
     if (input_message === "") {
       return setInputMessage("");
@@ -471,6 +472,7 @@ const Chatroom: React.FC<HomeNavigationProps<Route.navChatroom>> = ({
       item_id: product_id,
       isApiCall: true,
     };
+    console.log("obj", obj);
     socket.emit(socketEvent.MESSAGE, obj);
     setMessages([
       {

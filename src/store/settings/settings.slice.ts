@@ -72,6 +72,7 @@ const initialState: SettingsStateProps = {
     is_selfie_uploaded: 0,
     total_earning: 0,
     sector: "",
+    all_documentation_approved_by_admin: 0,
   },
   errorFromSocial: false,
   address: "",
@@ -148,9 +149,12 @@ const initialState: SettingsStateProps = {
     is_selfie_uploaded: 0,
     total_earning: 0,
     sector: "",
+    all_documentation_approved_by_admin: 0,
   },
   closedItem: [],
   messagingData: [],
+  unread_count: 0,
+  unread_alert_count: 0,
 };
 
 const settings = createSlice({
@@ -217,6 +221,12 @@ const settings = createSlice({
     setMessagingData: (state, action: PayloadAction<ChatDataList[]>) => {
       state.messagingData = action.payload;
     },
+    setTotalUnreadNotificationCount: (state, action: PayloadAction<number>) => {
+      state.unread_count = action.payload;
+    },
+    setTotalUnreadAlertCount: (state, action: PayloadAction<number>) => {
+      state.unread_alert_count = action.payload;
+    },
   },
 });
 
@@ -234,6 +244,8 @@ export const {
   setMoverInfo,
   setClosedItems,
   setMessagingData,
+  setTotalUnreadNotificationCount,
+  setTotalUnreadAlertCount,
 } = settings.actions;
 
 export default settings.reducer;
