@@ -34,8 +34,7 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
   const dispatch = useAppDispatch();
 
   const [visible, setVisible] = useState(false);
-  const [selectedImageForDelete, setSelectedImageForDelete] =
-    useState<string>("");
+  const [selectedImageForDelete, setSelectedImageForDelete] = useState<any>([]);
 
   // useEffect(() => {
   //   if (selectedImageForDelete !== "") {
@@ -48,7 +47,7 @@ const PickSellProduct: React.FC<PickSellProductProps> = ({
   // }, [selectedImageForDelete]);
 
   const onPressCloseIcon = (item: imagePickerProps) => {
-    // setSelectedImageForDelete(item.name);
+    setSelectedImageForDelete([...selectedImageForDelete, item.name]);
     const filterArr = images.filter((ele) => {
       return ele.name !== item.name;
     });

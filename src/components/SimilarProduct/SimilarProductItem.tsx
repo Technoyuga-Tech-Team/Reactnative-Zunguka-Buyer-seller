@@ -21,7 +21,8 @@ const SimilarProductItem: React.FC<SimilarProductItemProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-  const img = { uri: item?.images[0].image } || Images.PLACEHOLDER_IMAGE;
+
+  const img = { uri: item?.images[0].uri } || Images.PLACEHOLDER_IMAGE;
   return (
     <TouchableOpacity
       onPress={onPressProduct}

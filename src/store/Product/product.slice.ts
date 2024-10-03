@@ -3,6 +3,7 @@ import { LoadingState } from "../../types/global.types";
 import {
   addProductForSell,
   addProductSearchFilter,
+  editProductForSell,
   publishUnpublishProduct,
   sendRequestToNearbyMovers,
   sendTheMessage,
@@ -25,7 +26,8 @@ const product = createSlice({
           addProductSearchFilter.pending,
           sendTheMessage.pending,
           publishUnpublishProduct.pending,
-          sendRequestToNearbyMovers.pending
+          sendRequestToNearbyMovers.pending,
+          editProductForSell.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -38,11 +40,13 @@ const product = createSlice({
           sendTheMessage.fulfilled,
           publishUnpublishProduct.fulfilled,
           sendRequestToNearbyMovers.fulfilled,
+          editProductForSell.fulfilled,
           addProductForSell.rejected,
           addProductSearchFilter.rejected,
           sendTheMessage.rejected,
           publishUnpublishProduct.rejected,
-          sendRequestToNearbyMovers.rejected
+          sendRequestToNearbyMovers.rejected,
+          editProductForSell.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

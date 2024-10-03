@@ -36,6 +36,37 @@ export const addProductForSell = createAsyncThunk<
   }
 );
 
+export const editProductForSell = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/editProductForSell",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.EDIT_PRODUCT_FOR_SELL,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    return data;
+  }
+);
+
 export const addProductSearchFilter = createAsyncThunk<
   any,
   {

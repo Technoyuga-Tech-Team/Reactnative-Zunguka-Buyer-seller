@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import { Platform, Text, View } from "react-native";
+import { Platform, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HomeNavigationProps } from "../types/navigation";
-import { Route } from "../constant/navigationConstants";
-import CustomButton from "../components/ui/CustomButton";
-import { ThemeProps } from "../types/global.types";
-import { HAS_NOTCH, RWF } from "../constant";
-import DeliveryMode from "../components/DeliveryMode";
-import SelfPickupIcon from "../components/ui/svg/SelfPickupIcon";
-import ScooterIcon from "../components/ui/svg/ScooterIcon";
-import CustomHeader from "../components/ui/CustomHeader";
-import { CommonActions } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import DeliveryMode from "../components/DeliveryMode";
+import CustomButton from "../components/ui/CustomButton";
+import CustomHeader from "../components/ui/CustomHeader";
+import ScooterIcon from "../components/ui/svg/ScooterIcon";
+import SelfPickupIcon from "../components/ui/svg/SelfPickupIcon";
+import { HAS_NOTCH, RWF } from "../constant";
+import { Route } from "../constant/navigationConstants";
 import { getProductInfo } from "../store/settings/settings.selectors";
+import { ThemeProps } from "../types/global.types";
+import { HomeNavigationProps } from "../types/navigation";
 
 const ModeOfDelivery: React.FC<
   HomeNavigationProps<Route.navModeOfDelivery>

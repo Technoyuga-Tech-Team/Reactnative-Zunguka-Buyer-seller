@@ -78,7 +78,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   };
 
   const onPressCreateListing = () => {
-    navigation.navigate(Route.navAddNewProduct);
+    navigation.navigate(Route.navAddNewProduct, { product_id: null });
   };
 
   const onEndReached = () => {

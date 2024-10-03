@@ -301,8 +301,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
   };
 
-  console.log("products", JSON.stringify(products));
-
   return (
     <View style={style.container}>
       <CustomSearchBarWithSortAndFilter

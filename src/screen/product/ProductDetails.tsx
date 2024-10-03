@@ -1,6 +1,13 @@
 import { CommonActions } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Alert, Platform, RefreshControl, StatusBar, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  RefreshControl,
+  Share,
+  StatusBar,
+  View,
+} from "react-native";
 import RNBootSplash from "react-native-bootsplash";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -31,6 +38,8 @@ import {
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
+import CustomHeader from "../../components/ui/CustomHeader";
+import NoDataFound from "../../components/ui/NoDataFound";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -40,7 +49,6 @@ const ProductDetails: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const { itemId } = route.params;
-
   const userData = useSelector(selectUserData);
 
   const [productDetails, setProductDetails] =
@@ -58,6 +66,7 @@ const ProductDetails: React.FC<
 
   const [productLikes, setProductLikes] = useState(0);
   const [loader, setLoader] = useState(true);
+  const [itemNotAvailable, setItemNotAvailable] = useState<boolean>(false);
 
   const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
@@ -91,7 +100,20 @@ const ProductDetails: React.FC<
   }, []);
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refetch();
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     if (productDetailsData?.data) {
+      console.log(
+        "productDetailsData?.data - - -",
+        JSON.stringify(productDetailsData?.data)
+      );
       setProductDetails(productDetailsData?.data);
       setProductLikes(productDetailsData?.data?.likes_count);
       setProductBannerData(productDetailsData?.data?.images);
@@ -107,6 +129,12 @@ const ProductDetails: React.FC<
       setPayablePrice(payable_price.toString());
     }
   }, [productDetailsData, is_CurrentUsers_product]);
+
+  useEffect(() => {
+    if (isError && productDetails == null) {
+      setItemNotAvailable(true);
+    }
+  }, [productDetails, isError]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -138,36 +166,37 @@ const ProductDetails: React.FC<
       );
     }
   };
-
   const onPressShare = async () => {
     setDisableShare(true);
-    // onShare(productDetails?.id);
-    const link = await dynamicLinks().buildLink({
-      link: `https://zunguka.page.link/H3Ed?itemId=${productDetails?.id}`,
-      // domainUriPrefix is created in your Firebase console
-      domainUriPrefix: "https://zunguka.page.link",
-      // optional setup which updates Firebase analytics campaign
-      // "banner". This also needs setting up before hand
-      android: {
-        packageName: "com.zunguka",
-        fallbackUrl: "https://google.com",
-      },
-      ios: {
-        bundleId: "com.zunguka",
-        fallbackUrl: "https://google.com",
-      },
-      navigation: {
-        forcedRedirectEnabled: true,
-      },
-      analytics: {
-        campaign: "banner",
-      },
-    });
+    setTimeout(async () => {
+      const link = await dynamicLinks().buildLink({
+        link: `https://zunguka.page.link/H3Ed?itemId=${productDetails?.id}`,
+        // domainUriPrefix is created in your Firebase console
+        domainUriPrefix: "https://zunguka.page.link",
+        // optional setup which updates Firebase analytics campaign
+        // "banner". This also needs setting up before hand
+        android: {
+          packageName: "com.zunguka",
+          fallbackUrl: "https://google.com",
+        },
+        ios: {
+          bundleId: "com.zunguka",
+          fallbackUrl: "https://google.com",
+        },
+        navigation: {
+          forcedRedirectEnabled: true,
+        },
+        analytics: {
+          campaign: "banner",
+        },
+      });
 
-    if (link) {
-      onShare(link);
-    }
-    setDisableShare(false);
+      if (link) {
+        let res = await onShare(link);
+        console.log("res = = = = = ", res);
+        setDisableShare(false);
+      }
+    }, 500);
   };
 
   const onPressDelete = () => {
@@ -282,7 +311,14 @@ const ProductDetails: React.FC<
     navigation.navigate(Route.navProductDetails1, { itemId: id });
   };
 
+  const onPressEditProduct = () => {
+    navigation.navigate(Route.navAddNewProduct, {
+      product_id: productDetails?.id,
+    });
+  };
+
   console.log("productStatus", productStatus);
+  console.log("disableShare", disableShare);
 
   return (
     <KeyboardAwareScrollView
@@ -304,71 +340,93 @@ const ProductDetails: React.FC<
         backgroundColor={theme.colors?.transparent}
         barStyle={"light-content"}
       />
-      {/* {isFetching && <Loading />} */}
-      <ProductBanner productBannerData={productBannerData} />
-      <View style={style.header}>
-        <ProductHeader
-          onPressBack={onPressBack}
-          disableShare={disableShare}
-          onPressShare={onPressShare}
-          showDelete={is_CurrentUsers_product}
-          onPressDelete={onPressDelete}
-        />
-      </View>
-      <ProductInfo
-        productDetails={productDetails}
-        onPressSavedItem={onPressSavedItem}
-        showSimilarItem={true}
-        onPressSimilarProduct={(id) => onPressSimilarProduct(id)}
-        isProductLike={savedItem}
-        productLikes={productLikes}
-        onPressMessage={onPressMessage}
-        isCurrentUsersProduct={is_CurrentUsers_product}
-      />
-      {/* for temporary stop and start the publish this product */}
-      {is_CurrentUsers_product && (
-        <View style={style.button}>
-          <CustomButton
-            disabled={productStatus == "Archived"}
-            onPress={onPressStopPublish}
-            title={
-              productStatus == "Archived"
-                ? "Sold"
-                : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
-                ? "Stop Publish"
-                : "Resume Publish"
-            }
-            buttonWidth="full"
-            width={SCREEN_WIDTH - 100}
-            variant="primary"
-            type="solid"
-            backgroundColor={
-              productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
-                ? theme?.colors?.pinkDark
-                : theme?.colors?.primary
-            }
-          />
+      {itemNotAvailable || productStatus == "Archived" ? (
+        <View style={{ paddingTop: insets.top, flex: 1 }}>
+          <CustomHeader />
+          <NoDataFound title="Item no longer available!" />
         </View>
-      )}
-      {!is_CurrentUsers_product && (
-        <View style={style.button}>
-          <CustomButton
-            onPress={onPressMessage}
-            title={"Message seller"}
-            buttonWidth="half"
-            width={(SCREEN_WIDTH - 50) / 2}
-            variant="secondary"
-            type="outline"
+      ) : (
+        <>
+          <ProductBanner productBannerData={productBannerData} />
+          <View style={style.header}>
+            <ProductHeader
+              onPressBack={onPressBack}
+              disableShare={disableShare}
+              onPressShare={onPressShare}
+              showDelete={is_CurrentUsers_product}
+              onPressDelete={onPressDelete}
+            />
+          </View>
+          <ProductInfo
+            productDetails={productDetails}
+            onPressSavedItem={onPressSavedItem}
+            showSimilarItem={true}
+            onPressSimilarProduct={(id) => onPressSimilarProduct(id)}
+            isProductLike={savedItem}
+            productLikes={productLikes}
+            onPressMessage={onPressMessage}
+            isCurrentUsersProduct={is_CurrentUsers_product}
           />
-          <CustomButton
-            onPress={onPressBuyProduct}
-            title={"Buy Product"}
-            buttonWidth="half"
-            width={(SCREEN_WIDTH - 50) / 2}
-            variant="primary"
-            type="solid"
-          />
-        </View>
+          {/* {is_CurrentUsers_product &&
+            productStatus == PRODUCT_STATUS_DRAFT.DRAFT && (
+              <View style={style.button}>
+                <CustomButton
+                  onPress={onPressEditProduct}
+                  title={"Edit Product"}
+                  buttonWidth="full"
+                  width={SCREEN_WIDTH - 100}
+                  variant="primary"
+                  type="solid"
+                  backgroundColor={theme?.colors?.primary}
+                />
+              </View>
+            )} */}
+          {/* for temporary stop and start the publish this product */}
+          {is_CurrentUsers_product && (
+            <View style={style.button}>
+              <CustomButton
+                disabled={productStatus == "Archived"}
+                onPress={onPressStopPublish}
+                title={
+                  productStatus == "Archived"
+                    ? "Sold"
+                    : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                    ? "Stop Publish"
+                    : "Resume Publish"
+                }
+                buttonWidth="full"
+                width={SCREEN_WIDTH - 100}
+                variant="primary"
+                type="solid"
+                backgroundColor={
+                  productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                    ? theme?.colors?.pinkDark
+                    : theme?.colors?.primary
+                }
+              />
+            </View>
+          )}
+          {!is_CurrentUsers_product && (
+            <View style={style.button}>
+              <CustomButton
+                onPress={onPressMessage}
+                title={"Message seller"}
+                buttonWidth="half"
+                width={(SCREEN_WIDTH - 50) / 2}
+                variant="secondary"
+                type="outline"
+              />
+              <CustomButton
+                onPress={onPressBuyProduct}
+                title={"Buy Product"}
+                buttonWidth="half"
+                width={(SCREEN_WIDTH - 50) / 2}
+                variant="primary"
+                type="solid"
+              />
+            </View>
+          )}
+        </>
       )}
     </KeyboardAwareScrollView>
   );

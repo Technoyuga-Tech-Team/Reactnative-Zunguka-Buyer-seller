@@ -34,7 +34,7 @@ const ProductBannerImage: React.FC<ProductBannerImageProps> = ({
       style={bannerHeight ? styles.container : styles.container1}
     >
       <AppImage
-        source={item?.image}
+        source={item?.uri}
         style={styles.sliderImage}
         resizeMode={bannerHeight ? "cover" : "contain"}
       />

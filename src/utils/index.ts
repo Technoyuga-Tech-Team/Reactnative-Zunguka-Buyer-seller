@@ -75,8 +75,20 @@ const onShare = async (val: string) => {
     message: val,
   };
   try {
-    await Share.share(options);
+    let result = await Share.share(options);
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log("Shared with activity type: " + result.activityType);
+      } else {
+        console.log("Shared successfully");
+        return true;
+      }
+    } else if (result.action === Share.dismissedAction) {
+      console.log("Share dismissed");
+      return false;
+    }
   } catch (error) {
+    return false;
     // showMessage(error.message);
   }
 };

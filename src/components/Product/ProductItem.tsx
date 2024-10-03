@@ -27,8 +27,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const userData = useSelector(selectUserData);
-
-  const product_image = item?.images[0]?.image || DUMMY_PLACEHOLDER;
+  const product_image = item?.images[0]?.uri || DUMMY_PLACEHOLDER;
   const showRequestBtn = item?.is_delivery_button;
   const isSearch = item?.is_searching_button;
   const is_otp = item?.is_otp;

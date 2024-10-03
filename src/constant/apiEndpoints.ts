@@ -31,6 +31,7 @@ export const API = {
   GET_BRANDS: "/brands",
   GET_SUB_CATEGORIES: "/subcategories",
   ADD_PRODUCT_FOR_SELL: "/add-item",
+  EDIT_PRODUCT_FOR_SELL: "/edit-item",
   GET_PRODUCT_DETAILS: "/get-item/",
   GET_PRODUCTS: "/list-item",
   GET_SEARCH_ITEM: "/search-item",

@@ -28,7 +28,7 @@ export type AppRoutes = {
   Dashboard: undefined;
   Home: undefined;
   SearchProduct: { mainCat: string; subCat: string };
-  AddNewProduct: undefined;
+  AddNewProduct: { product_id?: string | null };
   Congratulations: { itemId: number };
   Congratulations1: undefined;
   SellAnItem: undefined;

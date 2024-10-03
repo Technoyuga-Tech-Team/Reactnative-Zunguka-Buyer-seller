@@ -47,9 +47,12 @@ import { isRequiredFields } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useCategories } from "../../hooks/useCategories";
-import { setErrors } from "../../store/global/global.slice";
+import { setErrors, setSuccess } from "../../store/global/global.slice";
 import { selectProductLoading } from "../../store/Product/product.selectors";
-import { addProductForSell } from "../../store/Product/product.thunk";
+import {
+  addProductForSell,
+  editProductForSell,
+} from "../../store/Product/product.thunk";
 import { imagePickerProps } from "../../types/common.types";
 import {
   CategoriesDataProps,
@@ -63,14 +66,20 @@ import Scale from "../../utils/Scale";
 import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { notifyMessage } from "../../utils/notifyMessage";
+import { useProductDetails } from "../../hooks/useProductDetails";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+
+  const { product_id } = route?.params;
+
+  console.log("product_id - - - - -", product_id);
 
   const scrollRef = React.useRef<KeyboardAwareScrollView>(null);
   const productTitleRef = React.useRef<TextInput>(null);
@@ -87,9 +96,11 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [district, setDistrict] = useState("");
   const [districtError, setDistrictError] = useState("");
+  const [changeDistrict, setChangeDistrict] = useState(false);
 
   const [sector, setSector] = useState("");
   const [sectorError, setSectorError] = useState("");
+  const [changeSector, setChangeSector] = useState(false);
 
   const [sectorData, setSectorData] = useState<
     { title: string; key: string }[]
@@ -97,6 +108,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [vehicle, setVehicle] = useState("");
   const [vehicleError, setVehicleError] = useState("");
+  const [changeVehical, setChangeVehical] = useState(false);
 
   const [productTitle, setProductTitle] = useState("");
   const [productTitleError, setProductTitleError] = useState("");
@@ -131,7 +143,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [brands, setBrands] = useState<HotBrandaDataProps[]>([]);
 
   const [expand, setExpand] = useState<number | null>(null);
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColors, setSelectedColors] = useState<any>([]);
   const [selectedColorsError, setSelectedColorsError] = useState<string>("");
 
   const [selectedSize, setSelectedSize] = useState<any[]>([]);
@@ -146,6 +158,118 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const [selectedBrandError, setSelectedBrandError] = useState<string>("");
 
   const [subParantCat, setSubParantCat] = useState<string>("");
+  const [fromEditProfile, setFromEditProfile] = useState<boolean>(false);
+
+  const {
+    data: productDetailsData,
+    refetch,
+    isLoading,
+    isError,
+  } = useProductDetails(product_id, {
+    staleTime: Infinity,
+    cacheTime: 0,
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (product_id) {
+      refetch().then();
+    }
+  }, [product_id]);
+
+  useEffect(() => {
+    if (productDetailsData?.data) {
+      setFromEditProfile(true);
+      console.log(
+        "productDetailsData - - -",
+        JSON.stringify(productDetailsData?.data)
+      );
+      // set Product image of the Product
+      if (productDetailsData?.data?.images.length > 0) {
+        setProductImages(productDetailsData?.data?.images);
+      }
+      // set profuct title
+      setProductTitle(productDetailsData?.data?.title);
+      // set Category of product and ids
+      setSubParantCat(
+        productDetailsData?.data?.category
+          .map((category) => category.name)
+          .join(" - ")
+      );
+      let cat_ids = productDetailsData?.data?.category_id.split(",");
+      setSubCategoryId(Number(cat_ids[0]));
+      setParantCategoryId(Number(cat_ids[1]));
+      // Condition of Item
+      setSelectedCondition(productDetailsData?.data?.condition_of_item);
+      setConditionData(
+        conditionData.map((item) => ({
+          ...item,
+          selected: item.value === productDetailsData?.data?.condition_of_item,
+        }))
+      );
+      // Brand of the Product
+      if (productDetailsData?.data?.brand !== null) {
+        setSelectedBrand({
+          id: productDetailsData?.data?.brand_id,
+          name: productDetailsData?.data?.brand.name,
+        });
+      }
+      // Color of the Product
+      if (productDetailsData?.data?.color !== null) {
+        let color = productDetailsData?.data?.color.split(",");
+        setSelectedColors(color);
+      }
+      // Size of the product
+      if (productDetailsData?.data?.size !== null) {
+        let size = productDetailsData?.data?.size.split(",");
+        setSelectedSizeValues(size);
+      }
+      // District of the product
+      if (productDetailsData?.data?.district) {
+        console.log(
+          "productDetailsData?.data?.district - - ",
+          productDetailsData?.data?.district
+        );
+        setDistrict({
+          key: productDetailsData?.data?.district,
+          title: productDetailsData?.data?.district,
+        });
+      }
+      // Sector of the product
+      if (productDetailsData?.data?.sector) {
+        console.log(
+          "productDetailsData?.data?.sector - - ",
+          productDetailsData?.data?.sector
+        );
+        setSector({
+          key: productDetailsData?.data?.sector,
+          title: productDetailsData?.data?.sector,
+        });
+      }
+      // Discription of the Product
+      if (productDetailsData?.data?.description) {
+        // setDistrict(productDetailsData?.data?.district);
+        setProductDescription(productDetailsData?.data?.description);
+      }
+      // mode of transport of the product
+      if (productDetailsData?.data?.mode_of_transport) {
+        setVehicle({
+          key: productDetailsData?.data?.mode_of_transport,
+          title: productDetailsData?.data?.mode_of_transport,
+        });
+      }
+      // is_selfpickup_available of the product
+      if (productDetailsData?.data?.is_selfpickup_available) {
+        setCheckedSelfPickup(
+          productDetailsData?.data?.is_selfpickup_available == 0 ? false : true
+        );
+      }
+      // selling price of the product
+      if (productDetailsData?.data?.sale_price) {
+        setProductSellingPrice(`${productDetailsData?.data?.sale_price}`);
+      }
+    }
+  }, [productDetailsData]);
 
   const { data: categoriesData, isFetching } = useCategories();
 
@@ -172,7 +296,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     if (district) {
       console.log("district", district);
       DISTRICT_AND_SECTORS.map((ele) => {
-        if (ele.key == district) {
+        if (ele.key == district || district.key) {
           setSectorData(ele.sectors);
         }
       });
@@ -402,7 +526,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("city", district);
       formData.append("address", productLocation);
       formData.append("description", productDescription);
-      formData.append("mode_of_transport", vehicle.toLocaleLowerCase());
+      formData.append("mode_of_transport", vehicle);
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
 
@@ -426,6 +550,66 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         }
       } else {
         console.log("addProductForSell error - - - ", result.payload);
+      }
+    }
+  };
+
+  const onPressEditProduct = async () => {
+    if (checkIsValidForm()) {
+      const formData = new FormData();
+
+      Object.entries(productImages).forEach(([_key, val]) => {
+        formData.append(`images[${_key}]`, {
+          name:
+            val.name ||
+            `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+          type: `image/${getUrlExtension(val.uri)}`,
+          uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+        });
+      });
+      formData.append("item_id", product_id);
+      formData.append("title", productTitle);
+      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      formData.append("condition_of_item", selectedCondition);
+      formData.append("brand_id", selectedBrand.id);
+      formData.append("color", selectedColors.join(", "));
+      formData.append("size", selectedSizeValue.join(", "));
+      formData.append("district", changeDistrict ? district : district.key);
+      formData.append("sector", changeSector ? sector : sector.key);
+      formData.append("city", changeDistrict ? district : district.key);
+      formData.append("address", productLocation);
+      formData.append("description", productDescription);
+      formData.append(
+        "mode_of_transport",
+        changeVehical ? vehicle : vehicle.key
+      );
+      formData.append("sale_price", productSellingPrice);
+      formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
+
+      console.log("Edit product formData - - -", JSON.stringify(formData));
+
+      const result = await dispatch(editProductForSell({ formData: formData }));
+
+      if (editProductForSell.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          console.log(
+            "editProductForSell response - - - ",
+            result.payload?.data
+          );
+          const itemId = result.payload?.data?.id;
+          dispatch(setSuccess("Product updated successfully"));
+          navigation.goBack();
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [
+          //       { name: Route.navCongratulations, params: { itemId: itemId } },
+          //     ],
+          //   })
+          // );
+        }
+      } else {
+        console.log("editProductForSell error - - - ", result.payload);
       }
     }
   };
@@ -618,6 +802,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             onSelect={(val) => {
               setDistrictError("");
               setDistrict(val.key);
+              setChangeDistrict(true);
             }}
             error={districtError}
           />
@@ -630,6 +815,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
               onSelect={(val) => {
                 setSectorError("");
                 setSector(val.key);
+                setChangeSector(true);
               }}
               error={sectorError}
             />
@@ -686,6 +872,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
                 onSelect={(val) => {
                   setVehicleError("");
                   setVehicle(val.key);
+                  setChangeVehical(true);
                 }}
                 error={vehicleError}
               />
@@ -735,9 +922,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           <CustomButton
             onPress={() => {
               Keyboard.dismiss();
-              onPressSubmit();
+              if (product_id) {
+                onPressEditProduct();
+              } else {
+                onPressSubmit();
+              }
             }}
-            title={"Submit"}
+            title={product_id ? "Update" : "Submit"}
             buttonWidth="full"
             variant="primary"
             type="solid"

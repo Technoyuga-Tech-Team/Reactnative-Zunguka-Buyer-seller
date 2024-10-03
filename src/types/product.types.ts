@@ -37,6 +37,9 @@ export interface ProductDataProps {
 export interface productImage {
   item_id: number;
   image: string;
+  name: string;
+  type: string;
+  uri: string;
 }
 interface productCategory {
   name: number;
@@ -66,6 +69,9 @@ export interface sellerDetailsProps {
 interface image {
   image: string;
   item_id: number;
+  name: string;
+  type: string;
+  uri: string;
 }
 
 export enum PRODUCT_STATUS_DRAFT {

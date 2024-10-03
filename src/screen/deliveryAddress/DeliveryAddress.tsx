@@ -514,7 +514,7 @@ const DeliveryAddress: React.FC<
         <CustomDropdown
           ref={regionRef}
           dropDownData={CITIES}
-          placeHolder={"Region"}
+          placeHolder={"District"}
           value={region}
           topMargin={20}
           onSelect={(val) => {
@@ -527,7 +527,7 @@ const DeliveryAddress: React.FC<
         <CustomDropdown
           ref={cityRef}
           dropDownData={CITIES}
-          placeHolder={"City"}
+          placeHolder={"Sector"}
           value={city}
           topMargin={20}
           onSelect={(val) => {
@@ -552,12 +552,12 @@ const DeliveryAddress: React.FC<
           <CustomButton
             onPress={() => {
               if (region == "" && city == "") {
-                setRegionError("Please select the region");
-                setCityError("Please select the city");
+                setRegionError("Please select the district");
+                setCityError("Please select the sector");
               } else if (region == "") {
-                setRegionError("Please select the region");
+                setRegionError("Please select the district");
               } else if (city == "") {
-                setCityError("Please select the city");
+                setCityError("Please select the sector");
               } else {
                 handleSubmit();
               }
