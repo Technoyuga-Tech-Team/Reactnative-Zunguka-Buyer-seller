@@ -215,6 +215,14 @@ const MainNavigator = () => {
             });
             // set default type wise
             break;
+          case "sold_item":
+            let item = notification?.data?.item;
+            // @ts-ignore
+            navigationRef.navigate(Route.navArchivedProductDetails, {
+              item: item.item,
+            });
+            // set default type wise
+            break;
           default:
             null;
           // set default notification

@@ -9,6 +9,7 @@ import { HIT_SLOP2, SCREEN_WIDTH } from "../constant";
 import BellIcon from "./ui/svg/BellIcon";
 import SearchIcon from "./ui/svg/SearchIcon";
 import MarqueeText from "react-native-marquee";
+import RightRoundIcon from "./ui/svg/RightRoundIcon";
 
 interface HeaderHomeProps {
   name: string;
@@ -55,7 +56,12 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
             style={style.notificationCont}
             onPress={onPressNotification}
           >
-            <BellIcon color={theme?.colors?.primaryVibrant} />
+            <RightRoundIcon
+              color={theme?.colors?.white}
+              height={40}
+              width={40}
+            />
+            {/* <BellIcon color={theme?.colors?.primaryVibrant} /> */}
             {notificationCount > 0 && (
               <View style={style.redDot}>
                 <Text style={style.txtNotificationCount}>
@@ -102,7 +108,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     height: Scale(32),
     width: Scale(32),
     borderRadius: Scale(32 / 2),
-    backgroundColor: theme?.colors?.borderButtonColor,
+    backgroundColor: theme?.colors?.pinkDark,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -151,11 +157,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     width: Scale(18),
     borderRadius: Scale(18 / 2),
     backgroundColor: theme.colors?.pinkDark,
-    // borderWidth: 1.5,
-    // borderColor: theme.colors?.white,
     position: "absolute",
-    right: -5,
-    top: -5,
+    right: -6,
+    top: -6,
     alignItems: "center",
     justifyContent: "center",
   },

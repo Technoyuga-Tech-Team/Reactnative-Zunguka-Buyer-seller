@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { makeStyles } from "react-native-elements";
+import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomButton from "../../components/ui/CustomButton";
 import RightRoundIcon from "../../components/ui/svg/RightRoundIcon";
@@ -15,7 +15,7 @@ const Congratulations1: React.FC<
 > = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
-
+  const { theme } = useTheme();
   const onPressDone = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -38,7 +38,7 @@ const Congratulations1: React.FC<
   return (
     <View style={style.container}>
       <View style={style.innerCont}>
-        <RightRoundIcon />
+        <RightRoundIcon color={theme?.colors?.green} />
         <Text style={style.txtCong}>Congratulations</Text>
         <Text style={style.txtDesc}>
           You have successfully made payment for purchase

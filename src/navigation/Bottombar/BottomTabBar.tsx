@@ -11,10 +11,7 @@ import HomeIcon from "../../components/ui/svg/HomeIcon";
 import UserIcon from "../../components/ui/svg/UserIcon";
 import { HIT_SLOP, SCREEN_WIDTH } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
-import {
-  getNotificationCount,
-  getUnreadAlertCount,
-} from "../../store/settings/settings.selectors";
+import { getNotificationCount } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 
@@ -22,7 +19,6 @@ const BottomTabBar = ({ state, navigation }: any) => {
   const insets = useSafeAreaInsets();
   const Style = useStyle({ insets });
   const notificationCount = useSelector(getNotificationCount);
-  const unread_alert_Count = useSelector(getUnreadAlertCount);
 
   const { theme } = useTheme();
 
@@ -81,7 +77,7 @@ const BottomTabBar = ({ state, navigation }: any) => {
                       height={25}
                       width={25}
                     />
-                  ) : route.name === Route.navAlert ? (
+                  ) : route.name === Route.navNotification ? (
                     <>
                       <AlertIcon
                         color={
@@ -92,10 +88,10 @@ const BottomTabBar = ({ state, navigation }: any) => {
                         height={22}
                         width={22}
                       />
-                      {unread_alert_Count > 0 && (
+                      {notificationCount > 0 && (
                         <View style={Style.redDot}>
                           <Text style={Style.txtNotificationCount}>
-                            {unread_alert_Count}
+                            {notificationCount}
                           </Text>
                         </View>
                       )}

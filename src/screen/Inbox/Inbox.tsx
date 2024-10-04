@@ -13,6 +13,7 @@ import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { GetNotificationDataList } from "../../types/notification.types";
 import { getData } from "../../utils/asyncStorage";
+import CustomHeader from "../../components/ui/CustomHeader";
 
 const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
   navigation,
@@ -129,7 +130,8 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
 
   return (
     <View style={style.container}>
-      <Text style={style.txtHeaderTitle}>Alert</Text>
+      <CustomHeader title="Alert" />
+      {/* <Text style={style.txtHeaderTitle}>Alert</Text> */}
       <NotificationListing
         notificationData={notifications}
         notificationLoading={loading}

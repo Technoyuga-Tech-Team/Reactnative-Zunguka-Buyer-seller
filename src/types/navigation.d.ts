@@ -119,7 +119,7 @@ export type BottomRoutes = {
   Home: undefined;
   Favourites: undefined;
   Sell: undefined;
-  Alert: undefined;
+  Notification: undefined;
   Profile: undefined;
 };
 

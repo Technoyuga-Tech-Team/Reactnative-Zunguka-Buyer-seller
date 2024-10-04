@@ -62,6 +62,7 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
         setTotalPage(data?.data?.totalPages);
         setPage(page + 1);
       } else {
+        setSavedProduct([]);
         setLoading(false);
       }
     } catch (error) {

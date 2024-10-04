@@ -217,7 +217,8 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   };
 
   const onPressNotification = () => {
-    navigation.navigate(Route.navNotification);
+    // navigation.navigate(Route.navNotification);
+    navigation.navigate(Route.navAlert);
   };
   const onPressSearch = () => {
     navigation.navigate(Route.navSearchProduct, { mainCat: "", subCat: "" });
@@ -252,7 +253,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         name={name}
         onPressNotification={onPressNotification}
         onPressSearch={onPressSearch}
-        notificationCount={unreadNotificationCount}
+        notificationCount={unreadAlertCount}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}

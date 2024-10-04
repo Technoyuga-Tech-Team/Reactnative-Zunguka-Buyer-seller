@@ -51,6 +51,7 @@ import Authentication from "./Authentication";
 import Bottombar from "./Bottombar/Bottombar";
 import AllBrands from "../screen/AllBrands";
 import AdminVerification from "../screen/authentication/AdminVerification";
+import Inbox from "../screen/Inbox/Inbox";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -161,6 +162,7 @@ const MainStack = () => {
           <Stack.Screen name={Route.navEarnings} component={Earnings} />
           <Stack.Screen name={Route.navWithdraw} component={Withdraw} />
           <Stack.Screen name={Route.navNotification} component={Notification} />
+          <Stack.Screen name={Route.navAlert} component={Inbox} />
           <Stack.Screen
             name={Route.navMySavedKeyword}
             component={MySavedKeywords}

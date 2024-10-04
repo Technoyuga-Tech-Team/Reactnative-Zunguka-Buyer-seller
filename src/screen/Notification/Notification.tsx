@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationListing from "../../components/Notification/NotificationListing";
@@ -139,7 +139,9 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
 
   return (
     <View style={style.container}>
-      <CustomHeader title="Notification" />
+      {/* <CustomHeader title="Notification" /> */}
+      <Text style={style.txtHeaderTitle}>Notification</Text>
+
       <NotificationListing
         notificationData={notifications}
         notificationLoading={loading}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { makeStyles } from "react-native-elements";
+import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomButton from "../../components/ui/CustomButton";
 import RightRoundIcon from "../../components/ui/svg/RightRoundIcon";
@@ -15,7 +15,7 @@ const Congratulations: React.FC<
 > = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
-
+  const { theme } = useTheme();
   const { itemId } = route.params;
 
   const onPressDone = () => {
@@ -45,7 +45,7 @@ const Congratulations: React.FC<
   return (
     <View style={style.container}>
       <View style={style.innerCont}>
-        <RightRoundIcon />
+        <RightRoundIcon color={theme?.colors?.green} />
         <Text style={style.txtCong}>Congratulations</Text>
         <Text style={style.txtDesc}>Your item is listed for sale</Text>
       </View>
