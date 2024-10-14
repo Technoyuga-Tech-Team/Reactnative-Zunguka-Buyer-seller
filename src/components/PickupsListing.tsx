@@ -11,6 +11,7 @@ interface PickupsListingProps {
   fromRequestPage?: boolean;
   isfromMover?: boolean;
   onPressShowDetails?: (item: any) => void;
+  onPressChat: (item: any) => void;
 }
 
 const PickupsListing: React.FC<PickupsListingProps> = ({
@@ -19,6 +20,7 @@ const PickupsListing: React.FC<PickupsListingProps> = ({
   fromRequestPage = false,
   isfromMover = false,
   onPressShowDetails,
+  onPressChat,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -37,6 +39,7 @@ const PickupsListing: React.FC<PickupsListingProps> = ({
         onPressShowDetails={() =>
           onPressShowDetails && onPressShowDetails(item)
         }
+        onPressChat={() => onPressChat(item)}
       />
     );
   };

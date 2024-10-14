@@ -11,15 +11,14 @@ import HomeIcon from "../../components/ui/svg/HomeIcon";
 import UserIcon from "../../components/ui/svg/UserIcon";
 import { HIT_SLOP, SCREEN_WIDTH } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
-import { getNotificationCount } from "../../store/settings/settings.selectors";
+import { getUnreadCount } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import Scale from "../../utils/Scale";
 
 const BottomTabBar = ({ state, navigation }: any) => {
   const insets = useSafeAreaInsets();
   const Style = useStyle({ insets });
-  const notificationCount = useSelector(getNotificationCount);
-
+  const notificationCount = useSelector(getUnreadCount);
   const { theme } = useTheme();
 
   return (
@@ -221,17 +220,15 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     marginBottom: 25,
   },
   redDot: {
-    height: Scale(18),
-    width: Scale(18),
-    borderRadius: Scale(18 / 2),
     backgroundColor: theme.colors?.pinkDark,
-    // borderWidth: 1.5,
-    // borderColor: theme.colors?.white,
     position: "absolute",
-    right: 18,
+    right: 10,
     top: -8,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 20,
   },
   txtNotificationCount: {
     fontSize: theme.fontSize?.fs10,

@@ -22,6 +22,7 @@ import PredefineOTPCodeView from "../../components/ui/PredefineOTPCodeView";
 import MoverItem from "../../components/ui/Mover/MoverItem";
 import BorderBottomItem from "./BorderBottomItem";
 import RatingPopup from "../../components/ui/popups/RatingPopup";
+import moment from "moment";
 
 const DeliveryDetails1: React.FC<
   HomeNavigationProps<Route.navDeliveryDetails1>
@@ -145,15 +146,13 @@ const DeliveryDetails1: React.FC<
   };
 
   const getColorFromStatus = (status: string, theme: Partial<FullTheme>) => {
-    return status === "pending"
-      ? theme.colors?.yellowStar
+    return status === "confirmed"
+      ? theme.colors?.primary
       : status === "startjob"
-      ? theme.colors?.primary
+      ? theme.colors?.green
       : status === "completed"
-      ? theme.colors?.primary
-      : status === "confirmed"
-      ? theme.colors?.yellowStar
-      : theme.colors?.primaryText;
+      ? theme.colors?.secondaryText
+      : theme.colors?.pinkDark;
   };
 
   const getStatusStrings = (status: string) => {
@@ -162,10 +161,10 @@ const DeliveryDetails1: React.FC<
       : status === "startjob"
       ? "Ongoing Job"
       : status === "completed"
-      ? "Delivery location"
+      ? "Reached at delivery location"
       : status === "confirmed"
-      ? "yet to start job"
-      : status;
+      ? "Start job"
+      : "";
   };
 
   console.log("isPackageDeliverd", isPackageDeliverd);
@@ -173,6 +172,8 @@ const DeliveryDetails1: React.FC<
   const title =
     isPackageDeliverd == 1 ? "Package Delivered" : "Delivery Details";
   console.log("deliveryDetailsData", deliveryDetailsData);
+
+  const date_Time = moment(deliveryDetailsData?.createdAt).format("DD/MM/YYYY");
   return (
     <View style={style.container}>
       <CustomHeader
@@ -236,6 +237,15 @@ const DeliveryDetails1: React.FC<
             numberOfLines={3}
             showblur={from_mover ? true : false}
           />
+          {date_Time && (
+            <BorderBottomItem
+              title="Date"
+              value={date_Time}
+              from_mover={false}
+              numberOfLines={3}
+              showblur={from_mover ? true : false}
+            />
+          )}
           {distance && distance !== "" && (
             <BorderBottomItem
               title="Distance"
@@ -273,14 +283,13 @@ const DeliveryDetails1: React.FC<
               from_mover={false}
             />
           )}
-          {from_mover && (
-            <BorderBottomItem
-              title="Status"
-              value={getStatusStrings(deliveryDetailsData?.status)}
-              from_mover={false}
-              txtColor={getColorFromStatus(deliveryDetailsData?.status, theme)}
-            />
-          )}
+
+          <BorderBottomItem
+            title="Status"
+            value={getStatusStrings(deliveryDetailsData?.status)}
+            from_mover={false}
+            txtColor={getColorFromStatus(deliveryDetailsData?.status, theme)}
+          />
         </View>
         {/* <View style={{ marginVertical: 10 }}>
           <CustomButton

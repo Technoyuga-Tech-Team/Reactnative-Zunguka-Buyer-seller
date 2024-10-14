@@ -28,14 +28,18 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getOpenData(10, 1);
+      getOpenData(10, 1, false);
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  const getOpenData = async (offset: number, page: number) => {
+  const getOpenData = async (
+    offset: number,
+    page: number,
+    fromLoadMore: boolean
+  ) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
     try {
       setLoading(true);
@@ -54,7 +58,9 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
       if (data.status === 1) {
         setLoading(false);
         if (data && data?.data?.data.length > 0) {
-          setDealsData(data?.data?.data);
+          fromLoadMore
+            ? setDealsData([...dealsData, data?.data?.data])
+            : setDealsData(data?.data?.data);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
@@ -70,7 +76,7 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
 
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
-      getOpenData(10, page);
+      getOpenData(10, page, true);
     }
   };
 
@@ -79,7 +85,7 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
   };
 
   const onRefresh = () => {
-    getOpenData(10, 1);
+    getOpenData(10, 1, false);
   };
 
   return (

@@ -71,6 +71,7 @@ import {
   GooglePlaceData,
   GooglePlaceDetail,
 } from "react-native-google-places-autocomplete";
+import MapWithSearchLocation from "../../components/MapWithSearchLocation";
 
 const DeliveryAddress: React.FC<
   HomeNavigationProps<Route.navDeliveryAddress>
@@ -676,15 +677,24 @@ const DeliveryAddress: React.FC<
         children={RenderAddressItems()}
       />
       {visibleAddress && (
-        <GooglePlaceAutoCompleteModal
+        <MapWithSearchLocation
           countryCode={CURRENT_COUNTRY_CODE}
-          onPressAddress={(
-            data: GooglePlaceData,
-            details: GooglePlaceDetail
-          ) => {
-            console.log("data, details", data, details);
-            onPressGetAddress(data, details);
+          onPressSetAddress={(address, latlng) => {
+            setFieldValue("deliveryAddress", address);
+            setLatLng({
+              lat: Number(latlng.lat),
+              lng: Number(latlng.lng),
+            });
+            toggleAddressModal();
+            Keyboard.dismiss();
           }}
+          // onPressAddress={(
+          //   data: GooglePlaceData,
+          //   details: GooglePlaceDetail
+          // ) => {
+          //   console.log("data, details", data, details);
+          //   onPressGetAddress(data, details);
+          // }}
           visiblePopup={visibleAddress}
           togglePopup={toggleAddressModal}
         />

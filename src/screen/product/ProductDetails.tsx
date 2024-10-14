@@ -367,7 +367,7 @@ const ProductDetails: React.FC<
             onPressMessage={onPressMessage}
             isCurrentUsersProduct={is_CurrentUsers_product}
           />
-          {/* {is_CurrentUsers_product &&
+          {is_CurrentUsers_product &&
             productStatus == PRODUCT_STATUS_DRAFT.DRAFT && (
               <View style={style.button}>
                 <CustomButton
@@ -380,7 +380,7 @@ const ProductDetails: React.FC<
                   backgroundColor={theme?.colors?.primary}
                 />
               </View>
-            )} */}
+            )}
           {/* for temporary stop and start the publish this product */}
           {is_CurrentUsers_product && (
             <View style={style.button}>

@@ -14,7 +14,7 @@ import JobHistory from "../screen/JobHistory";
 import ModeOfDelivery from "../screen/ModeOfDelivery";
 import MoverRequestTab from "../screen/MoverRequest/MoverRequest";
 import MySavedKeywords from "../screen/MySavedKeywords";
-import Notification from "../screen/Notification/Notification";
+// import Notification from "../screen/Notification/Notification";
 import Splash from "../screen/Splash";
 import MyStorefront from "../screen/Storefront/MyStorefront";
 import Withdraw from "../screen/Withdraw";
@@ -161,7 +161,7 @@ const MainStack = () => {
           <Stack.Screen name={Route.navMessaging} component={Messaging} />
           <Stack.Screen name={Route.navEarnings} component={Earnings} />
           <Stack.Screen name={Route.navWithdraw} component={Withdraw} />
-          <Stack.Screen name={Route.navNotification} component={Notification} />
+          {/* <Stack.Screen name={Route.navNotification} component={Notification} /> */}
           <Stack.Screen name={Route.navAlert} component={Inbox} />
           <Stack.Screen
             name={Route.navMySavedKeyword}

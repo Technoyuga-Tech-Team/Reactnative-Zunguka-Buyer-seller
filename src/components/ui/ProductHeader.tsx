@@ -14,6 +14,7 @@ interface ProductHeaderProps {
   onPressDelete: () => void;
   showDelete: boolean;
   disableShare?: boolean;
+  showRightButtons?: boolean;
 }
 
 const ProductHeader: React.FC<ProductHeaderProps> = ({
@@ -22,6 +23,7 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
   onPressDelete,
   showDelete,
   disableShare,
+  showRightButtons,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -54,29 +56,35 @@ const ProductHeader: React.FC<ProductHeaderProps> = ({
         onPress={onPressBack}
         icon={<LeftIcon color={theme?.colors?.white} />}
       />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <RoundButton
-          disable={disableShare}
-          onPress={onPressShare}
-          icon={
-            <ShareIcon color={theme?.colors?.white} height={15} width={15} />
-          }
-        />
-        {showDelete && (
+      {!showRightButtons && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <RoundButton
-            marginLeft={10}
-            onPress={onPressDelete}
+            disable={disableShare}
+            onPress={onPressShare}
             icon={
-              <DeleteIcon color={theme?.colors?.white} height={15} width={15} />
+              <ShareIcon color={theme?.colors?.white} height={15} width={15} />
             }
           />
-        )}
-      </View>
+          {showDelete && (
+            <RoundButton
+              marginLeft={10}
+              onPress={onPressDelete}
+              icon={
+                <DeleteIcon
+                  color={theme?.colors?.white}
+                  height={15}
+                  width={15}
+                />
+              }
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

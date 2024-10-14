@@ -216,15 +216,23 @@ const MainNavigator = () => {
             // set default type wise
             break;
           case "sold_item":
-            let item = notification?.data?.item;
+            let item = notification?.data?.product;
+            let prod = JSON.parse(item);
+            console.log("prod = = = = =", prod);
             // @ts-ignore
             navigationRef.navigate(Route.navArchivedProductDetails, {
-              item: item.item,
+              item: prod,
             });
             // set default type wise
             break;
           default:
-            null;
+            // @ts-ignore
+            if (notification?.data?.is_notification == "1") {
+              navigationRef.navigate(Route.navNotification);
+            }
+            if (notification?.data?.is_alert == "1") {
+              navigationRef.navigate(Route.navAlert);
+            }
           // set default notification
         }
       }
@@ -262,7 +270,11 @@ const MainNavigator = () => {
       setVisible(true);
     }
 
-    if (message?.data?.type === "confirmed") {
+    if (
+      message?.data?.type === "confirmed" ||
+      message?.data?.type === "send_request_again" ||
+      message?.data?.type === "send_request_again_not_started"
+    ) {
       const token = await getData(secureStoreKeys.JWT_TOKEN);
       try {
         const response = await fetch(

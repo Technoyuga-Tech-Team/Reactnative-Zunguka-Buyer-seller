@@ -84,6 +84,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const scrollRef = React.useRef<KeyboardAwareScrollView>(null);
   const productTitleRef = React.useRef<TextInput>(null);
   const locationRef = React.useRef<TextInput>(null);
+  const districtRef = React.useRef(null);
+  const sectorRef = React.useRef(null);
+  const vehicleRef = React.useRef(null);
 
   const loading = useSelector(selectProductLoading);
 
@@ -226,25 +229,21 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       }
       // District of the product
       if (productDetailsData?.data?.district) {
-        console.log(
-          "productDetailsData?.data?.district - - ",
-          productDetailsData?.data?.district
+        const findDistrictIndex = DISTRICT_AND_SECTORS.findIndex(
+          (ele) => ele.title == productDetailsData?.data?.district
         );
-        setDistrict({
-          key: productDetailsData?.data?.district,
-          title: productDetailsData?.data?.district,
-        });
+
+        districtRef?.current?.selectIndex(findDistrictIndex);
+        setDistrict(productDetailsData?.data?.district);
       }
       // Sector of the product
       if (productDetailsData?.data?.sector) {
-        console.log(
-          "productDetailsData?.data?.sector - - ",
-          productDetailsData?.data?.sector
+        const findDistrictIndex = sectorData.findIndex(
+          (ele) => ele.title == productDetailsData?.data?.sector
         );
-        setSector({
-          key: productDetailsData?.data?.sector,
-          title: productDetailsData?.data?.sector,
-        });
+
+        sectorRef?.current?.selectIndex(findDistrictIndex);
+        setSector(productDetailsData?.data?.sector);
       }
       // Discription of the Product
       if (productDetailsData?.data?.description) {
@@ -253,10 +252,16 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       }
       // mode of transport of the product
       if (productDetailsData?.data?.mode_of_transport) {
-        setVehicle({
-          key: productDetailsData?.data?.mode_of_transport,
-          title: productDetailsData?.data?.mode_of_transport,
-        });
+        console.log(
+          "productDetailsData?.data?.mode_of_transport",
+          productDetailsData?.data?.mode_of_transport
+        );
+        const findIndex = VEHICLE_TYPE_DATA.findIndex(
+          (ele) => ele.key == productDetailsData?.data?.mode_of_transport
+        );
+
+        vehicleRef?.current?.selectIndex(findIndex);
+        setVehicle(productDetailsData?.data?.mode_of_transport);
       }
       // is_selfpickup_available of the product
       if (productDetailsData?.data?.is_selfpickup_available) {
@@ -360,7 +365,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const onChangeProductDescription = (val: string) => {
     setProductDescriptionError("");
-    setProductDescription(val);
+    const cleanedText = val.replace(/\s+/g, " ");
+    setProductDescription(cleanedText);
   };
 
   const onBlurDescription = () => {
@@ -574,15 +580,12 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("brand_id", selectedBrand.id);
       formData.append("color", selectedColors.join(", "));
       formData.append("size", selectedSizeValue.join(", "));
-      formData.append("district", changeDistrict ? district : district.key);
-      formData.append("sector", changeSector ? sector : sector.key);
-      formData.append("city", changeDistrict ? district : district.key);
+      formData.append("district", district);
+      formData.append("sector", sector);
+      formData.append("city", district);
       formData.append("address", productLocation);
       formData.append("description", productDescription);
-      formData.append(
-        "mode_of_transport",
-        changeVehical ? vehicle : vehicle.key
-      );
+      formData.append("mode_of_transport", vehicle);
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
 
@@ -795,6 +798,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <TitleWithInfoIcon title="Location" />
         <View style={style.paddingHorizontal}>
           <CustomDropdown
+            ref={districtRef}
             dropDownData={DISTRICT_AND_SECTORS}
             placeHolder={"District"}
             value={district}
@@ -808,6 +812,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           />
           {sectorData?.length > 0 && (
             <CustomDropdown
+              ref={sectorRef}
               dropDownData={sectorData}
               placeHolder={"Sector"}
               value={sector}
@@ -865,6 +870,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             <TitleWithInfoIcon title="Mode of transports" />
             <View style={style.paddingHorizontal}>
               <CustomDropdown
+                ref={vehicleRef}
                 dropDownData={VEHICLE_TYPE_DATA}
                 placeHolder={"Select"}
                 value={vehicle}

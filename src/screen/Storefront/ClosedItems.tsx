@@ -40,14 +40,18 @@ const ClosedItems: React.FC<
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getClosedData(10, 1);
+      getClosedData(10, 1, false);
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  const getClosedData = async (offset: number, page: number) => {
+  const getClosedData = async (
+    offset: number,
+    page: number,
+    fromLoadMore: boolean
+  ) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
     try {
       setLoading(true);
@@ -66,7 +70,9 @@ const ClosedItems: React.FC<
       if (data.status === 1) {
         setLoading(false);
         if (data && data?.data?.data.length > 0) {
-          setDealsData(data?.data?.data);
+          fromLoadMore
+            ? setDealsData([...dealsData, data?.data?.data])
+            : setDealsData(data?.data?.data);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
@@ -82,7 +88,7 @@ const ClosedItems: React.FC<
 
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
-      getClosedData(10, page);
+      getClosedData(10, page, true);
     }
   };
 
@@ -98,7 +104,7 @@ const ClosedItems: React.FC<
       if (sendRequestToNearbyMovers.fulfilled.match(result)) {
         if (result.payload.status === 1) {
           console.log("result sendRequestToNearbyMovers --->", result.payload);
-          getClosedData(10, 1);
+          getClosedData(10, 1, false);
           // navigation.navigate(Route.navRequestToMover);
         }
       } else {
@@ -110,7 +116,7 @@ const ClosedItems: React.FC<
   };
 
   const onRefresh = () => {
-    getClosedData(10, 1);
+    getClosedData(10, 1, false);
   };
 
   console.log("dealsData", JSON.stringify(dealsData));

@@ -33,6 +33,7 @@ export interface ProductDataProps {
   is_searching_button: boolean;
   pickup_otp: number;
   is_otp: boolean;
+  is_delivered: number;
 }
 export interface productImage {
   item_id: number;
@@ -123,6 +124,7 @@ export interface ProductDetailsDataProps {
   district: string;
   is_selfpickup_available: number;
   similar_products: similarDataProps[];
+  is_delivered: number;
 }
 
 export interface GetPurchasedHistoryProps {

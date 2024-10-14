@@ -154,6 +154,7 @@ const ArchivedProductDetails: React.FC<
           onPressBack={onPressBack}
           onPressShare={onPressShare}
           showDelete={true}
+          showRightButtons={productDetails?.is_delivered == 1}
           onPressDelete={onPressDelete}
         />
       </View>

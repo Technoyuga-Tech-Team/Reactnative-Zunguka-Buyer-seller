@@ -12,10 +12,13 @@ import { CommonActions } from "@react-navigation/native";
 
 const Congratulations1: React.FC<
   HomeNavigationProps<Route.navCongratulations1>
-> = ({ navigation }) => {
+> = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+
+  const { modeOfDelivery } = route.params;
+
   const onPressDone = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -43,9 +46,12 @@ const Congratulations1: React.FC<
         <Text style={style.txtDesc}>
           You have successfully made payment for purchase
         </Text>
-        <Text style={style.txtDesc1}>
-          Once the seller has shipped, you will receive a shipping notification
-        </Text>
+        {modeOfDelivery == "delivery_service" && (
+          <Text style={style.txtDesc1}>
+            Once the seller has shipped, you will receive a shipping
+            notification
+          </Text>
+        )}
       </View>
       <View style={style.button}>
         <CustomButton

@@ -17,6 +17,7 @@ import { productImage } from "../types/product.types";
 import { createArrayUseNumber } from "../utils";
 import ProductBannerImage from "./Product/ProductBannerImage";
 import Paginator from "./ui/Paginator";
+import ImagesZoomViewer from "./ui/popups/ImagesZoomViewer";
 
 const { width: wWidth } = Dimensions.get("window");
 
@@ -31,6 +32,7 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
   const sliderRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
+  const [visiblePopup, setVisiblePopup] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
 
   // handle hardware back button click
@@ -65,13 +67,15 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      nextSlide().then();
-    }, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [nextSlide]);
+    if (!visiblePopup) {
+      const intervalId = setInterval(() => {
+        nextSlide().then();
+      }, 5000);
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [nextSlide, visiblePopup]);
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
@@ -80,6 +84,13 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
       setCurrentSlide(viewableItems[0].index as number);
     }
   ).current;
+
+  const onPressBanner = () => {
+    setVisiblePopup(true);
+  };
+  const togglePopup = () => {
+    setVisiblePopup(!visiblePopup);
+  };
 
   return (
     <View style={styles.mainCont}>
@@ -109,6 +120,7 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
             bannerHeight={286}
             bannerwidth={SCREEN_WIDTH}
             borderRadius={1}
+            onPressBanner={onPressBanner}
           />
         )}
       />
@@ -123,6 +135,13 @@ const ProductBanner: React.FC<ProductBannerProps> = ({ productBannerData }) => {
             showSecondaryColor={true}
           />
         </View>
+      )}
+      {visiblePopup && (
+        <ImagesZoomViewer
+          images={productBannerData}
+          visiblePopup={visiblePopup}
+          togglePopup={togglePopup}
+        />
       )}
     </View>
   );

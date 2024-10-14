@@ -121,11 +121,11 @@ const MoverItem: React.FC<MoverItemProps> = ({ item, onPressHire }) => {
         </View>
 
         <View style={style.txtCont}>
-          <TouchableOpacity style={style.priceCont}>
+          {/* <TouchableOpacity style={style.priceCont}>
             <Text numberOfLines={1} style={style?.txtLocationRate}>
               {RWF} {item?.rate}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={style.addressCont}>
             <LocationIcon
               color={theme?.colors?.greyed}

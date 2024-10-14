@@ -100,12 +100,32 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
       // Geolocation.clearWatch();
     };
   }, []);
+  function getAddressFromCoords(lat, lng) {
+    const apiKey = GOOGLE_MAP_API_KEY; // Replace with your Google Maps API key
+    const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+
+    fetch(geocodeURL)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "OK" && data.results.length > 0) {
+          const address = data.results[0].formatted_address;
+          console.log("Address: ", address);
+          setAddress(address);
+        } else {
+          console.error("No address found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error with geocoding: ", error);
+      });
+  }
 
   const getOneTimeLocation = () => {
     setLoading(true);
     Geolocation.getCurrentPosition(
       //Will give you the current location
       (position) => {
+        console.log("position - - ", position);
         //getting the Longitude from the location json
         const currentLongitude = position.coords.longitude;
         //getting the Latitude from the location json
@@ -119,6 +139,11 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
           latitude: currentLatitude,
           longitude: currentLongitude,
         });
+        setAddressLatLng({
+          lat: Number(currentLatitude),
+          lng: Number(currentLongitude),
+        });
+        getAddressFromCoords(currentLatitude, currentLongitude);
         mapRef.current?.fitToCoordinates(
           [
             {
@@ -245,7 +270,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
           >
             <Marker
               draggable
-              title="Yor are here"
+              title={address ? address : "You are here"}
               description=""
               coordinate={markerCoordinate}
             />
@@ -270,7 +295,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
             query={{
               key: GOOGLE_MAP_API_KEY,
               language: "en",
-              components: `country:rw`, // default is rw
+              // components: `country:rw`, // default is rw
             }}
             autoFillOnNotFound={true}
             currentLocation={true}

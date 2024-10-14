@@ -2183,7 +2183,7 @@ export const SIZES = [
 ];
 
 export const VEHICLE_TYPE_DATA = [
-  { key: "Moto", title: "Moto" },
+  { key: "moto", title: "Moto" },
   { key: "tricycle_cargo", title: "Tricycle Cargo" },
 ];
 
@@ -2222,8 +2222,8 @@ export const PAYMENT_METHOD = [
     selected: true,
   },
   {
-    title: "My Earning",
-    value: "My Earning",
+    title: "My Zunguka Earning",
+    value: "My Zunguka Earning",
     type: "earning",
     selected: false,
   },

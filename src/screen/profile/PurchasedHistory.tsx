@@ -8,6 +8,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import {
   GetProductDetailsDataProps,
+  ProductDataProps,
   ProductDetailsDataProps,
 } from "../../types/product.types";
 import { useGetPurchasedHistory } from "../../hooks/useGetPurchasedHistory";
@@ -26,9 +27,9 @@ const PurchasedHistory: React.FC<
   const [loader, setLoader] = useState(true);
   const [fetchMore, setFetchMore] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [purchasedProduct, setPurchasedProduct] = useState<
-    GetProductDetailsDataProps[]
-  >([]);
+  const [purchasedProduct, setPurchasedProduct] = useState<ProductDataProps[]>(
+    []
+  );
 
   const {
     data: productData,
@@ -53,6 +54,7 @@ const PurchasedHistory: React.FC<
   }, []);
 
   useEffect(() => {
+    console.log("productData =  = =", productData?.data?.data);
     if (productData?.data?.data && productData?.data?.data?.length > 0) {
       setPurchasedProduct([...purchasedProduct, ...productData?.data?.data]);
       setTotalPage(productData?.data?.totalPages);
@@ -77,18 +79,37 @@ const PurchasedHistory: React.FC<
       refetch().then();
     }
   };
+  console.log("purchasedProduct = =", JSON.stringify(purchasedProduct));
 
+  const onPressProduct = (id, item) => {
+    console.log("id = = ", id);
+    console.log("item = = ", item);
+  };
   return (
     <View style={style.container}>
       {/* {!loading && isFetching && <Loading />} */}
       <CustomHeader title="Purchased History" />
-      <ProductListing
-        data={purchasedProduct}
-        onPressProductItem={(item) => onPressProductItem(item)}
-        onPressMoverBook={(item) => onPressMoverBook(item)}
+      {/* <ProductListing
+        productData={purchasedProduct}
+        onPressProductItem={(item: number) => onPressProductItem(item)}
+        onPressMoverBook={(item: number) => onPressMoverBook(item)}
         onEndReached={onEndReached}
         fromPurchased={true}
         isLoading={fetchMoreLoading || loader}
+      /> */}
+      <ProductListing
+        isLoading={loader}
+        productData={purchasedProduct}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={loader}
+        //     onRefresh={onRefresh}
+        //     tintColor={theme?.colors?.primary}
+        //   />
+        // }
+        onPress={onPressProduct}
+        onEndReached={onEndReached}
+        // showLoadMore={page <= totalPage}
       />
     </View>
   );

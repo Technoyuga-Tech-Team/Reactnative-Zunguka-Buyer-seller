@@ -120,17 +120,18 @@ const DeliveryCompleteAndRateDriver: React.FC<
         backgroundColor={theme.colors?.transparent}
         barStyle={"dark-content"}
       />
-      <ImageBackground
+      <View style={style.container}>
+        {/* <ImageBackground
         source={Images.DELIVERY_COMPLETE}
         style={style.container}
-      >
+      > */}
         <TouchableOpacity
           hitSlop={HIT_SLOP2}
           onPress={onPressCancel}
           activeOpacity={0.8}
           style={style.closeCont}
         >
-          <CloseIcon color={theme.colors?.white} />
+          <CloseIcon color={theme.colors?.black} />
         </TouchableOpacity>
 
         <KeyboardAwareScrollView contentContainerStyle={style.innerCont}>
@@ -191,7 +192,8 @@ const DeliveryCompleteAndRateDriver: React.FC<
             />
           </View>
         </KeyboardAwareScrollView>
-      </ImageBackground>
+        {/* </ImageBackground> */}
+      </View>
     </>
   );
 };
@@ -289,7 +291,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   txtTitle1: {
     fontSize: theme.fontSize?.fs12,
     fontFamily: theme.fontFamily?.regular,
-    color: theme.colors?.white,
+    color: theme.colors?.secondaryText,
     textAlign: "center",
     lineHeight: 16,
     marginTop: 10,

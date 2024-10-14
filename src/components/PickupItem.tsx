@@ -7,7 +7,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemeProps } from "../types/global.types";
 import Scale from "../utils/Scale";
 import PickupDeliveryCont from "./PickupDeliveryCont";
-import { RWF } from "../constant";
+import { HIT_SLOP2, RWF } from "../constant";
+import ChatFillIcon from "./ui/svg/ChatFillIcon";
 
 interface PickupItemProps {
   item: any;
@@ -15,6 +16,7 @@ interface PickupItemProps {
   fromRequestPage?: boolean;
   isfromMover?: boolean;
   onPressShowDetails: () => void;
+  onPressChat?: () => void;
 }
 
 const getStatusStrings = (status: string) => {
@@ -36,6 +38,7 @@ const PickupItem: React.FC<PickupItemProps> = ({
   fromRequestPage,
   isfromMover,
   onPressShowDetails,
+  onPressChat,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -44,14 +47,31 @@ const PickupItem: React.FC<PickupItemProps> = ({
   const navigation = useNavigation();
 
   const time = moment(item?.createdAt).fromNow();
-  console.log("item", item);
+
+  const getColors = (status: string, theme: Partial<FullTheme>) => {
+    return status === "confirmed"
+      ? theme.colors?.primary
+      : status === "startjob"
+      ? theme.colors?.green
+      : status === "completed"
+      ? theme.colors?.secondaryText
+      : theme.colors?.pinkDark;
+  };
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={style.container}
+      style={[
+        style.container,
+        { borderColor: getColors(item.status, theme), borderWidth: 1 },
+      ]}
     >
-      <View style={style.topCont}>
+      <View
+        style={[
+          style.topCont,
+          { backgroundColor: getColors(item.status, theme) },
+        ]}
+      >
         <Text style={style.txtDate}>{time}</Text>
         <View
           style={{
@@ -89,7 +109,26 @@ const PickupItem: React.FC<PickupItemProps> = ({
             </Text>
           </TouchableOpacity>
         ) : (
-          <Text style={style.txtProductType}>{item.item_name}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+            }}
+          >
+            <TouchableOpacity
+              onPress={onPressChat}
+              hitSlop={HIT_SLOP2}
+              style={{ flexDirection: "row", alignItems: "center" }}
+            >
+              <ChatFillIcon
+                color={theme.colors?.greyedColor}
+                height={22}
+                width={22}
+              />
+              <Text style={style.txtProductType}>- {item.item_name}</Text>
+            </TouchableOpacity>
+          </View>
         )}
         <View
           style={{
@@ -102,46 +141,12 @@ const PickupItem: React.FC<PickupItemProps> = ({
             style={[
               style.txtProductType,
               {
-                color:
-                  item.status === "confirmed" || item.status === "completed"
-                    ? theme.colors?.primary
-                    : item.status === "startjob"
-                    ? theme.colors?.golden
-                    : theme.colors?.golden,
+                color: getColors(item.status, theme),
               },
             ]}
           >
             {getStatusStrings(item.status)}
-            {/* {item.status} */}
           </Text>
-          {/* {isfromMover && (
-            <TouchableOpacity
-              style={{ marginLeft: 5 }}
-              onPress={onPressShowDetails}
-              activeOpacity={0.8}
-              hitSlop={HIT_SLOP2}
-            >
-              <InfocircleIcon
-                color={theme?.colors?.greyedColor}
-                height={20}
-                width={20}
-              />
-            </TouchableOpacity>
-          )} */}
-          {/* {fromRequestPage && item.status !== "pending" && (
-            <TouchableOpacity
-              style={{ marginLeft: 5 }}
-              onPress={onPressMessage}
-              activeOpacity={0.8}
-              hitSlop={HIT_SLOP2}
-            >
-              <ChatFillIcon
-                color={theme?.colors?.primary}
-                height={28}
-                width={28}
-              />
-            </TouchableOpacity>
-          )} */}
         </View>
       </View>
     </TouchableOpacity>
@@ -190,6 +195,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    borderTopColor: theme.colors?.borderButtonColor,
+    borderTopWidth: 1,
   },
   shadow: {
     shadowColor: theme.colors?.blackTrans,

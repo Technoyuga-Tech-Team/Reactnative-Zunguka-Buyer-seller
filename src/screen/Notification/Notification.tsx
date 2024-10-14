@@ -43,13 +43,12 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      dispatch(setSaveNotificationCount(0));
       getNotifications(10, 1);
     });
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [navigation]);
 
   const getNotifications = async (limit: number, page: number) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
@@ -66,11 +65,11 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
       );
 
       const data = await response.json();
-
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setLoading(false);
         setNotifications([...notifications, ...data?.data?.data]);
+
         setUnreadNotificationCount(data?.data?.unread_notifications);
         setTotalPage(data?.data?.totalPages);
         setPage(page + 1);

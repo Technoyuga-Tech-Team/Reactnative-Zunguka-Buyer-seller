@@ -89,12 +89,10 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
         setOutOfKigali(true);
         setTotalPrice(Number(productInfo?.price).toFixed(2));
       } else {
-        let price1 = (Number(productInfo?.price) * 5) / 100;
-        setTransportFee(price1.toFixed(2));
+        // let price1 = (Number(productInfo?.price) * 5) / 100;
+        // setTransportFee(price1.toFixed(2));
         setTotalPrice(
-          (Number(productInfo?.price) + price1 + Number(deliveryPrice)).toFixed(
-            2
-          )
+          (Number(productInfo?.price) + Number(deliveryPrice)).toFixed(2)
         );
         setOutOfKigali(false);
       }
@@ -226,7 +224,12 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: Route.navCongratulations1 }],
+            routes: [
+              {
+                name: Route.navCongratulations1,
+                params: { modeOfDelivery: modeOfDelivery },
+              },
+            ],
           })
         );
       }
@@ -267,7 +270,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
               />
             </>
           )}
-          {!outOfKigali && (
+          {/* {!outOfKigali && (
             <>
               <RenderItem
                 title="Transport fee (5%)"
@@ -275,7 +278,7 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
               />
               <View style={style.borderCont} />
             </>
-          )}
+          )} */}
 
           <RenderItem title="Total" value={`${RWF} ${totalPrice}`} />
           <View style={style.borderCont} />

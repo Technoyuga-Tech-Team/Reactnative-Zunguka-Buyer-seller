@@ -109,6 +109,13 @@ const OngoingMoverRequest: React.FC<
     getMoverRequestedData();
   };
 
+  const onPressChat = (item: any) => {
+    navigation.navigate(Route.navChatroom, {
+      receiver_id: `${item?.userid}`,
+      product_id: `${item?.product_id}`,
+    });
+  };
+
   return (
     <>
       <View style={style.container}>
@@ -142,6 +149,7 @@ const OngoingMoverRequest: React.FC<
                 data={requestData}
                 onPress={onPressItem}
                 fromRequestPage={true}
+                onPressChat={onPressChat}
               />
             </View>
           ) : (

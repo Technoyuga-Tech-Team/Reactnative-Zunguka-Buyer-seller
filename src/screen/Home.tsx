@@ -48,7 +48,6 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
-  const notificationCount = useSelector(getNotificationCount);
   const unread_notification_Count = useSelector(getUnreadCount);
   const unread_alert_Count = useSelector(getUnreadAlertCount);
 

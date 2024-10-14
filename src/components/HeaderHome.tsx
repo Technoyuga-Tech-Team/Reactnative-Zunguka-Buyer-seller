@@ -58,8 +58,8 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
           >
             <RightRoundIcon
               color={theme?.colors?.white}
-              height={40}
-              width={40}
+              height={60}
+              width={60}
             />
             {/* <BellIcon color={theme?.colors?.primaryVibrant} /> */}
             {notificationCount > 0 && (
@@ -105,12 +105,13 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     justifyContent: "flex-end",
   },
   notificationCont: {
-    height: Scale(32),
-    width: Scale(32),
-    borderRadius: Scale(32 / 2),
+    height: Scale(50),
+    width: Scale(50),
+    borderRadius: Scale(50 / 2),
     backgroundColor: theme?.colors?.pinkDark,
     alignItems: "center",
     justifyContent: "center",
+    marginRight: 10,
   },
   txtName: {
     fontSize: theme.fontSize?.fs28,
@@ -153,15 +154,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     marginHorizontal: 10,
   },
   redDot: {
-    height: Scale(18),
-    width: Scale(18),
-    borderRadius: Scale(18 / 2),
     backgroundColor: theme.colors?.pinkDark,
     position: "absolute",
-    right: -6,
-    top: -6,
+    right: -10,
+    top: -5,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 20,
   },
   txtNotificationCount: {
     fontSize: theme.fontSize?.fs10,

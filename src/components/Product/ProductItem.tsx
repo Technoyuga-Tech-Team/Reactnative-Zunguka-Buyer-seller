@@ -11,6 +11,10 @@ import { getConditionItemValue } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import CustomButton from "../ui/CustomButton";
+import InputFieldInfo from "../ui/InputFieldInfo";
+import { useNavigation } from "@react-navigation/native";
+import { Route } from "../../constant/navigationConstants";
+import RightIcon from "../ui/svg/RightIcon";
 
 interface ProductItemProps {
   item: ProductDataProps;
@@ -24,16 +28,17 @@ const ProductItem: React.FC<ProductItemProps> = ({
   fromClosedItem,
   onPressHireMover,
 }) => {
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const userData = useSelector(selectUserData);
-  const product_image = item?.images[0]?.uri || DUMMY_PLACEHOLDER;
+  const product_image =
+    item?.images?.length > 0 ? item?.images[0]?.uri : DUMMY_PLACEHOLDER;
   const showRequestBtn = item?.is_delivery_button;
   const isSearch = item?.is_searching_button;
   const is_otp = item?.is_otp;
 
   const currentUsersProduct = item?.user_id == userData?.id;
-
   return (
     <View style={style.container}>
       <TouchableOpacity
@@ -65,6 +70,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
             {item.status == "Archived" &&
               currentUsersProduct &&
               !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
+            {item.status == "Archived" &&
+              currentUsersProduct &&
+              fromClosedItem &&
+              item.is_delivered == 1 && (
+                <Text style={style.txtSold}>Delivered</Text>
+              )}
           </View>
 
           <Text numberOfLines={1} style={style.txtTypeAndCategories}>
@@ -84,25 +95,44 @@ const ProductItem: React.FC<ProductItemProps> = ({
         </View>
       </TouchableOpacity>
       {fromClosedItem && showRequestBtn && (
-        <View style={{ marginTop: 10 }}>
-          <CustomButton
-            onPress={() => {
-              if (!(isSearch || is_otp)) {
-                onPressHireMover();
+        <>
+          <View style={{ marginTop: 10 }}>
+            <CustomButton
+              onPress={() => {
+                console.log("isSearch", isSearch);
+                console.log("is_otp", is_otp);
+                if (!(isSearch || is_otp)) {
+                  onPressHireMover();
+                } else if (is_otp) {
+                  navigation.navigate(Route.navRequestToMover, {
+                    screen: Route.navOngoingMoverRequest,
+                  });
+                }
+              }}
+              title={
+                isSearch
+                  ? "Searching Mover..."
+                  : is_otp
+                  ? `OTP ${item?.pickup_otp}`
+                  : "Hire mover"
               }
-            }}
-            title={
-              isSearch
-                ? "Searching Mover..."
-                : is_otp
-                ? `OTP ${item?.pickup_otp}`
-                : "Hire mover"
-            }
-            buttonWidth="full"
-            variant="primary"
-            type="solid"
-          />
-        </View>
+              buttonWidth="full"
+              variant="primary"
+              type="solid"
+              iconPosition="right"
+              icon={is_otp ? <RightIcon color={"white"} /> : null}
+            />
+          </View>
+          {isSearch && (
+            <View style={{ marginTop: 5, paddingHorizontal: 20 }}>
+              <InputFieldInfo
+                text={
+                  "We are searching mover for you, once we get will notified you."
+                }
+              />
+            </View>
+          )}
+        </>
       )}
     </View>
   );

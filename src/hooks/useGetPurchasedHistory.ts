@@ -17,7 +17,7 @@ export const useGetPurchasedHistory = (
     [QueryKeys.PURCHASED_PRODUCTS],
     async () => {
       const { data, errors } = await fetch<GetPurchasedHistoryProps>({
-        url: `${API.GET_PURCHASED_PRODUCTS}/${10}/${page}`,
+        url: `${API.GET_PURCHASED_PRODUCTS}?limit=10&offset=${page}`,
         method: "GET",
       });
 
