@@ -11,11 +11,14 @@ import Snackbar from "react-native-snackbar";
 import { useSelector } from "react-redux";
 // Relative path
 import notifee, { EventType, Notification } from "@notifee/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import messaging, {
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import DeliveryConfirmationPopup from "../components/ui/popups/DeliveryConfirmationPopup";
+import LogoutPopup from "../components/ui/popups/LogoutPopup";
 import {
   BASE_PORT,
   BASE_URL,
@@ -23,6 +26,7 @@ import {
   secureStoreKeys,
   USER_DATA,
 } from "../constant";
+import { API } from "../constant/apiEndpoints";
 import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import {
@@ -41,15 +45,10 @@ import {
   setTotalUnreadNotificationCount,
   setUserData,
 } from "../store/settings/settings.slice";
-import MainStack from "./MainStack";
-import { getData, setData } from "../utils/asyncStorage";
-import { API } from "../constant/apiEndpoints";
-import { ChatDataList } from "../types/chat.types";
 import store from "../store/store";
-import { logout } from "../store/authentication/authentication.thunks";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import LogoutPopup from "../components/ui/popups/LogoutPopup";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ChatDataList } from "../types/chat.types";
+import { getData, setData } from "../utils/asyncStorage";
+import MainStack from "./MainStack";
 
 const linking: LinkingOptions<{}> = {
   prefixes: [`http://${BASE_PORT}/`, `zunguka://`],
@@ -212,6 +211,62 @@ const MainNavigator = () => {
             // @ts-ignore
             navigationRef.navigate(Route.navMyStorefront, {
               screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "confirmed":
+            // @ts-ignore
+            navigationRef.navigate(Route.navMyStorefront, {
+              screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "send_request_again":
+            // @ts-ignore
+            navigationRef.navigate(Route.navMyStorefront, {
+              screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "send_request_again_not_started":
+            // @ts-ignore
+            navigationRef.navigate(Route.navMyStorefront, {
+              screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "delivery_code":
+            // @ts-ignore
+            navigationRef.navigate(Route.navMyStorefront, {
+              screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "send_request_again":
+            // @ts-ignore
+            navigationRef.navigate(Route.navMyStorefront, {
+              screen: Route.navClosedItems,
+            });
+            // set default type wise
+            break;
+          case "on_the_way":
+            // @ts-ignore
+            navigationRef.navigate(Route.navRequestToMover, {
+              screen: Route.navOngoingMoverRequest,
+            });
+            // set default type wise
+            break;
+          case "startjob":
+            // @ts-ignore
+            navigationRef.navigate(Route.navRequestToMover, {
+              screen: Route.navOngoingMoverRequest,
+            });
+            // set default type wise
+            break;
+          case "endjob":
+            // @ts-ignore
+            navigationRef.navigate(Route.navRequestToMover, {
+              screen: Route.navPastMoverRequest,
             });
             // set default type wise
             break;

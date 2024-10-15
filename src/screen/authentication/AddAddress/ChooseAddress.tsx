@@ -9,7 +9,12 @@ import {
   GooglePlacesAutocomplete,
   Point,
 } from "react-native-google-places-autocomplete";
-import MapView, { MapPressEvent, Marker } from "react-native-maps";
+import MapView, {
+  MapPressEvent,
+  Marker,
+  MarkerDragEvent,
+  MarkerDragStartEndEvent,
+} from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddressContainer from "../../../components/ui/AddressContainer";
 import CustomHeader from "../../../components/ui/CustomHeader";
@@ -240,6 +245,22 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
       .catch((error) => console.warn(error)); // Handle errors gracefully
   };
 
+  const onDrag = (event: MarkerDragStartEndEvent) => {
+    const newCoordinate = event.nativeEvent.coordinate;
+    setMarkerCoordinate(newCoordinate);
+    setAddressLatLng({
+      lat: Number(newCoordinate.latitude),
+      lng: Number(newCoordinate.longitude),
+    });
+    // Get address using geocoding library
+    Geocoder.from(newCoordinate)
+      .then((json) => {
+        const formattedAddress = json.results[0].formatted_address;
+        setAddress(formattedAddress);
+      })
+      .catch((error) => console.warn(error)); // Handle errors gracefully
+  };
+
   const onPressSave = () => {
     if (address) {
       dispatch(saveAddress(address));
@@ -266,6 +287,8 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
               latitudeDelta: 0.04,
               longitudeDelta: 0.04,
             }}
+            // onMarkerDrag={onDrag}
+            onMarkerDragEnd={onDrag}
             onPress={handleMapPress}
           >
             <Marker

@@ -32,6 +32,8 @@ import { selectAuthenticationLoading } from "../../../store/authentication/authe
 import { CommonActions } from "@react-navigation/native";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import CheckBoxSelection from "../../../components/ui/CheckBoxSelection";
+import CustomDropdown from "../../../components/Dropdown/CustomDropdown";
+import { DISTRICT_AND_SECTORS } from "../../../constant";
 
 const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   navigation,
@@ -58,6 +60,29 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   const [gpsAddress, setGpsAddress] = useState<string>("");
   const [gpsAddressHave, setGpsAddressHave] = useState<number>(0);
   const [noHouseNumber, setNoHouseNumber] = useState<boolean>(false);
+
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedSector, setSelectedSector] = useState("");
+
+  const [district, setDistrict] = useState("");
+  const [districtError, setDistrictError] = useState("");
+
+  const [sector, setSector] = useState("");
+  const [sectorError, setSectorError] = useState("");
+
+  const [sectorData, setSectorData] = useState<
+    { title: string; key: string }[]
+  >([]);
+
+  useEffect(() => {
+    if (district) {
+      DISTRICT_AND_SECTORS.map((ele) => {
+        if (ele.key == district) {
+          setSectorData(ele.sectors);
+        }
+      });
+    }
+  }, [district]);
 
   useEffect(() => {
     const onBackPress = () => {
@@ -129,6 +154,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       sector,
       district,
     }) => {
+      console.log("calleddd");
       const formData = new FormData();
       const is_house_num = noHouseNumber ? 0 : 1;
       formData.append("is_gps_location", `${gpsAddressHave}`);
@@ -190,6 +216,47 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
 
   const handleCheckboxChange = () => {
     setNoHouseNumber(!noHouseNumber);
+  };
+
+  const onSelectDistrict = (val: {
+    title: string;
+    key: string;
+    id: string;
+  }) => {
+    setDistrictError("");
+    setDistrict(val.key);
+    setFieldValue("district", val.key);
+    setSelectedDistrict(val.key);
+  };
+
+  const onSelectSector = (val: { title: string; key: string; id: string }) => {
+    setSectorError("");
+    setSector(val.key);
+    setFieldValue("sector", val.key);
+    setSelectedSector(val.key);
+  };
+
+  const checkDistrictAndSector = async () => {
+    if (
+      selectedDistrict &&
+      selectedDistrict !== "" &&
+      selectedSector &&
+      selectedSector !== ""
+    ) {
+      return true;
+    } else {
+      if (selectedDistrict == "" && selectedSector == "") {
+        setDistrictError("Please select the district.");
+        setSectorError("Please select the sector.");
+        return false;
+      } else if (selectedDistrict == "") {
+        setDistrictError("Please select the district.");
+        return false;
+      } else if (selectedSector == "") {
+        setSectorError("Please select the sector.");
+        return false;
+      }
+    }
   };
 
   return (
@@ -269,7 +336,23 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             returnKeyType="next"
             onSubmitEditing={() => cityRef.current?.focus()}
           />
-          <CustomTxtInput
+          <CustomDropdown
+            dropDownData={DISTRICT_AND_SECTORS}
+            placeHolder={"District"}
+            value={district}
+            topMargin={15}
+            onSelect={onSelectDistrict}
+            error={districtError}
+          />
+          <CustomDropdown
+            dropDownData={sectorData}
+            placeHolder={"Sector"}
+            value={sector}
+            topMargin={20}
+            onSelect={onSelectSector}
+            error={sectorError}
+          />
+          {/* <CustomTxtInput
             ref={cityRef}
             placeholder="Sector name"
             onChangeText={handleChange("sector")}
@@ -292,13 +375,15 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             returnKeyLabel="next"
             returnKeyType="next"
             onSubmitEditing={() => zipRef.current?.focus()}
-          />
+          /> */}
         </View>
       </KeyboardAwareScrollView>
       <CustomButton
-        onPress={() => {
+        onPress={async () => {
           if (houseImage?.length > 0) {
-            handleSubmit();
+            if (await checkDistrictAndSector()) {
+              handleSubmit();
+            }
           } else {
             setProductImageError("Please add your house image.");
             dispatch(
