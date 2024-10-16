@@ -38,6 +38,7 @@ import {
   HIT_SLOP2,
   RWF,
   SCREEN_HEIGHT,
+  SCREEN_WIDTH,
   secureStoreKeys,
   SIZES,
   VEHICLE_TYPE_DATA,
@@ -162,6 +163,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [subParantCat, setSubParantCat] = useState<string>("");
   const [fromEditProfile, setFromEditProfile] = useState<boolean>(false);
+
+  const [isDraft, setIsDraft] = useState<number>(0);
 
   const {
     data: productDetailsData,
@@ -508,7 +511,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     return true;
   };
 
-  const onPressSubmit = async () => {
+  const onPressSubmit = async (saved_as_draft: number) => {
+    setIsDraft(saved_as_draft);
     if (checkIsValidForm()) {
       const formData = new FormData();
 
@@ -535,6 +539,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("mode_of_transport", vehicle);
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
+      formData.append("is_saved_as_draft", saved_as_draft);
 
       const result = await dispatch(addProductForSell({ formData: formData }));
 
@@ -549,7 +554,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             CommonActions.reset({
               index: 0,
               routes: [
-                { name: Route.navCongratulations, params: { itemId: itemId } },
+                {
+                  name: Route.navCongratulations,
+                  params: { itemId: itemId, savedAsDraft: saved_as_draft },
+                },
               ],
             })
           );
@@ -560,7 +568,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     }
   };
 
-  const onPressEditProduct = async () => {
+  const onPressEditProduct = async (saved_as_draft: number) => {
     if (checkIsValidForm()) {
       const formData = new FormData();
 
@@ -588,6 +596,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("mode_of_transport", vehicle);
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
+      formData.append("is_saved_as_draft", saved_as_draft);
 
       console.log("Edit product formData - - -", JSON.stringify(formData));
 
@@ -925,21 +934,37 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           />
         </View>
         <View style={style.btnSubmit}>
+          {!product_id && (
+            <CustomButton
+              onPress={() => {
+                Keyboard.dismiss();
+                onPressSubmit(1);
+              }}
+              title={"Save as a draft"}
+              buttonWidth="half"
+              width={(SCREEN_WIDTH - 50) / 2}
+              variant="secondary"
+              type="outline"
+              disabled={loading === LoadingState.CREATE && isDraft == 1}
+              loading={loading === LoadingState.CREATE && isDraft == 1}
+            />
+          )}
           <CustomButton
             onPress={() => {
               Keyboard.dismiss();
               if (product_id) {
-                onPressEditProduct();
+                onPressEditProduct(0);
               } else {
-                onPressSubmit();
+                onPressSubmit(0);
               }
             }}
             title={product_id ? "Update" : "Submit"}
-            buttonWidth="full"
+            buttonWidth={product_id ? "full" : "half"}
+            width={product_id ? SCREEN_WIDTH - 50 : (SCREEN_WIDTH - 50) / 2}
             variant="primary"
             type="solid"
-            disabled={loading === LoadingState.CREATE}
-            loading={loading === LoadingState.CREATE}
+            disabled={loading === LoadingState.CREATE && isDraft == 0}
+            loading={loading === LoadingState.CREATE && isDraft == 0}
           />
         </View>
       </KeyboardAwareScrollView>
@@ -1091,6 +1116,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   btnSubmit: {
     marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: "row",

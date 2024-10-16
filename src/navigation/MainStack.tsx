@@ -52,6 +52,7 @@ import Bottombar from "./Bottombar/Bottombar";
 import AllBrands from "../screen/AllBrands";
 import AdminVerification from "../screen/authentication/AdminVerification";
 import Inbox from "../screen/Inbox/Inbox";
+import DraftProductList from "../screen/product/DraftProductList";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -197,6 +198,10 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navAdminVerification}
             component={AdminVerification}
+          />
+          <Stack.Screen
+            name={Route.navDraftItems}
+            component={DraftProductList}
           />
         </Stack.Navigator>
       </BottomSheetModalProvider>

@@ -22,6 +22,7 @@ import CustomHeader from "../../components/ui/CustomHeader";
 import { CustomTxtInput } from "../../components/ui/CustomTextInput";
 import CustomButton from "../../components/ui/CustomButton";
 import { HAS_NOTCH } from "../../constant";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const ChangePassword: React.FC<
   AuthNavigationProps<Route.navChangePassword>

@@ -392,6 +392,8 @@ const ProductDetails: React.FC<
                     ? "Sold"
                     : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
                     ? "Stop Publish"
+                    : productStatus == PRODUCT_STATUS_DRAFT.SAVED_AS_DRAFT
+                    ? "Publish"
                     : "Resume Publish"
                 }
                 buttonWidth="full"

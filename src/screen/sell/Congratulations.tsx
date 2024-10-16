@@ -16,7 +16,7 @@ const Congratulations: React.FC<
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
-  const { itemId } = route.params;
+  const { itemId, savedAsDraft } = route.params;
 
   const onPressDone = () => {
     navigation.dispatch(
@@ -47,7 +47,11 @@ const Congratulations: React.FC<
       <View style={style.innerCont}>
         <RightRoundIcon color={theme?.colors?.green} />
         <Text style={style.txtCong}>Congratulations</Text>
-        <Text style={style.txtDesc}>Your item is listed for sale</Text>
+        <Text style={style.txtDesc}>
+          {savedAsDraft == 1
+            ? "Your item is saved as a draft"
+            : "Your item is listed for sale"}
+        </Text>
       </View>
       <View style={style.button}>
         <CustomButton

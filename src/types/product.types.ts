@@ -78,6 +78,7 @@ interface image {
 export enum PRODUCT_STATUS_DRAFT {
   DRAFT = "Draft",
   ACTIVE = "Active",
+  SAVED_AS_DRAFT = "Saved_as_Draft",
 }
 
 export interface similarDataProps {

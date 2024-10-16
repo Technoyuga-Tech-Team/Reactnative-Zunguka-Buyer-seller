@@ -89,6 +89,9 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const onRefresh = () => {
     getMyProductProducts(10, 1, true);
   };
+
+  console.log("products", JSON.stringify(products));
+
   return (
     <View style={style.container}>
       <Text style={style.txtTitle}>Selling</Text>

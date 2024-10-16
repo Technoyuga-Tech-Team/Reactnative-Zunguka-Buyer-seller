@@ -242,7 +242,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             returnKeyLabel="next"
             keyboardType={"email-address"}
             onChangeText={handleChange("email")}
-            onBlur={handleBlur("email")}
+            // onBlur={handleBlur("email")}
             value={values.email}
             error={errors.email}
             touched={touched.email}
@@ -291,6 +291,11 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             textContentType="oneTimeCode"
             onSubmitEditing={() => confirmPasswordRef.current?.focus()}
           />
+          {/* <InputFieldInfo
+            text={
+              "Password must be 1 capital letter, 1 numeric, 1 special character, 1 alphabet and at least 8 characters long."
+            }
+          /> */}
           <CustomTxtInput
             placeholder="Confirm password"
             ref={confirmPasswordRef}
@@ -329,7 +334,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
                 handleSubmit();
               }
             }}
-            disabled={!isValid || loading === LoadingState.CREATE}
+            disabled={loading === LoadingState.CREATE}
             loading={loading === LoadingState.CREATE}
             title={"Sign up"}
             buttonWidth="full"

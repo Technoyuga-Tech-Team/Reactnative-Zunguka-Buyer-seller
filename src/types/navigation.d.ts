@@ -29,9 +29,10 @@ export type AppRoutes = {
   Home: undefined;
   SearchProduct: { mainCat: string; subCat: string };
   AddNewProduct: { product_id?: string | null };
-  Congratulations: { itemId: number };
+  Congratulations: { itemId: number; savedAsDraft: number };
   Congratulations1: { modeOfDelivery: string };
   SellAnItem: undefined;
+  DraftItems: undefined;
   ListAnother: undefined;
   Storefront: undefined;
   Profile: undefined;

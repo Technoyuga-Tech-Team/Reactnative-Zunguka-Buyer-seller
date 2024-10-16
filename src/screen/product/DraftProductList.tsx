@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, RefreshControl, View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../../components/Product/ProductListing";
@@ -8,46 +8,35 @@ import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { ThemeProps } from "../../types/global.types";
-import { MyFrontStoreNavigationProps } from "../../types/navigation";
+import { HomeNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
-import { sendRequestToNearbyMovers } from "../../store/Product/product.thunk";
-import { useSelector } from "react-redux";
-import { getClosedItem } from "../../store/settings/settings.selectors";
+import CustomHeader from "../../components/ui/CustomHeader";
 
-const ClosedItems: React.FC<
-  MyFrontStoreNavigationProps<Route.navClosedItems>
-> = ({ navigation }) => {
+const DraftProductList: React.FC<HomeNavigationProps<Route.navDraftItems>> = ({
+  navigation,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
-  const closedItems = useSelector(getClosedItem);
-
   const [loading, setLoading] = useState(false);
-  const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);
-
+  const [draftData, setDraftData] = useState<ProductDataProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
   useEffect(() => {
-    if (closedItems?.length > 0) {
-      setDealsData(closedItems);
-    }
-  }, [closedItems]);
-
-  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getClosedData(10, 1, false);
+      getDraftProductsData(10, 1, false);
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  const getClosedData = async (
+  const getDraftProductsData = async (
     offset: number,
     page: number,
     fromLoadMore: boolean
@@ -56,7 +45,7 @@ const ClosedItems: React.FC<
     try {
       setLoading(true);
       const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/closed/my/${offset}/${page}`,
+        `${BASE_URL}${API.GET_PRODUCTS}/saved_as_draft/my/${offset}/${page}`,
         {
           method: "GET",
           headers: {
@@ -64,85 +53,51 @@ const ClosedItems: React.FC<
           },
         }
       );
-
       const data = await response.json();
-      console.log("data?.data?.data", data);
+
       // Handle the fetched data here
       if (data.status === 1) {
         setLoading(false);
         if (data && data?.data?.data.length > 0) {
           fromLoadMore
-            ? setDealsData([...dealsData, data?.data?.data])
-            : setDealsData(data?.data?.data);
+            ? setDraftData([...draftData, data?.data?.data])
+            : setDraftData(data?.data?.data);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
       } else {
-        setDealsData([]);
+        setDraftData([]);
         setLoading(false);
       }
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      console.log(error);
     }
   };
 
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
-      getClosedData(10, page, true);
+      getDraftProductsData(10, page, true);
     }
   };
 
-  const onPressProductItem = (itemId: number, item: ProductDataProps) => {
-    navigation.navigate(Route.navArchivedProductDetails, { item: item });
-  };
-
-  const onPressHireMover = async (itemId: number) => {
-    try {
-      const formData = new FormData();
-      formData.append("item_id", itemId);
-      const result = await dispatch(sendRequestToNearbyMovers({ formData }));
-      if (sendRequestToNearbyMovers.fulfilled.match(result)) {
-        if (result.payload.status === 1) {
-          console.log("result sendRequestToNearbyMovers --->", result.payload);
-          getClosedData(10, 1, false);
-          // navigation.navigate(Route.navRequestToMover);
-        }
-      } else {
-        console.log("errror sendRequestToNearbyMovers --->", result.payload);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
+  const onPressProductItem = (itemId: number) => {
+    navigation.navigate(Route.navProductDetails, { itemId: itemId });
   };
 
   const onRefresh = () => {
-    getClosedData(10, 1, false);
+    getDraftProductsData(10, 1, false);
   };
-
-  console.log("dealsData", JSON.stringify(dealsData));
 
   return (
     <View style={style.container}>
+      <CustomHeader title="Draft Items" />
       <ProductListing
-        productData={dealsData}
-        onPress={(itemId, item) => onPressProductItem(itemId, item)}
-        onPressHireMover={(itemId) => {
-          Alert.alert("Hire Mover", "Is items packed and ready to ship?", [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-            },
-            {
-              text: "Yes",
-              onPress: () => onPressHireMover(itemId),
-            },
-          ]);
-        }}
+        productData={draftData}
+        onPress={(item) => onPressProductItem(item)}
         onEndReached={onEndReached}
         isLoading={loading}
         showLoadMore={page <= totalPage}
-        fromClosedItem={true}
         refreshControl={
           <RefreshControl
             refreshing={loading}
@@ -157,13 +112,13 @@ const ClosedItems: React.FC<
   );
 };
 
-export default ClosedItems;
+export default DraftProductList;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors?.background,
-    paddingTop: 10,
+    paddingTop: props.insets.top,
   },
   textInputCont: {
     height: Scale(40),

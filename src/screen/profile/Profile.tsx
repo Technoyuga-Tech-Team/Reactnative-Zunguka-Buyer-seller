@@ -165,6 +165,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const onPressMyItems = () => {
     navigation.navigate(Route.navMyStorefront);
   };
+  const onPressDraftItems = () => {
+    navigation.navigate(Route.navDraftItems);
+  };
 
   const onPressMessages = () => {
     navigation.navigate(Route.navMessaging);
@@ -208,6 +211,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           name="My Items"
           icon={<TagfillIcon color={theme.colors?.primary} />}
           onPress={onPressMyItems}
+        />
+        <ProfileItem
+          name="Draft Items"
+          icon={<TagfillIcon color={theme.colors?.primary} />}
+          onPress={onPressDraftItems}
         />
 
         <ProfileItem

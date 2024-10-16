@@ -97,7 +97,7 @@ const ProductListing: React.FC<ProductProps> = ({
           ListFooterComponent={Footer}
         />
       ) : (
-        <NoDataFound title="No Products found!" isLoading={isLoading} />
+        <NoDataFound title="No Items found!" isLoading={isLoading} />
       )}
     </>
   );

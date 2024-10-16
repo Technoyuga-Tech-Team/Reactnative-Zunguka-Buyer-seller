@@ -67,7 +67,7 @@ const ArchivedProductInfo: React.FC<ArchivedProductInfoProps> = ({
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <NoDataFound title="This Item is no longer Available" />
+          <NoDataFound title="This Item is no longer available" />
         </View>
         <View
           style={{

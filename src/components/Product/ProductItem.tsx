@@ -60,22 +60,34 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <View
             style={{
               flexDirection: "row",
-              alignItems: "center",
+              // alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Text numberOfLines={1} style={style.txtTitle}>
-              {item?.title}
-            </Text>
-            {item.status == "Archived" &&
-              currentUsersProduct &&
-              !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
-            {item.status == "Archived" &&
-              currentUsersProduct &&
-              fromClosedItem &&
-              item.is_delivered == 1 && (
-                <Text style={style.txtSold}>Delivered</Text>
-              )}
+            <View style={{ width: "50%" }}>
+              <Text numberOfLines={2} style={style.txtTitle}>
+                {item?.title}
+              </Text>
+            </View>
+            <View style={{ width: "50%", alignItems: "flex-end" }}>
+              {item.status == "Saved_as_Draft" &&
+                currentUsersProduct &&
+                !fromClosedItem && <Text style={style.txtSold}>Draft</Text>}
+              {item.status == "Draft" &&
+                currentUsersProduct &&
+                !fromClosedItem && (
+                  <Text style={style.txtSold}>Stop Publishing</Text>
+                )}
+              {item.status == "Archived" &&
+                currentUsersProduct &&
+                !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
+              {item.status == "Archived" &&
+                currentUsersProduct &&
+                fromClosedItem &&
+                item.is_delivered == 1 && (
+                  <Text style={style.txtSold}>Delivered</Text>
+                )}
+            </View>
           </View>
 
           <Text numberOfLines={1} style={style.txtTypeAndCategories}>
