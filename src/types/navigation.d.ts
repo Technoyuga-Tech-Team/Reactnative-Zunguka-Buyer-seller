@@ -7,7 +7,7 @@ import { ProductDataProps } from "./product.types";
 
 export type TopRoutes = {
   OpenItems: undefined;
-  ClosedItems: undefined;
+  ClosedItems: { packageId?: string };
   ProductDetails: { itemId: number };
   ArchivedProductDetails: { item: ProductDataProps };
   RequestToMover: undefined;
@@ -82,7 +82,7 @@ export type AppRoutes = {
   };
   VisitProfile: undefined;
   JobHistory: undefined;
-  YourAddress: { fromOTP?: boolean };
+  YourAddress: { fromOTP?: boolean; fromEdit?: boolean };
   Favourites: undefined;
   Sell: undefined;
   Alert: undefined;

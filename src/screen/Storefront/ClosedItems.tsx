@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Alert, RefreshControl, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, FlatList, RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../../components/Product/ProductListing";
@@ -18,14 +18,18 @@ import { getClosedItem } from "../../store/settings/settings.selectors";
 
 const ClosedItems: React.FC<
   MyFrontStoreNavigationProps<Route.navClosedItems>
-> = ({ navigation }) => {
+> = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+  const flatlistRef = useRef<FlatList>(null);
 
+  const packageId = route.params?.packageId;
+  console.log("packageId = = = = = = = = = = = = = = = =", packageId);
   const closedItems = useSelector(getClosedItem);
 
+  const [packageIndex, setPackageIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);
 
@@ -66,7 +70,6 @@ const ClosedItems: React.FC<
       );
 
       const data = await response.json();
-      console.log("data?.data?.data", data);
       // Handle the fetched data here
       if (data.status === 1) {
         setLoading(false);
@@ -87,6 +90,23 @@ const ClosedItems: React.FC<
     }
   };
 
+  useEffect(() => {
+    if (packageId !== "" && dealsData.length > 0) {
+      let ind = dealsData.findIndex((ele) => ele.id === Number(packageId));
+
+      console.log("ind - -  -  - - - - - -  - - - - ", ind);
+      if (ind !== -1) {
+        setPackageIndex(ind);
+        setTimeout(() => {
+          flatlistRef?.current?.scrollToIndex({
+            index: ind,
+            animated: true,
+          });
+        }, 1000);
+      }
+    }
+  }, [packageId, dealsData]);
+
   const onEndReached = () => {
     if (page <= totalPage && !loading) {
       getClosedData(10, page, true);
@@ -94,10 +114,13 @@ const ClosedItems: React.FC<
   };
 
   const onPressProductItem = (itemId: number, item: ProductDataProps) => {
+    setPackageIndex(null);
+    console.log("itemId", itemId);
     navigation.navigate(Route.navArchivedProductDetails, { item: item });
   };
 
   const onPressHireMover = async (itemId: number) => {
+    setPackageIndex(null);
     try {
       const formData = new FormData();
       formData.append("item_id", itemId);
@@ -120,11 +143,12 @@ const ClosedItems: React.FC<
     getClosedData(10, 1, false);
   };
 
-  console.log("dealsData", JSON.stringify(dealsData));
+  // console.log("dealsData", JSON.stringify(dealsData));
 
   return (
     <View style={style.container}>
       <ProductListing
+        ref={flatlistRef}
         productData={dealsData}
         onPress={(itemId, item) => onPressProductItem(itemId, item)}
         onPressHireMover={(itemId) => {
@@ -143,6 +167,7 @@ const ClosedItems: React.FC<
         isLoading={loading}
         showLoadMore={page <= totalPage}
         fromClosedItem={true}
+        packageIndex={packageIndex}
         refreshControl={
           <RefreshControl
             refreshing={loading}

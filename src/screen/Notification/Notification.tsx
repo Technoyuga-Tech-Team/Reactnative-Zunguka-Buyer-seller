@@ -117,6 +117,10 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     if (item.type == "mover_status") {
       // navigate to request mover page
       navigation.navigate(Route.navRequestToMover);
+      // navigation.navigate(Route.navMyStorefront, {
+      //   screen: Route.navClosedItems,
+      //   params: { packageId: item.package_id },
+      // });
     } else if (item.type == "sold_item") {
       // navigate to Closed item
       // @ts-ignore

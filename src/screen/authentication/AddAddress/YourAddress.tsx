@@ -18,6 +18,7 @@ import {
   getCityAddress,
   getSavedAddress,
   getSavedLatLng,
+  selectUserData,
 } from "../../../store/settings/settings.selectors";
 import { AddAddressProps } from "../../../types/authentication.types";
 import { imagePickerProps } from "../../../types/common.types";
@@ -34,6 +35,7 @@ import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import CheckBoxSelection from "../../../components/ui/CheckBoxSelection";
 import CustomDropdown from "../../../components/Dropdown/CustomDropdown";
 import { DISTRICT_AND_SECTORS } from "../../../constant";
+import { saveLatLng } from "../../../store/settings/settings.slice";
 
 const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   navigation,
@@ -43,12 +45,16 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+
+  const userData = useSelector(selectUserData);
+
   const from = route?.params?.fromOTP || false;
+  const fromUpdateAddress = route?.params?.fromEdit || false;
 
   const st1Ref = React.useRef<TextInput>(null);
   const cityRef = React.useRef<TextInput>(null);
-  const countryRef = React.useRef<TextInput>(null);
-  const zipRef = React.useRef<TextInput>(null);
+  const districtRef = React.useRef(null);
+  const sectorRef = React.useRef(null);
 
   const savedAddress = useSelector(getSavedAddress);
   const savedLatLng = useSelector(getSavedLatLng);
@@ -191,6 +197,53 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
     },
   });
 
+  useEffect(() => {
+    if (fromUpdateAddress && userData) {
+      if (userData?.house_number) {
+        console.log("userData?.house_number", userData?.house_number);
+        setFieldValue("houseNumber", userData?.house_number);
+      }
+      if (userData?.is_house_number) {
+        console.log("userData?.is_house_number", userData?.is_house_number);
+
+        setNoHouseNumber(userData?.is_house_number == 1 ? false : true);
+      }
+      if (userData?.street_number) {
+        setFieldValue("streetNumber", userData?.street_number);
+      }
+      if (userData?.address) {
+        setFieldValue("gpsAddress", userData?.address);
+        setGpsAddressHave(1);
+      }
+      if (userData?.latitude || userData?.longitude) {
+        dispatch(
+          saveLatLng({
+            lat: Number(userData?.latitude),
+            lng: Number(userData?.longitude),
+          })
+        );
+      }
+
+      if (userData?.district) {
+        const findDistrictIndex = DISTRICT_AND_SECTORS.findIndex(
+          (ele) => ele.title == userData?.district
+        );
+        districtRef?.current?.selectIndex(findDistrictIndex);
+        setFieldValue("district", userData?.district);
+        setSelectedDistrict(userData?.district);
+      }
+
+      if (userData?.sector) {
+        const findDistrictIndex = sectorData.findIndex(
+          (ele) => ele.title == userData?.sector
+        );
+        sectorRef?.current?.selectIndex(findDistrictIndex);
+        setFieldValue("sector", userData?.sector);
+        setSelectedSector(userData?.sector);
+      }
+    }
+  }, [fromUpdateAddress, userData]);
+
   const onPressBack = () => {
     if (navigation.canGoBack() && !from) {
       navigation.goBack();
@@ -204,13 +257,15 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
     }
   };
 
-  useEffect(() => {
-    values.houseNumber !== ""
-      ? setNoHouseNumber(false)
-      : setNoHouseNumber(true);
-  }, [values.houseNumber]);
+  // useEffect(() => {
+  //   console.log("values.houseNumber", values.houseNumber);
+  //   values.houseNumber !== ""
+  //     ? setNoHouseNumber(false)
+  //     : setNoHouseNumber(true);
+  // }, [values.houseNumber]);
 
   useEffect(() => {
+    console.log("noHouseNumber", noHouseNumber);
     noHouseNumber && setFieldValue("houseNumber", "");
   }, [noHouseNumber]);
 
@@ -337,6 +392,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             onSubmitEditing={() => cityRef.current?.focus()}
           />
           <CustomDropdown
+            ref={districtRef}
             dropDownData={DISTRICT_AND_SECTORS}
             placeHolder={"District"}
             value={district}
@@ -345,6 +401,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             error={districtError}
           />
           <CustomDropdown
+            ref={sectorRef}
             dropDownData={sectorData}
             placeHolder={"Sector"}
             value={sector}
@@ -395,7 +452,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             );
           }
         }}
-        title={"Continue"}
+        title={fromUpdateAddress ? "Update" : "Continue"}
         buttonWidth="full"
         variant="primary"
         type="solid"

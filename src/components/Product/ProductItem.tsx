@@ -21,12 +21,14 @@ interface ProductItemProps {
   onPress: () => void;
   fromClosedItem: boolean;
   onPressHireMover: () => void;
+  showBorder?: boolean;
 }
 const ProductItem: React.FC<ProductItemProps> = ({
   item,
   onPress,
   fromClosedItem,
   onPressHireMover,
+  showBorder,
 }) => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -40,7 +42,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
   const currentUsersProduct = item?.user_id == userData?.id;
   return (
-    <View style={style.container}>
+    <View
+      style={[
+        style.container,
+        fromClosedItem && showBorder && style.bordercont,
+      ]}
+    >
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.8}
@@ -154,11 +161,7 @@ export default ProductItem;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
-    marginVertical: 5,
-    // flexDirection: "row",
-    // alignItems: "center",
-    // justifyContent: "flex-start",
-    // paddingRight: 20,
+    paddingVertical: 5,
     flex: 1,
   },
   product: {
@@ -194,5 +197,8 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     minHeight: Scale(97),
     justifyContent: "space-between",
     marginRight: 20,
+  },
+  bordercont: {
+    backgroundColor: theme?.colors?.border,
   },
 }));

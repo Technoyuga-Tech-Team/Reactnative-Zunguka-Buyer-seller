@@ -140,6 +140,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
       confirmPassword: "",
       username: "",
     },
+    validateOnChange: true,
     onSubmit: async ({
       firstName,
       lastName,
@@ -280,7 +281,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             placeholder="Password"
             ref={passwordRef}
             onChangeText={handleChange("createPassword")}
-            // onBlur={handleBlur("createPassword")}
+            onBlur={handleBlur("createPassword")}
             value={values.createPassword}
             error={errors.createPassword}
             touched={touched.createPassword}
@@ -300,7 +301,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             placeholder="Confirm password"
             ref={confirmPasswordRef}
             onChangeText={handleChange("confirmPassword")}
-            // onBlur={handleBlur("confirmPassword")}
+            onBlur={handleBlur("confirmPassword")}
             value={values.confirmPassword}
             error={errors.confirmPassword}
             touched={touched.confirmPassword}

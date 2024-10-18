@@ -317,9 +317,6 @@ const ProductDetails: React.FC<
     });
   };
 
-  console.log("productStatus", productStatus);
-  console.log("disableShare", disableShare);
-
   return (
     <KeyboardAwareScrollView
       bounces={false}

@@ -10,9 +10,14 @@ import LockIcon from "./svg/LockIcon";
 interface BorderedItemProps {
   title: string;
   onPressItem: () => void;
+  icon: any;
 }
 
-const BorderedItem: React.FC<BorderedItemProps> = ({ title, onPressItem }) => {
+const BorderedItem: React.FC<BorderedItemProps> = ({
+  title,
+  onPressItem,
+  icon,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
@@ -23,12 +28,7 @@ const BorderedItem: React.FC<BorderedItemProps> = ({ title, onPressItem }) => {
       style={style.cont}
     >
       <View style={style.iconCont}>
-        <LockIcon
-          color={theme?.colors?.primary}
-          style={{ marginRight: 10 }}
-          height={20}
-          width={20}
-        />
+        {icon}
         <Text style={style.txtChangePassword}>{title}</Text>
       </View>
       <RightIcon color={"#B8B5B5"} />

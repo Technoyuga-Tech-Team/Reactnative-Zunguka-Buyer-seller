@@ -39,6 +39,7 @@ import Scale from "../../utils/Scale";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { Images } from "../../assets/images";
 import { useGetFCMToken } from "../../hooks/useGetFCMToken";
+import { SCREEN_WIDTH } from "../../constant";
 
 const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   navigation,
@@ -300,6 +301,14 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
           </Text>
         </View>
       </View>
+      <CustomButton
+        // onPress={onPressMessage}
+        title={"Login as a guest"}
+        buttonWidth="half"
+        width={SCREEN_WIDTH - 50}
+        variant="secondary"
+        type="outline"
+      />
     </KeyboardAwareScrollView>
   );
 };
@@ -310,6 +319,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   scrollCont: {
     flexGrow: 1,
     paddingTop: props.insets.top,
+    paddingBottom: props.insets.bottom + 10,
     backgroundColor: theme.colors?.background,
   },
   title: {

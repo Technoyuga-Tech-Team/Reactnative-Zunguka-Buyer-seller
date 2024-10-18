@@ -55,6 +55,8 @@ import {
 } from "../../utils/ImagePickerCameraGallary";
 import Scale from "../../utils/Scale";
 import LeftIcon from "../../components/ui/svg/LeftIcon";
+import LockIcon from "../../components/ui/svg/LockIcon";
+import LocationIcon from "../../components/ui/svg/LocationIcon";
 
 const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   navigation,
@@ -173,6 +175,13 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   };
   const onPressChangePassword = () => {
     navigation.navigate(Route.navChangePassword);
+  };
+
+  const onPressUpdateAddress = () => {
+    navigation.navigate(Route.navYourAddress, {
+      fromOTP: false,
+      fromEdit: true,
+    });
   };
 
   const {
@@ -415,9 +424,29 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               onSelect={(country, cca2) => onSelect(country, cca2)}
             />
           </View>
+          <BorderedItem
+            title="Update Address"
+            icon={
+              <LocationIcon
+                color={theme?.colors?.primary}
+                style={{ marginRight: 10 }}
+                height={20}
+                width={20}
+              />
+            }
+            onPressItem={onPressUpdateAddress}
+          />
           {userData?.is_social === 0 && (
             <BorderedItem
               title="Change Password"
+              icon={
+                <LockIcon
+                  color={theme?.colors?.primary}
+                  style={{ marginRight: 10 }}
+                  height={20}
+                  width={20}
+                />
+              }
               onPressItem={onPressChangePassword}
             />
           )}

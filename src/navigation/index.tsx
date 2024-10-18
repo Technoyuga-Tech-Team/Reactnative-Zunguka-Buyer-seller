@@ -215,9 +215,12 @@ const MainNavigator = () => {
             // set default type wise
             break;
           case "confirmed":
+            let packageId = notification?.data?.package_id;
+
             // @ts-ignore
             navigationRef.navigate(Route.navMyStorefront, {
               screen: Route.navClosedItems,
+              params: { packageId: packageId },
             });
             // set default type wise
             break;

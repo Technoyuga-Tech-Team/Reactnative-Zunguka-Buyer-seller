@@ -274,6 +274,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           name="Terms and Conditions"
           icon={<DocslistIcon color={theme.colors?.primary} />}
         />
+        <ProfileItem
+          name="Contact Us"
+          icon={<InfocircleIcon color={theme.colors?.primary} />}
+        />
       </KeyboardAwareScrollView>
       <View
         style={{

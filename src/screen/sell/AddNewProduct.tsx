@@ -940,7 +940,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
                 Keyboard.dismiss();
                 onPressSubmit(1);
               }}
-              title={"Save as a draft"}
+              title={"Draft"}
               buttonWidth="half"
               width={(SCREEN_WIDTH - 50) / 2}
               variant="secondary"

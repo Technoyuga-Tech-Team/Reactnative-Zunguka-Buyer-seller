@@ -40,6 +40,7 @@ export type UserData = {
   profile_percentage: number;
   address: string;
   sector: string;
+  district: string;
   insurance_number: string;
   insurance_copies: string;
   address_proofs: string;
@@ -62,6 +63,9 @@ export type UserData = {
   apple_secret: string;
   stripe_enabled: number;
   house_images: string;
+  house_number: string;
+  is_house_number: number;
+  street_number: string;
   street_address_1: string;
   street_address_2: string;
   country: string;
