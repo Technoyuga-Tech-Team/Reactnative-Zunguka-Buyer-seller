@@ -260,6 +260,15 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
     }
   };
 
+  const onPressSkip = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navDashboard }],
+      })
+    );
+  };
+
   return (
     <View style={style.container}>
       <StatusBar translucent backgroundColor={"transparent"} />
@@ -318,29 +327,42 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
               <View
                 style={{
                   flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
                   paddingHorizontal: 5,
                 }}
               >
-                <AppImage
-                  source={Images.LOADER}
-                  style={{ height: 70, width: 70, marginBottom: 20 }}
-                  resizeMode="contain"
-                />
-                <Text
+                <View
                   style={{
-                    fontSize: Scale(30),
-                    fontFamily: theme?.fontFamily?.bold,
-                    color: theme?.colors?.black,
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  Profile under review
-                </Text>
-                <Text style={style.txtFace}>
-                  Your profile is under review, please wait for 24 hours admin
-                  will verify
-                </Text>
+                  <AppImage
+                    source={Images.LOADER}
+                    style={{ height: 70, width: 70, marginBottom: 20 }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      fontSize: Scale(30),
+                      fontFamily: theme?.fontFamily?.bold,
+                      color: theme?.colors?.black,
+                    }}
+                  >
+                    Profile under review
+                  </Text>
+                  <Text style={style.txtFace}>
+                    Your profile is under review, please wait for 24 hours admin
+                    will verify
+                  </Text>
+                </View>
+                <CustomButton
+                  onPress={onPressSkip}
+                  title={"Skip"}
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
               </View>
             </>
           ) : (

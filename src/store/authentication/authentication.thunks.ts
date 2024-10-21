@@ -165,6 +165,7 @@ export const userLogin = createAsyncThunk<
     return data;
   }
 );
+
 export const userForgotPassword = createAsyncThunk<
   any,
   { phone_number: string },
@@ -530,6 +531,47 @@ export const userAddress = createAsyncThunk<
     return data;
   }
 );
+export const updateUserAddress = createAsyncThunk<
+  any,
+  {
+    formData: FormData;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "authentication/updateUserAddress",
+  async ({ formData }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.UPDATE_ADDRESS,
+          method: "POST",
+          data: formData,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    if (data?.data) {
+      console.log("data - - -- -", data?.data);
+
+      dispatch(setUserData(data?.data));
+      setData(USER_DATA, data?.data);
+    }
+
+    if (data?.authorization) {
+      await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
+    }
+
+    return data;
+  }
+);
 // Add KYC
 export const userVerifyId = createAsyncThunk<
   any,
@@ -605,6 +647,45 @@ export const userSelfieVerification = createAsyncThunk<
     }
 
     if (data?.authorization) {
+      await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
+    }
+
+    return data;
+  }
+);
+
+export const userAsGuestLogin = createAsyncThunk<
+  any,
+  {
+    device_type: string;
+    device_token: string;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "authentication/userAsGuestLogin",
+  async ({ device_token, device_type }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload>(
+        {
+          url: API.LOGIN_AS_GUEST,
+          method: "POST",
+          data: {
+            device_token,
+            device_type,
+            type: UserRoleType.BUYER_SELLER,
+          },
+        },
+        false
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+
+    if (data?.authorization) {
+      dispatch(setUserData(data?.user));
+      setData(USER_DATA, data?.user);
       await setData(secureStoreKeys.JWT_TOKEN, data?.authorization.token);
     }
 

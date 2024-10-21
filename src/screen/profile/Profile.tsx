@@ -38,6 +38,9 @@ import { HomeNavigationProps } from "../../types/navigation";
 import Scale from "../../utils/Scale";
 import { setData } from "../../utils/asyncStorage";
 import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
+import DraftItemIcon from "../../components/ui/svg/DraftItemIcon";
+import ContactUsIcon from "../../components/ui/svg/ContactUsIcon";
+import TransactionHistoryIcon from "../../components/ui/svg/TransactionHistoryIcon";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -48,6 +51,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
   const userLoading = useSelector(selectUserProfileLoading);
+
+  console.log("userData", userData);
+
+  const isGuest = userData?.is_guest == 1;
 
   const [visible, setVisible] = useState(false);
   const [title1, setTitle1] = useState("");
@@ -181,6 +188,21 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     navigation.navigate(Route.navRequestToMover);
   };
 
+  const onPressLogin = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navAuthentication }],
+      })
+    );
+  };
+
   const Profile = profilePicture;
   return (
     <View style={style.container}>
@@ -189,61 +211,64 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
         barStyle={"dark-content"}
       />
       <Text style={style.txtProfile}>Profile</Text>
-      <View style={style.profileCont}>
-        <ProfileAndName
-          name={userData?.username}
-          email={userData?.email}
-          profileImage={Profile}
-        />
-      </View>
-      <KeyboardAwareScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps={"handled"}
-        contentContainerStyle={style.scrollCont}
-      >
-        <ProfileItem
-          name="My Profile"
-          icon={<ProfileIcon color={theme.colors?.primary} />}
-          onPress={onPressMyProfile}
-        />
-        <ProfileItem
-          name="My Items"
-          icon={<TagfillIcon color={theme.colors?.primary} />}
-          onPress={onPressMyItems}
-        />
-        <ProfileItem
-          name="Draft Items"
-          icon={<TagfillIcon color={theme.colors?.primary} />}
-          onPress={onPressDraftItems}
-        />
+      {!isGuest && (
+        <View style={style.profileCont}>
+          <ProfileAndName
+            name={userData?.username}
+            email={userData?.email}
+            profileImage={Profile}
+          />
+        </View>
+      )}
+      {!isGuest && (
+        <KeyboardAwareScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={"handled"}
+          contentContainerStyle={style.scrollCont}
+        >
+          <ProfileItem
+            name="My Profile"
+            icon={<ProfileIcon color={theme.colors?.primary} />}
+            onPress={onPressMyProfile}
+          />
+          <ProfileItem
+            name="My Items"
+            icon={<TagfillIcon color={theme.colors?.primary} />}
+            onPress={onPressMyItems}
+          />
+          <ProfileItem
+            name="Draft Items"
+            icon={<DraftItemIcon color={theme.colors?.primary} />}
+            onPress={onPressDraftItems}
+          />
 
-        <ProfileItem
-          name="Messeges"
-          icon={<ChatIcon color={theme.colors?.primary} />}
-          onPress={onPressMessages}
-        />
-        {/* <ProfileItem
+          <ProfileItem
+            name="Messeges"
+            icon={<ChatIcon color={theme.colors?.primary} />}
+            onPress={onPressMessages}
+          />
+          {/* <ProfileItem
           name="Card Details"
           icon={<CreditcardIcon color={theme.colors?.primary} />}
           onPress={onPressCardDetails}
         /> */}
-        <ProfileItem
-          name="My Earnings"
-          icon={<MoneybillsIcon color={theme.colors?.primary} />}
-          onPress={onPressMyEarnings}
-        />
-        <ProfileItem
-          name="Mover Request page"
-          icon={<AlertIcon color={theme.colors?.primary} />}
-          onPress={onPressRequestPage}
-        />
-        <ProfileItem
-          name="Transaction History"
-          icon={<MoneybillsIcon color={theme.colors?.primary} />}
-          onPress={onPressTransactionHistroy}
-        />
-        {/* <ProfileItem
+          <ProfileItem
+            name="My Earnings"
+            icon={<MoneybillsIcon color={theme.colors?.primary} />}
+            onPress={onPressMyEarnings}
+          />
+          <ProfileItem
+            name="Mover Request page"
+            icon={<AlertIcon color={theme.colors?.primary} />}
+            onPress={onPressRequestPage}
+          />
+          <ProfileItem
+            name="Transaction History"
+            icon={<TransactionHistoryIcon color={theme.colors?.primary} />}
+            onPress={onPressTransactionHistroy}
+          />
+          {/* <ProfileItem
           name="Purchased History"
           icon={
             <PurchasedProductIcon
@@ -254,84 +279,91 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           }
           onPress={onPressPurchasedHistory}
         /> */}
-        {/* <ProfileItem
+          {/* <ProfileItem
           name="Job History"
           icon={
             <PackageIcon color={theme.colors?.primary} height={24} width={24} />
           }
           onPress={onPressJobHistroy}
         /> */}
-        <ProfileItem
-          name="My Keywords"
-          icon={<MoneybillsIcon color={theme.colors?.primary} />}
-          onPress={onPressKeywords}
-        />
-        <ProfileItem
-          name="About Us"
-          icon={<InfocircleIcon color={theme.colors?.primary} />}
-        />
-        <ProfileItem
-          name="Terms and Conditions"
-          icon={<DocslistIcon color={theme.colors?.primary} />}
-        />
-        <ProfileItem
-          name="Contact Us"
-          icon={<InfocircleIcon color={theme.colors?.primary} />}
-        />
-      </KeyboardAwareScrollView>
-      <View
-        style={{
-          marginHorizontal: 20,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingTop: 10,
-        }}
-      >
-        <CustomButton
-          onPress={onPressDeleteAccount}
-          title={"Delete Account"}
-          buttonWidth="half"
-          width={(SCREEN_WIDTH - 50) / 2}
-          variant="secondary"
-          type="outline"
-          borderColor={theme?.colors?.red}
-          titleStyle={style.txtTitleStyle}
-          icon={
-            <DeleteIcon
-              height={18}
-              width={18}
-              color={theme.colors?.red}
-              style={{ marginRight: 5 }}
-            />
-          }
-        />
-        <CustomButton
-          onPress={onPressLogoutPopup}
-          title={"Logout"}
-          buttonWidth="half"
-          width={(SCREEN_WIDTH - 50) / 2}
-          variant="secondary"
-          type="outline"
-          borderColor={theme?.colors?.red}
-          titleStyle={style.txtTitleStyle}
-          icon={
-            <LogoutIcon color={theme.colors?.red} style={{ marginRight: 5 }} />
-          }
-        />
-        {/* <CustomButton
-          onPress={onPressLogoutPopup}
-          title={"Logout"}
-          buttonWidth="full"
-          type="clear"
-          icon={
-            <LogoutIcon color={theme.colors?.red} style={{ marginRight: 5 }} />
-          }
-          containerStyle={style.btnLogout}
-          buttonStyle={style.btnLogout1}
-          titleStyle={style.txtTitleStyle}
-        /> */}
-      </View>
+          <ProfileItem
+            name="My Keywords"
+            icon={<MoneybillsIcon color={theme.colors?.primary} />}
+            onPress={onPressKeywords}
+          />
+          <ProfileItem
+            name="About Us"
+            icon={<InfocircleIcon color={theme.colors?.primary} />}
+          />
+          <ProfileItem
+            name="Terms and Conditions"
+            icon={<DocslistIcon color={theme.colors?.primary} />}
+          />
+          <ProfileItem
+            name="Contact Us"
+            icon={<ContactUsIcon color={theme.colors?.primary} />}
+          />
+        </KeyboardAwareScrollView>
+      )}
+      {!isGuest ? (
+        <View
+          style={{
+            marginHorizontal: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: 10,
+          }}
+        >
+          <CustomButton
+            onPress={onPressDeleteAccount}
+            title={"Delete Account"}
+            buttonWidth="half"
+            width={(SCREEN_WIDTH - 50) / 2}
+            variant="secondary"
+            type="outline"
+            borderColor={theme?.colors?.red}
+            titleStyle={style.txtTitleStyle}
+            icon={
+              <DeleteIcon
+                height={18}
+                width={18}
+                color={theme.colors?.red}
+                style={{ marginRight: 5 }}
+              />
+            }
+          />
+
+          <CustomButton
+            onPress={onPressLogoutPopup}
+            title={"Logout"}
+            buttonWidth="half"
+            width={(SCREEN_WIDTH - 50) / 2}
+            variant="secondary"
+            type="outline"
+            borderColor={theme?.colors?.red}
+            titleStyle={style.txtTitleStyle}
+            icon={
+              <LogoutIcon
+                color={theme.colors?.red}
+                style={{ marginRight: 5 }}
+              />
+            }
+          />
+        </View>
+      ) : (
+        <View style={style.guestUserCont}>
+          <Text style={style.txtTitle}>Login to Zunguka</Text>
+          <Text style={style.txtTitle1}>Start Sell and Buy Products...</Text>
+          <CustomButton
+            onPress={onPressLogin}
+            title={"Login"}
+            buttonWidth="full"
+            variant="primary"
+            type="solid"
+          />
+        </View>
+      )}
       <LogoutPopup
         title1={title1}
         title2={title2}
@@ -402,5 +434,21 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     lineHeight: 24,
     textAlign: "center",
     marginTop: 20,
+  },
+  guestUserCont: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  txtTitle: {
+    fontSize: theme.fontSize?.fs20,
+    fontFamily: theme.fontFamily?.bold,
+    color: theme.colors?.black,
+  },
+  txtTitle1: {
+    fontSize: theme.fontSize?.fs14,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.black,
+    paddingVertical: 10,
   },
 }));

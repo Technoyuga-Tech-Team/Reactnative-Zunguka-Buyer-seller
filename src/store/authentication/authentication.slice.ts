@@ -1,8 +1,10 @@
 import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { AuthenticationState } from "../../types/authentication.types";
 import {
+  updateUserAddress,
   userAddress,
   userAddUserName,
+  userAsGuestLogin,
   userChangePassword,
   userForgotPassword,
   userLogin,
@@ -43,7 +45,9 @@ const authentication = createSlice({
           userResetPassword.pending,
           userAddress.pending,
           userVerifyId.pending,
-          userSelfieVerification.pending
+          userSelfieVerification.pending,
+          userAsGuestLogin.pending,
+          updateUserAddress.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -61,6 +65,8 @@ const authentication = createSlice({
           userAddress.fulfilled,
           userVerifyId.fulfilled,
           userSelfieVerification.fulfilled,
+          userAsGuestLogin.fulfilled,
+          updateUserAddress.fulfilled,
           userLogin.rejected,
           userRegistration.rejected,
           userAddUserName.rejected,
@@ -70,7 +76,9 @@ const authentication = createSlice({
           userResetPassword.rejected,
           userAddress.rejected,
           userVerifyId.rejected,
-          userSelfieVerification.rejected
+          userSelfieVerification.rejected,
+          userAsGuestLogin.rejected,
+          updateUserAddress.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;

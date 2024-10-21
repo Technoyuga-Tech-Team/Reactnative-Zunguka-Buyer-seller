@@ -5,6 +5,12 @@ export enum UserRoleType {
   MOVER = 1,
 }
 
+export interface houseImage {
+  name: string;
+  type: string;
+  uri: string;
+}
+
 export type UserData = {
   id: number;
   first_name: string;
@@ -62,7 +68,7 @@ export type UserData = {
   stripe_account_id: string;
   apple_secret: string;
   stripe_enabled: number;
-  house_images: string;
+  house_images: houseImage[];
   house_number: string;
   is_house_number: number;
   street_number: string;
@@ -77,6 +83,7 @@ export type UserData = {
   selfie_image: string;
   is_selfie_uploaded: number;
   total_earning: number;
+  is_guest: number;
 };
 
 export interface getUserData {

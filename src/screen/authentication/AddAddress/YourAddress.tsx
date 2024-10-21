@@ -28,7 +28,10 @@ import {
   HomeNavigationProps,
 } from "../../../types/navigation";
 import { getUrlExtension } from "../../../utils";
-import { userAddress } from "../../../store/authentication/authentication.thunks";
+import {
+  updateUserAddress,
+  userAddress,
+} from "../../../store/authentication/authentication.thunks";
 import { selectAuthenticationLoading } from "../../../store/authentication/authentication.selectors";
 import { CommonActions } from "@react-navigation/native";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
@@ -183,22 +186,42 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         });
       });
       console.log("formData", JSON.stringify(formData));
-      const result = await dispatch(userAddress({ formData: formData }));
 
-      if (userAddress.fulfilled.match(result)) {
-        if (result.payload.status === 1) {
-          console.log("userAddress result - - - ", result.payload);
-          dispatch(setSuccess(result.payload.message));
-          navigation.navigate(Route.navAddKyc, { fromOTP: false });
+      if (fromUpdateAddress) {
+        const result = await dispatch(
+          updateUserAddress({ formData: formData })
+        );
+
+        if (updateUserAddress.fulfilled.match(result)) {
+          if (result.payload.status === 1) {
+            console.log("updateUserAddress result - - - ", result.payload);
+            dispatch(setSuccess(result.payload.message));
+          }
+        } else {
+          console.log("updateUserAddress error - - - ", result.payload);
         }
       } else {
-        console.log("userAddress error - - - ", result.payload);
+        const result = await dispatch(userAddress({ formData: formData }));
+
+        if (userAddress.fulfilled.match(result)) {
+          if (result.payload.status === 1) {
+            console.log("userAddress result - - - ", result.payload);
+            dispatch(setSuccess(result.payload.message));
+            navigation.navigate(Route.navAddKyc, { fromOTP: false });
+          }
+        } else {
+          console.log("userAddress error - - - ", result.payload);
+        }
       }
     },
   });
 
   useEffect(() => {
     if (fromUpdateAddress && userData) {
+      if (userData?.house_images?.length > 0) {
+        setHouseImages(userData?.house_images);
+      }
+
       if (userData?.house_number) {
         console.log("userData?.house_number", userData?.house_number);
         setFieldValue("houseNumber", userData?.house_number);
@@ -225,6 +248,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       }
 
       if (userData?.district) {
+        setDistrict(userData?.district);
         const findDistrictIndex = DISTRICT_AND_SECTORS.findIndex(
           (ele) => ele.title == userData?.district
         );
@@ -234,12 +258,25 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       }
 
       if (userData?.sector) {
-        const findDistrictIndex = sectorData.findIndex(
+        let sectors: any[] = [];
+
+        DISTRICT_AND_SECTORS.map((ele) => {
+          if (ele.key == userData?.district) {
+            sectors = ele.sectors;
+            setSectorData(ele.sectors);
+          }
+        });
+
+        const findSectorIndex = sectors?.findIndex(
           (ele) => ele.title == userData?.sector
         );
-        sectorRef?.current?.selectIndex(findDistrictIndex);
+        console.log("findSectorIndex", findSectorIndex);
+
+        sectorRef?.current?.selectIndex(findSectorIndex);
         setFieldValue("sector", userData?.sector);
         setSelectedSector(userData?.sector);
+        setSector(userData?.sector);
+        setSector({ key: userData?.sector, title: userData?.sector });
       }
     }
   }, [fromUpdateAddress, userData]);
@@ -317,7 +354,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   return (
     <View style={style.container}>
       <CustomHeader
-        title="Your address"
+        title={fromUpdateAddress ? "Update address" : "Your address"}
         isOutsideBack={true}
         onPressBackBtn={onPressBack}
       />

@@ -1,6 +1,7 @@
 export const API = {
   REGISTER: "/register",
   LOGIN: "/login",
+  LOGIN_AS_GUEST: "/login-as-guest",
   LOGOUT: "/logout",
   OAUTH_LOGIN: "/social_login_reg",
   OAUTH_REGISTER: "/register",
@@ -12,6 +13,7 @@ export const API = {
   ADD_USERNAME: "/add_username",
   // Address
   ADD_ADDRESS: "/add-address",
+  UPDATE_ADDRESS: "/edit-address",
   // Verify ID (kyc)
   VERIFY_KYC: "/verify-kyc",
   VERIFY_SELFIE: "/add-selfie",

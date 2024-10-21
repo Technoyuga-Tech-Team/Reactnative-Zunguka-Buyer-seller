@@ -115,7 +115,6 @@ const ClosedItems: React.FC<
 
   const onPressProductItem = (itemId: number, item: ProductDataProps) => {
     setPackageIndex(null);
-    console.log("itemId", itemId);
     navigation.navigate(Route.navArchivedProductDetails, { item: item });
   };
 

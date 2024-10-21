@@ -39,7 +39,7 @@ const Splash: React.FC<SplashScreenProps> = () => {
           await GoogleSignin.signOut();
         }
         dispatch(setUserData(user_data));
-
+        const isGuest = user_data?.is_guest == 1;
         let is_username = user_data.is_username_added;
         let steps = user_data.step;
         let isStepCompleted = user_data.is_profile_completed;
@@ -50,66 +50,78 @@ const Splash: React.FC<SplashScreenProps> = () => {
         console.log("isVerify_by_Admin", isVerify_by_Admin);
         console.log("isAdmin_verify_account", isAdmin_verify_account);
         console.log("steps", steps);
-        if (is_username == 0) {
-          // @ts-ignore
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [
-                {
-                  name: Route.navAuthentication,
-                  state: {
-                    routes: [{ name: Route.navAddUserName }],
-                  },
-                },
-              ],
-            })
-          );
-        } else {
-          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
+        if (!isGuest) {
+          if (is_username == 0) {
+            // @ts-ignore
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: Route.navDashboard }],
+                routes: [
+                  {
+                    name: Route.navAuthentication,
+                    state: {
+                      routes: [{ name: Route.navAddUserName }],
+                    },
+                  },
+                ],
               })
             );
           } else {
-            if (steps == 0) {
-              dispatch(saveAddress(""));
-              // @ts-ignore
-              // navigation.navigate(Route.navYourAddress, { fromOTP: true });
+            if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [
-                    { name: Route.navYourAddress, params: { fromOTP: true } },
-                  ],
+                  routes: [{ name: Route.navDashboard }],
                 })
               );
-            } else if (steps == 1) {
-              // @ts-ignore
-              // navigation.navigate(Route.navAddKyc, { fromOTP: true });
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [
-                    { name: Route.navAddKyc, params: { fromOTP: true } },
-                  ],
-                })
-              );
-            } else if (steps == 2 || steps == 3) {
-              // @ts-ignore
-              // navigation.navigate(Route.navTakeSelfie, { fromflow: false });
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [
-                    { name: Route.navTakeSelfie, params: { fromflow: false } },
-                  ],
-                })
-              );
+            } else {
+              if (steps == 0) {
+                dispatch(saveAddress(""));
+                // @ts-ignore
+                // navigation.navigate(Route.navYourAddress, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navYourAddress, params: { fromOTP: true } },
+                    ],
+                  })
+                );
+              } else if (steps == 1) {
+                // @ts-ignore
+                // navigation.navigate(Route.navAddKyc, { fromOTP: true });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      { name: Route.navAddKyc, params: { fromOTP: true } },
+                    ],
+                  })
+                );
+              } else if (steps == 2 || steps == 3) {
+                // @ts-ignore
+                // navigation.navigate(Route.navTakeSelfie, { fromflow: false });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: Route.navTakeSelfie,
+                        params: { fromflow: false },
+                      },
+                    ],
+                  })
+                );
+              }
             }
           }
+        } else {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: Route.navDashboard }],
+            })
+          );
         }
       } else {
         if (await appAlreadyOpen()) {

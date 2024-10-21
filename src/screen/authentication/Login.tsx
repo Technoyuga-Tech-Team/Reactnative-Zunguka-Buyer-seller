@@ -30,7 +30,10 @@ import { LoginScreenSchema } from "../../constant/formValidations";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { selectAuthenticationLoading } from "../../store/authentication/authentication.selectors";
-import { userLogin } from "../../store/authentication/authentication.thunks";
+import {
+  userAsGuestLogin,
+  userLogin,
+} from "../../store/authentication/authentication.thunks";
 import { saveAddress } from "../../store/settings/settings.slice";
 import { LoginFormProps } from "../../types/authentication.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
@@ -194,6 +197,26 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     navigation.navigate(Route.navSelectRoll);
   };
 
+  const onPressLoginAsGuest = async () => {
+    const result = await dispatch(
+      userAsGuestLogin({
+        device_type: Platform.OS === "ios" ? "iOS" : "Android",
+        device_token: fcmToken,
+      })
+    );
+    console.log("result", result);
+    if (userAsGuestLogin.fulfilled.match(result)) {
+      if (result.payload?.status == 1) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navDashboard }],
+          })
+        );
+      }
+    }
+  };
+
   return (
     <KeyboardAwareScrollView
       keyboardShouldPersistTaps={"handled"}
@@ -302,7 +325,7 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
         </View>
       </View>
       <CustomButton
-        // onPress={onPressMessage}
+        onPress={onPressLoginAsGuest}
         title={"Login as a guest"}
         buttonWidth="half"
         width={SCREEN_WIDTH - 50}

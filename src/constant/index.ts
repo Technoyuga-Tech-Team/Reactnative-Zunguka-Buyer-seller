@@ -56,6 +56,13 @@ export const FW_SECRET_KEY = "FLWSECK_TEST-ca4fade6b4b20a473f20c7eb07c1dcd2-X";
 
 export const DUMMY_PLACEHOLDER = require("../assets/images/placeholder.jpg");
 
+export const GUEST_USER_MESSAGE =
+  "You are a Guest user, please Login or register first";
+export const ADMIN_VERIFICATION_PENDING_MESSAGE =
+  "You can't add product for sell, Admin verification is pending...";
+export const ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE =
+  "You can't add product for sell, Address verification is pending from Admin...";
+
 export const DUMMY_USER =
   "https://images.unsplash.com/flagged/photo-1573740144655-bbb6e88fb18a?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D";
 

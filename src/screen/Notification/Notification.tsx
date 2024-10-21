@@ -116,11 +116,11 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     console.log("item - - -", item);
     if (item.type == "mover_status") {
       // navigate to request mover page
-      navigation.navigate(Route.navRequestToMover);
-      // navigation.navigate(Route.navMyStorefront, {
-      //   screen: Route.navClosedItems,
-      //   params: { packageId: item.package_id },
-      // });
+      // navigation.navigate(Route.navRequestToMover);
+      navigation.navigate(Route.navMyStorefront, {
+        screen: Route.navClosedItems,
+        params: { packageId: item.item_id },
+      });
     } else if (item.type == "sold_item") {
       // navigate to Closed item
       // @ts-ignore

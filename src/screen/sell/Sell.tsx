@@ -4,13 +4,23 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../../components/Product/ProductListing";
 import CustomButton from "../../components/ui/CustomButton";
-import { BASE_URL, SCREEN_WIDTH, secureStoreKeys } from "../../constant";
+import {
+  ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE,
+  ADMIN_VERIFICATION_PENDING_MESSAGE,
+  BASE_URL,
+  GUEST_USER_MESSAGE,
+  SCREEN_WIDTH,
+  secureStoreKeys,
+} from "../../constant";
 import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { getData } from "../../utils/asyncStorage";
+import { useSelector } from "react-redux";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import { notifyMessage } from "../../utils/notifyMessage";
 
 const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -22,6 +32,16 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loader, setLoader] = useState(true);
+
+  const userData = useSelector(selectUserData);
+  console.log("userData", userData);
+  const isGuest = userData?.is_guest == 1;
+  const admin_verification_completed =
+    userData?.is_selfie_uploaded == 1 &&
+    userData?.is_kyc_verified_by_admin == 1;
+
+  const admin_address_verification_completed =
+    userData?.all_documentation_approved_by_admin == 1;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -78,7 +98,19 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   };
 
   const onPressCreateListing = () => {
-    navigation.navigate(Route.navAddNewProduct, { product_id: null });
+    if (!isGuest) {
+      if (admin_verification_completed) {
+        if (admin_address_verification_completed) {
+          navigation.navigate(Route.navAddNewProduct, { product_id: null });
+        } else {
+          notifyMessage(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE);
+        }
+      } else {
+        notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
+      }
+    } else {
+      notifyMessage(GUEST_USER_MESSAGE);
+    }
   };
 
   const onEndReached = () => {
