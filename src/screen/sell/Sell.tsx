@@ -34,7 +34,6 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const [loader, setLoader] = useState(true);
 
   const userData = useSelector(selectUserData);
-  console.log("userData", userData);
   const isGuest = userData?.is_guest == 1;
   const admin_verification_completed =
     userData?.is_selfie_uploaded == 1 &&

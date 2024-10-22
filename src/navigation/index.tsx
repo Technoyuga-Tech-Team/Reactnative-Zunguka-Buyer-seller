@@ -49,6 +49,7 @@ import store from "../store/store";
 import { ChatDataList } from "../types/chat.types";
 import { getData, setData } from "../utils/asyncStorage";
 import MainStack from "./MainStack";
+import RNRestart from "react-native-restart";
 
 const linking: LinkingOptions<{}> = {
   prefixes: [`http://${BASE_PORT}/`, `zunguka://`],
@@ -355,6 +356,23 @@ const MainNavigator = () => {
       } catch (error) {
         console.error(error);
       }
+    }
+
+    // approve_document or reject_document
+    if (
+      message?.data?.type === "reject_document" ||
+      message?.data?.type === "approve_document"
+    ) {
+      console.log(" ======   = = = = = = = = = ", typeof message?.data?.user);
+      const userData = JSON.parse(message?.data?.user);
+      console.log(" ======   = = = = = = = = = >>>>>>", typeof userData);
+
+      dispatch(setUserData(userData));
+      setData(USER_DATA, userData);
+    }
+
+    if (message?.data?.type === "reject_document") {
+      RNRestart.restart();
     }
 
     if (message?.data?.type === "new_message") {

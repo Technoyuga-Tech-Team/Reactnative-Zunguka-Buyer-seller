@@ -82,6 +82,7 @@ export type UserData = {
   all_documentation_approved_by_admin: number;
   selfie_image: string;
   is_selfie_uploaded: number;
+  is_selfie_rejected: number;
   total_earning: number;
   is_guest: number;
 };

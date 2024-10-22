@@ -68,6 +68,7 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
   const [accountStatus, setAccountStatus] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [selfieUploaded, setSelfieUploded] = useState<number>(0);
+  const [selfieRejected, setSelfieRejected] = useState<number>(0);
   const [isVerifiedByAdmin, setIsVerifiedByAdmin] = useState<number>(0);
   const [profileImage, setProfileImage] = useState<imagePickerProps>({
     name: "",
@@ -105,22 +106,36 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
       setProfilePicture(userData?.selfie_image);
       setIsVerifiedByAdmin(userData?.is_kyc_verified_by_admin);
       setSelfieUploded(userData?.is_selfie_uploaded);
+      setSelfieRejected(userData?.is_selfie_rejected);
     }
   }, [userData]);
 
   useEffect(() => {
     // uploaded and rejected by admin
-    if (selfieUploaded == 1 && isVerifiedByAdmin == 2) {
-      setAccountStatus("Rejected");
-    } else if (
-      (selfieUploaded == 0 || selfieUploaded == 1) &&
-      isVerifiedByAdmin == 0
-    ) {
-      setAccountStatus("Pending");
-    } else if (selfieUploaded == 1 && isVerifiedByAdmin == 1) {
-      setAccountStatus("Completed");
+    if (!loader) {
+      if (
+        selfieUploaded == 1 &&
+        isVerifiedByAdmin == 2 &&
+        selfieRejected == 1
+      ) {
+        setAccountStatus("Rejected");
+      } else if (
+        (selfieUploaded == 0 || selfieUploaded == 1) &&
+        isVerifiedByAdmin == 0 &&
+        selfieRejected == 0
+      ) {
+        setAccountStatus("Pending");
+      } else if (
+        selfieUploaded == 1 &&
+        isVerifiedByAdmin == 1 &&
+        selfieRejected == 0
+      ) {
+        setAccountStatus("Completed");
+      } else if (selfieUploaded == 1 && selfieRejected == 1) {
+        setAccountStatus("Rejected");
+      }
     }
-  }, [selfieUploaded, isVerifiedByAdmin]);
+  }, [selfieUploaded, isVerifiedByAdmin, selfieRejected, loader]);
 
   useEffect(() => {
     const onBackPress = () => {
@@ -149,7 +164,6 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
       const options = { quality: 0.8 };
       const data = await cameraRef.current.takePictureAsync(options);
       if (data) {
-        console.log("data", data);
         setProfilePicture(data.uri);
 
         const imageObject = {

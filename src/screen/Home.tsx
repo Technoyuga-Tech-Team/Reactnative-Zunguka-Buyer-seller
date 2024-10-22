@@ -41,6 +41,8 @@ import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { socket, socketEvent } from "../utils/socket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setData } from "../utils/asyncStorage";
+import { USER_DATA } from "../constant";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -167,6 +169,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         socket.emit("conn", user_id);
       });
       dispatch(setUserData(currentUser?.user));
+      setData(USER_DATA, currentUser?.user);
     }
   }, [currentUser, socket]);
 
