@@ -23,6 +23,7 @@ interface ProductProps extends FlatListProps<any> {
   isLoading?: boolean;
   showLoadMore?: boolean;
   fromClosedItem?: boolean;
+  fromPurchase?: boolean;
   onPressHireMover?: (itemId: number, item: ProductDataProps) => void;
   ref?: React.Ref<FlatList | null>;
   packageIndex?: number;
@@ -38,6 +39,7 @@ export const ProductListing = React.forwardRef<FlatList, ProductProps>(
       isLoading,
       showLoadMore,
       fromClosedItem = false,
+      fromPurchase = false,
       onPressHireMover,
       packageIndex,
     },
@@ -58,6 +60,7 @@ export const ProductListing = React.forwardRef<FlatList, ProductProps>(
           item={item}
           showBorder={index == packageIndex}
           fromClosedItem={fromClosedItem}
+          fromPurchase={fromPurchase}
           onPress={() => onPress(item.id, item)}
           onPressHireMover={() =>
             onPressHireMover && onPressHireMover(item.id, item)

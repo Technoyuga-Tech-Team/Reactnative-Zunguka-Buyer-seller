@@ -57,7 +57,7 @@ export const FW_SECRET_KEY = "FLWSECK_TEST-ca4fade6b4b20a473f20c7eb07c1dcd2-X";
 export const DUMMY_PLACEHOLDER = require("../assets/images/placeholder.jpg");
 
 export const GUEST_USER_MESSAGE =
-  "You are a Guest user, please Login or register first";
+  "Access Restricted: Please log in with a registered account to use this feature. Guest users have limited access.";
 export const ADMIN_VERIFICATION_PENDING_MESSAGE =
   "You can't add product for sell, Admin verification is pending...";
 export const ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE =

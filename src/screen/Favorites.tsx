@@ -3,13 +3,21 @@ import { RefreshControl, Text, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProductListing from "../components/Product/ProductListing";
-import { BASE_URL, secureStoreKeys } from "../constant";
+import { BASE_URL, secureStoreKeys, USER_DATA } from "../constant";
 import { API } from "../constant/apiEndpoints";
 import { Route } from "../constant/navigationConstants";
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { ProductDataProps } from "../types/product.types";
-import { getData } from "../utils/asyncStorage";
+import { getData, setData } from "../utils/asyncStorage";
+import { useSelector } from "react-redux";
+import { selectUserData } from "../store/settings/settings.selectors";
+import LoginToZunguka from "../components/ui/LoginToZunguka";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { logout } from "../store/authentication/authentication.thunks";
+import notifee from "@notifee/react-native";
+import { setUserData } from "../store/settings/settings.slice";
+import { CommonActions } from "@react-navigation/native";
 
 const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
   navigation,
@@ -18,10 +26,16 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
 
+  const dispatch = useAppDispatch();
+
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [savedProduct, setSavedProduct] = useState<ProductDataProps[]>([]);
+
+  const userData = useSelector(selectUserData);
+
+  const isGuest = userData?.is_guest == 1;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -86,25 +100,44 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
     getSavedProducts(10, 1, true);
   };
 
+  const onPressLogin = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navAuthentication }],
+      })
+    );
+  };
+
   return (
     <View style={style.container}>
       <Text style={style.txtHeaderTitle}>Favorites</Text>
-      <ProductListing
-        isLoading={loading}
-        productData={savedProduct}
-        onPress={onPressProduct}
-        onEndReached={onEndReached}
-        showLoadMore={page <= totalPage}
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={onRefresh}
-            tintColor={theme?.colors?.primary}
-            // @ts-ignore
-            colors={[theme?.colors?.primary]}
-          />
-        }
-      />
+      {!isGuest ? (
+        <ProductListing
+          isLoading={loading}
+          productData={savedProduct}
+          onPress={onPressProduct}
+          onEndReached={onEndReached}
+          showLoadMore={page <= totalPage}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={onRefresh}
+              tintColor={theme?.colors?.primary}
+              // @ts-ignore
+              colors={[theme?.colors?.primary]}
+            />
+          }
+        />
+      ) : (
+        <LoginToZunguka onPressLogin={onPressLogin} />
+      )}
     </View>
   );
 };

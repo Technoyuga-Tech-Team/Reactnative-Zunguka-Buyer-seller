@@ -14,7 +14,9 @@ import {
 import { useGetPurchasedHistory } from "../../hooks/useGetPurchasedHistory";
 import CustomHeader from "../../components/ui/CustomHeader";
 import ProductListing from "../../components/Product/ProductListing";
-import { HAS_NOTCH } from "../../constant";
+import { BASE_URL, HAS_NOTCH, secureStoreKeys } from "../../constant";
+import { getData } from "../../utils/asyncStorage";
+import { API } from "../../constant/apiEndpoints";
 
 const PurchasedHistory: React.FC<
   HomeNavigationProps<Route.navPurchasedHistory>
@@ -24,48 +26,100 @@ const PurchasedHistory: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const [fetchMoreLoading, setFetchMoreLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [loader, setLoader] = useState(true);
   const [fetchMore, setFetchMore] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [purchasedProduct, setPurchasedProduct] = useState<ProductDataProps[]>(
     []
   );
 
-  const {
-    data: productData,
-    refetch,
-    isLoading,
-    error,
-  } = useGetPurchasedHistory(`${fetchMore}`, { enabled: false, cacheTime: 0 });
-
   useEffect(() => {
-    setLoader(isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    setPurchasedProduct([]);
     const unsubscribe = navigation.addListener("focus", () => {
-      setFetchMore(1);
-      refetch();
+      getPurchasedHistory(10, 1, false);
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  useEffect(() => {
-    console.log("productData =  = =", productData?.data?.data);
-    if (productData?.data?.data && productData?.data?.data?.length > 0) {
-      setPurchasedProduct([...purchasedProduct, ...productData?.data?.data]);
-      setTotalPage(productData?.data?.totalPages);
-      setFetchMore(fetchMore + 1);
-      setFetchMoreLoading(false);
+  const getPurchasedHistory = async (
+    limit: number,
+    page: number,
+    fromLoadMore: boolean
+  ) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    try {
+      setLoading(true);
+      // ${API.GET_PURCHASED_PRODUCTS}?limit=10&offset=${page}
+      const response = await fetch(
+        `${BASE_URL}${API.GET_PURCHASED_PRODUCTS}?limit=${limit}&offset=${page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      // Handle the fetched data here
+      if (data.status === 1) {
+        setLoading(false);
+        if (data && data?.data?.data.length > 0) {
+          fromLoadMore
+            ? setPurchasedProduct([...purchasedProduct, data?.data?.data])
+            : setPurchasedProduct(data?.data?.data);
+          setTotalPage(data?.data?.totalPages);
+          setPage(page + 1);
+        }
+      } else {
+        setPurchasedProduct([]);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
     }
-    if (error) {
-      setFetchMoreLoading(false);
-      setPurchasedProduct([]);
-    }
-  }, [productData, error]);
+  };
+
+  // const {
+  //   data: productData,
+  //   refetch,
+  //   isLoading,
+  //   error,
+  // } = useGetPurchasedHistory(`${fetchMore}`, { enabled: false, cacheTime: 0 });
+
+  // useEffect(() => {
+  //   setLoader(isLoading);
+  // }, [isLoading]);
+
+  // useEffect(() => {
+  //   setPurchasedProduct([]);
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setFetchMore(1);
+  //     refetch();
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("productData =  = =", productData?.data?.data);
+  //   if (productData?.data?.data && productData?.data?.data?.length > 0) {
+  //     setPurchasedProduct([...purchasedProduct, ...productData?.data?.data]);
+  //     setTotalPage(productData?.data?.totalPages);
+  //     setFetchMore(fetchMore + 1);
+  //     setFetchMoreLoading(false);
+  //   }
+  //   if (error) {
+  //     setFetchMoreLoading(false);
+  //     setPurchasedProduct([]);
+  //   }
+  // }, [productData, error]);
 
   const onPressProductItem = (itemId: number) => {
     navigation.navigate(Route.navProductDetails, { itemId: itemId });
@@ -74,9 +128,8 @@ const PurchasedHistory: React.FC<
   const onPressMoverBook = (itemId: number) => {};
 
   const onEndReached = () => {
-    if (fetchMore <= totalPage && !loader) {
-      setFetchMoreLoading(true);
-      refetch().then();
+    if (page <= totalPage && !loading) {
+      getPurchasedHistory(10, page, true);
     }
   };
   console.log("purchasedProduct = =", JSON.stringify(purchasedProduct));
@@ -85,6 +138,7 @@ const PurchasedHistory: React.FC<
     console.log("id = = ", id);
     console.log("item = = ", item);
   };
+
   return (
     <View style={style.container}>
       {/* {!loading && isFetching && <Loading />} */}
@@ -100,6 +154,7 @@ const PurchasedHistory: React.FC<
       <ProductListing
         isLoading={loader}
         productData={purchasedProduct}
+        fromPurchase={true}
         // refreshControl={
         //   <RefreshControl
         //     refreshing={loader}

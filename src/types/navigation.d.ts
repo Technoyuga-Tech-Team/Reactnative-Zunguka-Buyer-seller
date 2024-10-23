@@ -94,6 +94,7 @@ export type AppRoutes = {
   OngoingMoverRequest: undefined;
   PastMoverRequest: undefined;
   AdminVerification: undefined;
+  ContactUs: undefined;
 };
 
 export type AuthenticationRoutes = {

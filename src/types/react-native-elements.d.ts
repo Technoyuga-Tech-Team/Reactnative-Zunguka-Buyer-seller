@@ -39,6 +39,7 @@ declare module "react-native-elements/dist/config/colors" {
     greyedColor: string;
     golden: string;
     yellowStar: string;
+    blue: string;
   }
 }
 

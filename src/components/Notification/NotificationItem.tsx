@@ -22,6 +22,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const time = moment(item?.created_at).fromNow();
   const profile = item.user.profile_image || Images.PLACEHOLDER_IMAGE;
   const is_unread = item.is_read == 0;
+
   return (
     <TouchableOpacity onPress={onPressItem}>
       <View

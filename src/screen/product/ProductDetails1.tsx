@@ -10,7 +10,13 @@ import ProductInfo from "../../components/Product/ProductInfo";
 import ProductBanner from "../../components/ProductBanner";
 import CustomButton from "../../components/ui/CustomButton";
 import ProductHeader from "../../components/ui/ProductHeader";
-import { HAS_NOTCH, SCREEN_WIDTH } from "../../constant";
+import {
+  ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE,
+  ADMIN_VERIFICATION_PENDING_MESSAGE,
+  GUEST_USER_MESSAGE,
+  HAS_NOTCH,
+  SCREEN_WIDTH,
+} from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useProductDetails } from "../../hooks/useProductDetails";
@@ -31,6 +37,7 @@ import {
 import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
+import { notifyMessage } from "../../utils/notifyMessage";
 
 const ProductDetails1: React.FC<
   HomeNavigationProps<Route.navProductDetails1>
@@ -42,6 +49,13 @@ const ProductDetails1: React.FC<
   const { itemId } = route.params;
 
   const userData = useSelector(selectUserData);
+
+  const isGuest = userData?.is_guest == 1;
+  const admin_verification_completed =
+    userData?.is_selfie_uploaded == 1 &&
+    userData?.is_kyc_verified_by_admin == 1;
+  const admin_address_verification_completed =
+    userData?.all_documentation_approved_by_admin == 1;
 
   const [productDetails, setProductDetails] =
     useState<ProductDetailsDataProps | null>(null);
@@ -193,24 +207,28 @@ const ProductDetails1: React.FC<
     }
   };
   const onPressSavedItem = async () => {
-    setSavedItem(!savedItem);
-    try {
-      const result = await dispatch(
-        likeDislikeProduct({
-          item_id: productDetails?.id,
-          type: savedItem ? "dislike" : "like",
-        })
-      );
-      if (likeDislikeProduct.fulfilled.match(result)) {
-        if (result.payload) {
-          console.log("response likeDislikeProduct --->", result.payload);
-          refetch();
+    if (!isGuest) {
+      setSavedItem(!savedItem);
+      try {
+        const result = await dispatch(
+          likeDislikeProduct({
+            item_id: productDetails?.id,
+            type: savedItem ? "dislike" : "like",
+          })
+        );
+        if (likeDislikeProduct.fulfilled.match(result)) {
+          if (result.payload) {
+            console.log("response likeDislikeProduct --->", result.payload);
+            refetch();
+          }
+        } else {
+          console.log("errror likeDislikeProduct --->", result.payload);
         }
-      } else {
-        console.log("errror likeDislikeProduct --->", result.payload);
+      } catch (error) {
+        console.log("errror likeDislikeProduct --->", error);
       }
-    } catch (error) {
-      console.log("errror likeDislikeProduct --->", error);
+    } else {
+      notifyMessage(GUEST_USER_MESSAGE);
     }
   };
 
@@ -220,41 +238,59 @@ const ProductDetails1: React.FC<
   };
 
   const onPressBuyProduct = () => {
-    const is_OutOf_Kigali =
-      (productDetails?.district || productDetails?.sector) == "Out of Kigali";
-    const selfPickupAvailable = productDetails?.is_selfpickup_available == 1;
-    productDetails &&
-      dispatch(
-        setProductInfo({
-          id: productDetails?.id,
-          price: productDetails?.sale_price,
-          isOutOfKigali: is_OutOf_Kigali,
-          selfPickupAvailable: selfPickupAvailable,
-          name: productDetails?.title,
-          sellerName: productDetails?.user?.username,
-          sellerPhone: productDetails?.user?.phone_number,
-          modeOfTransport: productDetails?.mode_of_transport,
-        })
-      );
-    if (is_OutOf_Kigali) {
-      navigation.navigate(Route.navPayment, {
-        deliveryPrice: 0,
-        modeOfDelivery: "outofkigali",
-      });
-    } else {
-      if (selfPickupAvailable) {
-        navigation.navigate(Route.navModeOfDelivery); // --> select address --> payment
+    if (!isGuest) {
+      if (admin_verification_completed) {
+        if (admin_address_verification_completed) {
+          const is_OutOf_Kigali =
+            (productDetails?.district || productDetails?.sector) ==
+            "Out of Kigali";
+          const selfPickupAvailable =
+            productDetails?.is_selfpickup_available == 1;
+          productDetails &&
+            dispatch(
+              setProductInfo({
+                id: productDetails?.id,
+                price: productDetails?.sale_price,
+                isOutOfKigali: is_OutOf_Kigali,
+                selfPickupAvailable: selfPickupAvailable,
+                name: productDetails?.title,
+                sellerName: productDetails?.user?.username,
+                sellerPhone: productDetails?.user?.phone_number,
+                modeOfTransport: productDetails?.mode_of_transport,
+              })
+            );
+          if (is_OutOf_Kigali) {
+            navigation.navigate(Route.navPayment, {
+              deliveryPrice: 0,
+              modeOfDelivery: "outofkigali",
+            });
+          } else {
+            if (selfPickupAvailable) {
+              navigation.navigate(Route.navModeOfDelivery); // --> select address --> payment
+            } else {
+              navigation.navigate(Route.navDeliveryAddress); // --> payment
+            }
+          }
+        } else {
+          notifyMessage(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE);
+        }
       } else {
-        navigation.navigate(Route.navDeliveryAddress); // --> payment
+        notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
       }
+    } else {
+      notifyMessage(GUEST_USER_MESSAGE);
     }
   };
 
   const onPressMessage = () => {
-    navigation.navigate(Route.navChatroom, {
-      receiver_id: `${productDetails?.user_id}`,
-      product_id: `${productDetails?.id}`,
-    });
+    if (!isGuest) {
+      navigation.navigate(Route.navChatroom, {
+        receiver_id: `${productDetails?.user_id}`,
+        product_id: `${productDetails?.id}`,
+      });
+    } else {
+      notifyMessage(GUEST_USER_MESSAGE);
+    }
   };
 
   const onRefresh = () => {

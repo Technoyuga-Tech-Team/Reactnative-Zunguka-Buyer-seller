@@ -958,7 +958,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
                 onPressSubmit(0);
               }
             }}
-            title={product_id ? "Update" : "Submit"}
+            title={product_id ? "Update" : "Publish"}
             buttonWidth={product_id ? "full" : "half"}
             width={product_id ? SCREEN_WIDTH - 50 : (SCREEN_WIDTH - 50) / 2}
             variant="primary"

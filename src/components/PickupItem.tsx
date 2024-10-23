@@ -26,7 +26,7 @@ const getStatusStrings = (status: string) => {
     : status === "startjob"
     ? "Ongoing Job"
     : status === "completed"
-    ? "Delivery location"
+    ? "At Delivery Location"
     : status === "confirmed"
     ? "yet to start job"
     : "";

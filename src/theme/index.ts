@@ -37,6 +37,7 @@ const LightThemeColor = {
   greyedColor: "#BEBFBF",
   golden: "#FFBE15",
   yellowStar: "#FFB74B",
+  blue: "#2271F1",
 };
 const DarkThemeColor = {
   primary: "#F3B241",
@@ -73,6 +74,7 @@ const DarkThemeColor = {
   greyedColor: "#BEBFBF",
   golden: "#FFBE15",
   yellowStar: "#FFB74B",
+  blue: "#2271F1",
 };
 
 export const getTheme = (mode: "light" | "dark" = "dark") => {

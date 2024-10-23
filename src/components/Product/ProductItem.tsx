@@ -20,6 +20,7 @@ interface ProductItemProps {
   item: ProductDataProps;
   onPress: () => void;
   fromClosedItem: boolean;
+  fromPurchase: boolean;
   onPressHireMover: () => void;
   showBorder?: boolean;
 }
@@ -27,6 +28,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   item,
   onPress,
   fromClosedItem,
+  fromPurchase,
   onPressHireMover,
   showBorder,
 }) => {
@@ -41,6 +43,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const is_otp = item?.is_otp;
 
   const currentUsersProduct = item?.user_id == userData?.id;
+
+  const showBtn = fromPurchase || fromClosedItem;
+
   return (
     <View
       style={[
@@ -113,7 +118,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </Text>
         </View>
       </TouchableOpacity>
-      {fromClosedItem && showRequestBtn && (
+      {showBtn && showRequestBtn && (
         <>
           <View style={{ marginTop: 10 }}>
             <CustomButton
@@ -122,7 +127,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 console.log("is_otp", is_otp);
                 if (!(isSearch || is_otp)) {
                   onPressHireMover();
-                } else if (is_otp) {
+                } else if (is_otp && !fromPurchase) {
                   navigation.navigate(Route.navRequestToMover, {
                     screen: Route.navOngoingMoverRequest,
                   });

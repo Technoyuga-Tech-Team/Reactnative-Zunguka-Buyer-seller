@@ -53,6 +53,7 @@ import AllBrands from "../screen/AllBrands";
 import AdminVerification from "../screen/authentication/AdminVerification";
 import Inbox from "../screen/Inbox/Inbox";
 import DraftProductList from "../screen/product/DraftProductList";
+import ContactUs from "../screen/ContactUs";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -203,6 +204,7 @@ const MainStack = () => {
             name={Route.navDraftItems}
             component={DraftProductList}
           />
+          <Stack.Screen name={Route.navContactUs} component={ContactUs} />
         </Stack.Navigator>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>

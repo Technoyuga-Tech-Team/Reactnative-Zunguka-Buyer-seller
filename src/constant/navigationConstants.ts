@@ -69,6 +69,7 @@ export enum Route {
   navOngoingMoverRequest = "OngoingMoverRequest",
   navPastMoverRequest = "PastMoverRequest",
   navProfile = "Profile",
+  navContactUs = "ContactUs",
   navSellAnItem = "SellAnItem",
   navListAnother = "ListAnother",
   navEditProfile = "EditProfile",

@@ -39,6 +39,7 @@ import CheckBoxSelection from "../../../components/ui/CheckBoxSelection";
 import CustomDropdown from "../../../components/Dropdown/CustomDropdown";
 import { DISTRICT_AND_SECTORS } from "../../../constant";
 import { saveLatLng } from "../../../store/settings/settings.slice";
+import InputFieldInfo from "../../../components/ui/InputFieldInfo";
 
 const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   navigation,
@@ -472,6 +473,15 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
           /> */}
         </View>
       </KeyboardAwareScrollView>
+      {fromUpdateAddress && (
+        <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+          <InputFieldInfo
+            text={
+              "Updating your address will require re-verification, temporarily disabling your ability to buy or sell products until verified by admin."
+            }
+          />
+        </View>
+      )}
       <CustomButton
         onPress={async () => {
           if (houseImage?.length > 0) {

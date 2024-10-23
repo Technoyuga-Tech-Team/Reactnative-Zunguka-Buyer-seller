@@ -21,6 +21,7 @@ import MoneybillsIcon from "../../components/ui/svg/MoneybillsIcon";
 import ProfileIcon from "../../components/ui/svg/ProfileIcon";
 import TagfillIcon from "../../components/ui/svg/TagfillIcon";
 import {
+  ADMIN_VERIFICATION_PENDING_MESSAGE,
   GOOGLE_WEB_CLIENT_ID,
   SCREEN_WIDTH,
   USER_DATA,
@@ -41,6 +42,8 @@ import PurchasedProductIcon from "../../components/ui/svg/PurchasedProductIcon";
 import DraftItemIcon from "../../components/ui/svg/DraftItemIcon";
 import ContactUsIcon from "../../components/ui/svg/ContactUsIcon";
 import TransactionHistoryIcon from "../../components/ui/svg/TransactionHistoryIcon";
+import LoginToZunguka from "../../components/ui/LoginToZunguka";
+import { notifyMessage } from "../../utils/notifyMessage";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -55,6 +58,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   console.log("userData", userData);
 
   const isGuest = userData?.is_guest == 1;
+  const admin_verification_completed =
+    userData?.is_selfie_uploaded == 1 &&
+    userData?.is_kyc_verified_by_admin == 1;
 
   const [visible, setVisible] = useState(false);
   const [title1, setTitle1] = useState("");
@@ -152,7 +158,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     setVisible(true);
   };
   const onPressMyProfile = () => {
-    navigation.navigate(Route.navEditProfile);
+    if (admin_verification_completed) {
+      navigation.navigate(Route.navEditProfile);
+    } else {
+      notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
+    }
   };
   const onPressCardDetails = () => {
     navigation.navigate(Route.navCardDetails, { from: "profile" });
@@ -186,6 +196,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
 
   const onPressRequestPage = () => {
     navigation.navigate(Route.navRequestToMover);
+  };
+
+  const onPressContactUs = () => {
+    navigation.navigate(Route.navContactUs);
   };
 
   const onPressLogin = async () => {
@@ -268,17 +282,17 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             icon={<TransactionHistoryIcon color={theme.colors?.primary} />}
             onPress={onPressTransactionHistroy}
           />
-          {/* <ProfileItem
-          name="Purchased History"
-          icon={
-            <PurchasedProductIcon
-              color={theme.colors?.primary}
-              height={22}
-              width={22}
-            />
-          }
-          onPress={onPressPurchasedHistory}
-        /> */}
+          <ProfileItem
+            name="Purchased History"
+            icon={
+              <PurchasedProductIcon
+                color={theme.colors?.primary}
+                height={22}
+                width={22}
+              />
+            }
+            onPress={onPressPurchasedHistory}
+          />
           {/* <ProfileItem
           name="Job History"
           icon={
@@ -299,10 +313,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             name="Terms and Conditions"
             icon={<DocslistIcon color={theme.colors?.primary} />}
           />
-          <ProfileItem
+          {/* <ProfileItem
             name="Contact Us"
             icon={<ContactUsIcon color={theme.colors?.primary} />}
-          />
+            onPress={onPressContactUs}
+          /> */}
         </KeyboardAwareScrollView>
       )}
       {!isGuest ? (
@@ -352,17 +367,18 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           />
         </View>
       ) : (
-        <View style={style.guestUserCont}>
-          <Text style={style.txtTitle}>Login to Zunguka</Text>
-          <Text style={style.txtTitle1}>Start Sell and Buy Products...</Text>
-          <CustomButton
-            onPress={onPressLogin}
-            title={"Login"}
-            buttonWidth="full"
-            variant="primary"
-            type="solid"
-          />
-        </View>
+        <LoginToZunguka onPressLogin={onPressLogin} />
+        // <View style={style.guestUserCont}>
+        //   <Text style={style.txtTitle}>Login to Zunguka</Text>
+        //   <Text style={style.txtTitle1}>Start Sell and Buy Products...</Text>
+        //   <CustomButton
+        //     onPress={onPressLogin}
+        //     title={"Login"}
+        //     buttonWidth="full"
+        //     variant="primary"
+        //     type="solid"
+        //   />
+        // </View>
       )}
       <LogoutPopup
         title1={title1}

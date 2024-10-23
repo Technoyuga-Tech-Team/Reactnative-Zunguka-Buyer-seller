@@ -199,20 +199,22 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <SellerProfileWithStar userData={productDetails?.user} />
         )}
       </View>
-      {showSimilarItem && (
-        <>
-          <ItemSeparator />
-          <View style={style.paddingCont}>
-            <Text style={[style.txtProductName, { marginBottom: 10 }]}>
-              Similar items
-            </Text>
-            <SimilarProductListing
-              similarProductData={productDetails?.similar_products}
-              onPressProduct={(item) => onPressSimilarProduct(item)}
-            />
-          </View>
-        </>
-      )}
+      {showSimilarItem &&
+        productDetails &&
+        productDetails?.similar_products?.length > 0 && (
+          <>
+            <ItemSeparator />
+            <View style={style.paddingCont}>
+              <Text style={[style.txtProductName, { marginBottom: 10 }]}>
+                Similar items
+              </Text>
+              <SimilarProductListing
+                similarProductData={productDetails?.similar_products}
+                onPressProduct={(item) => onPressSimilarProduct(item)}
+              />
+            </View>
+          </>
+        )}
     </View>
   );
 };

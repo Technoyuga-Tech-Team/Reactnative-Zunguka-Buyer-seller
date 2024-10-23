@@ -369,10 +369,13 @@ const TakeSelfie: React.FC<HomeNavigationProps<Route.navTakeSelfie>> = ({
                     Your profile is under review, please wait for 24 hours admin
                     will verify
                   </Text>
+                  <Text style={style.txtFace}>
+                    You can Explore app untill admin verify
+                  </Text>
                 </View>
                 <CustomButton
                   onPress={onPressSkip}
-                  title={"Skip"}
+                  title={"Explore App"}
                   buttonWidth="full"
                   variant="primary"
                   type="solid"

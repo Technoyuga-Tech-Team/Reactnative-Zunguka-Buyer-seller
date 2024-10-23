@@ -1,19 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationListing from "../../components/Notification/NotificationListing";
-import { BASE_URL, secureStoreKeys } from "../../constant";
+import { BASE_URL, secureStoreKeys, USER_DATA } from "../../constant";
 import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { readUnreadAlert } from "../../store/Notification/notification.thunk";
-import { setTotalUnreadAlertCount } from "../../store/settings/settings.slice";
+import {
+  markAllAsRead,
+  readUnreadAlert,
+} from "../../store/Notification/notification.thunk";
+import {
+  setTotalUnreadAlertCount,
+  setUserData,
+} from "../../store/settings/settings.slice";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import { GetNotificationDataList } from "../../types/notification.types";
-import { getData } from "../../utils/asyncStorage";
+import { getData, setData } from "../../utils/asyncStorage";
 import CustomHeader from "../../components/ui/CustomHeader";
+import { useSelector } from "react-redux";
+import { selectUserData } from "../../store/settings/settings.selectors";
+import LoginToZunguka from "../../components/ui/LoginToZunguka";
+import { logout } from "../../store/authentication/authentication.thunks";
+import notifee from "@notifee/react-native";
+import { CommonActions } from "@react-navigation/native";
+import Scale from "../../utils/Scale";
 
 const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
   navigation,
@@ -32,6 +45,10 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
     []
   );
   const [unreadAlertCount, setUnreadAlertCount] = useState(0);
+
+  const userData = useSelector(selectUserData);
+
+  const isGuest = userData?.is_guest == 1;
 
   useEffect(() => {
     dispatch(setTotalUnreadAlertCount(unreadAlertCount));
@@ -128,17 +145,76 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
     }
   };
 
+  const onPressMarkAllAsRead = async () => {
+    try {
+      const result = await dispatch(markAllAsRead({ is_alert: 1 }));
+      if (markAllAsRead.fulfilled.match(result)) {
+        console.log("markAllAsRead result.payload", result.payload);
+        if (result.payload.status == 1) {
+          let data = [...notifications];
+          data.map((ele) => {
+            return (ele.is_read = 1);
+          });
+          setNotifications(data);
+          getNotifications(10, 1);
+          setUnreadAlertCount(0);
+        }
+      } else {
+        console.log("errror markAllAsRead --->", result.payload);
+      }
+    } catch (error) {
+      console.log("catch error markAllAsRead --->", error);
+    }
+  };
+
+  const onPressLogin = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navAuthentication }],
+      })
+    );
+  };
+
   return (
     <View style={style.container}>
       <CustomHeader title="Alert" />
-      {/* <Text style={style.txtHeaderTitle}>Alert</Text> */}
-      <NotificationListing
-        notificationData={notifications}
-        notificationLoading={loading}
-        onEndReached={onEndReached}
-        loadMoreLoading={loadMoreLoading}
-        onPressItem={onPressItem}
-      />
+      {!isGuest ? (
+        <View style={{ flex: 1 }}>
+          {notifications?.length > 0 && (
+            <TouchableOpacity
+              disabled={unreadAlertCount == 0}
+              onPress={onPressMarkAllAsRead}
+              style={[
+                style.btnMarkCont,
+                {
+                  backgroundColor:
+                    unreadAlertCount == 0
+                      ? theme?.colors?.unselectedIconColor
+                      : theme?.colors?.blue,
+                },
+              ]}
+            >
+              <Text style={style.txtMark}>Mark all as read</Text>
+            </TouchableOpacity>
+          )}
+          <NotificationListing
+            notificationData={notifications}
+            notificationLoading={loading}
+            onEndReached={onEndReached}
+            loadMoreLoading={loadMoreLoading}
+            onPressItem={onPressItem}
+          />
+        </View>
+      ) : (
+        <LoginToZunguka onPressLogin={onPressLogin} />
+      )}
     </View>
   );
 };
@@ -159,5 +235,22 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     lineHeight: 24,
     textAlign: "center",
     marginVertical: 20,
+  },
+  btnMarkCont: {
+    height: Scale(30),
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme?.colors?.blue,
+    // backgroundColor: "red",
+    alignSelf: "flex-end",
+    borderRadius: 4,
+    marginRight: 10,
+    marginVertical: 5,
+  },
+  txtMark: {
+    fontSize: theme.fontSize?.fs14,
+    fontFamily: theme.fontFamily?.regular,
+    color: theme.colors?.white,
   },
 }));
