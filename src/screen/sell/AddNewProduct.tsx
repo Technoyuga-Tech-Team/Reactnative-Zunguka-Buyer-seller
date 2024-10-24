@@ -597,6 +597,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
       formData.append("is_saved_as_draft", saved_as_draft);
+      formData.append("status", "Active");
 
       console.log("Edit product formData - - -", JSON.stringify(formData));
 

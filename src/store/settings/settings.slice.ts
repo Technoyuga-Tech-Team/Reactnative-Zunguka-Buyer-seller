@@ -155,6 +155,7 @@ const initialState: SettingsStateProps = {
   messagingData: [],
   unread_count: 0,
   unread_alert_count: 0,
+  searchValueforCategory: "",
 };
 
 const settings = createSlice({
@@ -227,6 +228,9 @@ const settings = createSlice({
     setTotalUnreadAlertCount: (state, action: PayloadAction<number>) => {
       state.unread_alert_count = action.payload;
     },
+    setSearchValueforCategory: (state, action: PayloadAction<string>) => {
+      state.searchValueforCategory = action.payload;
+    },
   },
 });
 
@@ -246,6 +250,7 @@ export const {
   setMessagingData,
   setTotalUnreadNotificationCount,
   setTotalUnreadAlertCount,
+  setSearchValueforCategory,
 } = settings.actions;
 
 export default settings.reducer;

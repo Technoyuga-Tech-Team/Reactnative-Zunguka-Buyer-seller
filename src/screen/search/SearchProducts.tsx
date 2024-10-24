@@ -17,8 +17,11 @@ import { CommonActions } from "@react-navigation/native";
 import { notifyMessage } from "../../utils/notifyMessage";
 import {
   setProductInfo,
+  setSearchValueforCategory,
   setSelectedDeliveryAddress,
 } from "../../store/settings/settings.slice";
+import { useSelector } from "react-redux";
+import { getSearchValueforCategory } from "../../store/settings/settings.selectors";
 
 const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   navigation,
@@ -31,6 +34,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   const { theme } = useTheme();
 
   const dispatch = useAppDispatch();
+  const search_val = useSelector(getSearchValueforCategory);
 
   const [visible, setVisible] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
@@ -40,23 +44,35 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   const [totalPage, setTotalPage] = useState(0);
   const [loader, setLoader] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValueForAPI, setSearchValueForAPI] = useState<string>("");
   const [filterItems, setFilterItems] = useState<any>(null);
 
-  const debouncedSearchTerm = useDebounce(searchValue, 500);
+  const debouncedSearchTerm = useDebounce(searchValueForAPI, 500);
+
+  // useEffect(() => {
+  //   if (subCat) {
+  //     console.log("called subcat");
+  //     setSearchValue(subCat);
+  //     getSearchedItems(subCat, 10, 1, true, null, false);
+  //   } else if (mainCat) {
+  //     console.log("called mainCat");
+  //     setSearchValue(mainCat);
+  //     getSearchedItems(mainCat, 10, 1, true, null, false);
+  //   } else {
+  //     getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
+  //   }
+  // }, [mainCat, subCat, debouncedSearchTerm]);
 
   useEffect(() => {
-    if (subCat) {
-      console.log("called subcat");
-      setSearchValue(subCat);
-      getSearchedItems(subCat, 10, 1, true, null, false);
-    } else if (mainCat) {
-      console.log("called mainCat");
-      setSearchValue(mainCat);
-      getSearchedItems(mainCat, 10, 1, true, null, false);
+    if (search_val) {
+      setSearchValue(search_val);
+      setSearchValueForAPI(search_val);
+
+      getSearchedItems(search_val, 10, 1, true, null, false);
     } else {
       getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
     }
-  }, [mainCat, subCat, debouncedSearchTerm]);
+  }, [search_val, debouncedSearchTerm]);
 
   const getSearchedItems = async (
     keyword: string,
@@ -168,6 +184,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
 
   const onChangeText = (val: string) => {
     setSearchValue(val);
+    setSearchValueForAPI(val);
+    dispatch(setSearchValueforCategory(val));
   };
 
   const onPressBack = () => {

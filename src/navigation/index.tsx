@@ -126,7 +126,8 @@ const MainNavigator = () => {
       ) !== -1
     ) {
       if (!isSocialError) {
-        if (errorMessage !== "") {
+        console.log("errorMessage --------------------", typeof errorMessage);
+        if (errorMessage && errorMessage !== "") {
           Snackbar.show({
             text: errorMessage || "",
             duration: Snackbar.LENGTH_LONG,
@@ -367,7 +368,7 @@ const MainNavigator = () => {
     ) {
       console.log(" ======   = = = = = = = = = ", typeof message?.data?.user);
       const userData = JSON.parse(message?.data?.user);
-      console.log(" ======   = = = = = = = = = >>>>>>", typeof userData);
+      console.log(" ======   = = = = = = = = = >>>>>>", userData);
 
       dispatch(setUserData(userData));
       setData(USER_DATA, userData);

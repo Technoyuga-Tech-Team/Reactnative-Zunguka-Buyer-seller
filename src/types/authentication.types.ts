@@ -85,3 +85,11 @@ export interface AddAddressProps {
   sector: string;
   district: string;
 }
+
+// Contact us
+
+export interface ContactUsFormProps {
+  email: string;
+  subject: string;
+  message: string;
+}

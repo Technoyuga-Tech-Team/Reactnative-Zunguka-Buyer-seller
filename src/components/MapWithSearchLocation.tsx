@@ -117,6 +117,26 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
     Geocoder.init(GOOGLE_MAP_API_KEY); // Initialize geocoder with API key
   }, []);
 
+  function getAddressFromCoords(lat, lng) {
+    const apiKey = GOOGLE_MAP_API_KEY; // Replace with your Google Maps API key
+    const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+
+    fetch(geocodeURL)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "OK" && data.results.length > 0) {
+          const address = data.results[0].formatted_address;
+          console.log("Address: ", address);
+          setAddress(address);
+        } else {
+          console.error("No address found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error with geocoding: ", error);
+      });
+  }
+
   const getOneTimeLocation = () => {
     setLoading(true);
     Geolocation.getCurrentPosition(
@@ -135,6 +155,7 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
           latitude: currentLatitude,
           longitude: currentLongitude,
         });
+        getAddressFromCoords(currentLatitude, currentLongitude);
         mapRef.current?.fitToCoordinates(
           [
             {

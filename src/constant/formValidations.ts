@@ -283,3 +283,20 @@ export const DeliveryAddressScreenSchema = (countryCode: CountryCode) => {
     city: Yup.string().required("City is required"),
   });
 };
+
+// Contact us form
+
+export const ContactUsScreenSchema = () => {
+  return Yup.object().shape({
+    email: Yup.string()
+      .trim()
+      .matches(
+        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        "Invalid email address"
+      )
+      .email("Invalid email address")
+      .required("Email is required"),
+    subject: Yup.string().required("Subject is required"),
+    message: Yup.string().trim().required("Message is required"),
+  });
+};

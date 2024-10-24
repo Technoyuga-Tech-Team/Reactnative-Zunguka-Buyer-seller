@@ -28,6 +28,7 @@ import {
   selectUserData,
 } from "../store/settings/settings.selectors";
 import {
+  setSearchValueforCategory,
   setTotalUnreadAlertCount,
   setTotalUnreadNotificationCount,
   setUserData,
@@ -233,12 +234,14 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
       mainCat: item.name,
       subCat: "",
     });
+    dispatch(setSearchValueforCategory(item.name));
   };
   const onPressHotBrands = (item: HotBrandaDataProps) => {
     navigation.navigate(Route.navSearchProduct, {
       mainCat: item.name,
       subCat: "",
     });
+    dispatch(setSearchValueforCategory(item.name));
   };
   const onPressSeeAllHotBrands = () => {
     navigation.navigate(Route.navAllBrand);

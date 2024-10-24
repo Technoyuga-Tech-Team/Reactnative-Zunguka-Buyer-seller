@@ -1,22 +1,82 @@
+import { useFormik } from "formik";
 import React from "react";
-import { View } from "react-native";
+import { TextInput, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import CustomButton from "../components/ui/CustomButton";
 import CustomHeader from "../components/ui/CustomHeader";
-import { Route } from "../constant/navigationConstants";
-import { ThemeProps } from "../types/global.types";
-import { HomeNavigationProps } from "../types/navigation";
 import { CustomTxtInput } from "../components/ui/CustomTextInput";
 import { MAX_CHAR_LENGTH } from "../constant";
+import { ContactUsScreenSchema } from "../constant/formValidations";
+import { Route } from "../constant/navigationConstants";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { setSuccess } from "../store/global/global.slice";
+import { selectUserProfileLoading } from "../store/userprofile/userprofile.selectors";
+import { userContactUs } from "../store/userprofile/userprofile.thunk";
+import { ContactUsFormProps } from "../types/authentication.types";
+import { LoadingState, ThemeProps } from "../types/global.types";
+import { HomeNavigationProps } from "../types/navigation";
 import Scale from "../utils/Scale";
-import CustomButton from "../components/ui/CustomButton";
 
-const ContactUs: React.FC<HomeNavigationProps<Route.navContactUs>> = ({}) => {
+const ContactUs: React.FC<HomeNavigationProps<Route.navContactUs>> = ({
+  navigation,
+}) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+  const dispatch = useAppDispatch();
+
+  const subjectRef = React.useRef<TextInput>(null);
+  const messageRef = React.useRef<TextInput>(null);
+
+  const userLoading = useSelector(selectUserProfileLoading);
+
+  const {
+    handleChange,
+    handleBlur,
+    touched,
+    values,
+    errors,
+    isValid,
+    handleSubmit,
+    setFieldValue,
+  } = useFormik<ContactUsFormProps>({
+    validationSchema: ContactUsScreenSchema,
+    initialValues: {
+      email: "",
+      subject: "",
+      message: "",
+    },
+    validateOnChange: true,
+    onSubmit: async ({ email, subject, message }) => {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("subject", subject);
+      formData.append("message", message);
+      const result = await dispatch(userContactUs({ formData }));
+      if (userContactUs.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          dispatch(setSuccess(result.payload.message));
+          setFieldValue("email", "");
+          setFieldValue("subject", "");
+          setFieldValue("message", "");
+          navigation.goBack();
+        }
+      } else {
+        console.log("errror userContactUs --->", result.payload);
+      }
+    },
+  });
+
   return (
-    <View style={style.container}>
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps={"handled"}
+      contentContainerStyle={style.container}
+      showsVerticalScrollIndicator={false}
+      bounces={false}
+    >
       <CustomHeader title="Contact Us" />
       <View style={style.txtInCont}>
         <CustomTxtInput
@@ -25,29 +85,30 @@ const ContactUs: React.FC<HomeNavigationProps<Route.navContactUs>> = ({}) => {
           returnKeyType="next"
           returnKeyLabel="next"
           keyboardType={"email-address"}
-          // onChangeText={handleChange("email")}
-          // onBlur={handleBlur("email")}
-          // value={values.email}
-          // error={errors.email}
-          // touched={touched.email}
-          // onSubmitEditing={() => phoneRef.current?.focus()}
+          onChangeText={handleChange("email")}
+          onBlur={handleBlur("email")}
+          value={values.email}
+          error={errors.email}
+          touched={touched.email}
+          onSubmitEditing={() => subjectRef.current?.focus()}
         />
         <CustomTxtInput
-          // ref={firstNameRef}
+          ref={subjectRef}
           placeholder="Subject"
           returnKeyType="next"
           returnKeyLabel="next"
           keyboardType={"default"}
           maxLength={MAX_CHAR_LENGTH}
-          // onChangeText={handleChange("firstName")}
-          // onBlur={handleBlur("firstName")}
-          // value={values.firstName}
-          // error={errors.firstName}
-          // touched={touched.firstName}
-          // onSubmitEditing={() => lastnameRef.current?.focus()}
+          onChangeText={handleChange("subject")}
+          onBlur={handleBlur("subject")}
+          value={values.subject}
+          error={errors.subject}
+          touched={touched.subject}
+          onSubmitEditing={() => messageRef.current?.focus()}
         />
 
         <CustomTxtInput
+          ref={messageRef}
           placeholder={`Message`}
           returnKeyType="next"
           returnKeyLabel="next"
@@ -57,25 +118,25 @@ const ContactUs: React.FC<HomeNavigationProps<Route.navContactUs>> = ({}) => {
           multiline={true}
           textAlignVertical="top"
           maxLength={200}
-          //   onChangeText={onChangeProductDescription}
-          //   onBlur={onBlurDescription}
-          //   value={productDescription}
-          //   error={productDescriptionError}
-          //   touched={productDescriptionError !== ""}
+          onChangeText={handleChange("message")}
+          onBlur={handleBlur("message")}
+          value={values.message}
+          error={errors.message}
+          touched={touched.message}
           onSubmitEditing={() => {}}
           // extraPeddingLeft={true}
         />
       </View>
       <CustomButton
-        onPress={() => {}}
+        onPress={() => handleSubmit()}
         title={"Submit"}
         buttonWidth="full"
         variant="primary"
         type="solid"
-        // disabled={!isValid || loading === LoadingState.CREATE}
-        // loading={loading === LoadingState.CREATE}
+        disabled={userLoading === LoadingState.CREATE}
+        loading={userLoading === LoadingState.CREATE}
       />
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -83,7 +144,7 @@ export default ContactUs;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: theme.colors?.background,
     paddingTop: props.insets.top,
     paddingBottom: props.insets.bottom + 10,

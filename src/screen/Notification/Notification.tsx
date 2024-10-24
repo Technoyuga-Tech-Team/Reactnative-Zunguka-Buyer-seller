@@ -246,7 +246,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.black,
     lineHeight: 24,
     textAlign: "center",
-    marginVertical: 20,
+    marginTop: 10,
   },
   btnMarkCont: {
     height: Scale(30),

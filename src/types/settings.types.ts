@@ -26,4 +26,5 @@ export interface SettingsStateProps {
   messagingData: ChatDataList[];
   unread_count: number;
   unread_alert_count: number;
+  searchValueforCategory: string;
 }

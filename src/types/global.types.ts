@@ -1,4 +1,4 @@
-import {EdgeInsets} from 'react-native-safe-area-context';
+import { EdgeInsets } from "react-native-safe-area-context";
 
 export interface GlobalState {
   errors: any;
@@ -14,10 +14,10 @@ export enum LoadingState {
   REMOVE,
 }
 export enum AuthLoadingState {
-  FACEBOOK = 'facebook',
-  GOOGLE = 'google',
-  APPLE = 'apple',
-  NULL = 'null',
+  FACEBOOK = "facebook",
+  GOOGLE = "google",
+  APPLE = "apple",
+  NULL = "null",
 }
 
-export type ThemeProps = {insets: EdgeInsets};
+export type ThemeProps = { insets: EdgeInsets; isGuest?: boolean };

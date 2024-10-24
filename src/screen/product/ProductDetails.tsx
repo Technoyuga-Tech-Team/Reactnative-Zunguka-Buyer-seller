@@ -81,6 +81,8 @@ const ProductDetails: React.FC<
   const [productLikes, setProductLikes] = useState(0);
   const [loader, setLoader] = useState(true);
   const [itemNotAvailable, setItemNotAvailable] = useState<boolean>(false);
+  const [publishUnPublishLoading, setPublishUnPublishLoading] =
+    useState<boolean>(false);
 
   const is_CurrentUsers_product = userData?.id == productDetails?.user_id;
 
@@ -328,17 +330,24 @@ const ProductDetails: React.FC<
   };
 
   const onPressStopPublish = async () => {
-    const formData = new FormData();
-    formData.append("item_id", productDetails?.id);
-    const result = await dispatch(publishUnpublishProduct({ formData }));
-    if (publishUnpublishProduct.fulfilled.match(result)) {
-      if (result.payload.status === 1) {
-        let status = result.payload.data.status;
-        setProductStatus(status);
-        console.log("result publishUnpublishProduct --->", result.payload);
+    setPublishUnPublishLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("item_id", productDetails?.id);
+      const result = await dispatch(publishUnpublishProduct({ formData }));
+      if (publishUnpublishProduct.fulfilled.match(result)) {
+        if (result.payload.status === 1) {
+          setPublishUnPublishLoading(false);
+          let status = result.payload.data.status;
+          setProductStatus(status);
+          console.log("result publishUnpublishProduct --->", result.payload);
+        }
+      } else {
+        setPublishUnPublishLoading(false);
+        console.log("errror publishUnpublishProduct --->", result.payload);
       }
-    } else {
-      console.log("errror publishUnpublishProduct --->", result.payload);
+    } catch (error) {
+      setPublishUnPublishLoading(false);
     }
   };
 
@@ -418,7 +427,9 @@ const ProductDetails: React.FC<
           {is_CurrentUsers_product && (
             <View style={style.button}>
               <CustomButton
-                disabled={productStatus == "Archived"}
+                disabled={
+                  productStatus == "Archived" || publishUnPublishLoading
+                }
                 onPress={onPressStopPublish}
                 title={
                   productStatus == "Archived"
@@ -438,6 +449,7 @@ const ProductDetails: React.FC<
                     ? theme?.colors?.pinkDark
                     : theme?.colors?.primary
                 }
+                loading={publishUnPublishLoading}
               />
             </View>
           )}

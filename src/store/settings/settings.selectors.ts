@@ -76,3 +76,8 @@ export const getUnreadAlertCount = createSelector(
   [selectSettings],
   (settings) => settings.unread_alert_count
 );
+
+export const getSearchValueforCategory = createSelector(
+  [selectSettings],
+  (settings) => settings.searchValueforCategory
+);

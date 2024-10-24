@@ -48,10 +48,6 @@ import { notifyMessage } from "../../utils/notifyMessage";
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
 }) => {
-  const insets = useSafeAreaInsets();
-  const style = useStyles({ insets });
-  const { theme } = useTheme();
-  const dispatch = useAppDispatch();
   const userData = useSelector(selectUserData);
   const userLoading = useSelector(selectUserProfileLoading);
 
@@ -61,6 +57,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   const admin_verification_completed =
     userData?.is_selfie_uploaded == 1 &&
     userData?.is_kyc_verified_by_admin == 1;
+
+  const insets = useSafeAreaInsets();
+  const style = useStyles({ insets, isGuest });
+  const { theme } = useTheme();
+  const dispatch = useAppDispatch();
 
   const [visible, setVisible] = useState(false);
   const [title1, setTitle1] = useState("");
@@ -313,11 +314,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             name="Terms and Conditions"
             icon={<DocslistIcon color={theme.colors?.primary} />}
           />
-          {/* <ProfileItem
+          <ProfileItem
             name="Contact Us"
             icon={<ContactUsIcon color={theme.colors?.primary} />}
             onPress={onPressContactUs}
-          /> */}
+          />
         </KeyboardAwareScrollView>
       )}
       {!isGuest ? (
@@ -406,7 +407,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     flex: 1,
     backgroundColor: theme.colors?.background,
     paddingTop: props.insets.top,
-    paddingBottom: props.insets.bottom + 80,
+    paddingBottom: props.isGuest ? 0 : props.insets.bottom + 80,
   },
   scrollCont: {
     flexGrow: 1,
@@ -449,7 +450,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     color: theme.colors?.black,
     lineHeight: 24,
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   guestUserCont: {
     flex: 1,

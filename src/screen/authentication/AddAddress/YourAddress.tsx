@@ -65,6 +65,9 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   const savedCity = useSelector(getCityAddress);
   const loading = useSelector(selectAuthenticationLoading);
 
+  const admin_address_verification_pending =
+    userData?.all_documentation_approved_by_admin == 0;
+
   const [houseImage, setHouseImages] = useState<imagePickerProps[]>([]);
   const [productImageError, setProductImageError] = useState<string>("");
   const [gpsAddress, setGpsAddress] = useState<string>("");
@@ -477,7 +480,9 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
           <InputFieldInfo
             text={
-              "Updating your address will require re-verification, temporarily disabling your ability to buy or sell products until verified by admin."
+              admin_address_verification_pending
+                ? "Your profile is under review..."
+                : "Updating your address will require re-verification, temporarily disabling your ability to buy or sell products until verified by admin."
             }
           />
         </View>
@@ -503,7 +508,9 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         buttonWidth="full"
         variant="primary"
         type="solid"
-        disabled={loading === LoadingState.CREATE}
+        disabled={
+          loading === LoadingState.CREATE || admin_address_verification_pending
+        }
         loading={loading === LoadingState.CREATE}
       />
     </View>

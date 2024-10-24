@@ -6,6 +6,7 @@ import {
   deleteAccount,
   deleteSavedKeyword,
   updateNotificationProfile,
+  userContactUs,
   userSavedKeyword,
   userSetupProfile,
   userUpdateProfile,
@@ -30,7 +31,8 @@ const userprofile = createSlice({
           userSetupProfile.pending,
           userSavedKeyword.pending,
           deleteSavedKeyword.pending,
-          deleteAccount.pending
+          deleteAccount.pending,
+          userContactUs.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;
@@ -45,13 +47,15 @@ const userprofile = createSlice({
           userSavedKeyword.fulfilled,
           deleteSavedKeyword.fulfilled,
           deleteAccount.fulfilled,
+          userContactUs.fulfilled,
           userUpdateProfilePicture.rejected,
           userUpdateProfile.rejected,
           updateNotificationProfile.rejected,
           userSetupProfile.rejected,
           userSavedKeyword.rejected,
           deleteSavedKeyword.rejected,
-          deleteAccount.rejected
+          deleteAccount.rejected,
+          userContactUs.rejected
         ),
         (state) => {
           state.loading = LoadingState.REMOVE;
