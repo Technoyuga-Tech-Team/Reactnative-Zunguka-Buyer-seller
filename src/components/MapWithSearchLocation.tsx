@@ -26,7 +26,12 @@ import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setErrors } from "../store/global/global.slice";
 import AddressContainer from "./ui/AddressContainer";
 import Loading from "./ui/Loading";
-import MapView, { MapPressEvent, Marker } from "react-native-maps";
+import MapView, {
+  MapPressEvent,
+  Marker,
+  MarkerDragStartEndEvent,
+  PoiClickEvent,
+} from "react-native-maps";
 import SearchIcon from "./ui/svg/SearchIcon";
 import Geocoder from "react-native-geocoding";
 
@@ -117,7 +122,7 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
     Geocoder.init(GOOGLE_MAP_API_KEY); // Initialize geocoder with API key
   }, []);
 
-  function getAddressFromCoords(lat, lng) {
+  function getAddressFromCoords(lat: number, lng: number) {
     const apiKey = GOOGLE_MAP_API_KEY; // Replace with your Google Maps API key
     const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
 
@@ -194,19 +199,66 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
   const country_ = countryCode.toLocaleLowerCase() ?? "rw";
 
   const handleMapPress = (event: MapPressEvent) => {
-    const newCoordinate = event.nativeEvent.coordinate;
-    setMarkerCoordinate(newCoordinate);
-    setAddressLatLng({
-      lat: Number(newCoordinate.latitude),
-      lng: Number(newCoordinate.longitude),
-    });
-    // Get address using geocoding library
-    Geocoder.from(newCoordinate)
-      .then((json) => {
-        const formattedAddress = json.results[0].formatted_address;
-        setAddress(formattedAddress);
-      })
-      .catch((error) => console.warn(error)); // Handle errors gracefully
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch handleMapPress", error);
+    }
+  };
+
+  const onPoiPress = (event: PoiClickEvent) => {
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch onPoiPress", error);
+    }
+  };
+
+  const onDrag = (event: MarkerDragStartEndEvent) => {
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch onDrag", error);
+    }
   };
 
   const onPressGetAddress = (
@@ -278,6 +330,7 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
             <MapView
               ref={mapRef}
               style={style.map}
+              pointerEvents="box-none"
               initialRegion={{
                 latitude: initialCoordinate?.latitude,
                 longitude: initialCoordinate.longitude,
@@ -285,6 +338,8 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
                 longitudeDelta: 0.04,
               }}
               onPress={handleMapPress}
+              onMarkerDragEnd={onDrag}
+              onPoiClick={onPoiPress}
             >
               <Marker
                 draggable

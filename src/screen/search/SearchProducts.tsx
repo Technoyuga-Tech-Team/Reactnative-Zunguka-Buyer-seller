@@ -49,20 +49,6 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
 
   const debouncedSearchTerm = useDebounce(searchValueForAPI, 500);
 
-  // useEffect(() => {
-  //   if (subCat) {
-  //     console.log("called subcat");
-  //     setSearchValue(subCat);
-  //     getSearchedItems(subCat, 10, 1, true, null, false);
-  //   } else if (mainCat) {
-  //     console.log("called mainCat");
-  //     setSearchValue(mainCat);
-  //     getSearchedItems(mainCat, 10, 1, true, null, false);
-  //   } else {
-  //     getSearchedItems(debouncedSearchTerm, 10, 1, true, null, false);
-  //   }
-  // }, [mainCat, subCat, debouncedSearchTerm]);
-
   useEffect(() => {
     if (search_val) {
       setSearchValue(search_val);
@@ -102,20 +88,21 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         );
       formData.append("brand_id", filterItems?.brand || "");
       formData.append("city", filterItems?.city || "");
-      // formData.append("maxPrice", filterItems?.maxPrice || "");
-      // formData.append("minPrice", filterItems?.minPrice || "");
+      formData.append("max_price", filterItems?.maxPrice || "");
+      formData.append("min_price", filterItems?.minPrice || "");
       formData.append("color", filterItems?.selectedColors || "");
       formData.append(
         "condition_of_item",
         filterItems?.selectedConditionValue || ""
       );
-      // formData.append("size", filterItems?.selectedSize || "");
       formData.append("rating", filterItems?.selectedRatings);
 
       formData.append("limit", limit);
       formData.append("offset", page);
 
-      console.log("formData", formData);
+      // formData.append("size", filterItems?.selectedSize || "");
+
+      // console.log("formData", JSON.stringify(formData));
       const result = await dispatch(
         addProductSearchFilter({ formData: formData })
       );
@@ -131,7 +118,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
             filterItems ||
             fromLoadMore
           ) {
-            console.log("in if - - - - -");
+            console.log("in if - - - - -", fromLoadMore);
             !fromLoadMore
               ? setProducts([...result.payload?.data?.data])
               : setProducts([...products, ...result.payload?.data?.data]);
@@ -189,6 +176,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
   };
 
   const onPressBack = () => {
+    dispatch(setSearchValueforCategory(""));
     if (navigation.canGoBack()) {
       navigation.goBack();
     } else {
@@ -349,37 +337,39 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
         togglePopup={togglePopup}
         onPressShowItems={onPressShowItems}
       />
-      <FilterProductPopup
-        visiblePopup={visibleFilter}
-        togglePopup={toggleFilterPopup}
-        loading={loader}
-        onPressShowItem={(
-          parantCategoryId: any,
-          subCategoryId: any,
-          brand: any,
-          selectedConditionValue: any,
-          selectedColors: any,
-          minPrice: any,
-          maxPrice: any,
-          selectedRatings: any,
-          selectedSize: any,
-          city: any
-        ) =>
-          onPressShowItem(
-            parantCategoryId,
-            subCategoryId,
-            brand,
-            selectedConditionValue,
-            selectedColors,
-            minPrice,
-            maxPrice,
-            selectedRatings,
-            selectedSize,
-            city
-          )
-        }
-        clearFilter={clearFilter}
-      />
+      {visibleFilter && (
+        <FilterProductPopup
+          visiblePopup={visibleFilter}
+          togglePopup={toggleFilterPopup}
+          loading={loader}
+          onPressShowItem={(
+            parantCategoryId: any,
+            subCategoryId: any,
+            brand: any,
+            selectedConditionValue: any,
+            selectedColors: any,
+            minPrice: any,
+            maxPrice: any,
+            selectedRatings: any,
+            selectedSize: any,
+            city: any
+          ) =>
+            onPressShowItem(
+              parantCategoryId,
+              subCategoryId,
+              brand,
+              selectedConditionValue,
+              selectedColors,
+              minPrice,
+              maxPrice,
+              selectedRatings,
+              selectedSize,
+              city
+            )
+          }
+          clearFilter={clearFilter}
+        />
+      )}
     </View>
   );
 };

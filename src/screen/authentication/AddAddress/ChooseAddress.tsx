@@ -12,8 +12,8 @@ import {
 import MapView, {
   MapPressEvent,
   Marker,
-  MarkerDragEvent,
   MarkerDragStartEndEvent,
+  PoiClickEvent,
 } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AddressContainer from "../../../components/ui/AddressContainer";
@@ -105,7 +105,7 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
       // Geolocation.clearWatch();
     };
   }, []);
-  function getAddressFromCoords(lat, lng) {
+  function getAddressFromCoords(lat: number, lng: number) {
     const apiKey = GOOGLE_MAP_API_KEY; // Replace with your Google Maps API key
     const geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
 
@@ -183,13 +183,10 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
     data: GooglePlaceData,
     details: GooglePlaceDetail
   ) => {
-    console.log("data", JSON.stringify(data));
-    console.log("details", JSON.stringify(details));
     dispatch(saveCity(""));
     if (data) {
       // @ts-ignore
       const addressComponents = data?.address_components;
-      console.log("addressComponents", addressComponents);
       // Loop through address components to find the city
       if (addressComponents && addressComponents.length > 0) {
         for (const component of addressComponents) {
@@ -230,35 +227,66 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
   };
 
   const handleMapPress = (event: MapPressEvent) => {
-    const newCoordinate = event.nativeEvent.coordinate;
-    setMarkerCoordinate(newCoordinate);
-    setAddressLatLng({
-      lat: Number(newCoordinate.latitude),
-      lng: Number(newCoordinate.longitude),
-    });
-    // Get address using geocoding library
-    Geocoder.from(newCoordinate)
-      .then((json) => {
-        const formattedAddress = json.results[0].formatted_address;
-        setAddress(formattedAddress);
-      })
-      .catch((error) => console.warn(error)); // Handle errors gracefully
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch handleMapPress", error);
+    }
   };
 
   const onDrag = (event: MarkerDragStartEndEvent) => {
-    const newCoordinate = event.nativeEvent.coordinate;
-    setMarkerCoordinate(newCoordinate);
-    setAddressLatLng({
-      lat: Number(newCoordinate.latitude),
-      lng: Number(newCoordinate.longitude),
-    });
-    // Get address using geocoding library
-    Geocoder.from(newCoordinate)
-      .then((json) => {
-        const formattedAddress = json.results[0].formatted_address;
-        setAddress(formattedAddress);
-      })
-      .catch((error) => console.warn(error)); // Handle errors gracefully
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch onDrag", error);
+    }
+  };
+
+  const onPoiPress = (event: PoiClickEvent) => {
+    try {
+      event.stopPropagation();
+      const newCoordinate = event.nativeEvent.coordinate;
+      setMarkerCoordinate(newCoordinate);
+      setAddressLatLng({
+        lat: Number(newCoordinate.latitude),
+        lng: Number(newCoordinate.longitude),
+      });
+      // Get address using geocoding library
+      Geocoder.from(newCoordinate)
+        .then((json) => {
+          const formattedAddress = json.results[0].formatted_address;
+          setAddress(formattedAddress);
+        })
+        .catch((error) => console.warn(error)); // Handle errors gracefully
+    } catch (error) {
+      console.log("catch onPoiPress", error);
+    }
   };
 
   const onPressSave = () => {
@@ -281,15 +309,16 @@ const ChooseAddress: React.FC<AuthNavigationProps<Route.navChooseAddress>> = ({
           <MapView
             ref={mapRef}
             style={style.map}
+            pointerEvents="box-none"
             initialRegion={{
               latitude: initialCoordinate?.latitude,
               longitude: initialCoordinate.longitude,
               latitudeDelta: 0.04,
               longitudeDelta: 0.04,
             }}
-            // onMarkerDrag={onDrag}
             onMarkerDragEnd={onDrag}
             onPress={handleMapPress}
+            onPoiClick={onPoiPress}
           >
             <Marker
               draggable

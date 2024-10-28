@@ -21,11 +21,15 @@ import { getData } from "../../utils/asyncStorage";
 import { useSelector } from "react-redux";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { notifyMessage } from "../../utils/notifyMessage";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setErrors, setSuccess } from "../../store/global/global.slice";
 
 const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+
+  const dispatch = useAppDispatch();
 
   const [products, setProducts] = useState<ProductDataProps[]>([]);
 
@@ -102,13 +106,13 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
         if (admin_address_verification_completed) {
           navigation.navigate(Route.navAddNewProduct, { product_id: null });
         } else {
-          notifyMessage(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE);
+          dispatch(setSuccess(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE));
         }
       } else {
-        notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
+        dispatch(setSuccess(ADMIN_VERIFICATION_PENDING_MESSAGE));
       }
     } else {
-      notifyMessage(GUEST_USER_MESSAGE);
+      dispatch(setSuccess(GUEST_USER_MESSAGE));
     }
   };
 

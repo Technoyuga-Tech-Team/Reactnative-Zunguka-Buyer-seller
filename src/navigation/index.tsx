@@ -134,7 +134,7 @@ const MainNavigator = () => {
             backgroundColor: theme.colors?.error,
             textColor: theme.colors?.white,
             fontFamily: theme.fontFamily?.medium,
-            numberOfLines: 4,
+            numberOfLines: 10,
           });
         }
       }
@@ -159,7 +159,7 @@ const MainNavigator = () => {
         backgroundColor: theme.colors?.primary,
         textColor: theme.colors?.black,
         fontFamily: theme.fontFamily?.medium,
-        numberOfLines: 4,
+        numberOfLines: 10,
       });
       dispatch(clearSuccess());
     }
@@ -279,6 +279,7 @@ const MainNavigator = () => {
             break;
           case "sold_item":
             let item = notification?.data?.product;
+            // @ts-ignore
             let prod = JSON.parse(item);
             console.log("prod = = = = =", prod);
             // @ts-ignore
@@ -290,9 +291,11 @@ const MainNavigator = () => {
           default:
             // @ts-ignore
             if (notification?.data?.is_notification == "1") {
+              // @ts-ignore
               navigationRef.navigate(Route.navNotification);
             }
             if (notification?.data?.is_alert == "1") {
+              // @ts-ignore
               navigationRef.navigate(Route.navAlert);
             }
           // set default notification
@@ -306,6 +309,7 @@ const MainNavigator = () => {
       "notifee setBackgroundMessageHandler localMessage",
       JSON.stringify(localMessage)
     );
+    // @ts-ignore
     handleClickedNotitfaction(localMessage.detail.notification);
   });
 
@@ -366,9 +370,7 @@ const MainNavigator = () => {
       message?.data?.type === "reject_document" ||
       message?.data?.type === "approve_document"
     ) {
-      console.log(" ======   = = = = = = = = = ", typeof message?.data?.user);
       const userData = JSON.parse(message?.data?.user);
-      console.log(" ======   = = = = = = = = = >>>>>>", userData);
 
       dispatch(setUserData(userData));
       setData(USER_DATA, userData);
@@ -466,6 +468,7 @@ const MainNavigator = () => {
       const isnotificationHandled = await AsyncStorage.getItem(
         "notificationHandled"
       );
+      // @ts-ignore
       let notificationHandled = JSON.parse(isnotificationHandled);
       console.log("notificationHandled - - ", notificationHandled);
       messaging()
@@ -502,6 +505,7 @@ const MainNavigator = () => {
   useEffect(() => {
     notifee.onForegroundEvent(({ type, detail }) => {
       if (type === EventType.PRESS) {
+        // @ts-ignore
         handleClickedNotitfaction(detail?.notification);
       }
     });
@@ -535,6 +539,26 @@ const MainNavigator = () => {
     }, 500);
   };
 
+  const onPressAccountTerminate = async () => {
+    let userData = store.getState().settings.userData;
+    if (userData?.is_social == 1) {
+      await GoogleSignin.signOut();
+    }
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    dispatch(setSaveNotificationCount(0));
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+    setVisibleDeleteAccount(false);
+    navigationRef.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: Route.navAuthentication }],
+      })
+    );
+  };
+
   return (
     <NavigationContainer ref={navigationRef} linking={linking}>
       <DeliveryConfirmationPopup
@@ -548,25 +572,7 @@ const MainNavigator = () => {
         title3={"Dismiss"}
         visiblePopup={visibleDeleteAccount}
         loading={false}
-        onPressLogout={async () => {
-          let userData = store.getState().settings.userData;
-          if (userData?.is_social == 1) {
-            await GoogleSignin.signOut();
-          }
-          await setData(secureStoreKeys.JWT_TOKEN, null);
-          await setData(USER_DATA, null);
-          dispatch(setSaveNotificationCount(0));
-          notifee.cancelAllNotifications();
-          // @ts-ignore
-          dispatch(setUserData({}));
-          setVisibleDeleteAccount(false);
-          navigationRef.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: Route.navAuthentication }],
-            })
-          );
-        }}
+        onPressLogout={() => onPressAccountTerminate()}
       />
       <MainStack />
     </NavigationContainer>

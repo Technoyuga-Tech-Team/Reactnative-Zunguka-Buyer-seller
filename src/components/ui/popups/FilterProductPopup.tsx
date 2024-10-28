@@ -104,7 +104,9 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     name: string;
   }>({ id: null, name: "" });
 
-  const { data: brandsData } = useBrands(`${parantCategoryId}`);
+  const { data: brandsData } = useBrands(`${parantCategoryId}`, {
+    enabled: !!parantCategoryId,
+  });
 
   useEffect(() => {
     if (brandsData?.data?.data) {
@@ -488,6 +490,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     position: "absolute",
     bottom: 0,
     width: "100%",
+    zIndex: 11,
   },
   modalCont: {
     backgroundColor: "transparent",
@@ -558,7 +561,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     left: 0,
     right: 0,
     height: SCREEN_HEIGHT,
-    zIndex: 11,
+    zIndex: 1111,
     paddingTop: props.insets.top,
     backgroundColor: theme?.colors?.white,
   },

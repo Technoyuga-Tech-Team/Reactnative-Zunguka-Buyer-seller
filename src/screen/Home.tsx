@@ -44,6 +44,7 @@ import { socket, socketEvent } from "../utils/socket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setData } from "../utils/asyncStorage";
 import { USER_DATA } from "../constant";
+import { setErrors } from "../store/global/global.slice";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -250,7 +251,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     // navigation.navigate(Route.navAdminVerification);
   };
 
-  console.log("userData - - ", userData);
+  // console.log("userData - - ", userData);
 
   return (
     <View style={style.container}>

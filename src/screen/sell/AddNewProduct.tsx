@@ -68,6 +68,7 @@ import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
 import { setAdjustPan, setAdjustResize } from "rn-android-keyboard-adjust";
 import { notifyMessage } from "../../utils/notifyMessage";
 import { useProductDetails } from "../../hooks/useProductDetails";
+import { RFValue } from "react-native-responsive-fontsize";
 
 const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   navigation,
@@ -1068,7 +1069,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     paddingHorizontal: 20,
   },
   txtDesc: {
-    height: Scale(150),
+    height: Scale(160),
     backgroundColor: theme?.colors?.textInputFieldBg,
     paddingHorizontal: 10,
     paddingTop: 3,
@@ -1076,7 +1077,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     marginHorizontal: 20,
   },
   textInput: {
-    height: 140,
+    height: Scale(150),
     width: "100%",
     color: theme.colors?.textPrimary,
     fontFamily: theme.fontFamily?.regular,

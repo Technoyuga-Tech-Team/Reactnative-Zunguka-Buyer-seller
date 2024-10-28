@@ -38,6 +38,7 @@ import { onShare } from "../../utils";
 import Scale from "../../utils/Scale";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import { notifyMessage } from "../../utils/notifyMessage";
+import { setSuccess } from "../../store/global/global.slice";
 
 const ProductDetails1: React.FC<
   HomeNavigationProps<Route.navProductDetails1>
@@ -272,13 +273,13 @@ const ProductDetails1: React.FC<
             }
           }
         } else {
-          notifyMessage(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE);
+          dispatch(setSuccess(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE));
         }
       } else {
-        notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
+        dispatch(setSuccess(ADMIN_VERIFICATION_PENDING_MESSAGE));
       }
     } else {
-      notifyMessage(GUEST_USER_MESSAGE);
+      dispatch(setSuccess(GUEST_USER_MESSAGE));
     }
   };
 

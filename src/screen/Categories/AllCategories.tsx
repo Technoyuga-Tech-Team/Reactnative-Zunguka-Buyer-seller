@@ -10,6 +10,8 @@ import { CategoriesDataProps } from "../../types/dashboard.types";
 import { ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
 import CategoriesListWithExpand from "./CategoriesListWithExpand";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { setSearchValueforCategory } from "../../store/settings/settings.slice";
 
 const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
   navigation,
@@ -17,6 +19,8 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+  const dispatch = useAppDispatch();
+
   const { data: categoriesData, isFetching } = useCategories();
 
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
@@ -45,6 +49,7 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
       mainCat: parantName,
       subCat: subName,
     });
+    dispatch(setSearchValueforCategory(subName));
     setSubCategoryId(subCatId);
   };
 

@@ -508,9 +508,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         buttonWidth="full"
         variant="primary"
         type="solid"
-        disabled={
-          loading === LoadingState.CREATE || admin_address_verification_pending
-        }
+        disabled={loading === LoadingState.CREATE}
         loading={loading === LoadingState.CREATE}
       />
     </View>

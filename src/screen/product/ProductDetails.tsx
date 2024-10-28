@@ -47,6 +47,7 @@ import dynamicLinks from "@react-native-firebase/dynamic-links";
 import CustomHeader from "../../components/ui/CustomHeader";
 import NoDataFound from "../../components/ui/NoDataFound";
 import { notifyMessage } from "../../utils/notifyMessage";
+import { setSuccess } from "../../store/global/global.slice";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -303,13 +304,13 @@ const ProductDetails: React.FC<
             }
           }
         } else {
-          notifyMessage(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE);
+          dispatch(setSuccess(ADMIN_ADDRESS_VERIFICATION_PENDING_MESSAGE));
         }
       } else {
-        notifyMessage(ADMIN_VERIFICATION_PENDING_MESSAGE);
+        dispatch(setSuccess(ADMIN_VERIFICATION_PENDING_MESSAGE));
       }
     } else {
-      notifyMessage(GUEST_USER_MESSAGE);
+      dispatch(setSuccess(GUEST_USER_MESSAGE));
     }
   };
 

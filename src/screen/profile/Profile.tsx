@@ -44,6 +44,7 @@ import ContactUsIcon from "../../components/ui/svg/ContactUsIcon";
 import TransactionHistoryIcon from "../../components/ui/svg/TransactionHistoryIcon";
 import LoginToZunguka from "../../components/ui/LoginToZunguka";
 import { notifyMessage } from "../../utils/notifyMessage";
+import CallIcon from "../../components/ui/svg/CallIcon";
 
 const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
   navigation,
@@ -316,7 +317,9 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           />
           <ProfileItem
             name="Contact Us"
-            icon={<ContactUsIcon color={theme.colors?.primary} />}
+            icon={
+              <CallIcon color={theme.colors?.primary} height={24} width={24} />
+            }
             onPress={onPressContactUs}
           />
         </KeyboardAwareScrollView>
