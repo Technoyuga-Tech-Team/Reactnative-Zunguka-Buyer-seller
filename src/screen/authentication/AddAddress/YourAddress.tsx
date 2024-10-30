@@ -99,18 +99,23 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
 
   useEffect(() => {
     const onBackPress = () => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: Route.navAuthentication }],
-        })
-      );
-      return true;
+      if (fromUpdateAddress) {
+        navigation.goBack();
+        return true;
+      } else {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navAuthentication }],
+          })
+        );
+        return true;
+      }
     };
     BackHandler.addEventListener("hardwareBackPress", onBackPress);
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  }, []);
+  }, [fromUpdateAddress]);
 
   useEffect(() => {
     setAdjustResize();

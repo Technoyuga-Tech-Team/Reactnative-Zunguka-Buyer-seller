@@ -1,4 +1,5 @@
 import notifee, { AuthorizationStatus } from "@notifee/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useRef, useState } from "react";
 import {
   AppState,
@@ -17,12 +18,12 @@ import HeaderHome from "../components/HeaderHome";
 import HomeBanner from "../components/HomeBanner";
 import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
 import SeeAllItem from "../components/SeeAllItem";
+import { USER_DATA } from "../constant";
 import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useGetDashboard } from "../hooks/useDashboard";
 import { useMeQuery } from "../hooks/useMeQuery";
 import {
-  getNotificationCount,
   getUnreadAlertCount,
   getUnreadCount,
   selectUserData,
@@ -40,11 +41,8 @@ import {
 } from "../types/dashboard.types";
 import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
-import { socket, socketEvent } from "../utils/socket";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setData } from "../utils/asyncStorage";
-import { USER_DATA } from "../constant";
-import { setErrors } from "../store/global/global.slice";
+import { socket, socketEvent } from "../utils/socket";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -141,7 +139,6 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
       }
 
       appState.current = nextAppState;
-      console.log("AppState", appState.current);
     });
 
     return () => {
@@ -177,7 +174,6 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
 
   useEffect(() => {
     if (dashboardData?.data) {
-      console.log("dashboardData?.data", dashboardData?.data);
       setBanner(dashboardData?.data?.banners);
       setCategories(dashboardData?.data?.categories);
       setHotBrands(dashboardData?.data?.brands);
@@ -220,8 +216,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     });
   };
 
-  const onPressNotification = () => {
-    // navigation.navigate(Route.navNotification);
+  const onPressAlert = () => {
     navigation.navigate(Route.navAlert);
   };
   const onPressSearch = () => {
@@ -257,7 +252,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
     <View style={style.container}>
       <HeaderHome
         name={name}
-        onPressNotification={onPressNotification}
+        onPressNotification={onPressAlert}
         onPressSearch={onPressSearch}
         notificationCount={unreadAlertCount}
       />

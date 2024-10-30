@@ -20,7 +20,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const time = moment(item?.created_at).fromNow();
-  const profile = item.user.profile_image || Images.PLACEHOLDER_IMAGE;
+  const profile = item?.buyer_seller?.profile_image || Images.PLACEHOLDER_IMAGE;
   const is_unread = item.is_read == 0;
 
   return (

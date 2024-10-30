@@ -219,6 +219,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     paddingBottom: 100,
+    marginTop: 10,
   },
   border: {
     height: 1,

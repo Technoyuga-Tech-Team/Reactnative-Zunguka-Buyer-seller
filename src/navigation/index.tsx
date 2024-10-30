@@ -211,6 +211,14 @@ const MainNavigator = () => {
             navigationRef.navigate(Route.navProductDetails, { itemId: itemId });
             // set default type wise
             break;
+          case "saved_item":
+            let item_Id = notification?.data?.item_id;
+            // @ts-ignore
+            navigationRef.navigate(Route.navProductDetails, {
+              itemId: item_Id,
+            });
+            // set default type wise
+            break;
           case "mover_status":
             // @ts-ignore
             navigationRef.navigate(Route.navMyStorefront, {

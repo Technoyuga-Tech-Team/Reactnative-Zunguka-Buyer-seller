@@ -52,16 +52,15 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
           </View>
           <TouchableOpacity
             hitSlop={HIT_SLOP2}
-            activeOpacity={0.8}
+            activeOpacity={1}
             style={style.notificationCont}
             onPress={onPressNotification}
           >
             <RightRoundIcon
               color={theme?.colors?.white}
-              height={60}
-              width={60}
+              height={Scale(60)}
+              width={Scale(60)}
             />
-            {/* <BellIcon color={theme?.colors?.primaryVibrant} /> */}
             {notificationCount > 0 && (
               <View style={style.redDot}>
                 <Text style={style.txtNotificationCount}>
@@ -105,9 +104,9 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     justifyContent: "flex-end",
   },
   notificationCont: {
-    height: Scale(50),
-    width: Scale(50),
-    borderRadius: Scale(50 / 2),
+    height: Scale(40),
+    width: Scale(40),
+    borderRadius: Scale(40 / 2),
     backgroundColor: theme?.colors?.pinkDark,
     alignItems: "center",
     justifyContent: "center",

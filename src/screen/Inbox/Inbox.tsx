@@ -126,7 +126,6 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
       }
     }
 
-    console.log("item - - -", item);
     if (item.type == "mover_status") {
       // navigate to request mover page
       navigation.navigate(Route.navRequestToMover);
@@ -136,7 +135,7 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
       navigation.navigate(Route.navMyStorefront, {
         screen: Route.navClosedItems,
       });
-    } else if (item.type == "new_item") {
+    } else if (item.type == "new_item" || item.type == "saved_item") {
       // navigate to product details
       navigation.navigate(Route.navProductDetails, { itemId: item?.item_id });
     } else if (item.type == "new_message") {
@@ -181,6 +180,8 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
       })
     );
   };
+
+  console.log("notifications", JSON.stringify(notifications));
 
   return (
     <View style={style.container}>

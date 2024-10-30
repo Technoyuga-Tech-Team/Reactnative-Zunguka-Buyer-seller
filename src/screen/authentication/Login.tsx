@@ -103,7 +103,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
     initialValues: { phoneNumber: "", password: "" },
     onSubmit: async ({ phoneNumber, password }) => {
       let phone_number = phoneNumber.replace(/ /g, "").replace("-", "");
-      console.log("fcmToken", fcmToken);
       const result = await dispatch(
         userLogin({
           phone_number: phone_number.replace("-", "").trim(),
@@ -191,10 +190,6 @@ const Login: React.FC<AuthNavigationProps<Route.navLogin>> = ({
   };
   const onClosePickerModal = () => {
     setVisibleCountryPicker(false);
-  };
-
-  const onPressBack = () => {
-    navigation.navigate(Route.navSelectRoll);
   };
 
   const onPressLoginAsGuest = async () => {

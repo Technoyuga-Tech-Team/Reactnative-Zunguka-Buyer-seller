@@ -309,7 +309,7 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
             value={selectedSizeValue?.join(", ")}
           /> */}
 
-          <FilterItem onPress={onPressCity} title="City" value={city} />
+          <FilterItem onPress={onPressCity} title="Sector" value={city} />
 
           <View style={style.buttonCont}>
             <CustomButton
@@ -410,13 +410,13 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
       {visibleCity && (
         <View style={style.view}>
           <ModalHeader
-            title="City"
+            title="Sector"
             onPress={() => setVisibleCity(!visibleCity)}
           />
           <View style={{ paddingHorizontal: 20 }}>
             <CustomDropdown
               dropDownData={CITIES}
-              placeHolder={"City"}
+              placeHolder={"Sector"}
               value={city}
               topMargin={20}
               onSelect={(val) => {

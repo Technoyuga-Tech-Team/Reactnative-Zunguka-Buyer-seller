@@ -362,6 +362,7 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
                 />
               )}
               onPress={(data, details) => {
+                // @ts-ignore
                 onPressGetAddress(data, details);
               }}
               query={{

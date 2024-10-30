@@ -58,40 +58,28 @@ const AddUserName: React.FC<AuthNavigationProps<Route.navAddUserName>> = ({
         })
       );
       if (userAddUserName.fulfilled.match(result)) {
-        console.log("result.payload", result.payload);
         if (result.payload?.status == 1) {
           let steps = result.payload?.user?.step;
           console.log("steps", steps);
-          if (steps !== 2) {
-            if (steps == 0) {
-              dispatch(saveAddress(""));
-              // navigation.navigate(Route.navYourAddress, { fromOTP: true });
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [
-                    { name: Route.navYourAddress, params: { fromOTP: true } },
-                  ],
-                })
-              );
-            } else if (steps == 1) {
-              // navigation.navigate(Route.navAddKyc, { fromOTP: true });
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [
-                    { name: Route.navAddKyc, params: { fromOTP: true } },
-                  ],
-                })
-              );
-            }
-          } else {
+          let isStepCompleted = result.payload?.user?.is_profile_completed;
+          let isVerify_by_Admin =
+            result.payload?.user?.is_kyc_verified_by_admin;
+          if (isStepCompleted == 1 && isVerify_by_Admin == 1) {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
                 routes: [{ name: Route.navDashboard }],
               })
             );
+          } else {
+            if (steps == 0) {
+              dispatch(saveAddress(""));
+              navigation.navigate(Route.navYourAddress, { fromOTP: false });
+            } else if (steps == 1) {
+              navigation.navigate(Route.navAddKyc, { fromOTP: false });
+            } else if (steps == 2 || steps == 3) {
+              navigation.navigate(Route.navTakeSelfie, { fromflow: false });
+            }
           }
         }
       }

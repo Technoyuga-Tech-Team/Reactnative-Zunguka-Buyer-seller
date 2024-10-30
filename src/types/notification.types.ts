@@ -35,4 +35,5 @@ export interface GetNotificationDataList {
   created_at: string;
   updated_at: string;
   user: UserData;
+  buyer_seller: UserData;
 }

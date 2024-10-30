@@ -42,7 +42,7 @@ const BottomTabBar = ({ state, navigation }: any) => {
                 <TouchableOpacity
                   key={route.key}
                   onPress={onPress}
-                  activeOpacity={0.8}
+                  activeOpacity={1}
                   hitSlop={HIT_SLOP}
                   style={Style.iconCont}
                 >
@@ -156,6 +156,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     alignItems: "center",
     justifyContent: "center",
     width: 70,
+    zIndex: 1,
   },
   container2: {
     height: Scale(60),
@@ -229,6 +230,7 @@ const useStyle = makeStyles((theme, props: ThemeProps) => ({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 20,
+    zIndex: 111,
   },
   txtNotificationCount: {
     fontSize: theme.fontSize?.fs10,
