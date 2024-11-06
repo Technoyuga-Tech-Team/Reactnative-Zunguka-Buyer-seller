@@ -6,6 +6,7 @@ import {
   BackHandler,
   Dimensions,
   FlatList,
+  Platform,
   StatusBar,
   View,
   ViewToken,
@@ -15,13 +16,15 @@ import { makeStyles, useTheme } from "react-native-elements";
 // relative path
 
 import SliderItem from "../../components/Onboard/SliderItem";
-import { SLIDER } from "../../constant";
+import { SCREEN_WIDTH, SLIDER } from "../../constant";
 import { Route } from "../../constant/navigationConstants";
 import { MainNavigationProps } from "../../types/navigation";
 import { setOpenFirstTime } from "../../utils/asyncStorage";
 import CustomButton from "../../components/ui/CustomButton";
 import Paginator from "../../components/ui/Paginator";
 import { createArrayUseNumber } from "../../utils";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { userAsGuestLogin } from "../../store/authentication/authentication.thunks";
 
 const { width: wWidth } = Dimensions.get("window");
 
@@ -31,6 +34,7 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
   const styles = useStyles();
   const { theme } = useTheme();
 
+  const dispatch = useAppDispatch();
   const sliderRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -101,6 +105,26 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
     );
   };
 
+  const onPressLoginAsGuest = async () => {
+    const result = await dispatch(
+      userAsGuestLogin({
+        device_type: Platform.OS === "ios" ? "iOS" : "Android",
+        device_token: "",
+      })
+    );
+    console.log("result", result);
+    if (userAsGuestLogin.fulfilled.match(result)) {
+      if (result.payload?.status == 1) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Route.navDashboard }],
+          })
+        );
+      }
+    }
+  };
+
   return (
     <View style={styles.mainCont}>
       <StatusBar
@@ -151,6 +175,15 @@ const Onboard: React.FC<MainNavigationProps<Route.navOnboard>> = ({
         title={"Log in"}
         type="outline"
         buttonWidth="full"
+        marginTop={20}
+      />
+
+      <CustomButton
+        onPress={onPressLoginAsGuest}
+        title={"Explore the market"}
+        variant="primary"
+        buttonWidth="full"
+        backgroundColor="#2F4D65"
         marginTop={20}
       />
     </View>

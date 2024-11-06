@@ -206,6 +206,8 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
             touched={touched.firstName}
             onSubmitEditing={() => lastnameRef.current?.focus()}
           />
+          <InputFieldInfo text={"Name should match with your ID card."} />
+
           <CustomTxtInput
             ref={lastnameRef}
             placeholder="Last name"
