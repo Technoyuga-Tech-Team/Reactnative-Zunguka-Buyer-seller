@@ -208,7 +208,7 @@ const Signup: React.FC<AuthNavigationProps<Route.navSignup>> = ({
           />
           <CustomTxtInput
             ref={lastnameRef}
-            placeholder="Last name (Optional)"
+            placeholder="Last name"
             returnKeyType="next"
             returnKeyLabel="next"
             keyboardType={"default"}
