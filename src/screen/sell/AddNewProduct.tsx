@@ -859,7 +859,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <TitleWithInfoIcon title="Description" />
 
         <CustomTxtInput
-          placeholder={`Please provide detailed information about your products.\n\nEx: Used iPhone in great condition! 1 year old, 90% battery health, and only minor scratches.`}
+          placeholder={`(Up to 100 words)\n(color, material, weight, market price, notes, etc.)\n\nEx: I purchased this jacket in 2001 for 30,000 francs, it is light gray in color 
+and has no noticeable damages.`}
           returnKeyType="next"
           returnKeyLabel="next"
           keyboardType={"default"}
@@ -928,6 +929,14 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           style={style.txtSellingPrice}
           extraPeddingLeft={true}
         />
+        <View style={style.paddingHorizontal}>
+          <InputFieldInfo
+            text={
+              "Ex: Selling Price  RWF 5,878\nService Charge RWF 588(10%)\nYour Earning RWF 5,290"
+            }
+          />
+        </View>
+
         <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
           <TermsAndCondition
             checked={checked}
