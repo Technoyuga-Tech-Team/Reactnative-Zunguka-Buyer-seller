@@ -147,6 +147,16 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             <Text style={style.txtDetails1}>Model</Text>
             <Text style={style.txtDetails2}>Other</Text>
           </View>
+          {productDetails?.mode_of_transport && (
+            <View style={style.fdCont}>
+              <Text style={style.txtDetails1}>Transport mode</Text>
+              <Text style={style.txtDetails2}>
+                {productDetails?.mode_of_transport == "moto"
+                  ? "Moto"
+                  : "Tricycle Cargo"}
+              </Text>
+            </View>
+          )}
           <View style={style.fdCont}>
             <Text
               style={[

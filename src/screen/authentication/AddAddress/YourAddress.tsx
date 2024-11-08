@@ -403,6 +403,11 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
             editable={false}
             icon={<LocationIcon color={theme?.colors?.black} />}
           />
+          <InputFieldInfo
+            text={
+              "To ensure a safe and secure marketplace for everyone, we kindly ask for your privacy information as part of our KYC process. Rest assured, these details will be kept strictly confidential and will never be disclosed to other users, helping to create a trusted environment for buying and selling with confidence."
+            }
+          />
           <Text style={style.txtManualAddress}>Manual Address</Text>
           <CustomTxtInput
             placeholder="House number (Ex. 401)"
@@ -544,7 +549,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontFamily: theme.fontFamily?.regular,
     color: theme.colors?.black,
     marginTop: 20,
-    marginBottom: 10,
   },
   inputCont: {
     marginHorizontal: 20,

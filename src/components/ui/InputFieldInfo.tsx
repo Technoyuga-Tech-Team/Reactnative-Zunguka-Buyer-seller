@@ -13,7 +13,7 @@ const InputFieldInfo: React.FC<InputFieldInfoProps> = ({ text }) => {
   return (
     <View style={style.container}>
       <InfoIcon color={theme?.colors?.primary} />
-      <Text numberOfLines={3} style={style.text}>
+      <Text numberOfLines={6} style={style.text}>
         {text}
       </Text>
     </View>

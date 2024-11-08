@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Platform, StatusBar, Text, View } from "react-native";
+import { Alert, Platform, StatusBar, Text, View } from "react-native";
 import DropShadow from "react-native-drop-shadow";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -334,7 +334,20 @@ const Payment: React.FC<HomeNavigationProps<Route.navPayment>> = ({
                   if (selectedPaymentMethod == "earning") {
                     paymentDepositSeller(null);
                   } else {
-                    props.onPress();
+                    Alert.alert(
+                      "Payment",
+                      "ZUNGUKA will retain the payment for the item until you receive the item and the transaction is officially closed. Please proceed with confidence",
+                      [
+                        {
+                          text: "Cancel",
+                          onPress: () => console.log("Cancel Pressed"),
+                        },
+                        {
+                          text: "Payment",
+                          onPress: () => props.onPress(),
+                        },
+                      ]
+                    );
                   }
                 } else {
                   notifyMessage("Please select the Payment method");

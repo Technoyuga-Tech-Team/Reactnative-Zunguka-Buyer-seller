@@ -185,7 +185,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     navigation.navigate(Route.navMyStorefront);
   };
   const onPressDraftItems = () => {
-    navigation.navigate(Route.navDraftItems);
+    navigation.navigate(Route.navDraftItems, { from: "profile" });
   };
 
   const onPressMessages = () => {

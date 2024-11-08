@@ -15,7 +15,11 @@ import {
 import { API } from "../../constant/apiEndpoints";
 import { Route } from "../../constant/navigationConstants";
 import { ThemeProps } from "../../types/global.types";
-import { HomeNavigationProps } from "../../types/navigation";
+import {
+  HomeNavigationProps,
+  TopItemsRoutes,
+  TopRoutes,
+} from "../../types/navigation";
 import { ProductDataProps } from "../../types/product.types";
 import { getData } from "../../utils/asyncStorage";
 import { useSelector } from "react-redux";
@@ -23,6 +27,10 @@ import { selectUserData } from "../../store/settings/settings.selectors";
 import { notifyMessage } from "../../utils/notifyMessage";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setErrors, setSuccess } from "../../store/global/global.slice";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import MyTabBar from "./MyTabBar";
+import DraftProductList from "../product/DraftProductList";
+import PublishItems from "./PublishItems";
 
 const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -127,6 +135,8 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
 
   console.log("products", JSON.stringify(products));
 
+  const Tab = createMaterialTopTabNavigator<TopItemsRoutes>();
+
   return (
     <View style={style.container}>
       <Text style={style.txtTitle}>Selling</Text>
@@ -140,7 +150,11 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
           type="outline"
         />
       </View>
-      <ProductListing
+      <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
+        <Tab.Screen name={Route.navPublishItems} component={PublishItems} />
+        <Tab.Screen name={Route.navDraftItems} component={DraftProductList} />
+      </Tab.Navigator>
+      {/* <ProductListing
         isLoading={loader}
         productData={products}
         onPress={onPressProduct}
@@ -155,7 +169,7 @@ const Sell: React.FC<HomeNavigationProps<Route.navSell>> = ({ navigation }) => {
             colors={[theme?.colors?.primary]}
           />
         }
-      />
+      /> */}
     </View>
   );
 };
@@ -176,6 +190,6 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     marginTop: 20,
   },
   button: {
-    marginVertical: 15,
+    marginTop: 15,
   },
 }));

@@ -27,7 +27,13 @@ export const LoginScreenSchema = (countryCode: CountryCode) => {
 // Signup screen
 export const UsernameScreenSchema = () => {
   return Yup.object().shape({
-    username: Yup.string().trim().required("Username is required"),
+    username: Yup.string()
+      .test(
+        "len",
+        "Username require more than 3 characters",
+        (val) => val.length >= 3
+      )
+      .required("Username is required"),
   });
 };
 

@@ -16,10 +16,12 @@ import CustomHeader from "../../components/ui/CustomHeader";
 
 const DraftProductList: React.FC<HomeNavigationProps<Route.navDraftItems>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
+  const fromProfile = route.params?.from == "profile";
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -91,7 +93,7 @@ const DraftProductList: React.FC<HomeNavigationProps<Route.navDraftItems>> = ({
 
   return (
     <View style={style.container}>
-      <CustomHeader title="Draft Items" />
+      {fromProfile && <CustomHeader title="Draft Items" />}
       <ProductListing
         productData={draftData}
         onPress={(item) => onPressProductItem(item)}

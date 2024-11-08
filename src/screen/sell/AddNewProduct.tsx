@@ -129,6 +129,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [checked, setChecked] = React.useState(false);
   const [checkedNotDamaged, setCheckedNotDamaged] = React.useState(false);
+  const [checkedActualPhotos, setCheckedActualPhotos] = React.useState(false);
   const [checkedSelfPickup, setCheckedSelfPickup] = React.useState(false);
 
   const [productImages, setProductImages] = useState<imagePickerProps[]>([]);
@@ -354,6 +355,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const toggleCheckbox = () => setChecked(!checked);
   const toggleCheckboxNotDamage = () =>
     setCheckedNotDamaged(!checkedNotDamaged);
+  const toggleCheckboxActualPhotos = () =>
+    setCheckedActualPhotos(!checkedActualPhotos);
   const toggleCheckSelfPickup = () => setCheckedSelfPickup(!checkedSelfPickup);
 
   const onPressItem = (index: number) => {
@@ -737,6 +740,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             title="Damages clearly photos"
           />
         </View>
+        <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
+          <TermsAndCondition
+            checked={checkedActualPhotos}
+            toggleCheckbox={toggleCheckboxActualPhotos}
+            title="Actual item photos from multiple angles"
+          />
+        </View>
         <View style={style.paddingHorizontal}>
           <CustomTxtInput
             ref={productTitleRef}
@@ -859,7 +869,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <TitleWithInfoIcon title="Description" />
 
         <CustomTxtInput
-          placeholder={`(Up to 100 words)\n(color, material, weight, market price, notes, etc.)\n\nEx: I purchased this jacket in 2001 for 30,000 francs, it is light gray in color 
+          placeholder={`(color, material, weight, market price, notes, etc.)\n\nEx: I purchased this jacket in 2001 for 30,000 francs, it is light gray in color 
 and has no noticeable damages.`}
           returnKeyType="next"
           returnKeyLabel="next"

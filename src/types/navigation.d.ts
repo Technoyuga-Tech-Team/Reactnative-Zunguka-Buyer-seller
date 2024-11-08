@@ -13,6 +13,11 @@ export type TopRoutes = {
   RequestToMover: undefined;
 };
 
+export type TopItemsRoutes = {
+  PublishItems: undefined;
+  DraftItems: undefined;
+};
+
 export type MoverRequestTopRoutes = {
   OngoingMoverRequest: undefined;
   PastMoverRequest: undefined;
@@ -32,7 +37,7 @@ export type AppRoutes = {
   Congratulations: { itemId: number; savedAsDraft: number };
   Congratulations1: { modeOfDelivery: string };
   SellAnItem: undefined;
-  DraftItems: undefined;
+  DraftItems: { from: string };
   ListAnother: undefined;
   Storefront: undefined;
   Profile: undefined;
