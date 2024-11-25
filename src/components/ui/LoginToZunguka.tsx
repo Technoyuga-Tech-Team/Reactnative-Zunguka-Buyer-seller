@@ -5,9 +5,13 @@ import CustomButton from "./CustomButton";
 
 interface LoginToZungukaProps {
   onPressLogin: () => void;
+  onPressSignup: () => void;
 }
 
-const LoginToZunguka: React.FC<LoginToZungukaProps> = ({ onPressLogin }) => {
+const LoginToZunguka: React.FC<LoginToZungukaProps> = ({
+  onPressLogin,
+  onPressSignup,
+}) => {
   const style = useStyles();
 
   return (
@@ -17,6 +21,14 @@ const LoginToZunguka: React.FC<LoginToZungukaProps> = ({ onPressLogin }) => {
       <CustomButton
         onPress={onPressLogin}
         title={"Login"}
+        buttonWidth="full"
+        variant="primary"
+        type="solid"
+      />
+      <View style={{ height: 20 }} />
+      <CustomButton
+        onPress={onPressSignup}
+        title={"Sign up"}
         buttonWidth="full"
         variant="primary"
         type="solid"
@@ -31,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
   guestUserCont: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 100,
+    // justifyContent: "center",
   },
   txtTitle: {
     fontSize: theme.fontSize?.fs20,

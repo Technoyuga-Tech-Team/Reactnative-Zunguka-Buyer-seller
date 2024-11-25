@@ -2190,8 +2190,8 @@ export const SIZES = [
 ];
 
 export const VEHICLE_TYPE_DATA = [
-  { key: "moto", title: "Moto (1500RWF)" },
-  { key: "tricycle_cargo", title: "Tricycle Cargo (10,000 RW)" },
+  { key: "moto", title: "Moto (1500 RWF) on Buyer" },
+  { key: "tricycle_cargo", title: "Tricycle Cargo (10,000 RW) on Buyer" },
 ];
 
 export const AddressData = [

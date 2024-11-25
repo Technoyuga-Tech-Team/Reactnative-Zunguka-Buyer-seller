@@ -49,7 +49,7 @@ const ModeOfDelivery: React.FC<
 
   const getDeliveryServiceAmount = (mode: string | undefined) => {
     // we added 50 as a static value
-    return mode == "moto" ? 2500 : mode == "cab" ? 10000 : 12000;
+    return mode == "moto" ? 1500 : 10000;
   };
 
   return (

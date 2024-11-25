@@ -115,6 +115,29 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
     );
   };
 
+  const onPressSignup = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: Route.navAuthentication,
+            state: {
+              routes: [{ name: Route.navSignup }],
+            },
+          },
+        ],
+      })
+    );
+  };
+
   return (
     <View style={style.container}>
       <Text style={style.txtHeaderTitle}>Favorites</Text>
@@ -136,7 +159,10 @@ const Favorites: React.FC<HomeNavigationProps<Route.navFavourites>> = ({
           }
         />
       ) : (
-        <LoginToZunguka onPressLogin={onPressLogin} />
+        <LoginToZunguka
+          onPressLogin={onPressLogin}
+          onPressSignup={onPressSignup}
+        />
       )}
     </View>
   );

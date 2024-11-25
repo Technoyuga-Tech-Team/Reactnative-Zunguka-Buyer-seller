@@ -219,6 +219,29 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
     );
   };
 
+  const onPressSignup = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: Route.navAuthentication,
+            state: {
+              routes: [{ name: Route.navSignup }],
+            },
+          },
+        ],
+      })
+    );
+  };
+
   const Profile = profilePicture;
   return (
     <View style={style.container}>
@@ -249,7 +272,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             onPress={onPressMyProfile}
           />
           <ProfileItem
-            name="My Items"
+            name="My Items and Deals"
             icon={<TagfillIcon color={theme.colors?.primary} />}
             onPress={onPressMyItems}
           />
@@ -371,7 +394,10 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           />
         </View>
       ) : (
-        <LoginToZunguka onPressLogin={onPressLogin} />
+        <LoginToZunguka
+          onPressLogin={onPressLogin}
+          onPressSignup={onPressSignup}
+        />
         // <View style={style.guestUserCont}>
         //   <Text style={style.txtTitle}>Login to Zunguka</Text>
         //   <Text style={style.txtTitle1}>Start Sell and Buy Products...</Text>

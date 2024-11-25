@@ -10,6 +10,7 @@ const MyTabBar = ({
   state,
   descriptors,
   navigation,
+  position,
 }: MaterialTopTabBarProps) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -27,8 +28,15 @@ const MyTabBar = ({
 
         const isFocused = state.index === index;
 
-        let txtLabel = label === "OpenItems" ? "Open Items" : "Closed Items";
+        let txtLabel =
+          label === "OpenItems"
+            ? "Open"
+            : label === "ClosedItems"
+            ? "Closed"
+            : "Ongoing";
         const isLeftSelected = state.index == 0;
+        const isCenteredSelected = state.index == 1;
+        const isRightSelected = state.index == 2;
         const onPress = () => {
           const event = navigation.emit({
             type: "tabPress",
@@ -49,13 +57,26 @@ const MyTabBar = ({
             onPress={onPress}
             style={[
               style.btnContainer,
-              isLeftSelected
-                ? isFocused
+              isLeftSelected &&
+                (isFocused
                   ? style.leftFocusedBtn
-                  : style.rightUnfocusedBtn
-                : isFocused
-                ? style.rightFocusedBtn
-                : style.leftUnfocusedBtn,
+                  : index == 1
+                  ? style.centeredUnfocusBtn
+                  : style.rightUnfocusedBtn),
+
+              isCenteredSelected &&
+                (isFocused
+                  ? style.centeredFocusBtn
+                  : index == 0
+                  ? style.leftUnfocusedBtn
+                  : style.rightUnfocusedBtn),
+
+              isRightSelected &&
+                (isFocused
+                  ? style.rightFocusedBtn
+                  : index == 0
+                  ? style.leftUnfocusedBtn
+                  : style.centeredUnfocusBtn),
             ]}
           >
             <Text
@@ -98,6 +119,20 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     borderBottomRightRadius: 0,
     backgroundColor: theme.colors?.primary,
   },
+  centeredFocusBtn: {
+    backgroundColor: theme.colors?.primary,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+  centeredUnfocusBtn: {
+    backgroundColor: theme.colors?.primaryLightest,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
   rightUnfocusedBtn: {
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
@@ -113,10 +148,10 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     backgroundColor: theme.colors?.primary,
   },
   leftUnfocusedBtn: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
     backgroundColor: theme.colors?.primaryLightest,
   },
   txtLabel: {

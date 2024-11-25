@@ -147,6 +147,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const [categories, setCategories] = useState<CategoriesDataProps[]>([]);
   const [brands, setBrands] = useState<HotBrandaDataProps[]>([]);
+  const [searchBrands, setSearchgBrands] = useState<string>("");
 
   const [expand, setExpand] = useState<number | null>(null);
   const [selectedColors, setSelectedColors] = useState<any>([]);
@@ -178,6 +179,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     cacheTime: 0,
     enabled: false,
   });
+
+  useEffect(() => {
+    getBrands(0);
+  }, []);
 
   useEffect(() => {
     if (product_id) {
@@ -642,23 +647,23 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     setParantCatName(parantCatName);
     setSubCategoryId(subCatId);
     setParantCategoryId(parantCatId);
-    getBrands(parantCatId);
+    // getBrands(parantCatId);
   };
 
   const getBrands = async (parantCatId: number) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
+    // `${BASE_URL}${API.GET_BRANDS}/${parantCatId}`,
+
     try {
-      const response = await fetch(
-        `${BASE_URL}${API.GET_BRANDS}/${parantCatId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}${API.GET_BRANDS}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
+      console.log("brand - data", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setBrands(data?.data?.data);
@@ -705,6 +710,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     setVisibleSize(!visibleSize);
   };
 
+  let filtered_Brands = brands?.filter((item) => {
+    return item.name.toLowerCase().indexOf(searchBrands.toLowerCase()) > -1;
+  });
+
   return (
     <View style={style.container}>
       <CustomHeader title="Create new listing" />
@@ -737,7 +746,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           <TermsAndCondition
             checked={checkedNotDamaged}
             toggleCheckbox={toggleCheckboxNotDamage}
-            title="Damages clearly photos"
+            title="Damages clearly pictured"
           />
         </View>
         <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
@@ -869,8 +878,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         <TitleWithInfoIcon title="Description" />
 
         <CustomTxtInput
-          placeholder={`(color, material, weight, market price, notes, etc.)\n\nEx: I purchased this jacket in 2001 for 30,000 francs, it is light gray in color 
-and has no noticeable damages.`}
+          placeholder={`(color, material, weight, market price, notes, etc.)\n\nEx: Used iPhone in great condition. 1 year old, 90% battery health, and some 
+minor scratches as shown in the 2nd photo.`}
           returnKeyType="next"
           returnKeyLabel="next"
           keyboardType={"default"}
@@ -908,7 +917,7 @@ and has no noticeable damages.`}
             <View style={[style.paddingHorizontal, { marginTop: 10 }]}>
               <InputFieldInfo
                 text={
-                  "Moto, Cab and Tricycle apply only in city of Kigali. \nTransport costs vary for each mode you choose and are charged to the buyer."
+                  "Moto and Tricycle apply only in city of Kigali. \nTransport costs are charged to the buyer."
                 }
               />
             </View>
@@ -1011,11 +1020,20 @@ and has no noticeable damages.`}
         <View style={style.view}>
           <ModalHeader
             title="Brands"
-            onPress={() => setVisibleBrands(!visibleBrands)}
+            onPress={() => {
+              getBrands(0);
+              setVisibleBrands(!visibleBrands);
+            }}
           />
+
           <View style={{ marginHorizontal: 20, flex: 1 }}>
-            {brands?.length > 0 ? (
-              brands.map((itm) => {
+            <CustomTxtInput
+              placeholder="Search brands"
+              value={searchBrands}
+              onChangeText={(val) => setSearchgBrands(val)}
+            />
+            {filtered_Brands?.length > 0 ? (
+              filtered_Brands.map((itm) => {
                 const btn =
                   itm?.id == selectedBrand.id
                     ? Images.CHECKED_RADIO

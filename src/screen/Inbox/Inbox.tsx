@@ -180,6 +180,28 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
       })
     );
   };
+  const onPressSignup = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: Route.navAuthentication,
+            state: {
+              routes: [{ name: Route.navSignup }],
+            },
+          },
+        ],
+      })
+    );
+  };
 
   console.log("notifications", JSON.stringify(notifications));
 
@@ -214,7 +236,10 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
           />
         </View>
       ) : (
-        <LoginToZunguka onPressLogin={onPressLogin} />
+        <LoginToZunguka
+          onPressLogin={onPressLogin}
+          onPressSignup={onPressSignup}
+        />
       )}
     </View>
   );

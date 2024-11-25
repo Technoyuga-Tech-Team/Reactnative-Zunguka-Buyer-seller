@@ -7,6 +7,7 @@ import { ProductDataProps } from "./product.types";
 
 export type TopRoutes = {
   OpenItems: undefined;
+  OngoingItems: { packageId?: string };
   ClosedItems: { packageId?: string };
   ProductDetails: { itemId: number };
   ArchivedProductDetails: { item: ProductDataProps };

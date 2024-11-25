@@ -64,6 +64,7 @@ export enum Route {
   navPackage = "Package",
   navMyStorefront = "Storefront",
   navOpenItems = "OpenItems",
+  navOngoingItems = "OngoingItems",
   navClosedItems = "ClosedItems",
   navDraftItems = "DraftItems",
   navPublishItems = "PublishItems",

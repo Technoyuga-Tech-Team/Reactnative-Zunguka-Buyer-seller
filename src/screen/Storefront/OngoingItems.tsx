@@ -16,8 +16,8 @@ import { sendRequestToNearbyMovers } from "../../store/Product/product.thunk";
 import { useSelector } from "react-redux";
 import { getClosedItem } from "../../store/settings/settings.selectors";
 
-const ClosedItems: React.FC<
-  MyFrontStoreNavigationProps<Route.navClosedItems>
+const OngoingItems: React.FC<
+  MyFrontStoreNavigationProps<Route.navOngoingItems>
 > = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -59,7 +59,7 @@ const ClosedItems: React.FC<
     try {
       setLoading(true);
       const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/delivered/my/${offset}/${page}`,
+        `${BASE_URL}${API.GET_PRODUCTS}/closed/my/${offset}/${page}`,
         {
           method: "GET",
           headers: {
@@ -69,13 +69,19 @@ const ClosedItems: React.FC<
       );
 
       const data = await response.json();
+
       // Handle the fetched data here
       if (data.status === 1) {
         setLoading(false);
         if (data && data?.data?.data.length > 0) {
+          let mydata = data?.data?.data;
+
+          const filteredData = mydata.filter((item) => {
+            return item.is_delivered !== 1;
+          });
           fromLoadMore
-            ? setDealsData([...dealsData, data?.data?.data])
-            : setDealsData(data?.data?.data);
+            ? setDealsData([...dealsData, filteredData])
+            : setDealsData(filteredData);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
@@ -178,7 +184,7 @@ const ClosedItems: React.FC<
   );
 };
 
-export default ClosedItems;
+export default OngoingItems;
 
 const useStyles = makeStyles((theme, props: ThemeProps) => ({
   container: {

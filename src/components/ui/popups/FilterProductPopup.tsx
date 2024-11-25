@@ -4,6 +4,7 @@ import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Images } from "../../../assets/images";
 import {
+  BASE_URL,
   CITIES,
   COLORS,
   CONDITIONS,
@@ -12,6 +13,7 @@ import {
   RWF,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
+  secureStoreKeys,
   SIZES,
 } from "../../../constant";
 import { useBrands } from "../../../hooks/useBrands";
@@ -35,6 +37,9 @@ import RenderSortItemsList from "../RenderSortItemsList";
 import BackIcon from "../svg/BackIcon";
 import PopupHeaderWithClose from "./PopupHeaderWithClose";
 import LeftIcon from "../svg/LeftIcon";
+import { CustomTxtInput } from "../CustomTextInput";
+import { getData } from "../../../utils/asyncStorage";
+import { API } from "../../../constant/apiEndpoints";
 
 interface FilterProductPopupProps {
   visiblePopup: boolean;
@@ -78,6 +83,8 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   const [visibleRating, setVisibleRating] = useState(false);
   const [visibleSize, setVisibleSize] = useState(false);
 
+  const [searchBrands, setSearchgBrands] = useState<string>("");
+
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSize, setSelectedSize] = useState<any[]>([]);
   const [selectedSizeValue, setSelectedSizeValues] = useState<any[]>([]);
@@ -104,15 +111,43 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     name: string;
   }>({ id: null, name: "" });
 
-  const { data: brandsData } = useBrands(`${parantCategoryId}`, {
-    enabled: !!parantCategoryId,
-  });
+  // const { data: brandsData } = useBrands(`${parantCategoryId}`, {
+  //   enabled: !!parantCategoryId,
+  // });
 
+  // useEffect(() => {
+  //   if (brandsData?.data?.data) {
+  //     setBrands(brandsData?.data?.data);
+  //   }
+  // }, [brandsData]);
   useEffect(() => {
-    if (brandsData?.data?.data) {
-      setBrands(brandsData?.data?.data);
+    getBrands(0);
+  }, []);
+
+  const getBrands = async (parantCatId: number) => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+    // `${BASE_URL}${API.GET_BRANDS}/${parantCatId}`,
+
+    try {
+      const response = await fetch(`${BASE_URL}${API.GET_BRANDS}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log("brand - data", data);
+      // Handle the fetched data here
+      if (data && data?.data?.data?.length > 0) {
+        setBrands(data?.data?.data);
+      } else {
+        setBrands([]);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }, [brandsData]);
+  };
 
   useEffect(() => {
     if (categoriesData?.data?.data) {
@@ -242,6 +277,10 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     setSliderVal({ low: 10, high: 400 });
     clearFilter();
   };
+
+  let filtered_Brands = brands?.filter((item) => {
+    return item.name.toLowerCase().indexOf(searchBrands.toLowerCase()) > -1;
+  });
 
   return (
     <Modal
@@ -380,8 +419,13 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
             onPress={() => setVisibleBrands(!visibleBrands)}
           />
           <View style={{ marginHorizontal: 20, flex: 1 }}>
-            {brands?.length > 0 ? (
-              brands.map((itm) => {
+            <CustomTxtInput
+              placeholder="Search brands"
+              value={searchBrands}
+              onChangeText={(val) => setSearchgBrands(val)}
+            />
+            {filtered_Brands?.length > 0 ? (
+              filtered_Brands.map((itm) => {
                 const btn =
                   itm?.id == selectedBrand.id
                     ? Images.CHECKED_RADIO

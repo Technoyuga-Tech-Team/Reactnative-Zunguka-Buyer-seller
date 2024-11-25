@@ -193,10 +193,33 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
     );
   };
 
+  const onPressSignup = async () => {
+    dispatch(logout());
+    await setData(secureStoreKeys.JWT_TOKEN, null);
+    await setData(USER_DATA, null);
+    notifee.cancelAllNotifications();
+    // @ts-ignore
+    dispatch(setUserData({}));
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: Route.navAuthentication,
+            state: {
+              routes: [{ name: Route.navSignup }],
+            },
+          },
+        ],
+      })
+    );
+  };
+
   return (
     <View style={style.container}>
       {/* <CustomHeader title="Notification" /> */}
-      <Text style={style.txtHeaderTitle}>Notification</Text>
+      <Text style={style.txtHeaderTitle}>Steps and Statuses</Text>
 
       {!isGuest ? (
         <View style={{ flex: 1 }}>
@@ -226,7 +249,10 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
           />
         </View>
       ) : (
-        <LoginToZunguka onPressLogin={onPressLogin} />
+        <LoginToZunguka
+          onPressLogin={onPressLogin}
+          onPressSignup={onPressSignup}
+        />
       )}
     </View>
   );

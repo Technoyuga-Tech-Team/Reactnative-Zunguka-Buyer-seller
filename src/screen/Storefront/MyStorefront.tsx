@@ -11,6 +11,7 @@ import { TopRoutes } from "../../types/navigation";
 import { Route } from "../../constant/navigationConstants";
 import { ThemeProps } from "../../types/global.types";
 import CustomHeader from "../../components/ui/CustomHeader";
+import OngoingItems from "./OngoingItems";
 
 const MyStorefront = () => {
   const insets = useSafeAreaInsets();
@@ -19,9 +20,10 @@ const MyStorefront = () => {
   const Tab = createMaterialTopTabNavigator<TopRoutes>();
   return (
     <View style={style.scrollCont}>
-      <CustomHeader title="My Items" />
+      <CustomHeader title="My Items and Deals" />
       <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
         <Tab.Screen name={Route.navOpenItems} component={OpenItems} />
+        <Tab.Screen name={Route.navOngoingItems} component={OngoingItems} />
         <Tab.Screen name={Route.navClosedItems} component={ClosedItems} />
       </Tab.Navigator>
     </View>
