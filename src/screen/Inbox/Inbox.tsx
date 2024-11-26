@@ -207,7 +207,7 @@ const Inbox: React.FC<HomeNavigationProps<Route.navAlert>> = ({
 
   return (
     <View style={style.container}>
-      <CustomHeader title="Alert" />
+      <CustomHeader title="Steps and Statuses" />
       {!isGuest ? (
         <View style={{ flex: 1 }}>
           {notifications?.length > 0 && (

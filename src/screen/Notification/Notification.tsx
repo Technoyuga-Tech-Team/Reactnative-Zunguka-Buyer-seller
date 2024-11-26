@@ -219,7 +219,7 @@ const Notification: React.FC<HomeNavigationProps<Route.navNotification>> = ({
   return (
     <View style={style.container}>
       {/* <CustomHeader title="Notification" /> */}
-      <Text style={style.txtHeaderTitle}>Steps and Statuses</Text>
+      <Text style={style.txtHeaderTitle}>Notifications</Text>
 
       {!isGuest ? (
         <View style={{ flex: 1 }}>

@@ -1,5 +1,5 @@
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   BackHandler,
   Keyboard,
@@ -714,6 +714,14 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     return item.name.toLowerCase().indexOf(searchBrands.toLowerCase()) > -1;
   });
 
+  const calculateDiscountBasedOnPrice = useMemo(() => {
+    return Number(productSellingPrice) / 10;
+  }, [productSellingPrice]);
+
+  const calculateEarning = useMemo(() => {
+    return Number(productSellingPrice) - Number(productSellingPrice) / 10;
+  }, [productSellingPrice]);
+
   return (
     <View style={style.container}>
       <CustomHeader title="Create new listing" />
@@ -949,11 +957,11 @@ minor scratches as shown in the 2nd photo.`}
           extraPeddingLeft={true}
         />
         <View style={style.paddingHorizontal}>
-          <InputFieldInfo
-            text={
-              "Ex: Selling Price  RWF 5,878\nService Charge RWF 588(10%)\nYour Earning RWF 5,290"
-            }
-          />
+          {productSellingPrice && (
+            <InputFieldInfo
+              text={`Selling Price  RWF ${productSellingPrice}\nService Charge RWF ${calculateDiscountBasedOnPrice}(10%)\nYour Earning RWF ${calculateEarning}`}
+            />
+          )}
         </View>
 
         <View style={[style.paddingHorizontal, { paddingHorizontal: 10 }]}>
