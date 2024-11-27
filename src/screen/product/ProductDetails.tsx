@@ -143,7 +143,7 @@ const ProductDetails: React.FC<
       let payable_price = is_CurrentUsers_product
         ? mainPrice
         : productDetailsData?.data?.sale_price;
-      setPayablePrice(payable_price.toString());
+      setPayablePrice(payable_price?.toString());
     }
   }, [productDetailsData, is_CurrentUsers_product]);
 

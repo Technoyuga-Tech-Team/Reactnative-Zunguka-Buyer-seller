@@ -209,9 +209,11 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           .map((category) => category.name)
           .join(" - ")
       );
-      let cat_ids = productDetailsData?.data?.category_id.split(",");
-      setSubCategoryId(Number(cat_ids[0]));
-      setParantCategoryId(Number(cat_ids[1]));
+      if (productDetailsData?.data?.category_id) {
+        let cat_ids = productDetailsData?.data?.category_id.split(",");
+        setSubCategoryId(Number(cat_ids[0]));
+        setParantCategoryId(Number(cat_ids[1]));
+      }
       // Condition of Item
       setSelectedCondition(productDetailsData?.data?.condition_of_item);
       setConditionData(
@@ -520,33 +522,76 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     return true;
   };
 
+  const checkIsValidFormForSavedDraft = () => {
+    let isValidProductImage = productImages.length > 0;
+    if (
+      !productTitle &&
+      !subParantCat &&
+      !selectedCondition &&
+      !district &&
+      !productDescription &&
+      !vehicle &&
+      !productSellingPrice &&
+      !isValidProductImage
+    ) {
+      dispatch(
+        setErrors({
+          message: "Please insert atlist one value to save as draft",
+          status: 0,
+          statusCode: null,
+        })
+      );
+      return false;
+    } else {
+      setProductImageError("");
+      setProductTitleError("");
+      setProductCategoryError("");
+      setSelectedConditionError("");
+      setDistrictError("");
+      setProductDescriptionError("");
+      setVehicleError("");
+      setProductSellingPriceError("");
+      setSelectedColorsError("");
+      setSelectedSizeValueError("");
+      setSelectedBrandError("");
+      return true;
+    }
+  };
+
   const onPressSubmit = async (saved_as_draft: number) => {
     setIsDraft(saved_as_draft);
-    if (checkIsValidForm()) {
+    if (
+      !saved_as_draft ? checkIsValidForm() : checkIsValidFormForSavedDraft()
+    ) {
       const formData = new FormData();
 
-      Object.entries(productImages).forEach(([_key, val]) => {
-        formData.append(`images[${_key}]`, {
-          name:
-            val.name ||
-            `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
-          type: `image/${getUrlExtension(val.uri)}`,
-          uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+      productImages &&
+        Object.entries(productImages).forEach(([_key, val]) => {
+          formData.append(`images[${_key}]`, {
+            name:
+              val.name ||
+              `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+            type: `image/${getUrlExtension(val.uri)}`,
+            uri:
+              Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+          });
         });
-      });
-      formData.append("title", productTitle);
-      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
-      formData.append("condition_of_item", selectedCondition);
-      formData.append("brand_id", selectedBrand.id);
-      formData.append("color", selectedColors.join(", "));
+      productTitle && formData.append("title", productTitle);
+      subCategoryId &&
+        parantCategoryId &&
+        formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      selectedCondition &&
+        formData.append("condition_of_item", selectedCondition);
+      selectedBrand.id && formData.append("brand_id", selectedBrand.id);
+      selectedColors && formData.append("color", selectedColors.join(", "));
       formData.append("size", selectedSizeValue.join(", "));
-      formData.append("district", district);
-      formData.append("sector", sector);
-      formData.append("city", district);
-      formData.append("address", productLocation);
-      formData.append("description", productDescription);
-      formData.append("mode_of_transport", vehicle);
-      formData.append("sale_price", productSellingPrice);
+      district && formData.append("district", district);
+      sector && formData.append("sector", sector);
+      district && formData.append("city", district);
+      productLocation && formData.append("address", productLocation);
+      productDescription && formData.append("description", productDescription);
+      vehicle && formData.append("mode_of_transport", vehicle);
+      productSellingPrice && formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
       formData.append("is_saved_as_draft", saved_as_draft);
 
@@ -578,35 +623,43 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressEditProduct = async (saved_as_draft: number) => {
-    if (checkIsValidForm()) {
+    if (checkIsValidFormForSavedDraft()) {
       const formData = new FormData();
 
-      Object.entries(productImages).forEach(([_key, val]) => {
-        formData.append(`images[${_key}]`, {
-          name:
-            val.name ||
-            `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
-          type: `image/${getUrlExtension(val.uri)}`,
-          uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+      productImages &&
+        Object.entries(productImages).forEach(([_key, val]) => {
+          formData.append(`images[${_key}]`, {
+            name:
+              val.name ||
+              `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+            type: `image/${getUrlExtension(val.uri)}`,
+            uri:
+              Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+          });
         });
-      });
-      formData.append("item_id", product_id);
-      formData.append("title", productTitle);
-      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
-      formData.append("condition_of_item", selectedCondition);
-      formData.append("brand_id", selectedBrand.id);
-      formData.append("color", selectedColors.join(", "));
-      formData.append("size", selectedSizeValue.join(", "));
-      formData.append("district", district);
-      formData.append("sector", sector);
-      formData.append("city", district);
-      formData.append("address", productLocation);
-      formData.append("description", productDescription);
-      formData.append("mode_of_transport", vehicle);
-      formData.append("sale_price", productSellingPrice);
-      formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
-      formData.append("is_saved_as_draft", saved_as_draft);
-      formData.append("status", product_status || "Active");
+      product_id && formData.append("item_id", product_id);
+      productTitle && formData.append("title", productTitle);
+      subCategoryId &&
+        parantCategoryId &&
+        formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      selectedCondition &&
+        formData.append("condition_of_item", selectedCondition);
+      selectedBrand && formData.append("brand_id", selectedBrand.id);
+      selectedColors && formData.append("color", selectedColors.join(", "));
+      selectedSizeValue &&
+        formData.append("size", selectedSizeValue.join(", "));
+      district && formData.append("district", district);
+      sector && formData.append("sector", sector);
+      district && formData.append("city", district);
+      productLocation && formData.append("address", productLocation);
+      productDescription && formData.append("description", productDescription);
+      vehicle && formData.append("mode_of_transport", vehicle);
+      productSellingPrice && formData.append("sale_price", productSellingPrice);
+      checkedSelfPickup &&
+        formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
+      product_status &&
+        formData.append("is_saved_as_draft", product_status ? 1 : 0);
+      product_status && formData.append("status", product_status || "Active");
 
       console.log("Edit product formData - - -", JSON.stringify(formData));
 
