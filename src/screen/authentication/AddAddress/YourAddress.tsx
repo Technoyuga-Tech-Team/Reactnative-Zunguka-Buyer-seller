@@ -185,15 +185,15 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       formData.append("latitude", `${savedLatLng.lat}`);
       formData.append("longitude", `${savedLatLng.lng}`);
 
-      Object.entries(houseImage).forEach(([_key, val]) => {
-        formData.append(`house_images[${_key}]`, {
-          name:
-            val.name ||
-            `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
-          type: `image/${getUrlExtension(val.uri)}`,
-          uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
-        });
-      });
+      // Object.entries(houseImage).forEach(([_key, val]) => {
+      //   formData.append(`house_images[${_key}]`, {
+      //     name:
+      //       val.name ||
+      //       `${new Date().getMilliseconds()}.${getUrlExtension(val.uri)}`,
+      //     type: `image/${getUrlExtension(val.uri)}`,
+      //     uri: Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
+      //   });
+      // });
       console.log("formData", JSON.stringify(formData));
 
       if (fromUpdateAddress) {
@@ -228,7 +228,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
   useEffect(() => {
     if (fromUpdateAddress && userData) {
       if (userData?.house_images?.length > 0) {
-        setHouseImages(userData?.house_images);
+        // setHouseImages(userData?.house_images);
       }
 
       if (userData?.house_number) {
@@ -372,7 +372,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps={"handled"}
       >
-        <Text style={style.txtHouseImage}>
+        {/* <Text style={style.txtHouseImage}>
           Image of House apperance or Gate
         </Text>
 
@@ -386,7 +386,7 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
         />
         {productImageError && (
           <Text style={style.error}>{productImageError}</Text>
-        )}
+        )} */}
         <View style={style.inputCont}>
           <CustomTxtInput
             placeholder="GPS Address"
@@ -499,20 +499,20 @@ const YourAddress: React.FC<HomeNavigationProps<Route.navYourAddress>> = ({
       )}
       <CustomButton
         onPress={async () => {
-          if (houseImage?.length > 0) {
-            if (await checkDistrictAndSector()) {
-              handleSubmit();
-            }
-          } else {
-            setProductImageError("Please add your house image.");
-            dispatch(
-              setErrors({
-                message: "Please add your house image.",
-                status: 0,
-                statusCode: null,
-              })
-            );
+          // if (houseImage?.length > 0) {
+          if (await checkDistrictAndSector()) {
+            handleSubmit();
           }
+          // } else {
+          //   // setProductImageError("Please add your house image.");
+          //   dispatch(
+          //     setErrors({
+          //       message: "Please add your house image.",
+          //       status: 0,
+          //       statusCode: null,
+          //     })
+          //   );
+          // }
         }}
         title={fromUpdateAddress ? "Update" : "Continue"}
         buttonWidth="full"
