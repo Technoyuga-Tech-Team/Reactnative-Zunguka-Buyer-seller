@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 
@@ -16,14 +16,21 @@ import OngoingItems from "./OngoingItems";
 const MyStorefront = () => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
+  const [ongoingCount, setOngoingCount] = useState(0);
 
   const Tab = createMaterialTopTabNavigator<TopRoutes>();
   return (
     <View style={style.scrollCont}>
       <CustomHeader title="My Items and Deals" />
-      <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
+      <Tab.Navigator
+        tabBar={(props) => <MyTabBar {...props} ongoingCount={ongoingCount} />}
+      >
         <Tab.Screen name={Route.navOpenItems} component={OpenItems} />
-        <Tab.Screen name={Route.navOngoingItems} component={OngoingItems} />
+        <Tab.Screen
+          name={Route.navOngoingItems}
+          component={OngoingItems}
+          initialParams={{ ongoingCount: setOngoingCount }}
+        />
         <Tab.Screen name={Route.navClosedItems} component={ClosedItems} />
       </Tab.Navigator>
     </View>

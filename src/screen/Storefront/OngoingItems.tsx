@@ -26,6 +26,7 @@ const OngoingItems: React.FC<
   const flatlistRef = useRef<FlatList>(null);
 
   const packageId = route.params?.packageId;
+  const { ongoingCount } = route.params;
   const closedItems = useSelector(getClosedItem);
 
   const [packageIndex, setPackageIndex] = useState<number | null>(null);
@@ -76,6 +77,7 @@ const OngoingItems: React.FC<
         if (data && data?.data?.data.length > 0) {
           let mydata = data?.data?.data;
 
+          ongoingCount(data?.data?.totalRecords);
           const filteredData = mydata.filter((item) => {
             return item.is_delivered !== 1;
           });

@@ -554,6 +554,17 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       setSelectedColorsError("");
       setSelectedSizeValueError("");
       setSelectedBrandError("");
+
+      if (!checked) {
+        dispatch(
+          setErrors({
+            message: "Please agree with terms & condition",
+            status: 0,
+            statusCode: null,
+          })
+        );
+        return false;
+      }
       return true;
     }
   };
@@ -623,7 +634,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   };
 
   const onPressEditProduct = async (saved_as_draft: number) => {
-    if (checkIsValidFormForSavedDraft()) {
+    if (product_status ? checkIsValidFormForSavedDraft() : checkIsValidForm()) {
       const formData = new FormData();
 
       productImages &&
@@ -637,29 +648,24 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
               Platform.OS === "ios" ? val.uri.replace("file://", "") : val.uri,
           });
         });
-      product_id && formData.append("item_id", product_id);
-      productTitle && formData.append("title", productTitle);
-      subCategoryId &&
-        parantCategoryId &&
-        formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
-      selectedCondition &&
-        formData.append("condition_of_item", selectedCondition);
-      selectedBrand && formData.append("brand_id", selectedBrand.id);
-      selectedColors && formData.append("color", selectedColors.join(", "));
-      selectedSizeValue &&
-        formData.append("size", selectedSizeValue.join(", "));
-      district && formData.append("district", district);
-      sector && formData.append("sector", sector);
-      district && formData.append("city", district);
-      productLocation && formData.append("address", productLocation);
-      productDescription && formData.append("description", productDescription);
-      vehicle && formData.append("mode_of_transport", vehicle);
-      productSellingPrice && formData.append("sale_price", productSellingPrice);
-      checkedSelfPickup &&
-        formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
-      product_status &&
-        formData.append("is_saved_as_draft", product_status ? 1 : 0);
-      product_status && formData.append("status", product_status || "Active");
+      formData.append("item_id", product_id);
+      formData.append("title", productTitle);
+
+      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      formData.append("condition_of_item", selectedCondition);
+      formData.append("brand_id", selectedBrand.id);
+      formData.append("color", selectedColors.join(", "));
+      formData.append("size", selectedSizeValue.join(", "));
+      formData.append("district", district);
+      formData.append("sector", sector);
+      formData.append("city", district);
+      formData.append("address", productLocation);
+      formData.append("description", productDescription);
+      formData.append("mode_of_transport", vehicle);
+      formData.append("sale_price", productSellingPrice);
+      formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
+      formData.append("is_saved_as_draft", product_status ? 1 : 0);
+      formData.append("status", product_status || "Active");
 
       console.log("Edit product formData - - -", JSON.stringify(formData));
 

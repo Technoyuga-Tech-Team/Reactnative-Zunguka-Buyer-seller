@@ -133,7 +133,10 @@ const ProductDetails: React.FC<
       );
       setProductDetails(productDetailsData?.data);
       setProductLikes(productDetailsData?.data?.likes_count);
-      setProductBannerData(productDetailsData?.data?.images);
+      const addImages = productDetailsData?.data?.images?.length
+        ? productDetailsData?.data?.images
+        : [{ uri: "123" }];
+      setProductBannerData(addImages);
       setSavedItem(productDetailsData?.data?.is_like);
       setProductStatus(productDetailsData?.data?.status);
       let price1 = (productDetailsData?.data?.sale_price * 5) / 100;

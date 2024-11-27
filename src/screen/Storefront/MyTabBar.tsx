@@ -10,6 +10,7 @@ const MyTabBar = ({
   state,
   descriptors,
   navigation,
+  ongoingCount,
   position,
 }: MaterialTopTabBarProps) => {
   const insets = useSafeAreaInsets();
@@ -91,6 +92,28 @@ const MyTabBar = ({
             >
               {txtLabel as string}
             </Text>
+            {label == "OngoingItems" && !!ongoingCount && (
+              <View
+                style={[
+                  style.countWrapper,
+                  {
+                    backgroundColor: isFocused
+                      ? theme.colors?.white
+                      : theme.colors?.primary,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: isFocused
+                      ? theme.colors?.primary
+                      : theme.colors?.white,
+                  }}
+                >
+                  {ongoingCount}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         );
       })}
@@ -108,6 +131,7 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   btnContainer: {
     flex: 1,
+    flexDirection: "row",
     height: Scale(48),
     alignItems: "center",
     justifyContent: "center",
@@ -158,5 +182,12 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     fontSize: theme.fontSize?.fs15,
     lineHeight: 20,
     fontFamily: theme.fontFamily?.medium,
+  },
+  countWrapper: {
+    marginLeft: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+    borderRadius: 20,
   },
 }));
