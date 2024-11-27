@@ -56,7 +56,7 @@ const ProductDetails: React.FC<
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const { itemId } = route.params;
+  const { itemId, routeName } = route.params;
   const userData = useSelector(selectUserData);
 
   const isGuest = userData?.is_guest == 1;
@@ -360,6 +360,10 @@ const ProductDetails: React.FC<
   const onPressEditProduct = () => {
     navigation.navigate(Route.navAddNewProduct, {
       product_id: productDetails?.id,
+      product_status:
+        routeName == Route.navDraftItems
+          ? PRODUCT_STATUS_DRAFT.SAVED_AS_DRAFT
+          : null,
     });
   };
 
@@ -410,8 +414,9 @@ const ProductDetails: React.FC<
             onPressMessage={onPressMessage}
             isCurrentUsersProduct={is_CurrentUsers_product}
           />
-          {is_CurrentUsers_product &&
-            productStatus == PRODUCT_STATUS_DRAFT.DRAFT && (
+          {(is_CurrentUsers_product &&
+            productStatus == PRODUCT_STATUS_DRAFT.DRAFT) ||
+            (productStatus == PRODUCT_STATUS_DRAFT.SAVED_AS_DRAFT && (
               <View style={style.button}>
                 <CustomButton
                   onPress={onPressEditProduct}
@@ -423,7 +428,7 @@ const ProductDetails: React.FC<
                   backgroundColor={theme?.colors?.primary}
                 />
               </View>
-            )}
+            ))}
           {/* for temporary stop and start the publish this product */}
           {is_CurrentUsers_product && (
             <View style={style.button}>

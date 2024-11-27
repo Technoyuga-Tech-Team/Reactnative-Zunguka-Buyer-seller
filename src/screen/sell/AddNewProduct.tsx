@@ -79,7 +79,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
 
-  const { product_id } = route?.params;
+  const { product_id, product_status } = route?.params;
 
   console.log("product_id - - - - -", product_id);
 
@@ -606,7 +606,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("sale_price", productSellingPrice);
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
       formData.append("is_saved_as_draft", saved_as_draft);
-      formData.append("status", "Active");
+      formData.append("status", product_status || "Active");
 
       console.log("Edit product formData - - -", JSON.stringify(formData));
 
@@ -724,7 +724,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   return (
     <View style={style.container}>
-      <CustomHeader title="Create new listing" />
+      <CustomHeader
+        title={!product_id ? "Create new listing" : "Edit listing"}
+      />
       <KeyboardAwareScrollView
         ref={scrollRef}
         bounces={false}

@@ -84,7 +84,10 @@ const DraftProductList: React.FC<HomeNavigationProps<Route.navDraftItems>> = ({
   };
 
   const onPressProductItem = (itemId: number) => {
-    navigation.navigate(Route.navProductDetails, { itemId: itemId });
+    navigation.navigate(Route.navProductDetails, {
+      itemId: itemId,
+      routeName: route.name,
+    });
   };
 
   const onRefresh = () => {
