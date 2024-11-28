@@ -48,6 +48,7 @@ import CustomHeader from "../../components/ui/CustomHeader";
 import NoDataFound from "../../components/ui/NoDataFound";
 import { notifyMessage } from "../../utils/notifyMessage";
 import { setSuccess } from "../../store/global/global.slice";
+import { Images } from "../../assets/images";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -135,7 +136,7 @@ const ProductDetails: React.FC<
       setProductLikes(productDetailsData?.data?.likes_count);
       const addImages = productDetailsData?.data?.images?.length
         ? productDetailsData?.data?.images
-        : [{ uri: "123" }];
+        : [{ uri: Images.PLACEHOLDER_IMAGE }];
       setProductBannerData(addImages);
       setSavedItem(productDetailsData?.data?.is_like);
       setProductStatus(productDetailsData?.data?.status);

@@ -84,9 +84,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           )}
         </View>
         <View style={style.productNameCont}>
-          <Text style={style.txtPrice}>
-            {RWF} {productDetails?.sale_price}
-          </Text>
+          {productDetails?.sale_price && (
+            <Text style={style.txtPrice}>
+              {RWF} {productDetails?.sale_price}
+            </Text>
+          )}
           {!isCurrentUsersProduct && (
             <TouchableOpacity
               onPress={onPressMessage}
@@ -140,7 +142,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 },
               ]}
             >
-              {productDetails?.category?.map((ele) => ele.name).join(", ")}
+              {productDetails?.category?.map((ele) => ele.name).join(", ") ||
+                "-"}
             </Text>
           </View>
           <View style={style.fdCont}>
@@ -187,14 +190,16 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Description
           </Text>
-          <Text style={style.txtdesc}>{productDetails?.description}</Text>
+          <Text style={style.txtdesc}>
+            {productDetails?.description || "-"}
+          </Text>
         </View>
         <ItemSeparator1 />
         <View>
           <Text style={[style.txtProductName, { marginBottom: 10 }]}>
             Address
           </Text>
-          <Text style={style.txtAddress}>{Addr1}</Text>
+          <Text style={style.txtAddress}>{Addr1 || "-"}</Text>
         </View>
       </View>
       <ItemSeparator />
