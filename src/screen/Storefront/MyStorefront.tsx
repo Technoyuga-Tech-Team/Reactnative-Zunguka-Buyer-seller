@@ -12,16 +12,25 @@ import { Route } from "../../constant/navigationConstants";
 import { ThemeProps } from "../../types/global.types";
 import CustomHeader from "../../components/ui/CustomHeader";
 import OngoingItems from "./OngoingItems";
+import BuyerSellerTabView from "../sell/buyerSellerTab";
 
 const MyStorefront = () => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const [ongoingCount, setOngoingCount] = useState(0);
+  const [selectedBuyerSellerTab, setSelectedBuyerSellerTab] = useState(1);
 
   const Tab = createMaterialTopTabNavigator<TopRoutes>();
+
+  // const
+
   return (
     <View style={style.scrollCont}>
       <CustomHeader title="My Items and Deals" />
+      <BuyerSellerTabView
+        selectedBuyerSellerTab={selectedBuyerSellerTab}
+        setSelectedBuyerSellerTab={setSelectedBuyerSellerTab}
+      />
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} ongoingCount={ongoingCount} />}
       >
