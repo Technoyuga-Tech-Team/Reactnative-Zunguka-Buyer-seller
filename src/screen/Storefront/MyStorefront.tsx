@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { makeStyles } from "react-native-elements";
 
@@ -13,6 +13,9 @@ import { ThemeProps } from "../../types/global.types";
 import CustomHeader from "../../components/ui/CustomHeader";
 import OngoingItems from "./OngoingItems";
 import BuyerSellerTabView from "../sell/buyerSellerTab";
+import { BASE_URL, secureStoreKeys } from "../../constant";
+import { API } from "../../constant/apiEndpoints";
+import { getData } from "../../utils/asyncStorage";
 
 const MyStorefront = () => {
   const insets = useSafeAreaInsets();
@@ -22,7 +25,26 @@ const MyStorefront = () => {
 
   const Tab = createMaterialTopTabNavigator<TopRoutes>();
 
-  // const
+  const getOngoingCountFromApi = async () => {
+    const token = await getData(secureStoreKeys.JWT_TOKEN);
+
+    const response = await fetch(
+      `${BASE_URL}${API.GET_PRODUCTS}/closed/my/${1}/${1}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+    setOngoingCount(data?.data?.totalRecords || 0);
+  };
+
+  useEffect(() => {
+    getOngoingCountFromApi();
+  }, []);
 
   return (
     <View style={style.scrollCont}>
@@ -35,11 +57,7 @@ const MyStorefront = () => {
         tabBar={(props) => <MyTabBar {...props} ongoingCount={ongoingCount} />}
       >
         <Tab.Screen name={Route.navOpenItems} component={OpenItems} />
-        <Tab.Screen
-          name={Route.navOngoingItems}
-          component={OngoingItems}
-          initialParams={{ ongoingCount: setOngoingCount }}
-        />
+        <Tab.Screen name={Route.navOngoingItems} component={OngoingItems} />
         <Tab.Screen name={Route.navClosedItems} component={ClosedItems} />
       </Tab.Navigator>
     </View>
