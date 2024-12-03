@@ -96,7 +96,7 @@ const DraftProductList: React.FC<HomeNavigationProps<Route.navDraftItems>> = ({
 
   return (
     <View style={style.container}>
-      {fromProfile && <CustomHeader title="Draft Items" />}
+      {fromProfile && <CustomHeader title="Selling Item" />}
       <ProductListing
         productData={draftData}
         onPress={(item) => onPressProductItem(item)}

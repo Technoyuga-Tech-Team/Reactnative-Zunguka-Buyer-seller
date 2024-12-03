@@ -272,12 +272,12 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             onPress={onPressMyProfile}
           />
           <ProfileItem
-            name="My Items and Deals"
+            name="My Deals"
             icon={<TagfillIcon color={theme.colors?.primary} />}
             onPress={onPressMyItems}
           />
           <ProfileItem
-            name="Draft Items"
+            name="Selling Item"
             icon={<DraftItemIcon color={theme.colors?.primary} />}
             onPress={onPressDraftItems}
           />
