@@ -68,54 +68,59 @@ const ProductItem: React.FC<ProductItemProps> = ({
           style={style.product}
           resizeMode="cover"
         />
-        <View style={style.secondCont}>
-          <View
-            style={{
-              flexDirection: "row",
-              // alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ width: "50%" }}>
-              <Text numberOfLines={2} style={style.txtTitle}>
-                {item?.title}
-              </Text>
+        <View style={style.itemAndDealsWrapper}>
+          <View style={style.secondCont}>
+            <View
+              style={{
+                flexDirection: "row",
+                // alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ width: "50%" }}>
+                <Text numberOfLines={2} style={style.txtTitle}>
+                  {item?.title}
+                </Text>
+              </View>
+              <View style={{ width: "50%", alignItems: "flex-end" }}>
+                {item.status == "Saved_as_Draft" &&
+                  currentUsersProduct &&
+                  !fromClosedItem && <Text style={style.txtSold}>Draft</Text>}
+                {item.status == "Draft" &&
+                  currentUsersProduct &&
+                  !fromClosedItem && (
+                    <Text style={style.txtSold}>Stop Publishing</Text>
+                  )}
+                {item.status == "Archived" &&
+                  currentUsersProduct &&
+                  !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
+                {item.status == "Archived" &&
+                  currentUsersProduct &&
+                  fromClosedItem &&
+                  item.is_delivered == 1 && (
+                    <Text style={style.txtSold}>Delivered</Text>
+                  )}
+              </View>
             </View>
-            <View style={{ width: "50%", alignItems: "flex-end" }}>
-              {item.status == "Saved_as_Draft" &&
-                currentUsersProduct &&
-                !fromClosedItem && <Text style={style.txtSold}>Draft</Text>}
-              {item.status == "Draft" &&
-                currentUsersProduct &&
-                !fromClosedItem && (
-                  <Text style={style.txtSold}>Stop Publishing</Text>
-                )}
-              {item.status == "Archived" &&
-                currentUsersProduct &&
-                !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
-              {item.status == "Archived" &&
-                currentUsersProduct &&
-                fromClosedItem &&
-                item.is_delivered == 1 && (
-                  <Text style={style.txtSold}>Delivered</Text>
-                )}
-            </View>
-          </View>
 
-          <Text numberOfLines={1} style={style.txtTypeAndCategories}>
-            {getConditionItemValue(item?.condition_of_item)}
-          </Text>
-          <Text
-            style={[
-              style.txtTypeAndCategories,
-              { textDecorationLine: "underline", flexWrap: "wrap" },
-            ]}
-          >
-            {item?.category?.map((ele) => ele.name).join(", ")}
-          </Text>
-          <Text style={style.txtPrice}>
-            {RWF} {item.sale_price}
-          </Text>
+            <Text numberOfLines={1} style={style.txtTypeAndCategories}>
+              {getConditionItemValue(item?.condition_of_item)}
+            </Text>
+            <Text
+              style={[
+                style.txtTypeAndCategories,
+                { textDecorationLine: "underline", flexWrap: "wrap" },
+              ]}
+            >
+              {item?.category?.map((ele) => ele.name).join(", ")}
+            </Text>
+            <Text style={style.txtPrice}>
+              {RWF} {item.sale_price}
+            </Text>
+          </View>
+          {/* <View style={style.sellerWrapperContainer}>
+            <Text style={{ fontSize: 12 }}>Seller</Text>
+          </View> */}
         </View>
       </TouchableOpacity>
       {showBtn && showRequestBtn && (
@@ -205,5 +210,20 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   bordercont: {
     backgroundColor: theme?.colors?.border,
+  },
+  itemAndDealsWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    marginRight: 20,
+    alignItems: "flex-start",
+  },
+  sellerWrapperContainer: {
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+    borderColor: theme.colors?.primary,
+    backgroundColor: theme.colors?.primaryLightest,
+    borderWidth: 1,
+    alignItems: "center",
+    borderRadius: 12,
   },
 }));
