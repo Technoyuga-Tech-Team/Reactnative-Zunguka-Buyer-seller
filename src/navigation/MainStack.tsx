@@ -54,6 +54,7 @@ import AdminVerification from "../screen/authentication/AdminVerification";
 import Inbox from "../screen/Inbox/Inbox";
 import DraftProductList from "../screen/product/DraftProductList";
 import ContactUs from "../screen/ContactUs";
+import SellItemsFromProfile from "../screen/profile/SellingItem";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -203,6 +204,10 @@ const MainStack = () => {
           <Stack.Screen
             name={Route.navDraftItems}
             component={DraftProductList}
+          />
+          <Stack.Screen
+            name={Route.navProfileSellingItem}
+            component={SellItemsFromProfile}
           />
           <Stack.Screen name={Route.navContactUs} component={ContactUs} />
         </Stack.Navigator>

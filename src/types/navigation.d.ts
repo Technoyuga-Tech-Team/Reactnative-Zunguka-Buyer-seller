@@ -19,6 +19,12 @@ export type TopItemsRoutes = {
   DraftItems: undefined;
 };
 
+export type SellingItemsRoutes = {
+  PublishItems: undefined;
+  DraftItems: undefined;
+  ClosedItems: undefined;
+};
+
 export type MoverRequestTopRoutes = {
   OngoingMoverRequest: undefined;
   PastMoverRequest: undefined;
@@ -101,6 +107,7 @@ export type AppRoutes = {
   PastMoverRequest: undefined;
   AdminVerification: undefined;
   ContactUs: undefined;
+  SellingItem: undefined;
 };
 
 export type AuthenticationRoutes = {

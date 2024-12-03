@@ -97,4 +97,5 @@ export enum Route {
   navPayoutHistory = "PayoutHistory",
   navMySavedKeyword = "MySavedKeyword",
   navPayMover = "PayMover",
+  navProfileSellingItem = "SellingItem",
 }
