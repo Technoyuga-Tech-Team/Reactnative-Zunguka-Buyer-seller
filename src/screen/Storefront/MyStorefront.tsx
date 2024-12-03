@@ -39,7 +39,13 @@ const MyStorefront = () => {
     );
 
     const data = await response.json();
-    setOngoingCount(data?.data?.totalRecords || 0);
+    let mydata = data?.data?.data;
+
+    const filteredData = mydata?.filter((item) => {
+      return item.is_delivered !== 1;
+    });
+
+    setOngoingCount(filteredData?.length || 0);
   };
 
   useEffect(() => {
@@ -48,11 +54,11 @@ const MyStorefront = () => {
 
   return (
     <View style={style.scrollCont}>
-      <CustomHeader title="My Items and Deals" />
-      <BuyerSellerTabView
+      <CustomHeader title="My Deals" />
+      {/* <BuyerSellerTabView
         selectedBuyerSellerTab={selectedBuyerSellerTab}
         setSelectedBuyerSellerTab={setSelectedBuyerSellerTab}
-      />
+      /> */}
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} ongoingCount={ongoingCount} />}
       >
