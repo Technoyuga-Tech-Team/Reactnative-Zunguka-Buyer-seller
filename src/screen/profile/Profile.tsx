@@ -307,7 +307,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             icon={<TransactionHistoryIcon color={theme.colors?.primary} />}
             onPress={onPressTransactionHistroy}
           />
-          <ProfileItem
+          {/* <ProfileItem
             name="Purchased History"
             icon={
               <PurchasedProductIcon
@@ -317,7 +317,7 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
               />
             }
             onPress={onPressPurchasedHistory}
-          />
+          /> */}
           {/* <ProfileItem
           name="Job History"
           icon={
