@@ -21,7 +21,7 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const { displayLabel } = route?.params;
+  const displayLabel = route?.params?.displayLabel;
 
   const [loading, setLoading] = useState(false);
   const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);

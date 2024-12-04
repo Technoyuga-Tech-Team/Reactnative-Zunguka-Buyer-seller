@@ -24,7 +24,7 @@ const ClosedItems: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const flatlistRef = useRef<FlatList>(null);
-  const { displayLabel } = route?.params;
+  const displayLabel = route?.params?.displayLabel;
 
   const packageId = route.params?.packageId;
   const closedItems = useSelector(getClosedItem);
