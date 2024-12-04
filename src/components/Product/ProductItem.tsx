@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { makeStyles } from "react-native-elements";
+import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { DUMMY_PLACEHOLDER, RWF } from "../../constant";
@@ -31,7 +31,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
   fromPurchase,
   onPressHireMover,
   showBorder,
+  displayLabel,
 }) => {
+  const { theme } = useTheme();
+
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -118,9 +121,25 @@ const ProductItem: React.FC<ProductItemProps> = ({
               {RWF} {item.sale_price}
             </Text>
           </View>
-          {/* <View style={style.sellerWrapperContainer}>
-            <Text style={{ fontSize: 12 }}>Seller</Text>
-          </View> */}
+          {displayLabel && (
+            <View
+              style={[
+                style.sellerWrapperContainer,
+                {
+                  backgroundColor: item?.is_buyer
+                    ? theme.colors?.lightGreen
+                    : theme.colors?.primaryLightest,
+                  borderColor: item?.is_buyer
+                    ? theme.colors?.green
+                    : theme.colors?.primary,
+                },
+              ]}
+            >
+              <Text style={{ fontSize: 12 }}>
+                {item?.is_buyer ? "Buyer" : "Seller"}
+              </Text>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
       {showBtn && showRequestBtn && (

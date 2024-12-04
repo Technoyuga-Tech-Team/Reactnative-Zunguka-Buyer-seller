@@ -31,6 +31,7 @@ export interface ProductDataProps {
   condition_of_item: string;
   is_delivery_button: boolean;
   is_searching_button: boolean;
+  is_buyer?: boolean;
   pickup_otp: number;
   is_otp: boolean;
   is_delivered: number;

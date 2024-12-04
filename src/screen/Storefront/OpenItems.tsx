@@ -15,11 +15,13 @@ import Scale from "../../utils/Scale";
 
 const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+  const { displayLabel } = route?.params;
 
   const [loading, setLoading] = useState(false);
   const [dealsData, setDealsData] = useState<ProductDataProps[]>([]);
@@ -92,6 +94,7 @@ const OpenItems: React.FC<MyFrontStoreNavigationProps<Route.navOpenItems>> = ({
     <View style={style.container}>
       <ProductListing
         productData={dealsData}
+        displayLabel={displayLabel}
         onPress={(item) => onPressProductItem(item)}
         onEndReached={onEndReached}
         isLoading={loading}

@@ -62,9 +62,21 @@ const MyStorefront = () => {
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} ongoingCount={ongoingCount} />}
       >
-        <Tab.Screen name={Route.navOpenItems} component={OpenItems} />
-        <Tab.Screen name={Route.navOngoingItems} component={OngoingItems} />
-        <Tab.Screen name={Route.navClosedItems} component={ClosedItems} />
+        <Tab.Screen
+          name={Route.navOpenItems}
+          component={OpenItems}
+          initialParams={{ displayLabel: true }}
+        />
+        <Tab.Screen
+          name={Route.navOngoingItems}
+          component={OngoingItems}
+          initialParams={{ displayLabel: true }}
+        />
+        <Tab.Screen
+          name={Route.navClosedItems}
+          component={ClosedItems}
+          initialParams={{ displayLabel: true }}
+        />
       </Tab.Navigator>
     </View>
   );

@@ -24,6 +24,7 @@ const OngoingItems: React.FC<
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const flatlistRef = useRef<FlatList>(null);
+  const { displayLabel } = route?.params;
 
   const packageId = route.params?.packageId;
   const closedItems = useSelector(getClosedItem);
@@ -150,6 +151,7 @@ const OngoingItems: React.FC<
   return (
     <View style={style.container}>
       <ProductListing
+        displayLabel={displayLabel}
         ref={flatlistRef}
         productData={dealsData}
         onPress={(itemId, item) => onPressProductItem(itemId, item)}
