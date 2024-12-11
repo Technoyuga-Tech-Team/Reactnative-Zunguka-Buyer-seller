@@ -109,7 +109,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   };
 
   const check24hourPassedOrNot = useMemo(() => {
-    return check24HoursPassedOrNot(rateSellerPopup?.delivered_at);
+    return check24HoursPassedOrNot(item?.delivered_at);
   }, [item]);
 
   return (
@@ -257,35 +257,60 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </>
         )}
 
-        {((!check24hourPassedOrNot &&
-          !!item.is_delivered &&
-          (!!item?.is_buyer || !!item?.rated_by_buyer)) ||
-          (check24hourPassedOrNot && !!item?.rated_by_buyer)) && (
+        {!!item.is_delivered &&
+          !!item?.is_buyer &&
+          !check24hourPassedOrNot &&
+          !item?.rated_by_buyer && (
+            <View style={{ marginTop: 10 }}>
+              <CustomButton
+                icon={
+                  !!item?.rated_by_buyer &&
+                  (!!item?.rated_approved_by_seller ? (
+                    <VerifiedIcon color={theme?.colors?.success} />
+                  ) : (
+                    <UnVerifiedIcon color={theme?.colors?.error} />
+                  ))
+                }
+                onPress={() => {
+                  setRateSellerPopup(item);
+                }}
+                title={"Rate now"}
+                buttonWidth="full"
+                variant="primary"
+                type="solid"
+              />
+            </View>
+          )}
+
+        {!!item.is_delivered && !!item?.rated_by_buyer && (
           <View style={{ marginTop: 10 }}>
             <CustomButton
-              icon={
-                !!item?.rated_by_buyer &&
-                (!!item?.rated_approved_by_seller ? (
-                  <VerifiedIcon color={theme?.colors?.success} />
-                ) : (
-                  <UnVerifiedIcon color={theme?.colors?.error} />
-                ))
-              }
               onPress={() => {
                 setRateSellerPopup(item);
               }}
               title={
-                check24hourPassedOrNot
-                  ? "View Rating"
-                  : !!item?.rated_by_buyer
-                  ? "View Rating"
-                  : !!item?.is_buyer
-                  ? "Rate now"
-                  : null
+                item?.is_buyer
+                  ? item?.rated_approved_by_seller == null
+                    ? "Verification Pending"
+                    : item?.rated_approved_by_seller == true
+                    ? `Verified(${item?.rated_by_buyer})`
+                    : `Rejected(${item?.rated_by_buyer})`
+                  : item?.rated_approved_by_seller == null
+                  ? "Verify Rating"
+                  : item?.rated_approved_by_seller == true
+                  ? `Verified(${item?.rated_by_buyer})`
+                  : `Rejected(${item?.rated_by_buyer})`
               }
               buttonWidth="full"
               variant="primary"
               type="solid"
+              backgroundColor={
+                item?.rated_approved_by_seller == true
+                  ? theme.colors?.success
+                  : item?.rated_approved_by_seller == false
+                  ? theme.colors?.error
+                  : theme.colors?.primary
+              }
             />
           </View>
         )}

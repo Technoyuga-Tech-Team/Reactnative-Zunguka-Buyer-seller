@@ -110,15 +110,22 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
                   !visiblePopup?.rated_by_buyer
                     ? "Send review"
                     : visiblePopup?.rated_approved_by_seller == true
-                    ? "Approved by seller"
+                    ? "Verified"
                     : visiblePopup?.rated_approved_by_seller == false
-                    ? "Rejected by seller"
-                    : "Verification pending by seller"
+                    ? "Rejected"
+                    : "Verification pending"
                 }
                 buttonWidth="full"
                 variant="primary"
                 type="solid"
                 disabled={comment == "" || currentRating <= 0 || isLoading}
+                backgroundColor={
+                  visiblePopup?.rated_approved_by_seller == true
+                    ? theme.colors?.success
+                    : visiblePopup?.rated_approved_by_seller == false
+                    ? theme.colors?.error
+                    : theme.colors?.primary
+                }
                 loading={isLoading}
               />
             </View>
@@ -132,7 +139,7 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
                 <CustomButton
                   title={
                     visiblePopup?.rated_approved_by_seller == 1
-                      ? "Approved"
+                      ? "Verified"
                       : "Rejected"
                   }
                   buttonWidth="full"

@@ -223,8 +223,10 @@ const hasAddress = (text: string) => {
 };
 
 const check24HoursPassedOrNot = (date) => {
+  const getAnotherDate = moment(date);
   const currentDate = moment();
-  const diffInHours = currentDate.diff(date, "hours");
+  const diffInHours = currentDate.diff(getAnotherDate, "hours");
+
   if (diffInHours >= 24) {
     return true;
   } else {
