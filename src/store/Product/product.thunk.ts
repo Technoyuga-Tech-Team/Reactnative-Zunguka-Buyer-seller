@@ -239,3 +239,69 @@ export const sendRequestToNearbyMovers = createAsyncThunk<
     return data;
   }
 );
+
+export const addRatingForItem = createAsyncThunk<
+  any,
+  {
+    item_id: string;
+    rate: number;
+    rate_message: string;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/add-buyer-rating",
+  async ({ item_id, rate, rate_message }, { dispatch, rejectWithValue }) => {
+    console.log("item_id, rate, rate_message", item_id, rate, rate_message);
+
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.RATE_ITEM_BY_BUYER,
+          method: "POST",
+          data: {
+            item_id,
+            rate: Number(rate),
+            rate_message,
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+    return data;
+  }
+);
+
+export const updateBuyerRatingStatus = createAsyncThunk<
+  any,
+  {
+    item_id: string;
+    status: boolean;
+  },
+  { state: RootReduxState; rejectValue: FetchResponseError }
+>(
+  "product/update-rating-status",
+  async ({ item_id, status }, { dispatch, rejectWithValue }) => {
+    const { errors, data } = await dispatch(
+      fetchAction<TokenPayload1>(
+        {
+          url: API.UPDATE_BUYER_RATING_STATUS,
+          method: "POST",
+          data: {
+            item_id,
+            status,
+          },
+        },
+        true
+      )
+    );
+
+    if (errors) {
+      return rejectWithValue(errors);
+    }
+    return data;
+  }
+);

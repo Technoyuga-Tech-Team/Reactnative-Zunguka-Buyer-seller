@@ -14,6 +14,7 @@ const RatingBox = ({
   rating,
   onRatingChange,
   onlyStar,
+  disabled,
 }: {
   rating: number;
   onRatingChange?: (rate: number) => void;
@@ -60,8 +61,9 @@ const RatingBox = ({
       ) : (
         <View style={style.ratingCont}>
           <Stars
+            disabled={disabled}
             half={true}
-            default={1}
+            default={rating || 1}
             update={handlePress}
             spacing={4}
             starSize={26}

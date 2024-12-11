@@ -1,6 +1,7 @@
 import { Share } from "react-native";
 import { Images } from "../assets/images";
 import * as Yup from "yup";
+import moment from "moment";
 
 const getUrlExtension = (url: string) => {
   return url?.split(/[#?]/)[0]?.split(".")?.pop()?.trim();
@@ -221,6 +222,16 @@ const hasAddress = (text: string) => {
   return false;
 };
 
+const check24HoursPassedOrNot = (date) => {
+  const currentDate = moment();
+  const diffInHours = currentDate.diff(date, "hours");
+  if (diffInHours >= 24) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -236,4 +247,5 @@ export {
   hasEmail,
   hasPhone,
   hasAddress,
+  check24HoursPassedOrNot,
 };

@@ -43,6 +43,7 @@ export const ProductListing = React.forwardRef<FlatList, ProductProps>(
       onPressHireMover,
       packageIndex,
       displayLabel,
+      updateArrayAfterRatingReview,
     },
     ref
   ) => {
@@ -58,6 +59,7 @@ export const ProductListing = React.forwardRef<FlatList, ProductProps>(
     }) => {
       return (
         <ProductItem
+          updateArrayAfterRatingReview={updateArrayAfterRatingReview}
           item={item}
           displayLabel={displayLabel}
           showBorder={index == packageIndex}

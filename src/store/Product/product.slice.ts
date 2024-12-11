@@ -3,10 +3,12 @@ import { LoadingState } from "../../types/global.types";
 import {
   addProductForSell,
   addProductSearchFilter,
+  addRatingForItem,
   editProductForSell,
   publishUnpublishProduct,
   sendRequestToNearbyMovers,
   sendTheMessage,
+  updateBuyerRatingStatus,
 } from "./product.thunk";
 import { ProductState } from "../../types/product.types";
 
@@ -27,7 +29,9 @@ const product = createSlice({
           sendTheMessage.pending,
           publishUnpublishProduct.pending,
           sendRequestToNearbyMovers.pending,
-          editProductForSell.pending
+          editProductForSell.pending,
+          updateBuyerRatingStatus.pending,
+          addRatingForItem.pending
         ),
         (state) => {
           state.loading = LoadingState.CREATE;

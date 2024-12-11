@@ -140,11 +140,17 @@ const ClosedItems: React.FC<
     getClosedData(10, 1, false);
   };
 
-  // console.log("dealsData", JSON.stringify(dealsData));
+  const updateArrayAfterRatingReview = (data) => {
+    const updatedArray = dealsData?.map((d) => {
+      return d?.id === data?.id ? { ...d, ...data } : d;
+    });
+    setDealsData(updatedArray);
+  };
 
   return (
     <View style={style.container}>
       <ProductListing
+        updateArrayAfterRatingReview={updateArrayAfterRatingReview}
         displayLabel={displayLabel}
         ref={flatlistRef}
         productData={dealsData}

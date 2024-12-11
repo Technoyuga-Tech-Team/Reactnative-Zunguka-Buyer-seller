@@ -92,4 +92,7 @@ export const API = {
   // Payment
   PAY_DEPOSIT_SELLER: "/pay-deposit-seller",
   PAY_DEPOSIT_MOVER: "/pay_deposit_to_mover",
+  //rating item by buyer
+  RATE_ITEM_BY_BUYER: "/add-buyer-rating",
+  UPDATE_BUYER_RATING_STATUS: "/update-rating-status",
 };

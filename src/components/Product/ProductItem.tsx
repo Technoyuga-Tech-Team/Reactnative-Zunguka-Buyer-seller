@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { DUMMY_PLACEHOLDER, RWF } from "../../constant";
+import { DUMMY_PLACEHOLDER, RWF, SCREEN_WIDTH } from "../../constant";
 import { selectUserData } from "../../store/settings/settings.selectors";
 import { ThemeProps } from "../../types/global.types";
 import { ProductDataProps } from "../../types/product.types";
-import { getConditionItemValue } from "../../utils";
+import { check24HoursPassedOrNot, getConditionItemValue } from "../../utils";
 import Scale from "../../utils/Scale";
 import { AppImage } from "../AppImage/AppImage";
 import CustomButton from "../ui/CustomButton";
@@ -15,6 +15,15 @@ import InputFieldInfo from "../ui/InputFieldInfo";
 import { useNavigation } from "@react-navigation/native";
 import { Route } from "../../constant/navigationConstants";
 import RightIcon from "../ui/svg/RightIcon";
+import RatingPopup from "../ui/popups/RatingPopup";
+import RatingItemPopup from "../ui/popups/RateItemsPopup";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import {
+  addRatingForItem,
+  updateBuyerRatingStatus,
+} from "../../store/Product/product.thunk";
+import VerifiedIcon from "../ui/svg/VerifiedIcon";
+import UnVerifiedIcon from "../ui/svg/UnVerifiedIcon";
 
 interface ProductItemProps {
   item: ProductDataProps;
@@ -23,6 +32,7 @@ interface ProductItemProps {
   fromPurchase: boolean;
   onPressHireMover: () => void;
   showBorder?: boolean;
+  displayLabel?: string;
 }
 const ProductItem: React.FC<ProductItemProps> = ({
   item,
@@ -32,6 +42,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
   onPressHireMover,
   showBorder,
   displayLabel,
+  updateArrayAfterRatingReview,
 }) => {
   const { theme } = useTheme();
 
@@ -39,6 +50,11 @@ const ProductItem: React.FC<ProductItemProps> = ({
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
   const userData = useSelector(selectUserData);
+  const dispatch = useAppDispatch();
+
+  const [rateSellerPopup, setRateSellerPopup] = useState(null);
+  const [rateSellerPopupLoader, setRateSellerPopupLoader] = useState(false);
+
   const product_image =
     item?.images?.length > 0 ? item?.images[0]?.uri : DUMMY_PLACEHOLDER;
   const showRequestBtn = item?.is_delivery_button;
@@ -49,140 +65,232 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
   const showBtn = fromPurchase || fromClosedItem;
 
-  return (
-    <View
-      style={[
-        style.container,
-        fromClosedItem && showBorder && style.bordercont,
-      ]}
-    >
-      <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.8}
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          flex: 1,
-        }}
-      >
-        <AppImage
-          source={product_image}
-          style={style.product}
-          resizeMode="cover"
-        />
-        <View style={style.itemAndDealsWrapper}>
-          <View style={style.secondCont}>
-            <View
-              style={{
-                flexDirection: "row",
-                // alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ width: "50%" }}>
-                <Text numberOfLines={2} style={style.txtTitle}>
-                  {item?.title}
-                </Text>
-              </View>
-              <View style={{ width: "50%", alignItems: "flex-end" }}>
-                {item.status == "Saved_as_Draft" &&
-                  currentUsersProduct &&
-                  !fromClosedItem && <Text style={style.txtSold}>Draft</Text>}
-                {item.status == "Draft" &&
-                  currentUsersProduct &&
-                  !fromClosedItem && (
-                    <Text style={style.txtSold}>Stop Publishing</Text>
-                  )}
-                {item.status == "Archived" &&
-                  currentUsersProduct &&
-                  !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
-                {item.status == "Archived" &&
-                  currentUsersProduct &&
-                  fromClosedItem &&
-                  item.is_delivered == 1 && (
-                    <Text style={style.txtSold}>Delivered</Text>
-                  )}
-              </View>
-            </View>
+  const togglePopup = () => {
+    setRateSellerPopup(null);
+  };
 
-            <Text numberOfLines={1} style={style.txtTypeAndCategories}>
-              {getConditionItemValue(item?.condition_of_item)}
-            </Text>
-            <Text
-              style={[
-                style.txtTypeAndCategories,
-                { textDecorationLine: "underline", flexWrap: "wrap" },
-              ]}
-            >
-              {item?.category?.map((ele) => ele.name).join(", ")}
-            </Text>
-            <Text style={style.txtPrice}>
-              {RWF} {item.sale_price}
-            </Text>
-          </View>
-          {displayLabel && (
-            <View
-              style={[
-                style.sellerWrapperContainer,
-                {
-                  backgroundColor: item?.is_buyer
-                    ? theme.colors?.lightGreen
-                    : theme.colors?.primaryLightest,
-                  borderColor: item?.is_buyer
-                    ? theme.colors?.green
-                    : theme.colors?.primary,
-                },
-              ]}
-            >
-              <Text style={{ fontSize: 12 }}>
-                {item?.is_buyer ? "Buyer" : "Seller"}
+  const onPressConfirmSendReview = async (rate: number, comment: string) => {
+    setRateSellerPopupLoader(true);
+    const result = await dispatch(
+      addRatingForItem({
+        item_id: rateSellerPopup?.id,
+        rate: rate,
+        rate_message: comment,
+      })
+    );
+    if (result?.payload?.data) {
+      updateArrayAfterRatingReview(result?.payload?.data);
+    }
+    setRateSellerPopup(null);
+    setRateSellerPopupLoader(false);
+  };
+
+  const onPressUpdateReviewStatus = async (status) => {
+    setRateSellerPopupLoader(true);
+    const result = await dispatch(
+      updateBuyerRatingStatus({
+        item_id: rateSellerPopup?.id,
+        status,
+      })
+    );
+    if (result?.payload?.data) {
+      updateArrayAfterRatingReview(result?.payload?.data);
+    }
+    setRateSellerPopup(null);
+    setRateSellerPopupLoader(false);
+  };
+
+  const onPressMessage = () => {
+    setRateSellerPopup(null);
+    navigation.navigate(Route.navChatroom, {
+      receiver_id: `${rateSellerPopup?.user_id}`,
+      product_id: `${rateSellerPopup?.id}`,
+    });
+  };
+
+  const check24hourPassedOrNot = useMemo(() => {
+    return check24HoursPassedOrNot(rateSellerPopup?.delivered_at);
+  }, [item]);
+
+  return (
+    <>
+      {rateSellerPopup && (
+        <RatingItemPopup
+          visiblePopup={rateSellerPopup}
+          togglePopup={togglePopup}
+          isLoading={rateSellerPopupLoader}
+          popupLabel={"Rate the item"}
+          onPressMessage={onPressMessage}
+          onPressConfirmSendReview={onPressConfirmSendReview}
+          onPressUpdateReviewStatus={onPressUpdateReviewStatus}
+        />
+      )}
+
+      <View
+        style={[
+          style.container,
+          fromClosedItem && showBorder && style.bordercont,
+        ]}
+      >
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.8}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            flex: 1,
+          }}
+        >
+          <AppImage
+            source={product_image}
+            style={style.product}
+            resizeMode="cover"
+          />
+          <View style={style.itemAndDealsWrapper}>
+            <View style={style.secondCont}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  // alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ width: "50%" }}>
+                  <Text numberOfLines={2} style={style.txtTitle}>
+                    {item?.title}
+                  </Text>
+                </View>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  {item.status == "Saved_as_Draft" &&
+                    currentUsersProduct &&
+                    !fromClosedItem && <Text style={style.txtSold}>Draft</Text>}
+                  {item.status == "Draft" &&
+                    currentUsersProduct &&
+                    !fromClosedItem && (
+                      <Text style={style.txtSold}>Stop Publishing</Text>
+                    )}
+                  {item.status == "Archived" &&
+                    currentUsersProduct &&
+                    !fromClosedItem && <Text style={style.txtSold}>Sold</Text>}
+                  {item.status == "Archived" &&
+                    currentUsersProduct &&
+                    fromClosedItem &&
+                    item.is_delivered == 1 && (
+                      <Text style={style.txtSold}>Delivered</Text>
+                    )}
+                </View>
+              </View>
+
+              <Text numberOfLines={1} style={style.txtTypeAndCategories}>
+                {getConditionItemValue(item?.condition_of_item)}
+              </Text>
+              <Text
+                style={[
+                  style.txtTypeAndCategories,
+                  { textDecorationLine: "underline", flexWrap: "wrap" },
+                ]}
+              >
+                {item?.category?.map((ele) => ele.name).join(", ")}
+              </Text>
+              <Text style={style.txtPrice}>
+                {RWF} {item.sale_price}
               </Text>
             </View>
-          )}
-        </View>
-      </TouchableOpacity>
-      {showBtn && showRequestBtn && (
-        <>
+            {displayLabel && (
+              <View
+                style={[
+                  style.sellerWrapperContainer,
+                  {
+                    backgroundColor: item?.is_buyer
+                      ? theme.colors?.lightGreen
+                      : theme.colors?.primaryLightest,
+                    borderColor: item?.is_buyer
+                      ? theme.colors?.green
+                      : theme.colors?.primary,
+                  },
+                ]}
+              >
+                <Text style={{ fontSize: 12 }}>
+                  {item?.is_buyer ? "Buy" : "Sell"}
+                </Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+        {showBtn && showRequestBtn && (
+          <>
+            <View style={{ marginTop: 10 }}>
+              <CustomButton
+                onPress={() => {
+                  if (!(isSearch || is_otp)) {
+                    onPressHireMover();
+                  } else if (is_otp && !fromPurchase) {
+                    navigation.navigate(Route.navRequestToMover, {
+                      screen: Route.navOngoingMoverRequest,
+                    });
+                  }
+                }}
+                title={
+                  isSearch
+                    ? "Searching Mover..."
+                    : is_otp
+                    ? `OTP ${item?.pickup_otp}`
+                    : "Hire mover"
+                }
+                buttonWidth="full"
+                variant="primary"
+                type="solid"
+                iconPosition="right"
+                icon={is_otp ? <RightIcon color={"white"} /> : null}
+              />
+            </View>
+            {isSearch && (
+              <View style={{ marginTop: 5, paddingHorizontal: 20 }}>
+                <InputFieldInfo
+                  text={
+                    "We are searching mover for you, once we get will notified you."
+                  }
+                />
+              </View>
+            )}
+          </>
+        )}
+
+        {((!check24hourPassedOrNot &&
+          !!item.is_delivered &&
+          (!!item?.is_buyer || !!item?.rated_by_buyer)) ||
+          (check24hourPassedOrNot && !!item?.rated_by_buyer)) && (
           <View style={{ marginTop: 10 }}>
             <CustomButton
+              icon={
+                !!item?.rated_by_buyer &&
+                (!!item?.rated_approved_by_seller ? (
+                  <VerifiedIcon color={theme?.colors?.success} />
+                ) : (
+                  <UnVerifiedIcon color={theme?.colors?.error} />
+                ))
+              }
               onPress={() => {
-                console.log("isSearch", isSearch);
-                console.log("is_otp", is_otp);
-                if (!(isSearch || is_otp)) {
-                  onPressHireMover();
-                } else if (is_otp && !fromPurchase) {
-                  navigation.navigate(Route.navRequestToMover, {
-                    screen: Route.navOngoingMoverRequest,
-                  });
-                }
+                setRateSellerPopup(item);
               }}
               title={
-                isSearch
-                  ? "Searching Mover..."
-                  : is_otp
-                  ? `OTP ${item?.pickup_otp}`
-                  : "Hire mover"
+                check24hourPassedOrNot
+                  ? "View Rating"
+                  : !!item?.rated_by_buyer
+                  ? "View Rating"
+                  : !!item?.is_buyer
+                  ? "Rate now"
+                  : null
               }
               buttonWidth="full"
               variant="primary"
               type="solid"
-              iconPosition="right"
-              icon={is_otp ? <RightIcon color={"white"} /> : null}
             />
           </View>
-          {isSearch && (
-            <View style={{ marginTop: 5, paddingHorizontal: 20 }}>
-              <InputFieldInfo
-                text={
-                  "We are searching mover for you, once we get will notified you."
-                }
-              />
-            </View>
-          )}
-        </>
-      )}
-    </View>
+        )}
+      </View>
+    </>
   );
 };
 
