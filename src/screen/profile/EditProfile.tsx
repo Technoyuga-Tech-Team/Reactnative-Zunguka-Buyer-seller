@@ -57,6 +57,8 @@ import Scale from "../../utils/Scale";
 import LeftIcon from "../../components/ui/svg/LeftIcon";
 import LockIcon from "../../components/ui/svg/LockIcon";
 import LocationIcon from "../../components/ui/svg/LocationIcon";
+import VerifiedIcon from "../../components/ui/svg/VerifiedIcon";
+import UnVerifiedIcon from "../../components/ui/svg/UnVerifiedIcon";
 
 const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
   navigation,
@@ -373,6 +375,14 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
 
             <CustomTxtInput
               ref={emaiRef}
+              iconPosition={"right"}
+              icon={
+                userData?.email_verified_at ? (
+                  <VerifiedIcon color={theme?.colors?.success} />
+                ) : (
+                  <UnVerifiedIcon color={theme?.colors?.error} />
+                )
+              }
               placeholder="Enter email"
               returnKeyType="next"
               returnKeyLabel="next"
@@ -385,6 +395,16 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               touched={touched.email}
               onSubmitEditing={() => phoneRef.current?.focus()}
             />
+            {values.email !== userData.email ? (
+              <InputFieldInfo
+                text={
+                  "Email updates require verification. A link will be sent to your email"
+                }
+              />
+            ) : !userData?.email_verified_at ? (
+              <InputFieldInfo text={"Email verification is pending"} />
+            ) : null}
+
             {userData?.is_social !== 1 && (
               <TouchableOpacity
                 onPress={() => {
