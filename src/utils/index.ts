@@ -234,6 +234,17 @@ const check24HoursPassedOrNot = (date) => {
   }
 };
 
+const check14DaysPassedOrNot = (date) => {
+  const getAnotherDate = moment(date);
+  const currentDate = moment();
+  const diffInHours = currentDate.diff(getAnotherDate, "days");
+  if (diffInHours >= 14) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -250,4 +261,5 @@ export {
   hasPhone,
   hasAddress,
   check24HoursPassedOrNot,
+  check14DaysPassedOrNot,
 };

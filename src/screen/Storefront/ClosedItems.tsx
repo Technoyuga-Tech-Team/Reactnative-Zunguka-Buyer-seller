@@ -75,7 +75,7 @@ const ClosedItems: React.FC<
         setLoading(false);
         if (data && data?.data?.data.length > 0) {
           fromLoadMore
-            ? setDealsData([...dealsData, data?.data?.data])
+            ? setDealsData([...dealsData, ...data?.data?.data])
             : setDealsData(data?.data?.data);
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
