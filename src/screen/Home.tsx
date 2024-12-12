@@ -8,6 +8,7 @@ import {
   RefreshControl,
   StatusBar,
   View,
+  Text,
 } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -18,7 +19,7 @@ import HeaderHome from "../components/HeaderHome";
 import HomeBanner from "../components/HomeBanner";
 import HotBrandsListing from "../components/HotBrands/HotBrandsListing";
 import SeeAllItem from "../components/SeeAllItem";
-import { USER_DATA } from "../constant";
+import { USER_DATA, WINDOW_WIDTH } from "../constant";
 import { Route } from "../constant/navigationConstants";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useGetDashboard } from "../hooks/useDashboard";
@@ -43,6 +44,7 @@ import { ThemeProps } from "../types/global.types";
 import { HomeNavigationProps } from "../types/navigation";
 import { setData } from "../utils/asyncStorage";
 import { socket, socketEvent } from "../utils/socket";
+import HowItWorks from "./howItWorks";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -269,6 +271,14 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
           />
         }
       >
+        <View style={[style.innerCont, style.howItWorksWrapper]}>
+          <Text
+            style={{ fontWeight: 700 }}
+            onPress={() => navigation.navigate(Route.howItWorks)}
+          >
+            How It Works
+          </Text>
+        </View>
         {banner?.length > 0 && (
           <HomeBanner bannerData={banner} onPressBanner={onPressBanner} />
         )}
@@ -316,5 +326,14 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
   },
   innerCont: {
     paddingHorizontal: 20,
+  },
+  howItWorksWrapper: {
+    backgroundColor: theme.colors?.backgroundLight,
+    marginTop: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    width: WINDOW_WIDTH - 40,
+    alignSelf: "center",
+    alignItems: "center",
   },
 }));

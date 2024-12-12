@@ -98,4 +98,5 @@ export enum Route {
   navMySavedKeyword = "MySavedKeyword",
   navPayMover = "PayMover",
   navProfileSellingItem = "SellingItem",
+  howItWorks = "HowItWorks",
 }

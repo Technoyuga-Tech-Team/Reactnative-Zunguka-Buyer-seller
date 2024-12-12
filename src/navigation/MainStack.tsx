@@ -55,6 +55,7 @@ import Inbox from "../screen/Inbox/Inbox";
 import DraftProductList from "../screen/product/DraftProductList";
 import ContactUs from "../screen/ContactUs";
 import SellItemsFromProfile from "../screen/profile/SellingItem";
+import HowItWorks from "../screen/howItWorks";
 
 const Stack = createNativeStackNavigator<AppRoutes>();
 
@@ -209,6 +210,8 @@ const MainStack = () => {
             name={Route.navProfileSellingItem}
             component={SellItemsFromProfile}
           />
+          <Stack.Screen name={Route.howItWorks} component={HowItWorks} />
+
           <Stack.Screen name={Route.navContactUs} component={ContactUs} />
         </Stack.Navigator>
       </BottomSheetModalProvider>

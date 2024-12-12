@@ -40,4 +40,6 @@ export enum Images {
   DISCOVER = require("../images/discover_card.png"),
   VISA = require("../images/visa_card.png"),
   PAYMENT_SECURE = require("../images/paymentSecure.png"),
+  // how it works
+  HOW_IT_WORKS = require("../images/how_it_works.png"),
 }

@@ -108,6 +108,7 @@ export type AppRoutes = {
   AdminVerification: undefined;
   ContactUs: undefined;
   SellingItem: undefined;
+  HowItWorks: undefined;
 };
 
 export type AuthenticationRoutes = {
