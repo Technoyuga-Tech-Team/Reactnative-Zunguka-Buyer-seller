@@ -34,6 +34,7 @@ import {
   BASE_URL,
   COLORS,
   CONDITIONS,
+  DELIVERY_TIME_CONST,
   DISTRICT_AND_SECTORS,
   HIT_SLOP2,
   RWF,
@@ -91,6 +92,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const vehicleRef = React.useRef(null);
 
   const loading = useSelector(selectProductLoading);
+
+  const [deliveryTimeData, setDeliveryTimeData] = useState(DELIVERY_TIME_CONST);
+  const [deliveryTimeCondition, setDeliveryTimeCondition] = useState("");
+  const [deliveryTimeDataError, setDeliveryTimeDataError] = useState("");
 
   const [conditionData, setConditionData] = useState(CONDITIONS);
   const [selectedCondition, setSelectedCondition] = useState("");
@@ -220,6 +225,13 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         conditionData.map((item) => ({
           ...item,
           selected: item.value === productDetailsData?.data?.condition_of_item,
+        }))
+      );
+      setDeliveryTimeCondition(productDetailsData?.data?.delivery_time);
+      setDeliveryTimeData(
+        deliveryTimeData.map((item) => ({
+          ...item,
+          selected: item.value === productDetailsData?.data?.delivery_time,
         }))
       );
       // Brand of the Product
@@ -377,6 +389,17 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     );
   };
 
+  const onPressDeliveryTimeItem = (index: number) => {
+    setDeliveryTimeDataError("");
+    setDeliveryTimeCondition(deliveryTimeData[index].value);
+    setDeliveryTimeData(
+      deliveryTimeData.map((item, itemIndex) => ({
+        ...item,
+        selected: index === itemIndex,
+      }))
+    );
+  };
+
   const onChangeProductDescription = (val: string) => {
     setProductDescriptionError("");
     const cleanedText = val.replace(/\s+/g, " ");
@@ -452,6 +475,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     let isValidTitle = isRequiredFields(productTitle);
     let isValidProductCategory = isRequiredFields(subParantCat);
     let isValidConditionOfItems = isRequiredFields(selectedCondition);
+    let isValidConditionOfDeliveryItem = isRequiredFields(
+      deliveryTimeCondition
+    );
     // let isValidBrands = isRequiredFields(selectedBrand.name);
     // let isValidColors = isRequiredFields(selectedColors[0]);
     // let isValidSize = isRequiredFields(selectedSizeValue[0]);
@@ -474,6 +500,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       return false;
     } else if (!isValidConditionOfItems) {
       setSelectedConditionError("Condition Of Items is required");
+      scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
+      return false;
+    } else if (!isValidConditionOfDeliveryItem) {
+      setDeliveryTimeDataError("Delivery time is required");
       scrollRef?.current?.scrollToPosition(0, SCREEN_HEIGHT / 2, true);
       return false;
     }
@@ -528,6 +558,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       !productTitle &&
       !subParantCat &&
       !selectedCondition &&
+      !deliveryTimeCondition &&
       !district &&
       !productDescription &&
       !vehicle &&
@@ -547,6 +578,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       setProductTitleError("");
       setProductCategoryError("");
       setSelectedConditionError("");
+      setDeliveryTimeDataError("");
       setDistrictError("");
       setProductDescriptionError("");
       setVehicleError("");
@@ -593,6 +625,8 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
       selectedCondition &&
         formData.append("condition_of_item", selectedCondition);
+      deliveryTimeCondition &&
+        formData.append("delivery_time", deliveryTimeCondition);
       selectedBrand.id && formData.append("brand_id", selectedBrand.id);
       selectedColors && formData.append("color", selectedColors.join(", "));
       formData.append("size", selectedSizeValue.join(", "));
@@ -653,6 +687,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
       formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
       formData.append("condition_of_item", selectedCondition);
+      formData.append("delivery_time", deliveryTimeCondition);
       formData.append("brand_id", selectedBrand.id);
       formData.append("color", selectedColors.join(", "));
       formData.append("size", selectedSizeValue.join(", "));
@@ -872,6 +907,14 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
         />
         {(selectedConditionError || selectedConditionError?.length <= 0) && (
           <Text style={style.error}>{selectedConditionError}</Text>
+        )}
+        <TitleWithInfoIcon title="Delivery time" />
+        <RenderSortItemsList
+          sortData={deliveryTimeData}
+          onPressItem={onPressDeliveryTimeItem}
+        />
+        {(deliveryTimeDataError || deliveryTimeDataError?.length <= 0) && (
+          <Text style={style.error}>{deliveryTimeDataError}</Text>
         )}
         <TitleWithInfoIcon title="Item specifics" showIcon={true} />
         <View style={style.paddingHorizontal}>

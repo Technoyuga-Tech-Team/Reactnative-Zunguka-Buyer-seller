@@ -1977,6 +1977,29 @@ export const CONDITIONS = [
 ];
 // new_unused,near_unused,no_noticable_scratched_stains,slightly_scratched,scratched_soiled
 
+export const DELIVERY_TIME_CONST = [
+  {
+    title: "Within 1 day",
+    value: "1",
+    selected: false,
+  },
+  {
+    title: "Within 2-3 days",
+    value: "2",
+    selected: false,
+  },
+  {
+    title: "Within 4-5 days",
+    value: "3",
+    selected: false,
+  },
+  {
+    title: "Within 1 week",
+    value: "4",
+    selected: false,
+  },
+];
+
 export const CITIES = [
   { title: "Kigali", key: "Kigali" },
   { title: "Kibeho", key: "Kibeho" },
