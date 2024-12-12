@@ -80,9 +80,12 @@ const OngoingItems: React.FC<
           const filteredData = mydata.filter((item) => {
             return item.is_delivered !== 1;
           });
-          fromLoadMore
-            ? setDealsData([...dealsData, filteredData])
-            : setDealsData(filteredData);
+
+          if (filteredData?.length) {
+            fromLoadMore
+              ? setDealsData([...dealsData, ...filteredData])
+              : setDealsData(filteredData);
+          }
           setTotalPage(data?.data?.totalPages);
           setPage(page + 1);
         }
