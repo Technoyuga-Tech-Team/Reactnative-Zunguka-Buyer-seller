@@ -49,6 +49,7 @@ import NoDataFound from "../../components/ui/NoDataFound";
 import { notifyMessage } from "../../utils/notifyMessage";
 import { setSuccess } from "../../store/global/global.slice";
 import { Images } from "../../assets/images";
+import InputFieldInfo from "../../components/ui/InputFieldInfo";
 
 const ProductDetails: React.FC<
   HomeNavigationProps<Route.navProductDetails>
@@ -434,34 +435,45 @@ const ProductDetails: React.FC<
               </View>
             ))}
           {/* for temporary stop and start the publish this product */}
-          {is_CurrentUsers_product && (
-            <View style={style.button}>
-              <CustomButton
-                disabled={
-                  productStatus == "Archived" || publishUnPublishLoading
-                }
-                onPress={onPressStopPublish}
-                title={
-                  productStatus == "Archived"
-                    ? "Sold"
-                    : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
-                    ? "Stop Publish"
-                    : productStatus == PRODUCT_STATUS_DRAFT.SAVED_AS_DRAFT
-                    ? "Publish"
-                    : "Resume Publish"
-                }
-                buttonWidth="full"
-                width={SCREEN_WIDTH - 100}
-                variant="primary"
-                type="solid"
-                backgroundColor={
-                  productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
-                    ? theme?.colors?.pinkDark
-                    : theme?.colors?.primary
-                }
-                loading={publishUnPublishLoading}
-              />
-            </View>
+          {!!is_CurrentUsers_product && (
+            <>
+              {productStatus == PRODUCT_STATUS_DRAFT.ACTIVE && (
+                <View style={style.button}>
+                  <InputFieldInfo
+                    text={
+                      'If you wish to edit the item, please tap on "Stop Publish" and then proceed to edit your item.'
+                    }
+                  />
+                </View>
+              )}
+              <View style={style.button}>
+                <CustomButton
+                  disabled={
+                    productStatus == "Archived" || publishUnPublishLoading
+                  }
+                  onPress={onPressStopPublish}
+                  title={
+                    productStatus == "Archived"
+                      ? "Sold"
+                      : productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                      ? "Stop Publish"
+                      : productStatus == PRODUCT_STATUS_DRAFT.SAVED_AS_DRAFT
+                      ? "Publish"
+                      : "Resume Publish"
+                  }
+                  buttonWidth="full"
+                  width={SCREEN_WIDTH - 100}
+                  variant="primary"
+                  type="solid"
+                  backgroundColor={
+                    productStatus == PRODUCT_STATUS_DRAFT.ACTIVE
+                      ? theme?.colors?.pinkDark
+                      : theme?.colors?.primary
+                  }
+                  loading={publishUnPublishLoading}
+                />
+              </View>
+            </>
           )}
           {!is_CurrentUsers_product && (
             <View style={style.button}>
