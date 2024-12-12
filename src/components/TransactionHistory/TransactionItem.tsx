@@ -53,7 +53,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ item, onPress }) => {
           },
         ]}
       >
-        {RWF} {item.amount}
+        {isCredited ? "+" : "-"} {RWF} {item.amount}
       </Text>
     </TouchableOpacity>
   );

@@ -293,14 +293,14 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
           onPress={onPressCardDetails}
         /> */}
           <ProfileItem
-            name="My Earnings"
-            icon={<MoneybillsIcon color={theme.colors?.primary} />}
-            onPress={onPressMyEarnings}
-          />
-          <ProfileItem
             name="Mover Request page"
             icon={<AlertIcon color={theme.colors?.primary} />}
             onPress={onPressRequestPage}
+          />
+          <ProfileItem
+            name="My Earnings"
+            icon={<MoneybillsIcon color={theme.colors?.primary} />}
+            onPress={onPressMyEarnings}
           />
           <ProfileItem
             name="Transaction History"

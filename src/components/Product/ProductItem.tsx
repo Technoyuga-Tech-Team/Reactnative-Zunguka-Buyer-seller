@@ -217,8 +217,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
                       ? "Bought"
                       : "Sold"
                     : item?.is_buyer
-                    ? "Buy"
-                    : "Sell"}
+                    ? "Buyer"
+                    : "Seller"}
                 </Text>
               </View>
             )}
