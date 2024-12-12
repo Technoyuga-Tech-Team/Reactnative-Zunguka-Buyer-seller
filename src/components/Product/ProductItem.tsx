@@ -212,7 +212,13 @@ const ProductItem: React.FC<ProductItemProps> = ({
                 ]}
               >
                 <Text style={{ fontSize: 12 }}>
-                  {item?.is_buyer ? "Buy" : "Sell"}
+                  {item?.is_delivered
+                    ? item?.is_buyer
+                      ? "Bought"
+                      : "Sold"
+                    : item?.is_buyer
+                    ? "Buy"
+                    : "Sell"}
                 </Text>
               </View>
             )}
