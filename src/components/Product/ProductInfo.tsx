@@ -7,7 +7,7 @@ import OutlineHeartIcon from "../ui/svg/OutlineHeartIcon";
 import Scale from "../../utils/Scale";
 import SellerProfileWithStar from "../ui/SellerProfileWithStar";
 import SimilarProductListing from "../SimilarProduct/SimilarProductListing";
-import { HOT_BRANDS, RWF } from "../../constant";
+import { DELIVERY_TIME_CONST, HOT_BRANDS, RWF } from "../../constant";
 import { ProductDetailsDataProps } from "../../types/product.types";
 import moment from "moment";
 import { getConditionItemValue } from "../../utils";
@@ -144,6 +144,14 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             >
               {productDetails?.category?.map((ele) => ele.name).join(", ") ||
                 "-"}
+            </Text>
+          </View>
+          <View style={style.fdCont}>
+            <Text style={style.txtDetails1}>Delivery time</Text>
+            <Text style={style.txtDetails2}>
+              {DELIVERY_TIME_CONST?.find(
+                (val) => val?.value == productDetails?.delivery_time
+              )?.title || "-"}
             </Text>
           </View>
           <View style={style.fdCont}>
