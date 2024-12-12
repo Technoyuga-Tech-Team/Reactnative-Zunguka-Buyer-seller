@@ -282,11 +282,6 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             onPress={onPressDraftItems}
           />
 
-          <ProfileItem
-            name="Messeges"
-            icon={<ChatIcon color={theme.colors?.primary} />}
-            onPress={onPressMessages}
-          />
           {/* <ProfileItem
           name="Card Details"
           icon={<CreditcardIcon color={theme.colors?.primary} />}
@@ -296,6 +291,11 @@ const Profile: React.FC<HomeNavigationProps<Route.navProfile>> = ({
             name="Mover Request page"
             icon={<AlertIcon color={theme.colors?.primary} />}
             onPress={onPressRequestPage}
+          />
+          <ProfileItem
+            name="Messeges"
+            icon={<ChatIcon color={theme.colors?.primary} />}
+            onPress={onPressMessages}
           />
           <ProfileItem
             name="My Earnings"
