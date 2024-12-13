@@ -2319,3 +2319,41 @@ export const DISTRICT_AND_SECTORS = [
     sectors: [{ title: "Out of Kigali", key: "Out of Kigali" }],
   },
 ];
+
+export const HOW_IT_WORKS_ARRAY = [
+  {
+    id: 1,
+    value: "List item",
+    desc: "User A (seller) lists an item for sale on the Zunguka platform.",
+  },
+  {
+    id: 2,
+    value: "Purchase",
+    desc: "User B (buyer) selects and purchases the listed item through the app.",
+  },
+  {
+    id: 3,
+    value: "Notification",
+    desc: "Zunguka notifies User A of the sale.",
+  },
+  {
+    id: 4,
+    value: "Ship or Self-Pick-Up",
+    desc: "User A arranges for the item to be shipped (using a partner driver) or coordinates a self-pick-up with User B.",
+  },
+  {
+    id: 5,
+    value: "Receive",
+    desc: "User B receives the item from the partner driver or through the agreed method.",
+  },
+  {
+    id: 6,
+    value: "Confirm Item & Rate Seller",
+    desc: "User B confirms receiving the item and rates User A.",
+  },
+  {
+    id: 7,
+    value: "Rating & Sales Grant",
+    desc: "Based on the confirmation and rating, Zunguka completes the transaction process for User A.",
+  },
+];

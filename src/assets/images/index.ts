@@ -42,4 +42,5 @@ export enum Images {
   PAYMENT_SECURE = require("../images/paymentSecure.png"),
   // how it works
   HOW_IT_WORKS = require("../images/how_it_works.png"),
+  HOW_IT_WORKS_ICON = require("../images/howItWorksIcons.png"),
 }

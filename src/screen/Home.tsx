@@ -45,6 +45,8 @@ import { HomeNavigationProps } from "../types/navigation";
 import { setData } from "../utils/asyncStorage";
 import { socket, socketEvent } from "../utils/socket";
 import HowItWorks from "./howItWorks";
+import { AppImage } from "../components/AppImage/AppImage";
+import { Images } from "../assets/images";
 
 const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -257,6 +259,7 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
         onPressNotification={onPressAlert}
         onPressSearch={onPressSearch}
         notificationCount={unreadAlertCount}
+        onPressHowItWorkIcon={() => navigation.navigate(Route.howItWorks)}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={style.scrollCont}
@@ -271,14 +274,14 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
           />
         }
       >
-        <View style={[style.innerCont, style.howItWorksWrapper]}>
+        {/* <View style={[style.innerCont, style.howItWorksWrapper]}>
           <Text
             style={{ fontWeight: 700 }}
             onPress={() => navigation.navigate(Route.howItWorks)}
           >
             How It Works
           </Text>
-        </View>
+        </View> */}
         {banner?.length > 0 && (
           <HomeBanner bannerData={banner} onPressBanner={onPressBanner} />
         )}

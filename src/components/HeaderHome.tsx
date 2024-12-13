@@ -6,10 +6,10 @@ import { ThemeProps } from "../types/global.types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Scale from "../utils/Scale";
 import { HIT_SLOP2, SCREEN_WIDTH } from "../constant";
-import BellIcon from "./ui/svg/BellIcon";
 import SearchIcon from "./ui/svg/SearchIcon";
 import MarqueeText from "react-native-marquee";
 import RightRoundIcon from "./ui/svg/RightRoundIcon";
+import { AppImage } from "./AppImage/AppImage";
 
 interface HeaderHomeProps {
   name: string;
@@ -23,6 +23,7 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
   onPressNotification,
   onPressSearch,
   notificationCount,
+  onPressHowItWorkIcon,
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyles({ insets });
@@ -50,6 +51,19 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
               Explore the world of hidden gems!
             </Text>
           </View>
+          <TouchableOpacity
+            hitSlop={HIT_SLOP2}
+            activeOpacity={1}
+            style={style.HowItWorksCount}
+            onPress={onPressHowItWorkIcon}
+          >
+            <AppImage
+              style={{ height: 25, width: 25 }}
+              source={Images.HOW_IT_WORKS_ICON}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+
           <TouchableOpacity
             hitSlop={HIT_SLOP2}
             activeOpacity={1}
@@ -108,6 +122,15 @@ const useStyles = makeStyles((theme, props: ThemeProps) => ({
     width: Scale(40),
     borderRadius: Scale(40 / 2),
     backgroundColor: theme?.colors?.pinkDark,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  HowItWorksCount: {
+    height: Scale(50),
+    width: Scale(50),
+    borderRadius: Scale(50 / 2),
+    backgroundColor: theme?.colors?.white,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
