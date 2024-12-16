@@ -10,13 +10,14 @@ const buyerSellerArray = [
 function BuyerSellerTabView({
   setSelectedBuyerSellerTab,
   selectedBuyerSellerTab,
+  data,
 }) {
   const { theme } = useTheme();
 
   return (
     <>
       <View style={[styles.tabContainerWrapper]}>
-        {buyerSellerArray?.map((b, index) => {
+        {data?.map((b, index) => {
           return (
             <TouchableOpacity
               onPress={() => setSelectedBuyerSellerTab(b.id)}

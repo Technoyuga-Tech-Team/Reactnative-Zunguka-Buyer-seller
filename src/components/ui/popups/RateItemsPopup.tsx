@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "../../../constant";
 import InputFieldInfo from "../InputFieldInfo";
 import CommanTabBar from "../../../screen/profile/commanTabBar";
+import BuyerSellerTabView from "../../../screen/sell/buyerSellerTab";
 
 interface RatingItemPopupProps {
   visiblePopup: boolean;
@@ -25,15 +26,9 @@ interface RatingItemPopupProps {
   onPressUpdateReviewStatus?: () => void;
 }
 
-const labelDataArray = [
-  {
-    id: 1,
-    value: "Buyer",
-  },
-  {
-    id: 2,
-    value: "Seller",
-  },
+const buyerSellerArray = [
+  { id: 1, name: "Seller", isSelected: true },
+  { id: 2, name: "Buyer" },
 ];
 
 const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
@@ -101,6 +96,16 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
     }
   }, [visiblePopup]);
 
+  const finalObjectForLabel = buyerSellerArray?.map((b, index) => {
+    return visiblePopup?.is_buyer
+      ? index == 1
+        ? { ...b, name: `${b?.name} (You)` }
+        : b
+      : index == 0
+      ? { ...b, name: `${b?.name} (You)` }
+      : b;
+  });
+
   return (
     <Modal
       visible={isModalVisible}
@@ -120,6 +125,7 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
           <Text style={style.txtTitle}>{checkForPopupLabel}</Text>
           <RateItem item={visiblePopup} onPressMessage={onPressMessage} />
 
+          {/* <BuyerSellerTabView data={finalObjectForLabel} /> */}
           {/* <CommanTabBar data={labelDataArray} /> */}
           <RatingBox
             disabled={checkReviewRatingIsDisabled}
@@ -141,7 +147,7 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
               value={comment}
             />
           </View>
-          {visiblePopup?.is_buyer && (
+          {visiblePopup?.is_buyer && !visiblePopup?.seller_rating && (
             <InputFieldInfo
               text={`Feel free to put your honest review. The seller will not be able to view your review.\nSeller will get notified, you received the review for abc Item.\nJust a notification, not able to view the Review.`}
             />

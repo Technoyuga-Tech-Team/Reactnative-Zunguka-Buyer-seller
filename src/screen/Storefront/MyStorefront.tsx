@@ -39,13 +39,8 @@ const MyStorefront = () => {
     );
 
     const data = await response.json();
-    let mydata = data?.data?.data;
 
-    const filteredData = mydata?.filter((item) => {
-      return item.is_delivered !== 1;
-    });
-
-    setOngoingCount(filteredData?.length || 0);
+    setOngoingCount(data?.data?.totalRecords || 0);
   };
 
   useEffect(() => {

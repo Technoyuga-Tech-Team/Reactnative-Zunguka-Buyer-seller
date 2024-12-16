@@ -35,6 +35,7 @@ export const GOOGLE_WEB_CLIENT_ID =
 
 // BASE_URL // http://3.70.108.140/api/
 export const BASE_PORT = "3.70.108.140";
+// export const BASE_PORT = "192.168.29.237:8000";
 export const SOCKET_PORT = `${BASE_PORT}:4000`;
 export const BASE_URL = `http://${BASE_PORT}/api`;
 export const SOCKET_URL = `http://${SOCKET_PORT}`;
@@ -1980,22 +1981,22 @@ export const CONDITIONS = [
 export const DELIVERY_TIME_CONST = [
   {
     title: "Within 1 day",
-    value: "1",
+    value: 1,
     selected: false,
   },
   {
     title: "Within 2-3 days",
-    value: "2",
+    value: 2,
     selected: false,
   },
   {
     title: "Within 4-5 days",
-    value: "3",
+    value: 3,
     selected: false,
   },
   {
     title: "Within 1 week",
-    value: "4",
+    value: 4,
     selected: false,
   },
 ];
