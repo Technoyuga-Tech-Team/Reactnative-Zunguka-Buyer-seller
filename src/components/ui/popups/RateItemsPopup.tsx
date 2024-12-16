@@ -13,6 +13,7 @@ import { Route } from "../../../constant/navigationConstants";
 import { useNavigation } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "../../../constant";
 import InputFieldInfo from "../InputFieldInfo";
+import CommanTabBar from "../../../screen/profile/commanTabBar";
 
 interface RatingItemPopupProps {
   visiblePopup: boolean;
@@ -23,6 +24,17 @@ interface RatingItemPopupProps {
   onPressMessage?: () => void;
   onPressUpdateReviewStatus?: () => void;
 }
+
+const labelDataArray = [
+  {
+    id: 1,
+    value: "Buyer",
+  },
+  {
+    id: 2,
+    value: "Seller",
+  },
+];
 
 const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
   visiblePopup,
@@ -35,8 +47,6 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const style = useStyle({ insets });
-  const navigation = useNavigation();
-  const { theme } = useTheme();
 
   const [currentRating, setCurrentRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
@@ -71,24 +81,23 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
     ? true
     : false;
 
-  console.log(
-    "checkReviewRatingIsDisabled =======",
-    checkReviewRatingIsDisabled
-  );
-
   const checkForPopupLabel = useMemo(() => {
     let popupMainLabel;
 
-    if (visiblePopup?.buyer_rating || visiblePopup?.seller_rating) {
+    if (visiblePopup?.buyer_rating && visiblePopup?.seller_rating) {
       return (popupMainLabel = "View Rating");
     }
 
-    if (!visiblePopup?.buyer_rating && !visiblePopup?.seller_rating) {
-      if (visiblePopup?.is_buyer) {
-        return (popupMainLabel = "Rate seller item");
-      } else {
-        return (popupMainLabel = "Rate buyer item");
-      }
+    if (visiblePopup?.is_buyer && visiblePopup?.buyer_rating) {
+      return (popupMainLabel = "View Rating");
+    }
+
+    if (!visiblePopup?.is_buyer && visiblePopup?.buyer_rating) {
+      return (popupMainLabel = "Rate Buyer");
+    }
+
+    if (visiblePopup?.is_buyer && !visiblePopup?.buyer_rating) {
+      return (popupMainLabel = "Rate seller item");
     }
   }, [visiblePopup]);
 
@@ -110,6 +119,8 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
         <KeyboardAwareScrollView contentContainerStyle={style.innerCont}>
           <Text style={style.txtTitle}>{checkForPopupLabel}</Text>
           <RateItem item={visiblePopup} onPressMessage={onPressMessage} />
+
+          {/* <CommanTabBar data={labelDataArray} /> */}
           <RatingBox
             disabled={checkReviewRatingIsDisabled}
             rating={currentRating}
