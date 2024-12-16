@@ -224,7 +224,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             )}
           </View>
         </TouchableOpacity>
-        {showBtn && showRequestBtn && (
+        {showBtn && showRequestBtn && isSearch && is_otp && (
           <>
             <View style={{ marginTop: 10 }}>
               <CustomButton
@@ -262,6 +262,27 @@ const ProductItem: React.FC<ProductItemProps> = ({
             )}
           </>
         )}
+
+        {showBtn &&
+          showRequestBtn &&
+          !isSearch &&
+          !is_otp &&
+          !item?.is_buyer && (
+            <>
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    onPressHireMover();
+                  }}
+                  title={"Hire mover"}
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                  iconPosition="right"
+                />
+              </View>
+            </>
+          )}
 
         {!!item.is_delivered &&
           !!item?.is_buyer &&
