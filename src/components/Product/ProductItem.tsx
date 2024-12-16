@@ -284,7 +284,51 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </>
           )}
 
-        {!!item.is_delivered &&
+        {!!item.is_delivered && !check24hourPassedOrNot && (
+          <View>
+            {!!item?.is_buyer ? (
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    setRateSellerPopup(item);
+                  }}
+                  title={
+                    !item?.buyer_rating
+                      ? "Rate Seller Now"
+                      : !item?.seller_rating
+                      ? "Seller not rate yet"
+                      : "View Rate"
+                  }
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
+              </View>
+            ) : (
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    !item?.is_buyer && !item?.buyer_rating
+                      ? null
+                      : setRateSellerPopup(item);
+                  }}
+                  title={
+                    !item?.buyer_rating
+                      ? "Buyer not ret yet"
+                      : item?.seller_rating
+                      ? "View Rating"
+                      : "Rate Buyer Now"
+                  }
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* {!!item.is_delivered &&
           !!item?.is_buyer &&
           !check24hourPassedOrNot &&
           !item?.rated_by_buyer && (
@@ -340,7 +384,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               }
             />
           </View>
-        )}
+        )} */}
       </View>
     </>
   );

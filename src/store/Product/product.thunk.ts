@@ -283,7 +283,7 @@ export const updateBuyerRatingStatus = createAsyncThunk<
   },
   { state: RootReduxState; rejectValue: FetchResponseError }
 >(
-  "product/update-rating-status",
+  "product/update-buyer-seller-rating-status",
   async ({ item_id, status }, { dispatch, rejectWithValue }) => {
     const { errors, data } = await dispatch(
       fetchAction<TokenPayload1>(
@@ -298,7 +298,6 @@ export const updateBuyerRatingStatus = createAsyncThunk<
         true
       )
     );
-
     if (errors) {
       return rejectWithValue(errors);
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -12,6 +12,7 @@ import RateItem from "../Items/RateItems";
 import { Route } from "../../../constant/navigationConstants";
 import { useNavigation } from "@react-navigation/native";
 import { SCREEN_WIDTH } from "../../../constant";
+import InputFieldInfo from "../InputFieldInfo";
 
 interface RatingItemPopupProps {
   visiblePopup: boolean;
@@ -39,15 +40,17 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
 
   const [currentRating, setCurrentRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
+  const [checkRatingForBuyerReview, setCheckRatingForBuyerReview] = useState(
+    visiblePopup?.is_buyer
+  );
 
   useEffect(() => {
-    setCurrentRating(0);
-    setComment("");
-    if (visiblePopup?.rated_by_buyer) {
-      setCurrentRating(parseFloat(visiblePopup?.rated_by_buyer));
-    }
-    if (visiblePopup?.rated_message) {
-      setComment(visiblePopup?.rated_message);
+    if (checkRatingForBuyerReview) {
+      setCurrentRating(parseFloat(visiblePopup?.buyer_rating?.rate) || 0);
+      setComment(visiblePopup?.buyer_rating?.rated_message || "");
+    } else {
+      setCurrentRating(parseFloat(visiblePopup?.seller_rating?.rate) || 0);
+      setComment(visiblePopup?.seller_rating?.rated_message || "");
     }
   }, []);
 
@@ -60,6 +63,34 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
   };
 
   const isModalVisible = visiblePopup ? true : false;
+  const checkReviewRatingIsDisabled = visiblePopup?.is_buyer
+    ? visiblePopup?.buyer_rating
+      ? true
+      : false
+    : visiblePopup?.seller_rating
+    ? true
+    : false;
+
+  console.log(
+    "checkReviewRatingIsDisabled =======",
+    checkReviewRatingIsDisabled
+  );
+
+  const checkForPopupLabel = useMemo(() => {
+    let popupMainLabel;
+
+    if (visiblePopup?.buyer_rating || visiblePopup?.seller_rating) {
+      return (popupMainLabel = "View Rating");
+    }
+
+    if (!visiblePopup?.buyer_rating && !visiblePopup?.seller_rating) {
+      if (visiblePopup?.is_buyer) {
+        return (popupMainLabel = "Rate seller item");
+      } else {
+        return (popupMainLabel = "Rate buyer item");
+      }
+    }
+  }, [visiblePopup]);
 
   return (
     <Modal
@@ -77,10 +108,10 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
       <View style={style.container1}>
         <TouchableOpacity onPress={togglePopup} activeOpacity={1} />
         <KeyboardAwareScrollView contentContainerStyle={style.innerCont}>
-          <Text style={style.txtTitle}>{popupLabel}</Text>
+          <Text style={style.txtTitle}>{checkForPopupLabel}</Text>
           <RateItem item={visiblePopup} onPressMessage={onPressMessage} />
           <RatingBox
-            disabled={visiblePopup?.rated_by_buyer ? true : false}
+            disabled={checkReviewRatingIsDisabled}
             rating={currentRating}
             onRatingChange={handleRatingChange}
           />
@@ -95,43 +126,100 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
               multiline={true}
               textAlignVertical="top"
               onChangeText={onChangeComment}
-              editable={visiblePopup?.rated_by_buyer ? false : true}
+              editable={!checkReviewRatingIsDisabled}
               value={comment}
             />
           </View>
           {visiblePopup?.is_buyer && (
-            <View style={{ marginVertical: 10, paddingBottom: insets.bottom }}>
+            <InputFieldInfo
+              text={`Feel free to put your honest review. The seller will not be able to view your review.\nSeller will get notified, you received the review for abc Item.\nJust a notification, not able to view the Review.`}
+            />
+          )}
+
+          <View style={{ marginVertical: 10, paddingBottom: insets.bottom }}>
+            {visiblePopup?.buyer_rating &&
+            visiblePopup?.seller_rating ? null : !!visiblePopup?.is_buyer ? (
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    !visiblePopup?.buyer_rating &&
+                      onPressConfirmSendReview(currentRating, comment);
+                  }}
+                  title={
+                    !visiblePopup?.buyer_rating
+                      ? "Rate Seller Now"
+                      : !visiblePopup?.seller_rating
+                      ? "Seller not rate yet"
+                      : "View Rate"
+                  }
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
+              </View>
+            ) : (
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    visiblePopup?.buyer_rating &&
+                      !visiblePopup?.seller_rating &&
+                      onPressConfirmSendReview(currentRating, comment);
+                  }}
+                  title={
+                    !visiblePopup?.buyer_rating
+                      ? "Buyer not ret yet"
+                      : visiblePopup?.seller_rating
+                      ? "View Rating"
+                      : "Rate Buyer Now"
+                  }
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
+              </View>
+            )}
+            {/* {!!item?.is_buyer ? (
+              <CustomButton
+                onPress={() =>
+                  !visiblePopup?.buyer_rating &&
+                  onPressConfirmSendReview(currentRating, comment)
+                }
+                title={
+                  !visiblePopup?.buyer_rating
+                    ? "Rate Seller Now"
+                    : !visiblePopup?.seller_rating
+                    ? "Seller not rate yet"
+                    : "View Rate"
+                }
+                buttonWidth="full"
+                variant="primary"
+                type="solid"
+                disabled={comment == "" || currentRating <= 0 || isLoading}
+                loading={isLoading}
+              />
+            ) : (
               <CustomButton
                 onPress={() =>
                   !visiblePopup?.rated_by_buyer &&
                   onPressConfirmSendReview(currentRating, comment)
                 }
                 title={
-                  !visiblePopup?.rated_by_buyer
-                    ? "Send review"
-                    : visiblePopup?.rated_approved_by_seller == true
-                    ? "Verified"
-                    : visiblePopup?.rated_approved_by_seller == false
-                    ? "Rejected"
-                    : "Verification pending"
+                  !visiblePopup?.buyer_rating
+                    ? "Rate Seller Now"
+                    : !visiblePopup?.seller_rating
+                    ? "Seller not rate yet"
+                    : "View Rate"
                 }
                 buttonWidth="full"
                 variant="primary"
                 type="solid"
                 disabled={comment == "" || currentRating <= 0 || isLoading}
-                backgroundColor={
-                  visiblePopup?.rated_approved_by_seller == true
-                    ? theme.colors?.success
-                    : visiblePopup?.rated_approved_by_seller == false
-                    ? theme.colors?.error
-                    : theme.colors?.primary
-                }
                 loading={isLoading}
               />
-            </View>
-          )}
+            )} */}
+          </View>
 
-          {!visiblePopup?.is_buyer &&
+          {/* {!visiblePopup?.is_buyer &&
             visiblePopup?.rated_approved_by_seller != null && (
               <View
                 style={{ marginVertical: 10, paddingBottom: insets.bottom }}
@@ -152,40 +240,7 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
                   type="solid"
                 />
               </View>
-            )}
-
-          {!visiblePopup?.is_buyer &&
-            visiblePopup?.rated_approved_by_seller !== 1 &&
-            visiblePopup?.rated_approved_by_seller !== 0 && (
-              <View
-                style={{
-                  marginVertical: 10,
-                  paddingBottom: insets.bottom,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <CustomButton
-                  onPress={() => onPressUpdateReviewStatus(1)}
-                  title={"Approve"}
-                  variant="primary"
-                  buttonWidth={"half"}
-                  type="solid"
-                  loading={isLoading}
-                  width={SCREEN_WIDTH / 2 - 30}
-                />
-                <CustomButton
-                  onPress={() => onPressUpdateReviewStatus(0)}
-                  title={"Reject"}
-                  variant="secondary"
-                  type="outline"
-                  buttonWidth={"half"}
-                  width={SCREEN_WIDTH / 2 - 30}
-                  borderColor={theme?.colors?.red}
-                  loading={isLoading}
-                />
-              </View>
-            )}
+            )} */}
         </KeyboardAwareScrollView>
       </View>
     </Modal>

@@ -78,7 +78,7 @@ const OngoingItems: React.FC<
           let mydata = data?.data?.data;
 
           const filteredData = mydata.filter((item) => {
-            return item.is_delivered !== 1;
+            return true;
           });
 
           if (filteredData?.length) {
@@ -149,11 +149,23 @@ const OngoingItems: React.FC<
     getClosedData(10, 1, false);
   };
 
-  // console.log("dealsData", JSON.stringify(dealsData));
+  const updateArrayAfterRatingReview = (data) => {
+    let updatedArray = dealsData?.map((d) => {
+      return d?.id === data?.id ? { ...d, ...data } : d;
+    });
+
+    if (data?.is_seller) {
+      updatedArray = dealsData?.filter((d) => {
+        return d?.id !== data?.id;
+      });
+    }
+    setDealsData(updatedArray);
+  };
 
   return (
     <View style={style.container}>
       <ProductListing
+        updateArrayAfterRatingReview={updateArrayAfterRatingReview}
         displayLabel={displayLabel}
         ref={flatlistRef}
         productData={dealsData}
