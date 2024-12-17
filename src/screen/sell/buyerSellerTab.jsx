@@ -2,13 +2,8 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme } from "react-native-elements";
 
-const buyerSellerArray = [
-  { id: 1, name: "Seller" },
-  { id: 2, name: "Buyer" },
-];
-
 function BuyerSellerTabView({
-  setSelectedBuyerSellerTab,
+  onPressTabDetails,
   selectedBuyerSellerTab,
   data,
 }) {
@@ -20,7 +15,7 @@ function BuyerSellerTabView({
         {data?.map((b, index) => {
           return (
             <TouchableOpacity
-              onPress={() => setSelectedBuyerSellerTab(b.id)}
+              onPress={() => onPressTabDetails(b)}
               style={[
                 styles.tabContainerWrapperInner,
                 {
@@ -29,7 +24,7 @@ function BuyerSellerTabView({
                   borderTopRightRadius: index == 1 ? 8 : 0,
                   borderBottomRightRadius: index == 1 ? 8 : 0,
                   backgroundColor:
-                    selectedBuyerSellerTab !== b?.id
+                    selectedBuyerSellerTab?.id !== b?.id
                       ? theme.colors?.primaryLightest
                       : theme.colors?.primary,
                 },
@@ -38,7 +33,7 @@ function BuyerSellerTabView({
               <Text
                 style={{
                   color:
-                    selectedBuyerSellerTab === b?.id
+                    selectedBuyerSellerTab?.id === b?.id
                       ? theme.colors?.white
                       : theme.colors?.primary,
                 }}

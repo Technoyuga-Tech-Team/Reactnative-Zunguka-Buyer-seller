@@ -45,19 +45,29 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
 
   const [currentRating, setCurrentRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
-  const [checkRatingForBuyerReview, setCheckRatingForBuyerReview] = useState(
-    visiblePopup?.is_buyer
+  const [checkRatingForBuyerReview, setCheckRatingForBuyerReview] =
+    useState(false);
+  const [selectedBuyerSellerTab, setSelectedBuyerSellerTab] = useState(
+    buyerSellerArray[0]
   );
 
   useEffect(() => {
-    if (checkRatingForBuyerReview) {
+    if (visiblePopup?.buyer_rating && visiblePopup?.seller_rating) {
+      if (checkRatingForBuyerReview) {
+        setCurrentRating(parseFloat(visiblePopup?.buyer_rating?.rate) || 0);
+        setComment(visiblePopup?.buyer_rating?.rated_message || "");
+      } else {
+        setCurrentRating(parseFloat(visiblePopup?.seller_rating?.rate) || 0);
+        setComment(visiblePopup?.seller_rating?.rated_message || "");
+      }
+    } else if (visiblePopup?.buyer_rating) {
       setCurrentRating(parseFloat(visiblePopup?.buyer_rating?.rate) || 0);
       setComment(visiblePopup?.buyer_rating?.rated_message || "");
-    } else {
+    } else if (visiblePopup?.seller_rating) {
       setCurrentRating(parseFloat(visiblePopup?.seller_rating?.rate) || 0);
       setComment(visiblePopup?.seller_rating?.rated_message || "");
     }
-  }, []);
+  }, [checkRatingForBuyerReview]);
 
   const handleRatingChange = (newRating: number) => {
     setCurrentRating(newRating);
@@ -106,6 +116,15 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
       : b;
   });
 
+  const onPressTabDetails = (data) => {
+    setSelectedBuyerSellerTab(data);
+    if (data?.id == 1) {
+      setCheckRatingForBuyerReview(false);
+    } else {
+      setCheckRatingForBuyerReview(true);
+    }
+  };
+
   return (
     <Modal
       visible={isModalVisible}
@@ -124,9 +143,13 @@ const RatingItemPopup: React.FC<RatingItemPopupProps> = ({
         <KeyboardAwareScrollView contentContainerStyle={style.innerCont}>
           <Text style={style.txtTitle}>{checkForPopupLabel}</Text>
           <RateItem item={visiblePopup} onPressMessage={onPressMessage} />
-
-          {/* <BuyerSellerTabView data={finalObjectForLabel} /> */}
-          {/* <CommanTabBar data={labelDataArray} /> */}
+          {visiblePopup?.buyer_rating && visiblePopup?.seller_rating && (
+            <BuyerSellerTabView
+              selectedBuyerSellerTab={selectedBuyerSellerTab}
+              onPressTabDetails={onPressTabDetails}
+              data={finalObjectForLabel}
+            />
+          )}
           <RatingBox
             disabled={checkReviewRatingIsDisabled}
             rating={currentRating}

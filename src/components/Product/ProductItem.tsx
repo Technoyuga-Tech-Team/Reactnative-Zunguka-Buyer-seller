@@ -328,6 +328,24 @@ const ProductItem: React.FC<ProductItemProps> = ({
           </View>
         )}
 
+        {!!item.is_delivered &&
+          check24hourPassedOrNot &&
+          (item?.buyer_rating || item?.seller_rating) && (
+            <View>
+              <View style={{ marginTop: 10 }}>
+                <CustomButton
+                  onPress={() => {
+                    setRateSellerPopup(item);
+                  }}
+                  title={"View Rate"}
+                  buttonWidth="full"
+                  variant="primary"
+                  type="solid"
+                />
+              </View>
+            </View>
+          )}
+
         {/* {!!item.is_delivered &&
           !!item?.is_buyer &&
           !check24hourPassedOrNot &&
