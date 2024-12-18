@@ -31,7 +31,11 @@ const SellItemsFromProfile: React.FC<
       <Tab.Navigator tabBar={(props) => <CommanTabBar {...props} />}>
         <Tab.Screen name={Route.navDraftItems} component={DraftProductList} />
         <Tab.Screen name={Route.navPublishItems} component={PublishItems} />
-        <Tab.Screen name={Route.navClosedItems} component={ClosedItems} />
+        <Tab.Screen
+          name={Route.navClosedItems}
+          component={ClosedItems}
+          initialParams={{ is_seller: true }}
+        />
       </Tab.Navigator>
     </View>
   );

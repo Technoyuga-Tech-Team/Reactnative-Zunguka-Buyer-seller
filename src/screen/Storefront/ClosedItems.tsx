@@ -25,6 +25,7 @@ const ClosedItems: React.FC<
   const dispatch = useAppDispatch();
   const flatlistRef = useRef<FlatList>(null);
   const displayLabel = route?.params?.displayLabel;
+  const isSeller = route?.params?.is_seller;
 
   const packageId = route.params?.packageId;
   const closedItems = useSelector(getClosedItem);
@@ -58,16 +59,19 @@ const ClosedItems: React.FC<
   ) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
     try {
+      let baseURL = `${BASE_URL}${API.GET_PRODUCTS}/delivered/my/${offset}/${page}`;
+
+      if (isSeller) {
+        baseURL = `${baseURL}?is_seller=true`;
+      }
+
       setLoading(true);
-      const response = await fetch(
-        `${BASE_URL}${API.GET_PRODUCTS}/delivered/my/${offset}/${page}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(baseURL, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
       // Handle the fetched data here
