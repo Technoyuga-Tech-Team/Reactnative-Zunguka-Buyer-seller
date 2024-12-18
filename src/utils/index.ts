@@ -237,11 +237,19 @@ const check24HoursPassedOrNot = (date) => {
 const check14DaysPassedOrNot = (date) => {
   const getAnotherDate = moment(date);
   const currentDate = moment();
-  const diffInHours = currentDate.diff(getAnotherDate, "days");
-  if (diffInHours >= 14) {
-    return true;
+  const diffInDays = currentDate.diff(getAnotherDate, "days");
+
+  if (diffInDays >= 14) {
+    return {
+      canUpdate: true,
+      remainingTime: 0,
+    };
   } else {
-    return false;
+    const daysRemaining = 14 - diffInDays;
+    return {
+      canUpdate: false,
+      remainingTime: !isNaN(diffInDays) ? daysRemaining : 0,
+    };
   }
 };
 

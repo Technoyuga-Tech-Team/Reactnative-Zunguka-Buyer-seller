@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -46,7 +46,11 @@ import { EditProfileFormProps } from "../../types/authentication.types";
 import { imagePickerProps } from "../../types/common.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
-import { getUrlExtension, keepSingleSpace } from "../../utils";
+import {
+  check14DaysPassedOrNot,
+  getUrlExtension,
+  keepSingleSpace,
+} from "../../utils";
 import { setData } from "../../utils/asyncStorage";
 import {
   getImageFromCamera,
@@ -225,6 +229,7 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
           setEnableUsername(false);
           setFieldValue("firstName", keepSingleSpace(firstName));
           setFieldValue("lastName", keepSingleSpace(lastName));
+          setFieldValue("username", keepSingleSpace(username.trim()));
           dispatch(setUserData(result?.payload?.data));
           await setData(USER_DATA, result?.payload?.data);
           dispatch(setSuccess(result?.payload?.message));
@@ -301,8 +306,13 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
     }
   };
 
+  const check14HourPassed = useMemo(() => {
+    return check14DaysPassedOrNot(userData?.username_updated_at);
+  }, [userData]);
+
   let phone_initial =
     tamp_phone === "" ? values.phoneNumber : userData?.phone_number;
+
   return (
     <View style={style.container}>
       {(userLoading === LoadingState.CREATE || loader) && <Loading />}
@@ -337,13 +347,21 @@ const EditProfile: React.FC<HomeNavigationProps<Route.navEditProfile>> = ({
               maxLength={MAX_CHAR_LENGTH}
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
-              editable={enableUsername}
+              editable={!check14HourPassed?.remainingTime}
               value={values.username}
               error={errors.username}
               touched={touched.username}
               onSubmitEditing={() => emaiRef.current?.focus()}
             />
             <InputFieldInfo text={"Username view for publicly"} />
+            {check14HourPassed?.remainingTime ? (
+              <InputFieldInfo
+                text={`You can change your user name after ${check14HourPassed?.remainingTime} days.`}
+              />
+            ) : (
+              <InputFieldInfo text={"Username can be changed after 14 days."} />
+            )}
+
             <CustomTxtInput
               placeholder="Enter your first name"
               returnKeyType="next"
