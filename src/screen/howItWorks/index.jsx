@@ -50,13 +50,11 @@ const HowItWorks: React.FC<HowItWorksProps> = () => {
           <View style={{ width: 45 }}></View>
         )}
         <View style={style.descriptionText}>
-          <Text>{item.desc}</Text>
+          <Text style={{ color: "rgba(51, 51, 51, 1)" }}>{item.desc}</Text>
         </View>
       </View>
     </View>
   );
-
-  console.log("WINDOW_HEIGHT", WINDOW_HEIGHT);
 
   return (
     <View style={style.scrollCont}>
@@ -70,9 +68,9 @@ const HowItWorks: React.FC<HowItWorksProps> = () => {
 
         <View style={style.listMainContainer}>
           <FlatList
-            data={HOW_IT_WORKS_ARRAY} // The data array
-            renderItem={renderItem} // Function to render each item
-            keyExtractor={(item) => item.id} // Unique key for each item
+            data={HOW_IT_WORKS_ARRAY}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
           />
         </View>
       </ScrollView>

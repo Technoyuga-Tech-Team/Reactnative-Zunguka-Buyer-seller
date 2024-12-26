@@ -211,7 +211,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                   },
                 ]}
               >
-                <Text style={{ fontSize: 12 }}>
+                <Text style={{ fontSize: 12, color: theme.colors?.black }}>
                   {item?.is_delivered
                     ? item?.is_buyer
                       ? "Bought"
