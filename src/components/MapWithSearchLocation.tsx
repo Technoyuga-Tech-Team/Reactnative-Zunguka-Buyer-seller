@@ -160,6 +160,10 @@ const MapWithSearchLocation: React.FC<MapWithSearchLocationProps> = ({
           latitude: currentLatitude,
           longitude: currentLongitude,
         });
+        setAddressLatLng({
+          lat: currentLatitude,
+          lng: currentLongitude,
+        });
         getAddressFromCoords(currentLatitude, currentLongitude);
         mapRef.current?.fitToCoordinates(
           [
