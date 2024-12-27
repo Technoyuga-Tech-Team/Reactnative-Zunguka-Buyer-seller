@@ -262,11 +262,15 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       }
       // Sector of the product
       if (productDetailsData?.data?.sector) {
-        const findDistrictIndex = sectorData.findIndex(
-          (ele) => ele.title == productDetailsData?.data?.sector
+        const districtDaya = DISTRICT_AND_SECTORS.find((ele) => {
+          return ele.key == productDetailsData?.data?.district;
+        })?.sectors;
+        const findDistrictIndex = districtDaya?.findIndex(
+          (ele) => ele.key == productDetailsData?.data?.sector
         );
-
-        sectorRef?.current?.selectIndex(findDistrictIndex);
+        setTimeout(() => {
+          sectorRef?.current?.selectIndex(findDistrictIndex);
+        }, 1000);
         setSector(productDetailsData?.data?.sector);
       }
       // Discription of the Product
@@ -946,6 +950,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             value={district}
             topMargin={20}
             onSelect={(val) => {
+              if (sectorRef.current) {
+                sectorRef.current.reset(); // Reset the dropdown selection
+              }
+              setSector("");
               setDistrictError("");
               setDistrict(val.key);
               setChangeDistrict(true);

@@ -129,10 +129,6 @@ const ProductDetails: React.FC<
 
   useEffect(() => {
     if (productDetailsData?.data) {
-      console.log(
-        "productDetailsData?.data - - -",
-        JSON.stringify(productDetailsData?.data)
-      );
       setProductDetails(productDetailsData?.data);
       setProductLikes(productDetailsData?.data?.likes_count);
       const addImages = productDetailsData?.data?.images?.length
