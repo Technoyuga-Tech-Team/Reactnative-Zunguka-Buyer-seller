@@ -224,7 +224,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             )}
           </View>
         </TouchableOpacity>
-        {showBtn && showRequestBtn && isSearch && is_otp && (
+        {showBtn && showRequestBtn && (isSearch || is_otp) && (
           <>
             <View style={{ marginTop: 10 }}>
               <CustomButton
