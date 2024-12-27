@@ -43,6 +43,7 @@ import {
   BASE_URL,
   CITIES,
   CURRENT_COUNTRY_CODE,
+  DISTRICT_AND_SECTORS,
   GOOGLE_MAP_API_KEY,
   MAX_CHAR_LENGTH,
   SCREEN_WIDTH,
@@ -104,6 +105,8 @@ const DeliveryAddress: React.FC<
   const [loader, setLoader] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [visibleAddress, setVisibleAddress] = useState<boolean>(false);
+
+  const [sectorArray, setSectorArray] = useState();
 
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
@@ -192,16 +195,29 @@ const DeliveryAddress: React.FC<
     setTamp_phone(item.phone_number);
     setFieldValue("deliveryAddress", item.address);
     // @ts-ignore
-    setRegion({ key: item.region, title: item.region });
+    setRegion(item.region);
     setFieldValue("region", item.region);
     // @ts-ignore
-    setCity({ key: item.city, title: item.city });
+    setCity(item.city);
     setFieldValue("city", item.city);
     setMakeDefault(item.is_default);
     setTimeout(() => {
       sheetRef.current?.snapToIndex(1);
       setSelectedAddress(item.id);
       setEditOn(true);
+    }, 1000);
+    setTimeout(() => {
+      const findIndex = DISTRICT_AND_SECTORS?.findIndex(
+        (y) => y?.key == item.region
+      );
+      regionRef?.current?.selectIndex(findIndex);
+    }, 1000);
+    setTimeout(() => {
+      const district = DISTRICT_AND_SECTORS?.find(
+        (f) => f?.key === item.region
+      )?.sectors;
+      const findIndex = district?.findIndex((y) => y?.key == item.city);
+      cityRef?.current?.selectIndex(findIndex);
     }, 1000);
   };
 
@@ -421,6 +437,10 @@ const DeliveryAddress: React.FC<
     setVisibleAddress(true);
   };
 
+  const findSectorListData = useMemo(() => {
+    return DISTRICT_AND_SECTORS?.find((f) => f?.key === region)?.sectors;
+  }, [region, city]);
+
   const RenderAddressItems = () => {
     return (
       <View style={style.inputCont}>
@@ -514,30 +534,37 @@ const DeliveryAddress: React.FC<
         </TouchableOpacity>
         <CustomDropdown
           ref={regionRef}
-          dropDownData={CITIES}
+          dropDownData={DISTRICT_AND_SECTORS}
           placeHolder={"District"}
           value={region}
           topMargin={20}
           onSelect={(val) => {
+            if (cityRef.current) {
+              cityRef.current.reset(); // Reset the dropdown selection
+            }
             setRegionError("");
             setRegion(val.key);
             setFieldValue("region", val.key);
+            setCity("");
+            setFieldValue("city", null);
           }}
           error={regionError}
         />
-        <CustomDropdown
-          ref={cityRef}
-          dropDownData={CITIES}
-          placeHolder={"Sector"}
-          value={city}
-          topMargin={20}
-          onSelect={(val) => {
-            setCityError("");
-            setCity(val.key);
-            setFieldValue("city", val.key);
-          }}
-          error={cityError}
-        />
+        {region && (
+          <CustomDropdown
+            ref={cityRef}
+            dropDownData={findSectorListData}
+            placeHolder={"Sector"}
+            value={city}
+            topMargin={20}
+            onSelect={(val) => {
+              setCityError("");
+              setCity(val.key);
+              setFieldValue("city", val.key);
+            }}
+            error={cityError}
+          />
+        )}
         <View style={{ marginVertical: 10 }}>
           <CheckBoxSelection
             isChecked={makeDefault == 1}
