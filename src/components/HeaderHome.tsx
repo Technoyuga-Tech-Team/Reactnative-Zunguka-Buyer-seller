@@ -51,7 +51,7 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
               Explore the world of hidden gems!
             </Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             hitSlop={HIT_SLOP2}
             activeOpacity={1}
             style={style.HowItWorksCount}
@@ -62,7 +62,7 @@ const HeaderHome: React.FC<HeaderHomeProps> = ({
               source={Images.HOW_IT_WORKS_ICON}
               resizeMode="cover"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity
             hitSlop={HIT_SLOP2}

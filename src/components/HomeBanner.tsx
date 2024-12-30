@@ -85,7 +85,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({
               item={item}
               bannerHeight={180}
               bannerwidth={SCREEN_WIDTH - 30}
-              onPressBanner={onPressBanner}
+              onPressBanner={() => onPressBanner(item)}
             />
           )}
         />

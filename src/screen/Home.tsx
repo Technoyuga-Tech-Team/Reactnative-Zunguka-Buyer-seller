@@ -246,7 +246,10 @@ const Home: React.FC<HomeNavigationProps<Route.navHome>> = ({ navigation }) => {
   const onPressSeeAllHotBrands = () => {
     navigation.navigate(Route.navAllBrand);
   };
-  const onPressBanner = async () => {
+  const onPressBanner = async (item) => {
+    if (item?.title === "how_it_works") {
+      navigation.navigate(Route.howItWorks);
+    }
     // navigation.navigate(Route.navAdminVerification);
   };
 
