@@ -82,8 +82,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   const { product_id, product_status } = route?.params;
 
-  console.log("product_id - - - - -", product_id);
-
   const scrollRef = React.useRef<KeyboardAwareScrollView>(null);
   const productTitleRef = React.useRef<TextInput>(null);
   const locationRef = React.useRef<TextInput>(null);
@@ -195,25 +193,43 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     }
   }, [product_id]);
 
+  const valueOfCategory = useMemo(() => {
+    if (subCatName) {
+      let finalString = "";
+      let subCategoryId1 = "";
+
+      const findCategoryName = categories?.find((c) => c?.isExpanded);
+      if (findCategoryName) {
+        finalString = findCategoryName?.name;
+        subCategoryId1 = findCategoryName?.id;
+      }
+      let findSubCategory;
+      if (findCategoryName?.subcategory?.length) {
+        findSubCategory = findCategoryName?.subcategory?.find(
+          (s) => s?.isExpanded
+        );
+        if (findSubCategory) {
+          subCategoryId1 = `${findSubCategory?.id},${subCategoryId1}`;
+          finalString = `${finalString} - ${findSubCategory?.name}`;
+        }
+      }
+      return {
+        name: `${finalString} - ${subCatName}`,
+        id: `${subCategoryId},${subCategoryId1}`,
+      };
+    }
+    return "";
+  }, [categories, subCatName]);
+
   useEffect(() => {
     if (productDetailsData?.data) {
       setFromEditProfile(true);
-      console.log(
-        "productDetailsData - - -",
-        JSON.stringify(productDetailsData?.data)
-      );
       // set Product image of the Product
       if (productDetailsData?.data?.images.length > 0) {
         setProductImages(productDetailsData?.data?.images);
       }
       // set profuct title
       setProductTitle(productDetailsData?.data?.title);
-      // set Category of product and ids
-      setSubParantCat(
-        productDetailsData?.data?.category
-          .map((category) => category.name)
-          .join(" - ")
-      );
       if (productDetailsData?.data?.category_id) {
         let cat_ids = productDetailsData?.data?.category_id.split(",");
         setSubCategoryId(Number(cat_ids[0]));
@@ -280,10 +296,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       }
       // mode of transport of the product
       if (productDetailsData?.data?.mode_of_transport) {
-        console.log(
-          "productDetailsData?.data?.mode_of_transport",
-          productDetailsData?.data?.mode_of_transport
-        );
         const findIndex = VEHICLE_TYPE_DATA.findIndex(
           (ele) => ele.key == productDetailsData?.data?.mode_of_transport
         );
@@ -305,19 +317,12 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   }, [productDetailsData]);
 
   const { data: categoriesData, isFetching } = useCategories();
-
   useEffect(() => {
     setAdjustResize();
     return () => {
       setAdjustPan();
     };
   }, []);
-
-  useEffect(() => {
-    if (parantCatName && subCatName) {
-      setSubParantCat(`${parantCatName} - ${subCatName}`);
-    }
-  }, [parantCatName, subCatName]);
 
   useEffect(() => {
     if (categoriesData?.data?.data) {
@@ -327,7 +332,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
   useEffect(() => {
     if (district) {
-      console.log("district", district);
       DISTRICT_AND_SECTORS.map((ele) => {
         if (ele.key == district || district.key) {
           setSectorData(ele.sectors);
@@ -477,7 +481,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   const checkIsValidForm = () => {
     let isValidProductImage = productImages.length > 0;
     let isValidTitle = isRequiredFields(productTitle);
-    let isValidProductCategory = isRequiredFields(subParantCat);
+    let isValidProductCategory = isRequiredFields(subCategoryId);
     let isValidConditionOfItems = isRequiredFields(selectedCondition);
     let isValidConditionOfDeliveryItem = isRequiredFields(
       deliveryTimeCondition
@@ -560,9 +564,9 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     let isValidProductImage = productImages.length > 0;
     if (
       !productTitle &&
-      !subParantCat &&
       !selectedCondition &&
       !deliveryTimeCondition &&
+      !subCategoryId &&
       !district &&
       !productDescription &&
       !vehicle &&
@@ -624,9 +628,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           });
         });
       productTitle && formData.append("title", productTitle);
-      subCategoryId &&
-        parantCategoryId &&
-        formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      valueOfCategory && formData.append("category_id", valueOfCategory?.id);
       selectedCondition &&
         formData.append("condition_of_item", selectedCondition);
       deliveryTimeCondition &&
@@ -648,10 +650,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
 
       if (addProductForSell.fulfilled.match(result)) {
         if (result.payload.status === 1) {
-          console.log(
-            "addProductForSell response - - - ",
-            result.payload?.data
-          );
           const itemId = result.payload?.data?.id;
           navigation.dispatch(
             CommonActions.reset({
@@ -666,7 +664,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           );
         }
       } else {
-        console.log("addProductForSell error - - - ", result.payload);
       }
     }
   };
@@ -689,7 +686,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("item_id", product_id);
       formData.append("title", productTitle);
 
-      formData.append("category_id", `${subCategoryId},${parantCategoryId}`);
+      formData.append("category_id", valueOfCategory?.id);
       formData.append("condition_of_item", selectedCondition);
       formData.append("delivery_time", deliveryTimeCondition);
       formData.append("brand_id", selectedBrand.id);
@@ -705,17 +702,10 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       formData.append("is_selfpickup_available", checkedSelfPickup ? 1 : 0);
       formData.append("is_saved_as_draft", product_status ? 1 : 0);
       formData.append("status", product_status || "Active");
-
-      console.log("Edit product formData - - -", JSON.stringify(formData));
-
       const result = await dispatch(editProductForSell({ formData: formData }));
 
       if (editProductForSell.fulfilled.match(result)) {
         if (result.payload.status === 1) {
-          console.log(
-            "editProductForSell response - - - ",
-            result.payload?.data
-          );
           const itemId = result.payload?.data?.id;
           dispatch(setSuccess("Product updated successfully"));
           navigation.goBack();
@@ -729,7 +719,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
           // );
         }
       } else {
-        console.log("editProductForSell error - - - ", result.payload);
       }
     }
   };
@@ -761,7 +750,6 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
       });
 
       const data = await response.json();
-      console.log("brand - data", data);
       // Handle the fetched data here
       if (data && data?.data?.data?.length > 0) {
         setBrands(data?.data?.data);
@@ -773,9 +761,37 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
     }
   };
 
-  const onExpand = (id: number) => {
-    setExpand(null);
-    expand == id ? setExpand(null) : setExpand(id);
+  const onExpand = (id: number, subId: number) => {
+    setSubCatName("");
+    setSubCategoryId("");
+    const finalData = categories?.map((c) => {
+      return {
+        ...c,
+        isExpanded:
+          c?.id === id && !subId
+            ? c?.isExpanded
+              ? false
+              : true
+            : c?.id === id
+            ? c?.isExpanded
+              ? true
+              : false
+            : false,
+        subcategory: c?.subcategory?.length
+          ? c?.subcategory?.map((sub) => {
+              return {
+                ...sub,
+                isExpanded:
+                  sub?.id === subId ? (sub?.isExpanded ? false : true) : false,
+              };
+            })
+          : [],
+      };
+    });
+    setCategories(finalData);
+
+    // setExpand(null);
+    // expand == id ? setExpand(null) : setExpand(id);
   };
 
   const onSelectBrand = (itm: HotBrandaDataProps) => {
@@ -894,7 +910,7 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
             // iconPosition={"right"}
             // icon={<PencilIcon color={theme?.colors?.unselectedIconColor} />}
             // onPressOuterRightIcon={onPressSelectCategory}
-            value={subParantCat}
+            value={valueOfCategory?.name}
             error={productCategoryError}
             touched={productCategoryError !== ""}
             onPress={onPressSelectCategory}
