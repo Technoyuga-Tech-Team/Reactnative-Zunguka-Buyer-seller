@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -12,6 +12,7 @@ import { HomeNavigationProps } from "../../types/navigation";
 import CategoriesListWithExpand from "./CategoriesListWithExpand";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { setSearchValueforCategory } from "../../store/settings/settings.slice";
+import { createStringForCategorySelection } from "../../utils";
 
 const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
   navigation,
@@ -34,9 +35,35 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
     }
   }, [categoriesData]);
 
-  const onExpand = (id: number) => {
-    setExpand(null);
-    expand == id ? setExpand(null) : setExpand(id);
+  const onExpand = (id: number, subId: number) => {
+    setSubCategoryId("");
+    const finalData = categories?.map((c) => {
+      return {
+        ...c,
+        isExpanded:
+          c?.id === id && !subId
+            ? c?.isExpanded
+              ? false
+              : true
+            : c?.id === id
+            ? c?.isExpanded
+              ? true
+              : false
+            : false,
+        subcategory: c?.subcategory?.length
+          ? c?.subcategory?.map((sub) => {
+              return {
+                ...sub,
+                isExpanded:
+                  sub?.id === subId ? (sub?.isExpanded ? false : true) : false,
+              };
+            })
+          : [],
+      };
+    });
+    setCategories(finalData);
+    // setExpand(null);
+    // expand == id ? setExpand(null) : setExpand(id);
   };
 
   const onPressCategory = (
@@ -52,6 +79,10 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
     dispatch(setSearchValueforCategory(subName));
     setSubCategoryId(subCatId);
   };
+
+  const valueOfCategory = useMemo(() => {
+    return createStringForCategorySelection(null, categories, subCategoryId);
+  }, [categories]);
 
   return (
     <View style={style.container}>
