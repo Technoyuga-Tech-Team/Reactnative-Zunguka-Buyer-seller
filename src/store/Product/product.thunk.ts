@@ -82,9 +82,9 @@ export const addProductSearchFilter = createAsyncThunk<
           url: API.GET_SEARCH_FILTER_ITEM,
           method: "POST",
           data: formData,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          // headers: {
+          //   "Content-Type": "multipart/form-data",
+          // },
         },
         true
       )

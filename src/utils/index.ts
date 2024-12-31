@@ -253,6 +253,38 @@ const check14DaysPassedOrNot = (date) => {
   }
 };
 
+const createStringForCategorySelection = (
+  subCatName,
+  categories,
+  subCategoryId
+) => {
+  if (subCategoryId) {
+    let finalString = "";
+    let subCategoryId1 = "";
+
+    const findCategoryName = categories?.find((c) => c?.isExpanded);
+    if (findCategoryName) {
+      finalString = findCategoryName?.name;
+      subCategoryId1 = findCategoryName?.id;
+    }
+    let findSubCategory;
+    if (findCategoryName?.subcategory?.length) {
+      findSubCategory = findCategoryName?.subcategory?.find(
+        (s) => s?.isExpanded
+      );
+      if (findSubCategory) {
+        subCategoryId1 = `${findSubCategory?.id},${subCategoryId1}`;
+        finalString = `${finalString} - ${findSubCategory?.name}`;
+      }
+    }
+    return {
+      name: `${finalString} - ${subCatName}`,
+      id: `${subCategoryId},${subCategoryId1}`,
+    };
+  }
+  return "";
+};
+
 export {
   CreditDebitCardNumber,
   createArrayUseNumber,
@@ -270,4 +302,5 @@ export {
   hasAddress,
   check24HoursPassedOrNot,
   check14DaysPassedOrNot,
+  createStringForCategorySelection,
 };

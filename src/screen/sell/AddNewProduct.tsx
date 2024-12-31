@@ -62,7 +62,7 @@ import {
 } from "../../types/dashboard.types";
 import { LoadingState, ThemeProps } from "../../types/global.types";
 import { HomeNavigationProps } from "../../types/navigation";
-import { getUrlExtension } from "../../utils";
+import { createStringForCategorySelection, getUrlExtension } from "../../utils";
 import { getData } from "../../utils/asyncStorage";
 import Scale from "../../utils/Scale";
 import CategoriesListWithExpand from "../Categories/CategoriesListWithExpand";
@@ -194,31 +194,11 @@ const AddNewProduct: React.FC<HomeNavigationProps<Route.navAddNewProduct>> = ({
   }, [product_id]);
 
   const valueOfCategory = useMemo(() => {
-    if (subCatName) {
-      let finalString = "";
-      let subCategoryId1 = "";
-
-      const findCategoryName = categories?.find((c) => c?.isExpanded);
-      if (findCategoryName) {
-        finalString = findCategoryName?.name;
-        subCategoryId1 = findCategoryName?.id;
-      }
-      let findSubCategory;
-      if (findCategoryName?.subcategory?.length) {
-        findSubCategory = findCategoryName?.subcategory?.find(
-          (s) => s?.isExpanded
-        );
-        if (findSubCategory) {
-          subCategoryId1 = `${findSubCategory?.id},${subCategoryId1}`;
-          finalString = `${finalString} - ${findSubCategory?.name}`;
-        }
-      }
-      return {
-        name: `${finalString} - ${subCatName}`,
-        id: `${subCategoryId},${subCategoryId1}`,
-      };
-    }
-    return "";
+    return createStringForCategorySelection(
+      subCatName,
+      categories,
+      subCategoryId
+    );
   }, [categories, subCatName]);
 
   useEffect(() => {

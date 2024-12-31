@@ -1,5 +1,5 @@
 import { useDebounce } from "@uidotdev/usehooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { RefreshControl, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,14 +81,16 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       formData.append("keyword", keyword);
 
       formData.append("is_filter", filterItems ? 1 : 0);
-      (filterItems?.parantCategoryId || filterItems?.subCategoryId) &&
-        formData.append(
-          "category_ids",
-          `${filterItems?.parantCategoryId},${filterItems?.subCategoryId}`
-        );
+      filterItems?.valueOfCategory?.id &&
+        formData.append("category_ids", filterItems?.valueOfCategory?.id);
       formData.append("brand_id", filterItems?.brand || "");
       formData.append("city", filterItems?.city || "");
-      formData.append("max_price", filterItems?.maxPrice || "");
+      formData.append(
+        "max_price",
+        filterItems?.maxPrice == 400
+          ? 10000000000000
+          : filterItems?.maxPrice || ""
+      );
       formData.append("min_price", filterItems?.minPrice || "");
       formData.append("color", filterItems?.selectedColors || "");
       formData.append(
@@ -100,12 +102,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       formData.append("limit", limit);
       formData.append("offset", page);
 
-      // formData.append("size", filterItems?.selectedSize || "");
-
-      // console.log("formData", JSON.stringify(formData));
-      const result = await dispatch(
-        addProductSearchFilter({ formData: formData })
-      );
+      const result = await dispatch(addProductSearchFilter({ formData }));
 
       if (addProductSearchFilter.fulfilled.match(result)) {
         // console.log(
@@ -285,7 +282,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
     maxPrice: any,
     selectedRatings: any,
     selectedSize: any,
-    city: any
+    city: any,
+    valueOfCategory: any
   ) => {
     let filter_Items = {
       parantCategoryId,
@@ -298,6 +296,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       selectedRatings,
       selectedSize,
       city,
+      valueOfCategory,
     };
     setFilterItems(filter_Items);
     getSearchedItems(debouncedSearchTerm, 10, 1, false, filter_Items, false);
@@ -352,7 +351,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
             maxPrice: any,
             selectedRatings: any,
             selectedSize: any,
-            city: any
+            city: any,
+            valueOfCategory: any
           ) =>
             onPressShowItem(
               parantCategoryId,
@@ -364,7 +364,8 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
               maxPrice,
               selectedRatings,
               selectedSize,
-              city
+              city,
+              valueOfCategory
             )
           }
           clearFilter={clearFilter}

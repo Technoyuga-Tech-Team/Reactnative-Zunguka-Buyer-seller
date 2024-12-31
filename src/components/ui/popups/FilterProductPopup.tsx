@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { makeStyles, useTheme } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -40,6 +40,7 @@ import LeftIcon from "../svg/LeftIcon";
 import { CustomTxtInput } from "../CustomTextInput";
 import { getData } from "../../../utils/asyncStorage";
 import { API } from "../../../constant/apiEndpoints";
+import { createStringForCategorySelection } from "../../../utils";
 
 interface FilterProductPopupProps {
   visiblePopup: boolean;
@@ -123,6 +124,14 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
   useEffect(() => {
     getBrands(0);
   }, []);
+
+  const valueOfCategory = useMemo(() => {
+    return createStringForCategorySelection(
+      subCatName,
+      categories,
+      subCategoryId
+    );
+  }, [categories, subCatName]);
 
   const getBrands = async (parantCatId: number) => {
     const token = await getData(secureStoreKeys.JWT_TOKEN);
@@ -238,9 +247,36 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
     setSelectedSize(item);
   };
 
-  const onExpand = (id: number) => {
-    setExpand(null);
-    expand == id ? setExpand(null) : setExpand(id);
+  const onExpand = (id: number, subId: number) => {
+    setSubCatName("");
+    setSubCategoryId("");
+    const finalData = categories?.map((c) => {
+      return {
+        ...c,
+        isExpanded:
+          c?.id === id && !subId
+            ? c?.isExpanded
+              ? false
+              : true
+            : c?.id === id
+            ? c?.isExpanded
+              ? true
+              : false
+            : false,
+        subcategory: c?.subcategory?.length
+          ? c?.subcategory?.map((sub) => {
+              return {
+                ...sub,
+                isExpanded:
+                  sub?.id === subId ? (sub?.isExpanded ? false : true) : false,
+              };
+            })
+          : [],
+      };
+    });
+    setCategories(finalData);
+    // setExpand(null);
+    // expand == id ? setExpand(null) : setExpand(id);
   };
 
   const onPressCategory = (
@@ -321,7 +357,9 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
           <FilterItem
             onPress={onPressPrice}
             title="Price"
-            value={`${RWF} ${sliderVal.low} - ${sliderVal.high}`}
+            value={`${RWF} ${sliderVal.low} - ${sliderVal.high} ${
+              sliderVal?.high == 400 && "+"
+            }`}
             isSelected={visiblePrice}
           />
           {visiblePrice && (
@@ -372,7 +410,8 @@ const FilterProductPopup: React.FC<FilterProductPopupProps> = ({
                   sliderVal.high,
                   selectedRatingsValues.join(", "),
                   selectedSizeValue.join(", "),
-                  city
+                  city,
+                  valueOfCategory
                 );
               }}
               title={"Show Items"}
