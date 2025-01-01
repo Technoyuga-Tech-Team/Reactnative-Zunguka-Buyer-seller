@@ -78,7 +78,7 @@ const SearchProducts: React.FC<HomeNavigationProps<Route.navSearchProduct>> = ({
       setLoader(true);
       const formData = new FormData();
       formData.append("is_search", keyword ? 1 : 0);
-      formData.append("keyword", keyword);
+      formData.append("keyword", keyword?.toLowerCase());
 
       formData.append("is_filter", filterItems ? 1 : 0);
       filterItems?.valueOfCategory?.id &&
