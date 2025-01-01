@@ -72,17 +72,24 @@ const AllCategories: React.FC<HomeNavigationProps<Route.navAllCategories>> = ({
     parantCatId: number,
     parantName: string
   ) => {
+    let subCategoryName = subName;
+
+    const findCategoryName = categories?.find((c) => c?.isExpanded);
+    const findSubCategory = findCategoryName?.subcategory?.find(
+      (s) => s?.isExpanded
+    );
+
+    if (findSubCategory) {
+      subCategoryName = `${findSubCategory?.name} ${subName}`;
+    }
+
     navigation.navigate(Route.navSearchProduct, {
       mainCat: parantName,
-      subCat: subName,
+      subCat: subCategoryName,
     });
-    dispatch(setSearchValueforCategory(subName));
+    dispatch(setSearchValueforCategory(subCategoryName));
     setSubCategoryId(subCatId);
   };
-
-  const valueOfCategory = useMemo(() => {
-    return createStringForCategorySelection(null, categories, subCategoryId);
-  }, [categories]);
 
   return (
     <View style={style.container}>
