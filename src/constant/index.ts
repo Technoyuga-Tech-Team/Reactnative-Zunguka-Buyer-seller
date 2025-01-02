@@ -1947,6 +1947,10 @@ export const COLORS = [
     itemName: "Blue",
     itemValue: "#0000FF",
   },
+  {
+    itemName: "Others",
+    itemValue: "Others",
+  },
 ];
 
 export const CONDITIONS = [
@@ -2210,6 +2214,10 @@ export const SIZES = [
   {
     itemName: "9XL",
     itemValue: "9XL",
+  },
+  {
+    itemName: "Others",
+    itemValue: "Others",
   },
 ];
 
